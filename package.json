@@ -1,0 +1,35 @@
+{
+  "name": "runtime-signature",
+  "version": "0.0.1",
+  "description": "Runtime type-checking with simple JavaScript types signatures.",
+  "author": "Laurent Payot",
+  "license": "MIT",
+  "homepage": "https://github.com/laurentpayot/runtime-signature#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/laurentpayot/runtime-signature"
+  },
+  "keywords": [
+    "type-checking",
+    "type",
+    "check",
+    "typed",
+    "signature",
+    "runtime",
+    "flow",
+    "typescript",
+    "coffeescript",
+    "coffee"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "build": "coffee -c index.coffee test/tests.coffee",
+    "test": "npm run build && RUNTIME_SIGNATURE_CHECK_TYPES=1 mocha"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "coffeescript": "^2.3.1",
+    "mocha": "^5.2.0"
+  }
+}
