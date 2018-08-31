@@ -21,13 +21,13 @@ $ npm install runtime-signature
 
 Usage
 -----
+General usage:
+```
+sig([<arguments types>], <result type>, <function>)
+```
 ### CoffeeScript :heart:
-```
-sig [<arguments types>], <result type>, <function>
-```
-Very clean syntax compared to JavaScript (below).
+You can ommit the parentheses, resulting in a very clean syntax:
 
-For instance:
 ```coffeescript
 import { sig } from 'runtime-signature'
 
@@ -40,12 +40,6 @@ add('5', 1) # Error: Argument number 1 (5) should be of type Number instead of S
 ```
 
 ### JavaScript
-```
-sig([<arguments types>], <result type>, <function>)
-```
-Noiser syntax than CofeeScript (above).
-
-For instance:
 ```js
 import { sig } from 'runtime-signature';
 
