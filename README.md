@@ -48,8 +48,8 @@ const add = sig([Number, [Number, undefined]], Number,
     return n1 + n2;
   });
 
-add(5); // 5
-add(5, 1); // 6
+add(5);      // 5
+add(5, 1);   // 6
 add('5', 1); // Error: Argument number 1 (5) should be of type Number instead of String.
 
 ```
