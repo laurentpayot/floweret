@@ -12,11 +12,11 @@ Features
 
 Install
 -------
-
+**NB: Not on npm yet, stay tuned!**
 ```bash
-$ yarn add runtime-signature
-# or
 $ npm install runtime-signature
+# or
+$ yarn add runtime-signature
 ```
 
 Usage
