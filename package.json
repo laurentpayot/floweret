@@ -22,6 +22,9 @@
     "coffee"
   ],
   "main": "index.js",
+  "engines": {
+    "node": ">=7.6.0"
+  },
   "scripts": {
     "build": "coffee -c index.coffee test/tests.coffee",
     "test": "npm run build && RUNTIME_SIGNATURE_CHECK_TYPES=1 mocha"
