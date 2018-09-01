@@ -104,7 +104,9 @@ As the type system uses JavaScript expressions, you can assign your type to a va
 ```js
 phoneType = [Number, undefined]
 ```
-### Type tools 
+
+Type tools 
+----------
 `isType(value, type)` 
 `typeOf(value)`
 
