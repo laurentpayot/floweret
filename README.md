@@ -1,14 +1,17 @@
 runtime-signature
 =================
-Runtime type-checking with simple JavaScript types signatures.
+Type-checking for functions at runtime with simple JavaScript types signatures.
 
 Features
 --------
-* Native types
-* Custom types (objects)
-* Union of types
-* Any type
-* Promised type
+* Native types `Number`
+* Typed arrays `Array(Number)`
+* Union of types `[Number, String]`
+* Custom types `myType = {id: Number, name: {first: String, last: String, middle: [String, undefined]}}`
+* Type composition `Array([Number, String])`
+* Type of promise `promised([Object, null])`
+* Any type wildcard `[]`
+* Type tools `isType(val,type)` `typeOf(val)`
 
 Install
 -------
