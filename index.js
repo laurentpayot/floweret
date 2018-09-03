@@ -48,6 +48,8 @@
       case 'Number':
       case 'Boolean':
         return val === type; // literal type or undefined or null
+      case 'Function':
+        return typeOf(val) === type.name; // native type: Number, String, Object, Array (untyped), Promise…
       case 'Array':
         switch (type.length) {
           case 0:
@@ -67,14 +69,12 @@
             });
         }
         break;
-      case 'Function':
-        return typeOf(val) === type.name; // native type: Number, String, Object, Array (untyped), Promise…
       case 'Object': // Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
-        if (!Object.keys(type).length) {
-          throw new Error("Type can not be an empty object.");
-        }
         if (typeOf(val) !== 'Object') {
           return false;
+        }
+        if (!Object.keys(type).length) {
+          return !Object.keys(val).length;
         }
         for (k in type) {
           v = type[k];
@@ -84,7 +84,7 @@
         }
         return true; // type is not a class but an instance
       default:
-        throw new Error(`Type can not be '${type}'. Use ${typeOf(type)} class instead.`);
+        throw new Error(`Type can not be an instance of ${typeOf(type)}. Use the ${typeOf(type)} class as type instead.`);
     }
   };
 

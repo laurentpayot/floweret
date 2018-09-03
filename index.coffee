@@ -11,6 +11,7 @@ typeOf = (val) -> if val is undefined then 'undefined' else if val is null then 
 isType = (val, type) ->
 	switch typeOf(type)
 		when 'undefined', 'null', 'String', 'Number', 'Boolean' then val is type # literal type or undefined or null
+		when 'Function' then typeOf(val) is type.name # native type: Number, String, Object, Array (untyped), Promise…
 		when 'Array'
 			switch type.length
 				when 0 then true # any type: `[]`
@@ -18,15 +19,15 @@ isType = (val, type) ->
 					unless Array.isArray(val) then false else val.every((v) -> isType(v, type[0]))
 				else # union of types, e.g.: `[Object, null]`
 					type.some((t) -> isType(val, t))
-		when 'Function' then typeOf(val) is type.name # native type: Number, String, Object, Array (untyped), Promise…
 		when 'Object' # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
-			throw new Error "Type can not be an empty object." unless Object.keys(type).length
 			return false unless typeOf(val) is 'Object'
+			return not Object.keys(val).length unless Object.keys(type).length
 			for k, v of type
 				return false unless isType(val[k], v)
 			true
 		else # type is not a class but an instance
-			throw new Error "Type can not be '#{type}'. Use #{typeOf(type)} class instead."
+			throw new Error "Type can not be an instance of #{typeOf(type)}.
+							Use the #{typeOf(type)} class as type instead."
 
 # not exported: get type name for sig error messages (supposing type is always correct)
 typeName = (type) ->

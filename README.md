@@ -4,8 +4,8 @@ Type-checking for functions at runtime with native JavaScript types signatures.
 
 Features
 --------
-* Super-simple native types syntax
-* Efficient: direct type evaluation, no string to parse.
+* Super-simple syntax: native types
+* Efficient: direct type evaluation, no string to parse
 * Lightweight: ± 70 LOC
 * No dependencies
 
@@ -71,7 +71,7 @@ For instance the type `[Number, String]` will accept a number value or a string 
 
 This is simply a shortcut to the union `[<type>, undefined, null]`. Usefull for optional parameters of a function, as shown in the [usage examples above](#usage).
 
-### Litteral type
+### Litteral types
 
 **TODO!**
 
@@ -87,7 +87,12 @@ Simply use `Array(Number)` for an array of number.
 * Use `Array([Number, String])` to accept an array of elements that can be numbers or strings, such as `[1, "2", 3]`.
 * Use `[Array(Number), Array(String)]` to accept an array of numbers (such as `[1, 2, 3]`) or an array of strings (such as `["1", "2", "3"]`).
 
-### Object types
+### Typed sets
+> _Set(<type\>)
+
+**TODO!**
+
+### Object type
 > {<key 1\>: <type 1\>, <key 2\>: <type 2\>, … , <key n\>: <type n\>}
 
 You can specify the types of an object values, at any depth.
@@ -96,6 +101,10 @@ For instance:
 ```js
 {id: Number, name: {first: String, last: String, middle: [String, undefined]}}
 ```
+
+### Custom type (class)
+
+**TODO!**
 
 ### Promise type
 > Promise.resolve(<type\>)

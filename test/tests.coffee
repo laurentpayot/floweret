@@ -115,12 +115,6 @@ describe "isType", ->
 			expect(isType(Boolean, true)).to.be.false
 			expect(isType(Boolean, false)).to.be.false
 
-		it "should throw an error when type is not a native type nor an object nor an array of types
-			nor a string or number or boolean literal.", ->
-			expect(-> isType(val, new Set([1])))
-			.to.throw("Literal type must be either a string, a number or a boolean.") for val in VALUES
-
-
 	context "Native Types", ->
 
 		it "should return true for an undefined type, false for other types", ->
@@ -167,7 +161,16 @@ describe "isType", ->
 			testTypes(((foo) -> ((bar)-> foo + bar)), Function)
 			testTypes(((foo) -> ((bar)-> new Promise((resolve, reject) -> resolve(foo + bar)))), Function)
 
-	context "Custom Types", ->
+	context "Object Types", ->
+
+		it "should return true if both value and type are empty object.", ->
+			expect(isType({}, {})).to.be.true
+
+		it "should return false if type is empty object but value unempty object.", ->
+			expect(isType({a: 1}, {})).to.be.false
+
+		it "should return false if value is empty object but type unempty object.", ->
+			expect(isType({}, {a: Number})).to.be.false
 
 		it "should return false for a custom type and non object values", ->
 			UserType =
@@ -254,7 +257,7 @@ describe "isType", ->
 
 	context "Typed array", ->
 
-		context "Native Types", ->
+		context "Native Type elements", ->
 
 			it "should return false when value is not an array", ->
 				expect(isType(val, Array(Number))).to.be.false for val in VALUES when not Array.isArray(val)
@@ -280,29 +283,25 @@ describe "isType", ->
 				expect(isType([val], Array(String))).to.be.false \
 					for val in VALUES when typeof val isnt 'string'
 
-		context "Custom Types", ->
+		context "Object Type elements", ->
 
 			it "should return false when value is not an array", ->
 				nsType = {n: Number, s: String}
 				expect(isType(val, Array(nsType))).to.be.false for val in VALUES when not Array.isArray(val)
 
-			it "should throw an error when type is an empty object", ->
-				expect(-> isType(val, {})).to.throw("Type can not be an empty object.") for val in VALUES
-
-			it "should return true when all elements of the array are of a given custom type", ->
+			it "should return true when all elements of the array are of a given object type", ->
 				nsType = {n: Number, s: String}
 				expect(isType([{n: 1, s: "a"}, {n: 2, s: "b"}, {n: 3, s: "c"}], Array(nsType))).to.be.true
 				expect(isType([{n: 1, s: "a"}], Array(nsType))).to.be.true
 				expect(isType([], Array(nsType))).to.be.true
 
-			it "should return false when some elements of the array are not of a given custom type", ->
+			it "should return false when some elements of the array are not of a given object type", ->
 				nsType = {n: Number, s: String}
 				expect(isType([{n: 1, s: "a"}, val, {n: 3, s: "c"}], Array(nsType))).to.be.false for val in VALUES
 				expect(isType([val], Array(nsType))).to.be.false for val in VALUES
 				expect(isType([{n: 1, s: "a"}, {foo: 2, s: "b"}, {n: 3, s: "c"}], Array(nsType))).to.be.false
 
-
-		context "Several Types", ->
+		context "Union Type elements", ->
 
 			it "should return false when value is not an array", ->
 				expect(isType(val, Array([Number, String]))).to.be.false for val in VALUES when not Array.isArray(val)
@@ -321,6 +320,20 @@ describe "isType", ->
 					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
 				expect(isType([val], Array([String, Number]))).to.be.false \
 					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
+
+	context "Custom Types (classes)", ->
+
+		it "should return true type is MyClass, false for other types", ->
+			class MyClass
+			mc = new MyClass
+			testTypes(mc, MyClass)
+
+	context "Unmanaged Types", ->
+
+		it "should throw an error when type is not a native type nor an object nor an array of types
+			nor a string or number or boolean literal.", ->
+			expect(-> isType(val, new Map([])))
+			.to.throw("Type can not be an instance of Map. Use the Map class as type instead.") for val in VALUES
 
 
 ###
