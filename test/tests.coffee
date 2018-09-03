@@ -1,4 +1,4 @@
-{typeOf, isType, sig, promised} = require '../index.js' # testing the build, not the source
+{typeOf, isType, sig, maybe, promised} = require '../index.js' # testing the build, not the source
 
 chai = require 'chai'
 chaiAsPromised = require 'chai-as-promised'
@@ -63,14 +63,23 @@ describe "typeOf", ->
 ###
 describe "isType", ->
 
-
 	context "Special Types", ->
 
-		context "Optional parameter type (undefined)", ->
+		context "Maybe type", ->
 
-			it "should return true only when value is undefined", ->
-				expect(isType(undefined, undefined)).to.be.true
-				expect(isType(val, undefined)).to.be.false for val in VALUES when val isnt undefined
+			it "should return true when value is undefined or null.", ->
+				for t in NATIVE_TYPES
+					expect(isType(undefined, maybe(t))).to.be.true
+					expect(isType(null, maybe(t))).to.be.true
+
+			it "should return true for a number type, false for other types.", ->
+				expect(isType(1.1, maybe(Number))).to.be.true
+				expect(isType(1.1, maybe(t))).to.be.false for t in NATIVE_TYPES when t and t isnt Number
+
+			it "should return true for a string type, false for other types.", ->
+				expect(isType("Énorme !", maybe(String))).to.be.true
+				expect(isType("Énorme !", maybe(t))).to.be.false for t in NATIVE_TYPES when t and t isnt String
+
 
 		context "Any type ([])", ->
 
@@ -108,7 +117,7 @@ describe "isType", ->
 
 		it "should return true for a string type, false for other types", ->
 			testTypes('', String)
-			testTypes("Àb c", String)
+			testTypes("Énorme !", String)
 
 		it "should return true for an array type, false for other types", ->
 			testTypes([1, 'a'], Array)

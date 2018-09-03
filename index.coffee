@@ -1,3 +1,6 @@
+# shortcut to `[<type>, undefined, null]`
+maybe = (t) -> [undefined, null, t] # checking undefined and null types first
+
 # shortcut to Promise.resolve
 promised = (t) -> Promise.resolve(t)
 
@@ -40,12 +43,10 @@ typeName = (type) ->
 		when isType(type, Object) then "custom type"
 		else typeOf(type)
 
-# check function in/out types, e.g.:
-# f = sig [String, Number], String,
-#     (str, num) -> str + num
+# wraps a function to check its arguments types and result type
 sig = (argTypes, resType, f) ->
 	# returns a function, sadly anonymous
-	-> # using JS keyword `arguments` instead of (args...) -> …
+	->
 		throw new Error "Too many arguments provided." unless arguments.length <= argTypes.length
 		for type, i in argTypes
 			unless Array.isArray(type) and not type.length # not checking type if any type
@@ -54,7 +55,6 @@ sig = (argTypes, resType, f) ->
 				else
 					throw new Error "Argument number #{i+1} (#{arguments[i]}) should be of type #{typeName(type)}
 									instead of #{typeOf(arguments[i])}." unless isType(arguments[i], type)
-		# to specify type of a promise function, use Promise.resolve(<type>) as resType,
 		if isType(resType, Promise)
 			# NB: not using `await` because CS would transpile the returned function (of the factory) as an async one!!!
 			resType.then((promiseType) ->
@@ -73,4 +73,4 @@ sig = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {typeOf, isType, sig, promised}
+module.exports = {typeOf, isType, sig, maybe, promised}

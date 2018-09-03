@@ -25,9 +25,9 @@ To add a signature to a function, wrap the function with the `sig` function:
 
 ### JavaScript
 ```js
-import { sig } from 'runtime-signature';
+import { sig, maybe } from 'runtime-signature';
 
-const add = sig([Number, [Number, undefined]], Number,
+const add = sig([Number, maybe(Number)], Number,
   function(n1, n2 = 0) {
     return n1 + n2;
   });
@@ -41,9 +41,9 @@ add('5', 1); // Error: Argument number 1 (5) should be of type Number instead of
 You can ommit the parentheses, resulting in a very clean syntax:
 
 ```coffeescript
-import { sig } from 'runtime-signature'
+import { sig, maybe } from 'runtime-signature'
 
-add = sig [Number, [Number, undefined]], Number,
+add = sig [Number, maybe(Number)], Number,
     (n1, n2=0) -> n1 + n2
 
 add(5)      # 5
@@ -64,7 +64,16 @@ All native JavaScript types are allowed as type:
 
 You can create a type that is the union of several types. Simply put them in a list.
 
-For instance the type `[Number, String, undefined]` will accept a number value or a string value or an undefined value.
+For instance the type `[Number, String]` will accept a number value or a string value value.
+
+### Maybe type
+> maybe(<type\>)
+
+This is simply a shortcut to the union `[<type>, undefined, null]`. Usefull for optional parameters of a function, as shown in the (usage examples above)[#usage].
+
+### Litteral type
+
+**TODO!**
 
 ### Typed arrays
 > Array(<type\>)
@@ -91,21 +100,15 @@ For instance:
 ### Promise type
 > Promise.resolve(<type\>)
 
-or
+or the shortcut (don't forget to import it)
 
 > promised(<type\>)
 
-The `promised` shortcut is graciously provided via
-
-```js
-import { promised } from 'runtime-signature'
-```
+Promised types are usually used as the result type of the function signature.
 
 You can use the `Promise` type for promises that resolve with a value of any type, but most of the time it is better to specify the type of the resolved value.
 
-Promised types are usually used as the result type of the function signature.
-
-For instance use `promised([Object, null])` for a promise that will resolve with an object or the null value.
+For instance use `Promise.resolve([Object, null])` for a promise that will resolve with an object or the null value.
 
 
 ### Any type wildcard
