@@ -1,28 +1,25 @@
-# shortcut to `[<type>, undefined, null]`
+# shortcuts
 maybe = (t) -> [undefined, null, t] # checking undefined and null types first
-
-# shortcut to Promise.resolve
 promised = (t) -> Promise.resolve(t)
+_Set = (t) -> if t is undefined then Set else new Set([t])
+_Map = (t) -> new Map([t])
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for Promise etc.
-typeOf = (val) -> Object.prototype.toString.call(val)[8...-1]
+typeOf = (val) -> if val is undefined then 'undefined' else if val is null then 'null' else val.constructor.name
 
 # check that a value is of a given type or of any (undefined) type, e.g.: isType("foo", String)
 isType = (val, type) ->
-	switch
-		when type is undefined then val is undefined
-		when type is null then val is null
-		when Array.isArray(type)
+	switch typeOf(type)
+		when 'undefined', 'null', 'String', 'Number', 'Boolean' then val is type # literal type or undefined or null
+		when 'Array'
 			switch type.length
 				when 0 then true # any type: `[]`
 				when 1 # typed array type, e.g.: `Array(String)`
 					unless Array.isArray(val) then false else val.every((v) -> isType(v, type[0]))
-				else # array of possible types, e.g.: `[Object, null]`
+				else # union of types, e.g.: `[Object, null]`
 					type.some((t) -> isType(val, t))
-		# native type: Number, String, Object, Array (untyped), Promise etc…
-		when typeof type is 'function' then typeOf(val) is type.name
-		# custom type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
-		when typeof type is 'object'
+		when 'Function' then typeOf(val) is type.name # native type: Number, String, Object, Array (untyped), Promise…
+		when 'Object' # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 			throw new Error "Type can not be an empty object." unless Object.keys(type).length
 			return false unless typeOf(val) is 'Object'
 			for k, v of type

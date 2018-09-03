@@ -87,16 +87,38 @@ describe "isType", ->
 				expect(isType(val, [])).to.be.true for val in VALUES
 
 
-	context "Invalid Types", ->
+	context "Literal Types", ->
 
-		it "should throw an error when type is not a native type nor an object nor an array of types", ->
-			expect(-> isType(val, 'Number'))
-			.to.throw("Type can not be 'Number'. Use String class instead.") for val in VALUES
-			expect(-> isType(val, 1))
-			.to.throw("Type can not be '1'. Use Number class instead.") for val in VALUES
+		it "should return true when value is the same string as the type literal, false if different", ->
+			expect(isType("foo", "foo")).to.be.true
+			expect(isType("Énorme !", "Énorme !")).to.be.true
+			expect(isType('', '')).to.be.true
+			expect(isType(' ', ' ')).to.be.true
+			expect(isType("Foo", "foo")).to.be.false
+			expect(isType("string", "foo")).to.be.false
+			expect(isType("String", "foo")).to.be.false
+			expect(isType(String, "String")).to.be.false
 
-		it "should throw an error when type is an empty object", ->
-			expect(-> isType(val, {})).to.throw("Type can not be an empty object.") for val in VALUES
+		it "should return true when value is the same number as the type literal, false if different", ->
+			expect(isType(1234, 1234)).to.be.true
+			expect(isType(1234.56, 1234.56)).to.be.true
+			expect(isType(-1, -1)).to.be.true
+			expect(isType(1235, 1234)).to.be.false
+			expect(isType(-1234, 1234)).to.be.false
+			expect(isType(Number, 1234)).to.be.false
+
+		it "should return true when value is the same boolean as the type literal, false if different", ->
+			expect(isType(true, true)).to.be.true
+			expect(isType(false, true)).to.be.false
+			expect(isType(false, false)).to.be.true
+			expect(isType(true, false)).to.be.false
+			expect(isType(Boolean, true)).to.be.false
+			expect(isType(Boolean, false)).to.be.false
+
+		it "should throw an error when type is not a native type nor an object nor an array of types
+			nor a string or number or boolean literal.", ->
+			expect(-> isType(val, new Set([1])))
+			.to.throw("Literal type must be either a string, a number or a boolean.") for val in VALUES
 
 
 	context "Native Types", ->
@@ -193,6 +215,18 @@ describe "isType", ->
 
 	context "Several Types", ->
 
+		it "should return true if the value is one of the given strings, false otherwise", ->
+			expect(isType("foo", ["foo", "bar"])).to.be.true
+			expect(isType("bar", ["foo", "bar"])).to.be.true
+			expect(isType("baz", ["foo", "bar"])).to.be.false
+			expect(isType(Array, ["foo", "bar"])).to.be.false
+
+		it "should return true if the value is one of the given strings, false otherwise", ->
+			expect(isType(1, [1, 2])).to.be.true
+			expect(isType(2, [1, 2])).to.be.true
+			expect(isType(3, [1, 2])).to.be.false
+			expect(isType(Array, [1, 2])).to.be.false
+
 		it "should return true for a string or a number value, false otherwise", ->
 			expect(isType("foo", [String, Number])).to.be.true
 			expect(isType(1234, [String, Number])).to.be.true
@@ -251,6 +285,9 @@ describe "isType", ->
 			it "should return false when value is not an array", ->
 				nsType = {n: Number, s: String}
 				expect(isType(val, Array(nsType))).to.be.false for val in VALUES when not Array.isArray(val)
+
+			it "should throw an error when type is an empty object", ->
+				expect(-> isType(val, {})).to.throw("Type can not be an empty object.") for val in VALUES
 
 			it "should return true when all elements of the array are of a given custom type", ->
 				nsType = {n: Number, s: String}
@@ -370,17 +407,17 @@ describe "sig", ->
 			f = sig [Number, [Number, undefined]], [],
 				(n1, n2=0) -> n1 + n2
 			expect(-> f(1, null))
-			.to.throw("Argument number 2 (null) should be of type Number or Undefined instead of Null")
+			.to.throw("Argument number 2 (null) should be of type Number or undefined instead of null")
 
 		it "should raise an error when only an optional argument and value is null", ->
 			f = sig [undefined], [],
 				(n1=0) -> n1
-			expect(-> f(null)).to.throw("Argument number 1 (null) should be of type Undefined instead of Null.")
+			expect(-> f(null)).to.throw("Argument number 1 (null) should be of type undefined instead of null.")
 
 		it "should raise an error when only an optional argument and value isnt undefined", ->
 			f = sig [undefined], [],
 				(n1=0) -> n1
-			expect(-> f(1)).to.throw("Argument number 1 (1) should be of type Undefined instead of Number.")
+			expect(-> f(1)).to.throw("Argument number 1 (1) should be of type undefined instead of Number.")
 
 		it "should do nothing if only an optional argument and value is undefined", ->
 			f = sig [undefined], [],
