@@ -1,5 +1,3 @@
-CHECK_TYPES = process?.env.NODE_ENV is 'development' or !!process?.env.RUNTIME_SIGNATURE_CHECK_TYPES
-
 # shortcut to Promise.resolve
 promised = (t) -> Promise.resolve(t)
 
@@ -46,7 +44,7 @@ typeName = (type) ->
 # f = sig [String, Number], String,
 #     (str, num) -> str + num
 sig = (argTypes, resType, f) ->
-	return f unless CHECK_TYPES
+	# returns a function, sadly anonymous
 	-> # using JS keyword `arguments` instead of (args...) -> …
 		throw new Error "Too many arguments provided." unless arguments.length <= argTypes.length
 		for type, i in argTypes

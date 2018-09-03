@@ -27,7 +27,7 @@
   },
   "scripts": {
     "build": "coffee -c index.coffee test/tests.coffee",
-    "test": "npm run build && RUNTIME_SIGNATURE_CHECK_TYPES=1 mocha"
+    "test": "npm run build && mocha"
   },
   "devDependencies": {
     "chai": "^4.1.2",
