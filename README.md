@@ -1,10 +1,10 @@
 runtime-signature
 =================
-Type-checking for functions at runtime with simple JavaScript types signatures.
+Type-checking for functions at runtime with native JavaScript types signatures.
 
 Features
 --------
-* Super-simple type syntax
+* Super-simple native types syntax
 * Efficient: direct type evaluation, no string to parse.
 * Lightweight: ± 70 LOC
 * No dependencies
@@ -69,7 +69,7 @@ For instance the type `[Number, String]` will accept a number value or a string 
 ### Maybe type
 > maybe(<type\>)
 
-This is simply a shortcut to the union `[<type>, undefined, null]`. Usefull for optional parameters of a function, as shown in the (usage examples above)[#usage].
+This is simply a shortcut to the union `[<type>, undefined, null]`. Usefull for optional parameters of a function, as shown in the [usage examples above](#usage).
 
 ### Litteral type
 
@@ -117,7 +117,7 @@ For instance use `Promise.resolve([Object, null])` for a promise that will resol
 When a value can be of any type, including `undefined`, use the empty array `[]`.
 
 ### Type composition
-As the type system uses JavaScript expressions, you can assign your type to a variable and use it to create new types.
+As the types are simply JavaScript expressions, you can assign any type to a variable and use it to create new types.
 ```js
 phoneType = [Number, undefined]
 nameType = {first: String, last: String, middle: [String, undefined]}
@@ -148,7 +148,7 @@ typeOf(Promise.resolve(1)) // 'Promise'
 
 Features to come
 ----------------
-* `sig` as a decorator, when JavaScript decorators reaches stage 4 and are implemented in CoffeeScript.
+* `sig` as a decorator, [when JavaScript decorators reaches stage 4 and are implemented in CoffeeScript](https://github.com/jashkenas/coffeescript/issues/4917#issuecomment-387220758).
 
 Licence
 -------
