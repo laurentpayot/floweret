@@ -363,7 +363,7 @@ describe "sig", ->
 		it "should return a promise if function returns promise", ->
 			f = sig [], promised(Number),
 				-> Promise.resolve(1)
-			expect(typeOf(f())).to.equal('Promise')
+			expect(f()?.constructor).to.equal(Promise)
 
 		it "should do nothing if function returns a string promise", ->
 			f = sig [], promised(String),
