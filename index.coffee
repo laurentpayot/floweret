@@ -1,11 +1,15 @@
 # trows customized error
 error = (msg) -> throw new Error "Type error: #{msg}"
 
+class Splat
+	constructor: (@type) ->
+
 # shortcuts
 maybe = (t) -> [undefined, null, t] # checking undefined and null types first
 promised = (t) -> Promise.resolve(t)
 _Set = (t) -> if t is undefined then Set else new Set([t])
 # _Map = (t) -> new Map([t])
+etc = (t) -> new Splat(t)
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
 # NB: returning string instead of class because of special array case http://web.mit.edu/jwalden/www/isArray.html
@@ -15,7 +19,7 @@ typeOf = (val) -> if val is undefined or val is null then '' + val else val.cons
 typeName = (type) -> switch typeOf(type)
 	when 'Array'
 		if type.length is 1
-			"array of #{typeName(type[0])}."
+			"array of #{typeName(type[0])}"
 		else
 			(typeName(t) for t in type).join(" or ")
 	when 'Function' then type.name
@@ -47,31 +51,37 @@ sig = (argTypes, resType, f) ->
 	error "Signature: Array of arguments types is missing." unless Array.isArray(argTypes)
 	error "Signature: Result type is missing." if resType?.constructor is Function and not resType.name
 	error "Signature: Function to wrap is missing." unless f?.constructor is Function
-	-> # returns an unfortunately anonymous function
-		error "Too many arguments provided." unless arguments.length <= argTypes.length
+	(args...) -> # returns an unfortunately anonymous function
+		# error "Too many arguments provided." unless arguments.length <= argTypes.length
 		for type, i in argTypes
-			unless Array.isArray(type) and not type.length # not checking type if type is any type (`[]`)
-				if arguments[i] is undefined
-					error "Missing required argument number #{i+1}." unless isType(undefined, type)
-				else
-					error "Argument number #{i+1} (#{arguments[i]}) should be of type #{typeName(type)}
-							instead of #{typeName(arguments[i])}." unless isType(arguments[i], type)
+			if type?.constructor is Splat
+				error "Signature: Splat must be the last element of the array of arguments." if i+1 < argTypes.length
+				for arg, j in args[i..]
+					error "Argument number #{i+j+1} (#{arg}) should be of type #{typeName(type.type)}
+							instead of #{typeOf(arg)}." unless isType(arg, type.type)
+			else
+				unless Array.isArray(type) and not type.length # not checking type if type is any type (`[]`)
+					if args[i] is undefined
+						error "Missing required argument number #{i+1}." unless isType(undefined, type)
+					else
+						error "Argument number #{i+1} (#{args[i]}) should be of type #{typeName(type)}
+								instead of #{typeOf(args[i])}." unless isType(args[i], type)
 		if isType(resType, Promise)
 			# NB: not using `await` because CS would transpile the returned function as an async one
 			resType.then((promiseType) ->
-				promise = f(arguments...)
+				promise = f(args...)
 				error "Function should return a promise." unless isType(promise, Promise)
 				promise.then((result) ->
 					error "Promise result (#{result}) should be of type #{typeName(promiseType)}
-							instead of #{typeName(result)}." unless isType(result, promiseType)
+							instead of #{typeOf(result)}." unless isType(result, promiseType)
 					result
 				)
 			)
 		else
-			result = f(arguments...)
+			result = f(args...)
 			error "Result (#{result}) should be of type #{typeName(resType)}
-					instead of #{typeName(result)}." unless isType(result, resType)
+					instead of #{typeOf(result)}." unless isType(result, resType)
 			result
 
 
-module.exports = {typeOf, isType, sig, maybe, promised}
+module.exports = {typeOf, isType, sig, maybe, promised, etc}

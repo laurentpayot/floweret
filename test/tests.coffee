@@ -1,4 +1,4 @@
-{typeOf, isType, sig, maybe, promised} = require '../index.js' # testing the build, not the source
+{typeOf, isType, sig, maybe, promised, etc} = require '../index.js' # testing the build, not the source
 
 chai = require 'chai'
 chaiAsPromised = require 'chai-as-promised'
@@ -507,3 +507,41 @@ describe "sig", ->
 				(n1=0) -> n1
 			expect(f()).to.equal(0)
 
+	context.only "Splats", ->
+
+		it "should return the concatenation of one argument of String type", ->
+			f = sig [etc(String)], String,
+				(str...) -> str.join('')
+			expect(f('abc')).to.equal('abc')
+
+		it "should return the concatenation of all the arguments of String type", ->
+			f = sig [etc(String)], String,
+				(str...) -> str.join('')
+			expect(f('a', 'bc', 'def')).to.equal('abcdef')
+
+		it "should throw an error if an argument is not a string", ->
+			f = sig [etc(String)], String,
+				(str...) -> str.join('')
+			expect(-> f('a', 5, 'def'))
+			.to.throw("Argument number 2 (5) should be of type String instead of Number.")
+
+		it "should throw an error if an argument is not a number", ->
+			f = sig [etc(Number)], String,
+				(str...) -> str.join('')
+			expect(-> f('a', 5, 'def'))
+			.to.throw("Argument number 1 (a) should be of type Number instead of String.")
+
+		it "should return the concatenation of all the arguments of any type", ->
+			f = sig [etc([])], String,
+				(str...) -> str.join('')
+			expect(f('a', 5, 'def')).to.equal('a5def')
+
+		it "should throw an error if an splat is not the last of the argument types", ->
+			f = sig [etc(String), String], String,
+				(str...) -> str.join('')
+			expect(-> f('a', 'bc', 'def'))
+			.to.throw("Splat must be the last element of the array of arguments.")
+			f = sig [String, etc(String), String], String,
+				(str...) -> str.join('')
+			expect(-> f('a', 'bc', 'def'))
+			.to.throw("Splat must be the last element of the array of arguments.")

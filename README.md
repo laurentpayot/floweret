@@ -6,7 +6,7 @@ Features
 --------
 * Super-simple syntax: native types
 * Efficient: direct type evaluation, no string to parse
-* Lightweight: ± 70 LOC
+* Lightweight: ± 80 LOC
 * No dependencies
 
 Install
