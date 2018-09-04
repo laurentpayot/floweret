@@ -1,15 +1,14 @@
 # trows customized error
 error = (msg) -> throw new Error "Type error: #{msg}"
 
-class Splat
-	constructor: (@type) ->
-
 # shortcuts
 maybe = (t) -> [undefined, null, t] # checking undefined and null types first
 promised = (t) -> Promise.resolve(t)
 _Set = (t) -> if t is undefined then Set else new Set([t])
 # _Map = (t) -> new Map([t])
-etc = (t) -> new Splat(t)
+
+# etc returns a function whose name property is 'etc'
+etc = (t) -> (etc = -> t)
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
 # NB: returning string instead of class because of special array case http://web.mit.edu/jwalden/www/isArray.html
@@ -54,11 +53,11 @@ sig = (argTypes, resType, f) ->
 	(args...) -> # returns an unfortunately anonymous function
 		# error "Too many arguments provided." unless arguments.length <= argTypes.length
 		for type, i in argTypes
-			if type?.constructor is Splat
+			if typeof type is 'function' and type.name is 'etc'
 				error "Signature: Splat must be the last element of the array of arguments." if i+1 < argTypes.length
 				for arg, j in args[i..]
-					error "Argument number #{i+j+1} (#{arg}) should be of type #{typeName(type.type)}
-							instead of #{typeOf(arg)}." unless isType(arg, type.type)
+					error "Argument number #{i+j+1} (#{arg}) should be of type #{typeName(type())}
+							instead of #{typeOf(arg)}." unless isType(arg, type())
 			else
 				unless Array.isArray(type) and not type.length # not checking type if type is any type (`[]`)
 					if args[i] is undefined
@@ -66,6 +65,7 @@ sig = (argTypes, resType, f) ->
 					else
 						error "Argument number #{i+1} (#{args[i]}) should be of type #{typeName(type)}
 								instead of #{typeOf(args[i])}." unless isType(args[i], type)
+		# console.log "*** i =", i
 		if isType(resType, Promise)
 			# NB: not using `await` because CS would transpile the returned function as an async one
 			resType.then((promiseType) ->

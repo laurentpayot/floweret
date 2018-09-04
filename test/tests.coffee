@@ -447,7 +447,7 @@ describe "sig", ->
 				(n1, n2=0) -> n1 + n2
 			expect(f(1, 2)).to.equal(3)
 
-		it "should raise an error if function has too many arguments", ->
+		it.only "should raise an error if function has too many arguments", ->
 			f = sig [Number, [Number, String]], [],
 				(n1, n2=0) -> n1 + n2
 			expect(-> f(1, 2, 3)).to.throw("Too many arguments provided.")
@@ -507,7 +507,7 @@ describe "sig", ->
 				(n1=0) -> n1
 			expect(f()).to.equal(0)
 
-	context.only "Splats", ->
+	context "Splats", ->
 
 		it "should return the concatenation of one argument of String type", ->
 			f = sig [etc(String)], String,
