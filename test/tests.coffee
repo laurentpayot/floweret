@@ -49,9 +49,37 @@ testTypes = (val, type) ->
 		██║      ██║   ██║     ███████╗╚██████╔╝██║
 		╚═╝      ╚═╝   ╚═╝     ╚══════╝ ╚═════╝ ╚═╝
 ###
-describe "typeOf", ->
+describe "typeOf (add more tests!!!!!!!!!!!!!!!!!!!!)", ->
 
-	it "TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", ->
+	it "should return 'Object' for an object value, something else otherwise", ->
+		expect(typeOf({})).to.equal('Object')
+		expect(typeOf({a: 1})).to.equal('Object')
+		expect(typeOf({a: 1, b: {c: 1}})).to.equal('Object')
+		expect(typeOf(null)).to.not.equal('Object')
+		expect(typeOf(undefined)).to.not.equal('Object')
+		expect(typeOf([])).to.not.equal('Object')
+		expect(typeOf([1])).to.not.equal('Object')
+		expect(typeOf(Object)).to.not.equal('Object')
+		expect(typeOf(-> {})).to.not.equal('Object')
+
+	it "should return 'Object' for an object value even after Object.name modification", ->
+		Object.name = "foo"
+		expect(typeOf({})).to.equal('Object')
+
+	it "should return 'Function' for a function value, something else otherwise", ->
+		expect(typeOf(->)).to.equal('Function')
+		expect(typeOf(-> 1)).to.equal('Function')
+		expect(typeOf(Function)).to.equal('Function')
+		expect(typeOf(String)).to.equal('Function')
+		expect(typeOf(Number)).to.equal('Function')
+		expect(typeOf(Array)).to.equal('Function')
+		expect(typeOf(Object)).to.equal('Function')
+		expect(typeOf(null)).to.not.equal('Function')
+		expect(typeOf(undefined)).to.not.equal('Function')
+
+	it "should return 'Function' for an Function value even after Function.name modification", ->
+		Function.name = "foo"
+		expect(typeOf(->)).to.equal('Function')
 
 ###
 	██╗███████╗████████╗██╗   ██╗██████╗ ███████╗
