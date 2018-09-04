@@ -30,20 +30,21 @@
 
   // _Map = (t) -> new Map([t])
 
-  // typeOf([]) is Array, whereas typeof [] is 'object'. Same for null, Promise etc.
+  // typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
+  // NB: returning string instead of class because of special array case http://web.mit.edu/jwalden/www/isArray.html
   typeOf = function(val) {
     if (val === void 0 || val === null) {
-      return val;
+      return '' + val;
     } else {
-      return val.constructor;
+      return val.constructor.name;
     }
   };
 
   // not exported: get type name for error messages (supposing type is always correct)
   typeName = function(type) {
-    var ref, t;
+    var t;
     switch (typeOf(type)) {
-      case Array:
+      case 'Array':
         if (type.length === 1) {
           return `array of ${typeName(type[0])}.`;
         } else {
@@ -58,12 +59,12 @@
           })()).join(" or ");
         }
         break;
-      case Function:
+      case 'Function':
         return type.name;
-      case Object:
+      case 'Object':
         return "custom type";
       default:
-        return ((ref = typeOf(type)) != null ? ref.name : void 0) || '' + type;
+        return typeOf(type);
     }
   };
 
@@ -71,15 +72,15 @@
   isType = function(val, type) {
     var k, v;
     switch (typeOf(type)) {
-      case void 0:
-      case null:
-      case String:
-      case Number:
-      case Boolean:
+      case 'undefined':
+      case 'null':
+      case 'String':
+      case 'Number':
+      case 'Boolean':
         return val === type; // literal type or undefined or null
-      case Function:
-        return typeOf(val) === type; // native type: Number, String, Object, Array (untyped), Promise…
-      case Array:
+      case 'Function':
+        return (val != null ? val.constructor : void 0) === type; // native type: Number, String, Object, Array (untyped), Promise…
+      case 'Array':
         switch (type.length) {
           case 0:
             return true; // any type: `[]`
@@ -98,8 +99,8 @@
             });
         }
         break;
-      case Object: // Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
-        if (typeOf(val) !== Object) {
+      case 'Object': // Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
+        if ((val != null ? val.constructor : void 0) !== Object) {
           return false;
         }
         if (!Object.keys(type).length) {
