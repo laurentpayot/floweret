@@ -45,7 +45,7 @@ isType = (val, type) -> switch typeOf(type)
 sig = (argTypes, resType, f) ->
 	error "Signature: Array of arguments types is missing." unless Array.isArray(argTypes)
 	error "Signature: Result type is missing." if resType?.constructor is Function and not resType.name
-	error "Signature: Function to wrap is missing." unless resType?.constructor is Function
+	error "Signature: Function to wrap is missing." unless f?.constructor is Function
 	-> # returns an unfortunately anonymous function
 		error "Too many arguments provided." unless arguments.length <= argTypes.length
 		for type, i in argTypes

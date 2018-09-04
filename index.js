@@ -125,7 +125,7 @@
     if ((resType != null ? resType.constructor : void 0) === Function && !resType.name) {
       error("Signature: Result type is missing.");
     }
-    if ((resType != null ? resType.constructor : void 0) !== Function) {
+    if ((f != null ? f.constructor : void 0) !== Function) {
       error("Signature: Function to wrap is missing.");
     }
     return function() { // returns an unfortunately anonymous function
