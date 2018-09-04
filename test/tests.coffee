@@ -346,6 +346,24 @@ describe "isType", ->
 ###
 describe "sig", ->
 
+	context "Arguments of signature itself", ->
+
+		it "should throw an error if signature is missing its arguments types array", ->
+			expect(-> (sig Number, -> 1))
+			.to.throw("Array of arguments types is missing.")
+
+		it "should throw an error if signature arguments types array is not an array", ->
+			expect(-> (sig Number, Number, -> 1))
+			.to.throw("Array of arguments types is missing.")
+
+		it "should throw an error if signature result type is missing", ->
+			expect(-> (sig [Number], -> 1))
+			.to.throw("Result type is missing.")
+
+		it "should throw an error if signature function to wrap is missing", ->
+			expect(-> (sig [Number], Number))
+			.to.throw("Function to wrap is missing.")
+
 	context "Synchronous functions", ->
 
 		it "should do nothing if function returns a string", ->

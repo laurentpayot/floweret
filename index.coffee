@@ -1,3 +1,6 @@
+# trows customized error
+error = (msg) -> throw new Error "Type error: #{msg}"
+
 # shortcuts
 maybe = (t) -> [undefined, null, t] # checking undefined and null types first
 promised = (t) -> Promise.resolve(t)
@@ -7,7 +10,7 @@ _Set = (t) -> if t is undefined then Set else new Set([t])
 # typeOf([]) is Array, whereas typeof [] is 'object'. Same for null, Promise etc.
 typeOf = (val) -> if val is undefined or val is null then val else val.constructor
 
-# not exported: get type name for sig error messages (supposing type is always correct)
+# not exported: get type name for error messages (supposing type is always correct)
 typeName = (type) -> switch typeOf(type)
 	when Array
 		if type.length is 1
@@ -36,36 +39,37 @@ isType = (val, type) -> switch typeOf(type)
 			return false unless isType(val[k], v)
 		true
 	else # type is not a class but an instance
-		throw new Error "Type can not be an instance of #{typeName(type)}.
-						Use the #{typeName(type)} class as type instead."
+		error "Type can not be an instance of #{typeName(type)}. Use the #{typeName(type)} class as type instead."
 
 # wraps a function to check its arguments types and result type
 sig = (argTypes, resType, f) ->
-	# returns a function, sadly anonymous
-	->
-		throw new Error "Too many arguments provided." unless arguments.length <= argTypes.length
+	error "Signature: Array of arguments types is missing." unless Array.isArray(argTypes)
+	error "Signature: Result type is missing." if resType?.constructor is Function and not resType.name
+	error "Signature: Function to wrap is missing." unless resType?.constructor is Function
+	-> # returns an unfortunately anonymous function
+		error "Too many arguments provided." unless arguments.length <= argTypes.length
 		for type, i in argTypes
 			unless Array.isArray(type) and not type.length # not checking type if type is any type (`[]`)
 				if arguments[i] is undefined
-					throw new Error "Missing required argument number #{i+1}." unless isType(undefined, type)
+					error "Missing required argument number #{i+1}." unless isType(undefined, type)
 				else
-					throw new Error "Argument number #{i+1} (#{arguments[i]}) should be of type #{typeName(type)}
-									instead of #{typeName(arguments[i])}." unless isType(arguments[i], type)
+					error "Argument number #{i+1} (#{arguments[i]}) should be of type #{typeName(type)}
+							instead of #{typeName(arguments[i])}." unless isType(arguments[i], type)
 		if isType(resType, Promise)
 			# NB: not using `await` because CS would transpile the returned function as an async one
 			resType.then((promiseType) ->
 				promise = f(arguments...)
-				throw new Error "Function should return a promise." unless isType(promise, Promise)
+				error "Function should return a promise." unless isType(promise, Promise)
 				promise.then((result) ->
-					throw new Error "Promise result (#{result}) should be of type #{typeName(promiseType)}
-									instead of #{typeName(result)}." unless isType(result, promiseType)
+					error "Promise result (#{result}) should be of type #{typeName(promiseType)}
+							instead of #{typeName(result)}." unless isType(result, promiseType)
 					result
 				)
 			)
 		else
 			result = f(arguments...)
-			throw new Error "Result (#{result}) should be of type #{typeName(resType)}
-							instead of #{typeName(result)}." unless isType(result, resType)
+			error "Result (#{result}) should be of type #{typeName(resType)}
+					instead of #{typeName(result)}." unless isType(result, resType)
 			result
 
 
