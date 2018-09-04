@@ -44,10 +44,10 @@ testTypes = (val, type) ->
 ###
 	████████╗██╗   ██╗██████╗ ███████╗ ██████╗ ███████╗
 	╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔═══██╗██╔════╝
-		██║    ╚████╔╝ ██████╔╝█████╗  ██║   ██║█████╗
-		██║     ╚██╔╝  ██╔═══╝ ██╔══╝  ██║   ██║██╔══╝
-		██║      ██║   ██║     ███████╗╚██████╔╝██║
-		╚═╝      ╚═╝   ╚═╝     ╚══════╝ ╚═════╝ ╚═╝
+	   ██║    ╚████╔╝ ██████╔╝█████╗  ██║   ██║█████╗
+	   ██║     ╚██╔╝  ██╔═══╝ ██╔══╝  ██║   ██║██╔══╝
+	   ██║      ██║   ██║     ███████╗╚██████╔╝██║
+	   ╚═╝      ╚═╝   ╚═╝     ╚══════╝ ╚═════╝ ╚═╝
 ###
 describe "typeOf (add more tests!!!!!!!!!!!!!!!!!!!!)", ->
 
@@ -244,7 +244,7 @@ describe "isType", ->
 		it "should return false for custom type {name: 'Number'} and a number value", ->
 			expect(isType(1, {name: 'Number'})).to.be.false
 
-	context "Several Types", ->
+	context "Union Types", ->
 
 		it "should return true if the value is one of the given strings, false otherwise", ->
 			expect(isType("foo", ["foo", "bar"])).to.be.true
@@ -310,6 +310,25 @@ describe "isType", ->
 					for val in VALUES when typeof val isnt 'string'
 				expect(isType([val], Array(String))).to.be.false \
 					for val in VALUES when typeof val isnt 'string'
+
+			it "should return true only for empty array or an array of one undefined element
+					when type is an array of one empty item", ->
+				expect(isType([], Array(1))).to.be.true
+				expect(isType([undefined], Array(1))).to.be.true
+				expect(isType(undefined, Array(1))).to.be.false
+				expect(isType([1], Array(1))).to.be.false
+
+			it "should return false when type is an array of two or more empty items", ->
+				expect(isType([undefined], Array(2))).to.be.false
+				expect(isType([undefined, undefined], Array(2))).to.be.false
+				expect(isType(undefined, Array(2))).to.be.false
+				expect(isType([], Array(2))).to.be.false
+				expect(isType([1], Array(2))).to.be.false
+				expect(isType([undefined], Array(3))).to.be.false
+				expect(isType([undefined, undefined, undefined], Array(3))).to.be.false
+				expect(isType(undefined, Array(3))).to.be.false
+				expect(isType([], Array(3))).to.be.false
+				expect(isType([1], Array(3))).to.be.false
 
 		context "Object Type elements", ->
 
