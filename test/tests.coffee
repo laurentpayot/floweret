@@ -641,14 +641,6 @@ describe "sig", ->
 			expect(-> f(1, 'a', 5, 'def'))
 			.to.throw("Argument number 2 (a) should be of type Number instead of String.")
 
-		it "should return the concatenation of all the arguments of any type", ->
-			f = sig [etc([])], String,
-				(str...) -> str.join('')
-			expect(f('a', 5, 'def')).to.equal('a5def')
-			f = sig [Number, etc([])], String,
-				(n, str...) -> n + str.join('')
-			expect(f(1, 'a', 5, 'def')).to.equal('1a5def')
-
 		it "should return the concatenation of all the arguments of String or Number type", ->
 			f = sig [etc([String, Number])], String,
 				(str...) -> str.join('')
@@ -688,3 +680,27 @@ describe "sig", ->
 				(n, str...) -> n + str.join('')
 			expect(-> f(1, 'a', 'bc', 'def'))
 			.to.throw("Rest type must be the last of the arguments types.")
+
+		it "should return the concatenation of all the arguments of any type", ->
+			f = sig [etc([])], String,
+				(str...) -> str.join('')
+			expect(f('a', 5, 'def')).to.equal('a5def')
+			f = sig [Number, etc([])], String,
+				(n, str...) -> n + str.join('')
+			expect(f(1, 'a', 5, 'def')).to.equal('1a5def')
+
+		it "should behave like etc([]) when type is ommited", ->
+			f = sig [etc()], String,
+				(str...) -> str.join('')
+			expect(f('a', 5, 'def')).to.equal('a5def')
+			f = sig [Number, etc()], String,
+				(n, str...) -> n + str.join('')
+			expect(f(1, 'a', 5, 'def')).to.equal('1a5def')
+
+		it "should behave like etc([]) when used as a function", ->
+			f = sig [etc], String,
+				(str...) -> str.join('')
+			expect(f('a', 5, 'def')).to.equal('a5def')
+			f = sig [Number, etc], String,
+				(n, str...) -> n + str.join('')
+			expect(f(1, 'a', 5, 'def')).to.equal('1a5def')

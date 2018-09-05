@@ -16,7 +16,7 @@
     })());
   };
 
-  // shortcuts
+  // type helpers
   maybe = function(t = []) {
     if (Array.isArray(t) && !t.length) {
       return [];
@@ -49,11 +49,16 @@
     }
   };
 
-  // rest type: returns a function whose name property is 'etc' that returns the type of the rest elements
-  etc = function(t) {
-    return etc = function() {
-      return t;
-    };
+  // rest type: returns a function whose name property is '_etc' that returns the type of the rest elements
+  etc = function(t = []) {
+    var _etc;
+    if (Array.isArray(t) && !t.length) {
+      return etc;
+    } else {
+      return _etc = function() {
+        return t;
+      };
+    }
   };
 
   // typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
@@ -184,18 +189,23 @@
       error("@Function to wrap is missing.");
     }
     return function(...args) { // returns an unfortunately anonymous function
-      var arg, i, j, l, len, len1, m, ref, result, type;
+      var arg, i, j, l, len, len1, m, ref, rest, result, t, type;
+      rest = false;
       for (i = l = 0, len = argTypes.length; l < len; i = ++l) {
         type = argTypes[i];
-        if (typeof type === 'function' && type.name === 'etc') { // rest type
+        if (typeof type === 'function' && (type.name === '_etc' || type === etc)) { // rest type
           if (i + 1 < argTypes.length) {
             error("@Rest type must be the last of the arguments types.");
           }
-          ref = args.slice(i);
-          for (j = m = 0, len1 = ref.length; m < len1; j = ++m) {
-            arg = ref[j];
-            if (!isType(arg, type())) {
-              error(`Argument number ${i + j + 1} (${arg}) should be of type ${typeName(type())} instead of ${typeOf(arg)}.`);
+          rest = true;
+          if (type !== etc) { // skip remaining arguments checks if rest type is any type
+            t = type();
+            ref = args.slice(i);
+            for (j = m = 0, len1 = ref.length; m < len1; j = ++m) {
+              arg = ref[j];
+              if (!isType(arg, t)) {
+                error(`Argument number ${i + j + 1} (${arg}) should be of type ${typeName(type())} instead of ${typeOf(arg)}.`);
+              }
             }
           }
         } else {
@@ -212,7 +222,7 @@
           }
         }
       }
-      if (args.length > argTypes.length && typeof j === 'undefined') {
+      if (args.length > argTypes.length && !rest) {
         error("Too many arguments provided.");
       }
       if (isType(resType, Promise)) {

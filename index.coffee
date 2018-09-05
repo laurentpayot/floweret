@@ -4,14 +4,13 @@ error = (msg) -> throw new Error switch msg[0]
 	when '!' then "Invalid type syntax: #{msg[1..]}"
 	else "Type error: #{msg}"
 
-# shortcuts
+# type helpers
 maybe = (t=[]) -> if Array.isArray(t) and not t.length then [] else [undefined, null, t]
 promised = (t=[]) -> if Array.isArray(t) and not t.length then Promise else Promise.resolve(t)
 _Set = (t=[]) -> if Array.isArray(t) and not t.length then Set else new Set([t])
 _Map = (t=[]) -> if Array.isArray(t) and not t.length then Map else new Map([t])
-
-# rest type: returns a function whose name property is 'etc' that returns the type of the rest elements
-etc = (t) -> (etc = -> t)
+# rest type: returns a function whose name property is '_etc' that returns the type of the rest elements
+etc = (t=[]) -> if Array.isArray(t) and not t.length then etc else (_etc = -> t)
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
 # NB: returning string instead of class because of special array case http://web.mit.edu/jwalden/www/isArray.html
@@ -65,12 +64,16 @@ sig = (argTypes, resType, f) ->
 	error "@Result type is missing." if resType?.constructor is Function and not resType.name
 	error "@Function to wrap is missing." unless f?.constructor is Function
 	(args...) -> # returns an unfortunately anonymous function
+		rest = false
 		for type, i in argTypes
-			if typeof type is 'function' and type.name is 'etc' # rest type
-				error "@Rest type must be the last of the arguments types." if i+1 < argTypes.length
-				for arg, j in args[i..]
-					error "Argument number #{i+j+1} (#{arg}) should be of type #{typeName(type())}
-							instead of #{typeOf(arg)}." unless isType(arg, type())
+			if typeof type is 'function' and (type.name is '_etc' or type is etc) # rest type
+				error "@Rest type must be the last of the arguments types." if i + 1 < argTypes.length
+				rest = true
+				unless type is etc # skip remaining arguments checks if rest type is any type
+					t = type()
+					for arg, j in args[i..]
+						error "Argument number #{i+j+1} (#{arg}) should be of type #{typeName(type())}
+								instead of #{typeOf(arg)}." unless isType(arg, t)
 			else
 				unless Array.isArray(type) and not type.length # not checking type if type is any type (`[]`)
 					if args[i] is undefined
@@ -78,7 +81,7 @@ sig = (argTypes, resType, f) ->
 					else
 						error "Argument number #{i+1} (#{args[i]}) should be of type #{typeName(type)}
 								instead of #{typeOf(args[i])}." unless isType(args[i], type)
-		error "Too many arguments provided." if args.length > argTypes.length and typeof j is 'undefined'
+		error "Too many arguments provided." if args.length > argTypes.length and not rest
 		if isType(resType, Promise)
 			# NB: not using `await` because CS would transpile the returned function as an async one
 			resType.then((promiseType) ->
