@@ -5,10 +5,10 @@ error = (msg) -> throw new Error switch msg[0]
 	else "Type error: #{msg}"
 
 # shortcuts
-maybe = (t) -> [undefined, null, t] # checking undefined and null types first
-promised = (t) -> Promise.resolve(t)
-_Set = (t) -> if t is undefined then Set else new Set([t])
-# _Map = (t) -> new Map([t])
+maybe = (t=[]) -> if Array.isArray(t) and not t.length then [] else [undefined, null, t]
+promised = (t=[]) -> if Array.isArray(t) and not t.length then Promise else Promise.resolve(t)
+_Set = (t=[]) -> if Array.isArray(t) and not t.length then Set else new Set([t])
+_Map = (t=[]) -> if Array.isArray(t) and not t.length then Map else new Map([t])
 
 # rest type: returns a function whose name property is 'etc' that returns the type of the rest elements
 etc = (t) -> (etc = -> t)
@@ -31,18 +31,24 @@ typeName = (type) -> switch typeOf(type)
 # check that a value is of a given type or of any (undefined) type, e.g.: isType("foo", String)
 isType = (val, type) -> switch typeOf(type)
 	when 'undefined', 'null', 'String', 'Number', 'Boolean' then val is type # literal type or undefined or null
-	when 'Function' then val?.constructor is type # native type: Number, String, Object, Array (untyped), Promise…
-	when 'Array'
-		switch type.length
-			when 0 then true # any type: `[]`
-			when 1 # typed array type, e.g.: `Array(String)`
-				unless Array.isArray(val) then false else val.every((e) -> isType(e, type[0]))
-			else # union of types, e.g.: `[Object, null]`
-				type.some((t) -> isType(val, t))
+	when 'Function' then switch type
+		when maybe then true # `maybe` function used directly
+		when promised then val?.constructor is Promise
+		when _Set then val?.constructor is Set
+		when _Map then val?.constructor is Map
+		else val?.constructor is type # native (Number, String, Object, Array (untyped), Promise…) and class types
+	when 'Array' then switch type.length
+		when 0 then true # any type: `[]`
+		when 1 # typed array type, e.g.: `Array(String)`
+			unless Array.isArray(val) then false else val.every((e) -> isType(e, type[0]))
+		else # union of types, e.g.: `[Object, null]`
+			type.some((t) -> isType(val, t))
 	when 'Set'
 		error "!Typed set must have one and only one type." unless type.size is 1
 		unless val?.constructor is Set then false else
 			t = [type...][0]
+			error "!You can not have a typed Set
+					of literal type '#{t}'." if typeOf(t) in ['undefined', 'null', 'String', 'Number', 'Boolean']
 			[val...].every((e) -> isType(e, t))
 	when 'Object' # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object

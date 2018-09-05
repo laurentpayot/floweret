@@ -376,10 +376,32 @@ describe "isType", ->
 				expect(isType(val, _Set(Number))).to.be.false for val in VALUES when not val?.constructor is Set
 				expect(isType(val, _Set(String))).to.be.false for val in VALUES when not val?.constructor is Set
 
+			it "should behave as Set type when type is ommited", ->
+				expect(isType(new Set([1, 2, 3]), _Set())).to.be.true
+				expect(isType(new Set([1, 2, 3]), _Set())).to.be.true
+				expect(isType(new Set([1]), _Set())).to.be.true
+				expect(isType(new Set([]), _Set())).to.be.true
+				expect(isType(1, _Set())).to.be.false
+				expect(isType([], _Set())).to.be.false
+				expect(isType([1, 2], _Set())).to.be.false
+				expect(isType({}, _Set())).to.be.false
+				expect(isType({a: 1}, _Set())).to.be.false
+
+			it "should behave as Set type when used as a function", ->
+				expect(isType(new Set([1, 2, 3]), _Set)).to.be.true
+				expect(isType(new Set([1, 2, 3]), _Set)).to.be.true
+				expect(isType(new Set([1]), _Set)).to.be.true
+				expect(isType(new Set([]), _Set)).to.be.true
+				expect(isType(1, _Set)).to.be.false
+				expect(isType([], _Set)).to.be.false
+				expect(isType([1, 2], _Set)).to.be.false
+				expect(isType({}, _Set)).to.be.false
+				expect(isType({a: 1}, _Set)).to.be.false
+
 			it "should return true for a set of numbers", ->
 				expect(isType(new Set([1, 2, 3]), _Set(Number))).to.be.true
 				expect(isType(new Set([1]), _Set(Number))).to.be.true
-				# expect(isType(new Set([]), _Set(Number))).to.be.true
+				expect(isType(new Set([]), _Set(Number))).to.be.true
 
 			it "should return true for a set of strings", ->
 				expect(isType(new Set(["foo", "bar", "baz"]), _Set(String))).to.be.true
@@ -573,7 +595,7 @@ describe "sig", ->
 				(n1=0) -> n1
 			expect(f()).to.equal(0)
 
-	context "Splats", ->
+	context "Rest type", ->
 
 		it "should return the concatenation of zero argument of String type", ->
 			f = sig [etc(String)], String,
