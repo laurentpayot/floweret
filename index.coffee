@@ -36,12 +36,14 @@ isType = (val, type) -> switch typeOf(type)
 		switch type.length
 			when 0 then true # any type: `[]`
 			when 1 # typed array type, e.g.: `Array(String)`
-				unless Array.isArray(val) then false else val.every((v) -> isType(v, type[0]))
+				unless Array.isArray(val) then false else val.every((e) -> isType(e, type[0]))
 			else # union of types, e.g.: `[Object, null]`
 				type.some((t) -> isType(val, t))
 	when 'Set'
 		error "!Typed set must have one and only one type." unless type.size is 1
-		unless val?.constructor is Set then false else [val...].every((v) -> isType(v, type[0]))
+		unless val?.constructor is Set then false else
+			t = [type...][0]
+			[val...].every((e) -> isType(e, t))
 	when 'Object' # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
 		return not Object.keys(val).length unless Object.keys(type).length
@@ -89,4 +91,4 @@ sig = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {typeOf, isType, sig, maybe, promised, etc}
+module.exports = {typeOf, isType, sig, maybe, promised, etc, _Set}

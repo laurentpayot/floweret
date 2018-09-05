@@ -86,7 +86,7 @@
 
   // check that a value is of a given type or of any (undefined) type, e.g.: isType("foo", String)
   isType = function(val, type) {
-    var k, v;
+    var k, t, v;
     switch (typeOf(type)) {
       case 'undefined':
       case 'null':
@@ -104,8 +104,8 @@
             if (!Array.isArray(val)) {
               return false;
             } else {
-              return val.every(function(v) {
-                return isType(v, type[0]);
+              return val.every(function(e) {
+                return isType(e, type[0]);
               });
             }
             break;
@@ -122,8 +122,9 @@
         if ((val != null ? val.constructor : void 0) !== Set) {
           return false;
         } else {
-          return [...val].every(function(v) {
-            return isType(v, type[0]);
+          t = [...type][0];
+          return [...val].every(function(e) {
+            return isType(e, t);
           });
         }
         break;
@@ -214,6 +215,6 @@
     };
   };
 
-  module.exports = {typeOf, isType, sig, maybe, promised, etc};
+  module.exports = {typeOf, isType, sig, maybe, promised, etc, _Set};
 
 }).call(this);
