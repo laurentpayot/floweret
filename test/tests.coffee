@@ -525,7 +525,7 @@ describe "sig", ->
 				(n, str...) -> n + str.join('')
 			expect(f(1, 'abc')).to.equal('1abc')
 
-		it "should return the concatenation of all the arguments", ->
+		it "should return the concatenation of all the arguments of String type", ->
 			f = sig [etc(String)], String,
 				(str...) -> str.join('')
 			expect(f('a', 'bc', 'def')).to.equal('abcdef')
@@ -560,6 +560,24 @@ describe "sig", ->
 			f = sig [Number, etc([])], String,
 				(n, str...) -> n + str.join('')
 			expect(f(1, 'a', 5, 'def')).to.equal('1a5def')
+
+		it "should return the concatenation of all the arguments of String or Number type", ->
+			f = sig [etc([String, Number])], String,
+				(str...) -> str.join('')
+			expect(f('a', 1, 'def')).to.equal('a1def')
+			f = sig [Number, etc([String, Number])], String,
+				(n, str...) -> n + str.join('')
+			expect(f(1, 'a', 2, 'def')).to.equal('1a2def')
+
+		it "should throw an error if an argument is not a string or a Number type", ->
+			f = sig [etc([String, Number])], String,
+				(str...) -> str.join('')
+			expect(-> f('a', true, 'def'))
+			.to.throw("Argument number 2 (true) should be of type String or Number instead of Boolean.")
+			f = sig [Number, etc([String, Number])], String,
+				(n, str...) -> n + str.join('')
+			expect(-> f(1, 'a', true, 'def'))
+			.to.throw("Argument number 3 (true) should be of type String or Number instead of Boolean.")
 
 		# ### CoffeeScript only ###
 		# it "should NOT throw an error if splat is not the last of the argument types", ->
