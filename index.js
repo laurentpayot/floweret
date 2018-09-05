@@ -4,7 +4,16 @@
   var _Set, error, etc, isType, maybe, promised, sig, typeName, typeOf;
 
   error = function(msg) {
-    throw new Error(`Type error: ${msg}`);
+    throw new Error((function() {
+      switch (msg[0]) {
+        case '@':
+          return `Signature: ${msg.slice(1)}`;
+        case '!':
+          return `Invalid type syntax: ${msg.slice(1)}`;
+        default:
+          return `Type error: ${msg}`;
+      }
+    })());
   };
 
   // shortcuts
@@ -106,6 +115,18 @@
             });
         }
         break;
+      case 'Set':
+        if (type.size !== 1) {
+          error("!Typed set must have one and only one type.");
+        }
+        if ((val != null ? val.constructor : void 0) !== Set) {
+          return false;
+        } else {
+          return [...val].every(function(v) {
+            return isType(v, type[0]);
+          });
+        }
+        break;
       case 'Object': // Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
         if ((val != null ? val.constructor : void 0) !== Object) {
           return false;
@@ -121,20 +142,20 @@
         }
         return true; // type is not a class but an instance
       default:
-        return error(`Type can not be an instance of ${typeName(type)}. Use the ${typeName(type)} class as type instead.`);
+        return error(`!Type can not be an instance of ${typeName(type)}. Use the ${typeName(type)} class as type instead.`);
     }
   };
 
   // wraps a function to check its arguments types and result type
   sig = function(argTypes, resType, f) {
     if (!Array.isArray(argTypes)) {
-      error("Signature: Array of arguments types is missing.");
+      error("@Array of arguments types is missing.");
     }
     if ((resType != null ? resType.constructor : void 0) === Function && !resType.name) {
-      error("Signature: Result type is missing.");
+      error("@Result type is missing.");
     }
     if ((f != null ? f.constructor : void 0) !== Function) {
-      error("Signature: Function to wrap is missing.");
+      error("@Function to wrap is missing.");
     }
     return function(...args) { // returns an unfortunately anonymous function
       var arg, i, j, l, len, len1, m, ref, result, type;
@@ -142,7 +163,7 @@
         type = argTypes[i];
         if (typeof type === 'function' && type.name === 'etc') { // rest type
           if (i + 1 < argTypes.length) {
-            error("Signature: Rest type must be the last of the arguments types.");
+            error("@Rest type must be the last of the arguments types.");
           }
           ref = args.slice(i);
           for (j = m = 0, len1 = ref.length; m < len1; j = ++m) {

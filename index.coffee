@@ -1,5 +1,8 @@
 # trows customized error
-error = (msg) -> throw new Error "Type error: #{msg}"
+error = (msg) -> throw new Error switch msg[0]
+	when '@' then "Signature: #{msg[1..]}"
+	when '!' then "Invalid type syntax: #{msg[1..]}"
+	else "Type error: #{msg}"
 
 # shortcuts
 maybe = (t) -> [undefined, null, t] # checking undefined and null types first
@@ -36,6 +39,9 @@ isType = (val, type) -> switch typeOf(type)
 				unless Array.isArray(val) then false else val.every((v) -> isType(v, type[0]))
 			else # union of types, e.g.: `[Object, null]`
 				type.some((t) -> isType(val, t))
+	when 'Set'
+		error "!Typed set must have one and only one type." unless type.size is 1
+		unless val?.constructor is Set then false else [val...].every((v) -> isType(v, type[0]))
 	when 'Object' # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
 		return not Object.keys(val).length unless Object.keys(type).length
@@ -43,17 +49,17 @@ isType = (val, type) -> switch typeOf(type)
 			return false unless isType(val[k], v)
 		true
 	else # type is not a class but an instance
-		error "Type can not be an instance of #{typeName(type)}. Use the #{typeName(type)} class as type instead."
+		error "!Type can not be an instance of #{typeName(type)}. Use the #{typeName(type)} class as type instead."
 
 # wraps a function to check its arguments types and result type
 sig = (argTypes, resType, f) ->
-	error "Signature: Array of arguments types is missing." unless Array.isArray(argTypes)
-	error "Signature: Result type is missing." if resType?.constructor is Function and not resType.name
-	error "Signature: Function to wrap is missing." unless f?.constructor is Function
+	error "@Array of arguments types is missing." unless Array.isArray(argTypes)
+	error "@Result type is missing." if resType?.constructor is Function and not resType.name
+	error "@Function to wrap is missing." unless f?.constructor is Function
 	(args...) -> # returns an unfortunately anonymous function
 		for type, i in argTypes
 			if typeof type is 'function' and type.name is 'etc' # rest type
-				error "Signature: Rest type must be the last of the arguments types." if i+1 < argTypes.length
+				error "@Rest type must be the last of the arguments types." if i+1 < argTypes.length
 				for arg, j in args[i..]
 					error "Argument number #{i+j+1} (#{arg}) should be of type #{typeName(type())}
 							instead of #{typeOf(arg)}." unless isType(arg, type())
