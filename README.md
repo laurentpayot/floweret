@@ -126,8 +126,8 @@ For instance use `Promise.resolve([Object, null])` for a promise that will resol
 ### Rest type
 > etc(<type\>)
 
-:warning: Rest type can only be the last type of the signature arguments types, (just like in JavaScript)[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description].
-CoffeeScript doesn't have this limitation, but this CoffeeScript feature is not implemented in runtime-signature.
+:warning: Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
+CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in runtime-signature.
 
 ### Type composition
 As the types are simply JavaScript expressions, you can assign any type to a variable and use it to create new types.
