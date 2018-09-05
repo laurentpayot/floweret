@@ -447,7 +447,7 @@ describe "sig", ->
 				(n1, n2=0) -> n1 + n2
 			expect(f(1, 2)).to.equal(3)
 
-		it.only "should raise an error if function has too many arguments", ->
+		it "should raise an error if function has too many arguments", ->
 			f = sig [Number, [Number, String]], [],
 				(n1, n2=0) -> n1 + n2
 			expect(-> f(1, 2, 3)).to.throw("Too many arguments provided.")
@@ -509,39 +509,76 @@ describe "sig", ->
 
 	context "Splats", ->
 
+		it "should return the concatenation of zero argument of String type", ->
+			f = sig [etc(String)], String,
+				(str...) -> str.join('')
+			expect(f()).to.equal('')
+			f = sig [Number, etc(String)], String,
+				(n, str...) -> n + str.join('')
+			expect(f(1)).to.equal('1')
+
 		it "should return the concatenation of one argument of String type", ->
 			f = sig [etc(String)], String,
 				(str...) -> str.join('')
 			expect(f('abc')).to.equal('abc')
+			f = sig [Number, etc(String)], String,
+				(n, str...) -> n + str.join('')
+			expect(f(1, 'abc')).to.equal('1abc')
 
-		it "should return the concatenation of all the arguments of String type", ->
+		it "should return the concatenation of all the arguments", ->
 			f = sig [etc(String)], String,
 				(str...) -> str.join('')
 			expect(f('a', 'bc', 'def')).to.equal('abcdef')
+			f = sig [Number, etc(String)], String,
+				(n, str...) -> n + str.join('')
+			expect(f(1, 'a', 'bc', 'def')).to.equal('1abcdef')
 
 		it "should throw an error if an argument is not a string", ->
 			f = sig [etc(String)], String,
 				(str...) -> str.join('')
 			expect(-> f('a', 5, 'def'))
 			.to.throw("Argument number 2 (5) should be of type String instead of Number.")
+			f = sig [Number, etc(String)], String,
+				(n, str...) -> n + str.join('')
+			expect(-> f(1, 'a', 5, 'def'))
+			.to.throw("Argument number 3 (5) should be of type String instead of Number.")
 
 		it "should throw an error if an argument is not a number", ->
 			f = sig [etc(Number)], String,
 				(str...) -> str.join('')
 			expect(-> f('a', 5, 'def'))
 			.to.throw("Argument number 1 (a) should be of type Number instead of String.")
+			f = sig [Number, etc(Number)], String,
+				(n, str...) -> n + str.join('')
+			expect(-> f(1, 'a', 5, 'def'))
+			.to.throw("Argument number 2 (a) should be of type Number instead of String.")
 
 		it "should return the concatenation of all the arguments of any type", ->
 			f = sig [etc([])], String,
 				(str...) -> str.join('')
 			expect(f('a', 5, 'def')).to.equal('a5def')
+			f = sig [Number, etc([])], String,
+				(n, str...) -> n + str.join('')
+			expect(f(1, 'a', 5, 'def')).to.equal('1a5def')
 
-		it "should throw an error if an splat is not the last of the argument types", ->
+		# ### CoffeeScript only ###
+		# it "should NOT throw an error if splat is not the last of the argument types", ->
+		# 	f = sig [Number, etc(String)], String,
+		# 		(n, str...) -> n + str.join('')
+		# 	expect(f(1, 'a', 'b', 'c')).to.equal("abc1")
+		# 	f = sig [etc(String), Number], String,
+		# 		(str..., n) -> str.join('') + n
+		# 	expect(f('a', 'b', 'c', 1)).to.equal("abc1")
+		# 	f = sig [Number, etc(String), Number], String,
+		# 		(n1, str..., n2) -> n1 + str.join('') + n2
+		# 	expect(f(1, 'a', 'b', 'c', 2)).to.equal("1abc2")
+
+		it "should throw an error if rest type is not the last of the argument types", ->
 			f = sig [etc(String), String], String,
 				(str...) -> str.join('')
 			expect(-> f('a', 'bc', 'def'))
-			.to.throw("Splat must be the last element of the array of arguments.")
-			f = sig [String, etc(String), String], String,
-				(str...) -> str.join('')
-			expect(-> f('a', 'bc', 'def'))
-			.to.throw("Splat must be the last element of the array of arguments.")
+			.to.throw("Rest type must be the last of the arguments types.")
+			f = sig [Number, etc(String), String], String,
+				(n, str...) -> n + str.join('')
+			expect(-> f(1, 'a', 'bc', 'def'))
+			.to.throw("Rest type must be the last of the arguments types.")

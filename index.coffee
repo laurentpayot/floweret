@@ -7,7 +7,7 @@ promised = (t) -> Promise.resolve(t)
 _Set = (t) -> if t is undefined then Set else new Set([t])
 # _Map = (t) -> new Map([t])
 
-# etc returns a function whose name property is 'etc'
+# rest type: returns a function whose name property is 'etc' that returns the type of the rest elements
 etc = (t) -> (etc = -> t)
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
@@ -51,10 +51,9 @@ sig = (argTypes, resType, f) ->
 	error "Signature: Result type is missing." if resType?.constructor is Function and not resType.name
 	error "Signature: Function to wrap is missing." unless f?.constructor is Function
 	(args...) -> # returns an unfortunately anonymous function
-		# error "Too many arguments provided." unless arguments.length <= argTypes.length
 		for type, i in argTypes
-			if typeof type is 'function' and type.name is 'etc'
-				error "Signature: Splat must be the last element of the array of arguments." if i+1 < argTypes.length
+			if typeof type is 'function' and type.name is 'etc' # rest type
+				error "Signature: Rest type must be the last of the arguments types." if i+1 < argTypes.length
 				for arg, j in args[i..]
 					error "Argument number #{i+j+1} (#{arg}) should be of type #{typeName(type())}
 							instead of #{typeOf(arg)}." unless isType(arg, type())
@@ -65,7 +64,7 @@ sig = (argTypes, resType, f) ->
 					else
 						error "Argument number #{i+1} (#{args[i]}) should be of type #{typeName(type)}
 								instead of #{typeOf(args[i])}." unless isType(args[i], type)
-		# console.log "*** i =", i
+		error "Too many arguments provided." if args.length > argTypes.length and typeof j is 'undefined'
 		if isType(resType, Promise)
 			# NB: not using `await` because CS would transpile the returned function as an async one
 			resType.then((promiseType) ->

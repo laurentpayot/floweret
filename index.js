@@ -30,7 +30,7 @@
 
   // _Map = (t) -> new Map([t])
 
-  // etc returns a function whose name property is 'etc'
+  // rest type: returns a function whose name property is 'etc' that returns the type of the rest elements
   etc = function(t) {
     return etc = function() {
       return t;
@@ -138,12 +138,11 @@
     }
     return function(...args) { // returns an unfortunately anonymous function
       var arg, i, j, l, len, len1, m, ref, result, type;
-// error "Too many arguments provided." unless arguments.length <= argTypes.length
       for (i = l = 0, len = argTypes.length; l < len; i = ++l) {
         type = argTypes[i];
-        if (typeof type === 'function' && type.name === 'etc') {
+        if (typeof type === 'function' && type.name === 'etc') { // rest type
           if (i + 1 < argTypes.length) {
-            error("Signature: Splat must be the last element of the array of arguments.");
+            error("Signature: Rest type must be the last of the arguments types.");
           }
           ref = args.slice(i);
           for (j = m = 0, len1 = ref.length; m < len1; j = ++m) {
@@ -166,7 +165,9 @@
           }
         }
       }
-      // console.log "*** i =", i
+      if (args.length > argTypes.length && typeof j === 'undefined') {
+        error("Too many arguments provided.");
+      }
       if (isType(resType, Promise)) {
         // NB: not using `await` because CS would transpile the returned function as an async one
         return resType.then(function(promiseType) {

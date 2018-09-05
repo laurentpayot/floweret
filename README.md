@@ -119,11 +119,15 @@ You can use the `Promise` type for promises that resolve with a value of any typ
 
 For instance use `Promise.resolve([Object, null])` for a promise that will resolve with an object or the null value.
 
-
 ### Any type wildcard
 > []
 
-When a value can be of any type, including `undefined`, use the empty array `[]`.
+
+### Rest type
+> etc(<type\>)
+
+:warning: Rest type can only be the last type of the signature arguments types, (just like in JavaScript)[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description].
+CoffeeScript doesn't have this limitation, but this CoffeeScript feature is not implemented in runtime-signature.
 
 ### Type composition
 As the types are simply JavaScript expressions, you can assign any type to a variable and use it to create new types.
