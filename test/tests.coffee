@@ -1,4 +1,4 @@
-{typeOf, isType, sig, maybe, promised, etc} = require '../index.js' # testing the build, not the source
+{typeOf, isType, sig, maybe, promised, etc, _Set} = require '../index.js' # testing the build, not the source
 
 chai = require 'chai'
 chaiAsPromised = require 'chai-as-promised'
@@ -49,7 +49,7 @@ testTypes = (val, type) ->
 	   ██║      ██║   ██║     ███████╗╚██████╔╝██║
 	   ╚═╝      ╚═╝   ╚═╝     ╚══════╝ ╚═════╝ ╚═╝
 ###
-describe "typeOf (add more tests!!!!!!!!!!!!!!!!!!!!)", ->
+describe "typeOf (add more tests!!!)", ->
 
 	it "should return 'Object' for an object value, something else otherwise", ->
 		expect(typeOf({})).to.equal('Object')
@@ -366,6 +366,72 @@ describe "isType", ->
 				expect(isType(["foo", val, 1], Array([String, Number]))).to.be.false \
 					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
 				expect(isType([val], Array([String, Number]))).to.be.false \
+					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
+
+	context "Typed set", ->
+
+		context "Native Type elements", ->
+
+			it "should return false when value is not a set", ->
+				expect(isType(val, _Set(Number))).to.be.false for val in VALUES when not val?.constructor is Set
+				expect(isType(val, _Set(String))).to.be.false for val in VALUES when not val?.constructor is Set
+
+			it "should return true for a set of numbers", ->
+				expect(isType(new Set([1, 2, 3]), _Set(Number))).to.be.true
+				expect(isType(new Set([1]), _Set(Number))).to.be.true
+				# expect(isType(new Set([]), _Set(Number))).to.be.true
+
+			it "should return true for a set of strings", ->
+				expect(isType(new Set(["foo", "bar", "baz"]), _Set(String))).to.be.true
+				expect(isType(new Set(["foo"]), _Set(String))).to.be.true
+				expect(isType(new Set([]), _Set(String))).to.be.true
+
+			it "should return false when an element of the set is not a number", ->
+				expect(isType(new Set([1, val, 3]), _Set(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
+				expect(isType(new Set([val]), _Set(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
+
+			it "should return false when an element of the set is not a string", ->
+				expect(isType(new Set(["foo", val, "bar"]), _Set(String))).to.be.false \
+					for val in VALUES when typeof val isnt 'string'
+				expect(isType(new Set([val]), _Set(String))).to.be.false \
+					for val in VALUES when typeof val isnt 'string'
+
+		context "Object Type elements", ->
+
+			it "should return false when value is not a set", ->
+				nsType = {n: Number, s: String}
+				expect(isType(val, _Set(nsType))).to.be.false for val in VALUES when not val?.constructor is Set
+
+			it "should return true when all elements of the set are of a given object type", ->
+				nsType = {n: Number, s: String}
+				expect(isType(new Set([{n: 1, s: "a"}, {n: 2, s: "b"}, {n: 3, s: "c"}]), _Set(nsType))).to.be.true
+				expect(isType(new Set([{n: 1, s: "a"}]), _Set(nsType))).to.be.true
+				expect(isType(new Set([]), _Set(nsType))).to.be.true
+
+			it "should return false when some elements of the set are not of a given object type", ->
+				nsType = {n: Number, s: String}
+				expect(isType(new Set([{n: 1, s: "a"}, val, {n: 3, s: "c"}]), _Set(nsType))).to.be.false for val in VALUES
+				expect(isType(new Set([val]), _Set(nsType))).to.be.false for val in VALUES
+				expect(isType(new Set([{n: 1, s: "a"}, {foo: 2, s: "b"}, {n: 3, s: "c"}]), _Set(nsType))).to.be.false
+
+		context "Union Type elements", ->
+
+			it "should return false when value is not a set", ->
+				expect(isType(val, _Set([Number, String]))).to.be.false for val in VALUES when not val?.constructor is Set
+
+			it "should return true for a set whom values are strings or numbers", ->
+				expect(isType(new Set([]), _Set([String, Number]))).to.be.true
+				expect(isType(new Set(["foo", "bar", "baz"]), _Set([String, Number]))).to.be.true
+				expect(isType(new Set(["foo"]), _Set([String, Number]))).to.be.true
+				expect(isType(new Set([1, 2, 3]), _Set([String, Number]))).to.be.true
+				expect(isType(new Set([1]), _Set([String, Number]))).to.be.true
+				expect(isType(new Set(["foo", 1, "bar"]), _Set([String, Number]))).to.be.true
+				expect(isType(new Set([1, "foo", 2]), _Set([String, Number]))).to.be.true
+
+			it "should return false when an element of the set is not a string nor a number", ->
+				expect(isType(new Set(["foo", val, 1]), _Set([String, Number]))).to.be.false \
+					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
+				expect(isType(new Set([val]), _Set([String, Number]))).to.be.false \
 					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
 
 	context "Custom Types (classes)", ->
