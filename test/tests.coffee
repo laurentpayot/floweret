@@ -93,6 +93,11 @@ describe "isType", ->
 
 	context "Special Types", ->
 
+		context "Any type ([])", ->
+
+			it "should return true for all values", ->
+				expect(isType(val, [])).to.be.true for val in VALUES
+
 		context "Maybe type", ->
 
 			it "should return true when value is undefined or null.", ->
@@ -108,12 +113,14 @@ describe "isType", ->
 				expect(isType("Énorme !", maybe(String))).to.be.true
 				expect(isType("Énorme !", maybe(t))).to.be.false for t in NATIVE_TYPES when t and t isnt String
 
+			it "maybe([]) should behave as any type", ->
+				expect(isType(val, maybe([]))).to.be.true for val in VALUES
 
-		context "Any type ([])", ->
+			it "maybe() should behave as any type when type is ommited", ->
+				expect(isType(val, maybe())).to.be.true for val in VALUES
 
-			it "should return true for all values", ->
-				expect(isType(val, [])).to.be.true for val in VALUES
-
+			it "maybe should behave as any type when used as a function", ->
+				expect(isType(val, maybe)).to.be.true for val in VALUES
 
 	context "Literal Types", ->
 
