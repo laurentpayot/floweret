@@ -71,16 +71,16 @@
       case 1:
         if (isAnyType(t1)) {
           return Map;
+        } else {
+          [keysType, valuesType] = [[], t1];
         }
-        keysType = [];
-        valuesType = t1;
         break;
       case 2:
         if (isAnyType(t1) && isAnyType(t2)) {
           return Map;
+        } else {
+          [keysType, valuesType] = [t1, t2];
         }
-        keysType = t1;
-        valuesType = t2;
     }
     return new Map([[keysType, valuesType]]);
   };

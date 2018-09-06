@@ -17,13 +17,9 @@ _Map = (t1=[], t2=[]) ->
 	switch arguments.length
 		when 0 then return Map
 		when 1
-			return Map if isAnyType(t1)
-			keysType = []
-			valuesType = t1
+			if isAnyType(t1) then return Map else [keysType, valuesType] = [[], t1]
 		when 2
-			return Map if isAnyType(t1) and isAnyType(t2)
-			keysType = t1
-			valuesType = t2
+			if isAnyType(t1) and isAnyType(t2) then return Map else [keysType, valuesType] = [t1, t2]
 	new Map([[keysType, valuesType]])
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
