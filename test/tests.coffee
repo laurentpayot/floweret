@@ -514,8 +514,8 @@ describe "isType", ->
 
 		it "should throw an error when type is not a native type nor an object nor an array of types
 			nor a string or number or boolean literal.", ->
-			expect(-> isType(val, new Map([])))
-			.to.throw("Type can not be an instance of Map. Use the Map class as type instead.") for val in VALUES
+			expect(-> isType(val, Symbol("foo")))
+			.to.throw("Type can not be an instance of Symbol. Use the Symbol class as type instead.") for val in VALUES
 
 
 ###

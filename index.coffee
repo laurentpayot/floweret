@@ -62,6 +62,13 @@ isType = (val, type) -> switch typeOf(type)
 			error "!You can not have a typed Set
 					of literal type '#{t}'." if typeOf(t) in ['undefined', 'null', 'String', 'Number', 'Boolean']
 			[val...].every((e) -> isType(e, t))
+	when 'Map'
+		error "!Typed map must have one and only one pair of types." unless type.size is 1
+		unless val?.constructor is Map then false else
+			[keysType, valuesType] = Array.from(type)[0]
+			keys = Array.from(val.keys())
+			values = Array.from(val.values())
+			keys.every((e) -> isType(e, keysType)) and values.every((e) -> isType(e, valuesType))
 	when 'Object' # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
 		return not Object.keys(val).length unless Object.keys(type).length

@@ -128,7 +128,7 @@
 
   // check that a value is of a given type or of any (undefined) type, e.g.: isType("foo", String)
   isType = function(val, type) {
-    var k, ref, t, v;
+    var k, keys, keysType, ref, t, v, values, valuesType;
     switch (typeOf(type)) {
       case 'undefined':
       case 'null':
@@ -185,6 +185,23 @@
           }
           return [...val].every(function(e) {
             return isType(e, t);
+          });
+        }
+        break;
+      case 'Map':
+        if (type.size !== 1) {
+          error("!Typed map must have one and only one pair of types.");
+        }
+        if ((val != null ? val.constructor : void 0) !== Map) {
+          return false;
+        } else {
+          [keysType, valuesType] = Array.from(type)[0];
+          keys = Array.from(val.keys());
+          values = Array.from(val.values());
+          return keys.every(function(e) {
+            return isType(e, keysType);
+          }) && values.every(function(e) {
+            return isType(e, valuesType);
           });
         }
         break;
