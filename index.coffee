@@ -20,6 +20,7 @@ _Map = (t1=[], t2=[]) ->
 			if isAnyType(t1) then return Map else [keysType, valuesType] = [[], t1]
 		when 2
 			if isAnyType(t1) and isAnyType(t2) then return Map else [keysType, valuesType] = [t1, t2]
+		else error "!Typed map type '_Map' can not have more than two arguments."
 	new Map([[keysType, valuesType]])
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
@@ -112,4 +113,4 @@ sig = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {typeOf, isType, sig, maybe, anyType, promised, etc, _Set}
+module.exports = {typeOf, isType, sig, maybe, anyType, promised, etc, _Set, _Map}

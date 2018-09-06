@@ -81,6 +81,9 @@
         } else {
           [keysType, valuesType] = [t1, t2];
         }
+        break;
+      default:
+        error("!Typed map type '_Map' can not have more than two arguments.");
     }
     return new Map([[keysType, valuesType]]);
   };
@@ -277,6 +280,6 @@
     };
   };
 
-  module.exports = {typeOf, isType, sig, maybe, anyType, promised, etc, _Set};
+  module.exports = {typeOf, isType, sig, maybe, anyType, promised, etc, _Set, _Map};
 
 }).call(this);
