@@ -1,4 +1,4 @@
-{typeOf, isType, sig, maybe, anyType, promised, etc, _Set} = require '../index.js' # testing the build, not the source
+{typeOf, isType, sig, maybe, anyType, promised, etc, _Set, _Map} = require '../index.js' # testing the build, not the source
 
 chai = require 'chai'
 chaiAsPromised = require 'chai-as-promised'
@@ -431,28 +431,6 @@ describe "isType", ->
 				expect(isType(val, _Set(Number))).to.be.false for val in VALUES when not val?.constructor is Set
 				expect(isType(val, _Set(String))).to.be.false for val in VALUES when not val?.constructor is Set
 
-			it "should behave as Set type when type is ommited", ->
-				expect(isType(new Set([1, 2, 3]), _Set())).to.be.true
-				expect(isType(new Set([1, 2, 3]), _Set())).to.be.true
-				expect(isType(new Set([1]), _Set())).to.be.true
-				expect(isType(new Set([]), _Set())).to.be.true
-				expect(isType(1, _Set())).to.be.false
-				expect(isType([], _Set())).to.be.false
-				expect(isType([1, 2], _Set())).to.be.false
-				expect(isType({}, _Set())).to.be.false
-				expect(isType({a: 1}, _Set())).to.be.false
-
-			it "should behave as Set type when used as a function", ->
-				expect(isType(new Set([1, 2, 3]), _Set)).to.be.true
-				expect(isType(new Set([1, 2, 3]), _Set)).to.be.true
-				expect(isType(new Set([1]), _Set)).to.be.true
-				expect(isType(new Set([]), _Set)).to.be.true
-				expect(isType(1, _Set)).to.be.false
-				expect(isType([], _Set)).to.be.false
-				expect(isType([1, 2], _Set)).to.be.false
-				expect(isType({}, _Set)).to.be.false
-				expect(isType({a: 1}, _Set)).to.be.false
-
 			it "should return true for a set of numbers", ->
 				expect(isType(new Set([1, 2, 3]), _Set(Number))).to.be.true
 				expect(isType(new Set([1]), _Set(Number))).to.be.true
@@ -509,6 +487,86 @@ describe "isType", ->
 				expect(isType(new Set(["foo", val, 1]), _Set([String, Number]))).to.be.false \
 					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
 				expect(isType(new Set([val]), _Set([String, Number]))).to.be.false \
+					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
+
+	context "Typed map", ->
+
+		context.only "Any type elements", ->
+
+			it "_Map() should return Map type.", ->
+				expect(_Map()).to.equal(Map)
+
+			it "_Map([]) should return Map type.", ->
+				expect(_Map([])).to.equal(Map)
+
+			it "_Map(anyType) should return Map type.", ->
+				expect(_Map(anyType)).to.equal(Map)
+
+			it "_Map should behave as Map type.", ->
+				expect(isType(val, _Map)).to.equal(isType(val, Map)) for val in VALUES
+
+		context "Native Type elements", ->
+
+			it "should return false when value is not a Map", ->
+				expect(isType(val, _Map(Number))).to.be.false for val in VALUES when not val?.constructor is Map
+				expect(isType(val, _Map(String))).to.be.false for val in VALUES when not val?.constructor is Map
+
+			it "should return true for a Map of numbers", ->
+				expect(isType(new Map([1, 2, 3]), _Map(Number))).to.be.true
+				expect(isType(new Map([1]), _Map(Number))).to.be.true
+				expect(isType(new Map([]), _Map(Number))).to.be.true
+
+			it "should return true for a Map of strings", ->
+				expect(isType(new Map(["foo", "bar", "baz"]), _Map(String))).to.be.true
+				expect(isType(new Map(["foo"]), _Map(String))).to.be.true
+				expect(isType(new Map([]), _Map(String))).to.be.true
+
+			it "should return false when an element of the Map is not a number", ->
+				expect(isType(new Map([1, val, 3]), _Map(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
+				expect(isType(new Map([val]), _Map(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
+
+			it "should return false when an element of the Map is not a string", ->
+				expect(isType(new Map(["foo", val, "bar"]), _Map(String))).to.be.false \
+					for val in VALUES when typeof val isnt 'string'
+				expect(isType(new Map([val]), _Map(String))).to.be.false \
+					for val in VALUES when typeof val isnt 'string'
+
+		context "Object Type elements", ->
+
+			it "should return false when value is not a Map", ->
+				nsType = {n: Number, s: String}
+				expect(isType(val, _Map(nsType))).to.be.false for val in VALUES when not val?.constructor is Map
+
+			it "should return true when all elements of the Map are of a given object type", ->
+				nsType = {n: Number, s: String}
+				expect(isType(new Map([{n: 1, s: "a"}, {n: 2, s: "b"}, {n: 3, s: "c"}]), _Map(nsType))).to.be.true
+				expect(isType(new Map([{n: 1, s: "a"}]), _Map(nsType))).to.be.true
+				expect(isType(new Map([]), _Map(nsType))).to.be.true
+
+			it "should return false when some elements of the Map are not of a given object type", ->
+				nsType = {n: Number, s: String}
+				expect(isType(new Map([{n: 1, s: "a"}, val, {n: 3, s: "c"}]), _Map(nsType))).to.be.false for val in VALUES
+				expect(isType(new Map([val]), _Map(nsType))).to.be.false for val in VALUES
+				expect(isType(new Map([{n: 1, s: "a"}, {foo: 2, s: "b"}, {n: 3, s: "c"}]), _Map(nsType))).to.be.false
+
+		context "Union Type elements", ->
+
+			it "should return false when value is not a Map", ->
+				expect(isType(val, _Map([Number, String]))).to.be.false for val in VALUES when not val?.constructor is Map
+
+			it "should return true for a Map whom values are strings or numbers", ->
+				expect(isType(new Map([]), _Map([String, Number]))).to.be.true
+				expect(isType(new Map(["foo", "bar", "baz"]), _Map([String, Number]))).to.be.true
+				expect(isType(new Map(["foo"]), _Map([String, Number]))).to.be.true
+				expect(isType(new Map([1, 2, 3]), _Map([String, Number]))).to.be.true
+				expect(isType(new Map([1]), _Map([String, Number]))).to.be.true
+				expect(isType(new Map(["foo", 1, "bar"]), _Map([String, Number]))).to.be.true
+				expect(isType(new Map([1, "foo", 2]), _Map([String, Number]))).to.be.true
+
+			it "should return false when an element of the Map is not a string nor a number", ->
+				expect(isType(new Map(["foo", val, 1]), _Map([String, Number]))).to.be.false \
+					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
+				expect(isType(new Map([val]), _Map([String, Number]))).to.be.false \
 					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
 
 	context "Promised type", ->

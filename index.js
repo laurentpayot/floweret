@@ -81,8 +81,7 @@
     var keysType, valuesType;
     switch (arguments.length) {
       case 0:
-        Map;
-        break;
+        return Map;
       case 1:
         if (isAnyType(t1)) {
           return Map;

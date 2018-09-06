@@ -23,7 +23,7 @@ _Set = (t=[]) ->
 	if isAnyType(t) then Set else new Set([t])
 _Map = (t1, t2) ->
 	switch arguments.length
-		when 0 then Map
+		when 0 then return Map
 		when 1
 			if isAnyType(t1) then return Map else [keysType, valuesType] = [[], t1]
 		when 2
