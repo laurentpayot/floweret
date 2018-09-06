@@ -7,11 +7,11 @@ error = (msg) -> throw new Error switch msg[0]
 # type helpers
 anyType = -> if arguments.length then error "!You can not specify a type for 'anyType'." else []
 isAnyType = (o) -> o is anyType or Array.isArray(o) and o.length is 0 # not exported
-maybe = (t) ->
-	error "!You must specify a type for 'maybe'." if not arguments.length
-	if isAnyType(t) then [] else [undefined, null, t]
-promised = (t) -> if not arguments.length then error "!You must specify a type for 'promised'." else Promise.resolve(t)
-etc = (t=[]) -> (_etc = -> t) # returns a function with name property '_etc'
+maybe = (types...) ->
+	error "!You must specify at least a type as 'maybe' argument." unless arguments.length
+	if types.some((t) -> isAnyType(t)) then [] else [undefined, null].concat(types)
+promised = (t) -> unless arguments.length then error "!You must specify a type for 'promised'." else Promise.resolve(t)
+etc = (t=[]) -> unless arguments.length then etc else (_etc = -> t) # returns itself or a function with name property '_etc'
 _Set = (t=[]) -> if isAnyType(t) then Set else new Set([t])
 _Map = (t1=[], t2=[]) ->
 	switch arguments.length
@@ -47,6 +47,7 @@ isType = (val, type) -> switch typeOf(type)
 		when _Set then val?.constructor is Set
 		when _Map then val?.constructor is Map
 		when promised, maybe then error "!You can not use '#{type.name}' directly as a function."
+		when etc then error "!You can not use 'etc' in types."
 		# constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
 		else val?.constructor is type
 	when 'Array' then switch type.length

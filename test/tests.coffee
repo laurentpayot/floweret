@@ -118,6 +118,12 @@ describe "isType", ->
 			it "maybe(anyType) should return empty array.", ->
 				expect(maybe(anyType)).to.be.an('array').that.is.empty
 
+			it "maybe(Number, [], String) should return empty array.", ->
+				expect(maybe(Number, [], String)).to.be.an('array').that.is.empty
+
+			it "maybe(Number, anyType) should return empty array.", ->
+				expect(maybe(Number, anyType, String)).to.be.an('array').that.is.empty
+
 			it "should return true when value is undefined or null.", ->
 				for t in NATIVE_TYPES
 					expect(isType(undefined, maybe(t))).to.be.true
@@ -131,11 +137,21 @@ describe "isType", ->
 				expect(isType("Énorme !", maybe(String))).to.be.true
 				expect(isType("Énorme !", maybe(t))).to.be.false for t in NATIVE_TYPES when t and t isnt String
 
-			it "maybe([]) should behave as any type", ->
-				expect(isType(val, maybe([]))).to.be.true for val in VALUES
+			it "should return true for a Number or a String or undefined or null", ->
+				expect(isType(1, maybe(Number, String))).to.be.true
+				expect(isType('1', maybe(Number, String))).to.be.true
+				expect(isType(undefined, maybe(Number, String))).to.be.true
+				expect(isType(null, maybe(Number, String))).to.be.true
+
+			it "should return true for a Number or a String or undefined or null, when union is used", ->
+				expect(isType(1, maybe([Number, String]))).to.be.true
+				expect(isType('1', maybe([Number, String]))).to.be.true
+				expect(isType(undefined, maybe([Number, String]))).to.be.true
+				expect(isType(null, maybe([Number, String]))).to.be.true
 
 			it "maybe() should throw an error when type is ommited", ->
-				expect(-> isType(1, maybe())).to.be.throw("You must specify a type for 'maybe'.")
+				expect(-> isType(1, maybe()))
+				.to.be.throw("You must specify at least a type as 'maybe' argument.")
 
 			it "maybe should throw an error when used as a function", ->
 				expect(-> isType(1, maybe)).to.throw("You can not use 'maybe' directly as a function.")
@@ -511,6 +527,14 @@ describe "isType", ->
 			testTypes(mc, MyClass)
 
 	context "Unmanaged Types", ->
+
+		it "should throw an error when etc is used as a function", ->
+			expect(-> isType(1, etc))
+			.to.throw("You can not use 'etc' in types.")
+
+		it "should throw an error when etc is used without parameter", ->
+			expect(-> isType(1, etc()))
+			.to.throw("You can not use 'etc' in types.")
 
 		it "should throw an error when type is not a native type nor an object nor an array of types
 			nor a string or number or boolean literal.", ->

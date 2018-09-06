@@ -29,14 +29,16 @@
     return o === anyType || Array.isArray(o) && o.length === 0; // not exported
   };
 
-  maybe = function(t) {
+  maybe = function(...types) {
     if (!arguments.length) {
-      error("!You must specify a type for 'maybe'.");
+      error("!You must specify at least a type as 'maybe' argument.");
     }
-    if (isAnyType(t)) {
+    if (types.some(function(t) {
+      return isAnyType(t);
+    })) {
       return [];
     } else {
-      return [void 0, null, t];
+      return [void 0, null].concat(types);
     }
   };
 
@@ -50,9 +52,13 @@
 
   etc = function(t = []) {
     var _etc;
-    return _etc = function() {
-      return t; // returns a function with name property '_etc'
-    };
+    if (!arguments.length) {
+      return etc;
+    } else {
+      return _etc = function() {
+        return t; // returns itself or a function with name property '_etc'
+      };
+    }
   };
 
   _Set = function(t = []) {
@@ -148,6 +154,8 @@
           case promised:
           case maybe:
             return error(`!You can not use '${type.name}' directly as a function.`);
+          case etc:
+            return error("!You can not use 'etc' in types.");
           default:
             // constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
             return (val != null ? val.constructor : void 0) === type;
