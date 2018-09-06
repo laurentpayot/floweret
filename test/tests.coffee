@@ -31,7 +31,7 @@ VALUES = [
 	new Set([]) # set
 	new Set([1, 2])
 	new Map([]) # map
-	new Map([[ 1, 'one' ],[ 2, 'two' ]])
+	new Map([[ 1, 'one' ], [ 2, 'two' ]])
 	Symbol('foo') # symbol
 ]
 
@@ -491,7 +491,7 @@ describe "isType", ->
 
 	context "Typed map", ->
 
-		context.only "Any type elements", ->
+		context "Any type elements", ->
 
 			it "_Map() should return Map type.", ->
 				expect(_Map()).to.equal(Map)
@@ -505,31 +505,33 @@ describe "isType", ->
 			it "_Map should behave as Map type.", ->
 				expect(isType(val, _Map)).to.equal(isType(val, Map)) for val in VALUES
 
-		context "Native Type elements", ->
+		context.only "Native Type elements", ->
 
 			it "should return false when value is not a Map", ->
 				expect(isType(val, _Map(Number))).to.be.false for val in VALUES when not val?.constructor is Map
 				expect(isType(val, _Map(String))).to.be.false for val in VALUES when not val?.constructor is Map
 
 			it "should return true for a Map of numbers", ->
-				expect(isType(new Map([1, 2, 3]), _Map(Number))).to.be.true
-				expect(isType(new Map([1]), _Map(Number))).to.be.true
+				expect(isType(new Map([['1', 1], ['2', 2], ['3', 3]]), _Map(Number))).to.be.true
+				expect(isType(new Map([['1', 1]]), _Map(Number))).to.be.true
 				expect(isType(new Map([]), _Map(Number))).to.be.true
 
 			it "should return true for a Map of strings", ->
-				expect(isType(new Map(["foo", "bar", "baz"]), _Map(String))).to.be.true
-				expect(isType(new Map(["foo"]), _Map(String))).to.be.true
+				expect(isType(new Map([[1, '1'], [2, '2'], [3, '3']]), _Map(String))).to.be.true
+				expect(isType(new Map([[1, '1']]), _Map(String))).to.be.true
 				expect(isType(new Map([]), _Map(String))).to.be.true
 
 			it "should return false when an element of the Map is not a number", ->
-				expect(isType(new Map([1, val, 3]), _Map(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
-				expect(isType(new Map([val]), _Map(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
+				expect(isType(new Map([['1', 1], ['2', val], ['3', 3]]), _Map(Number)))
+				.to.be.false for val in VALUES when typeof val isnt 'number'
+				expect(isType(new Map([['foo', val]]), _Map(Number)))
+				.to.be.false for val in VALUES when typeof val isnt 'number'
 
 			it "should return false when an element of the Map is not a string", ->
-				expect(isType(new Map(["foo", val, "bar"]), _Map(String))).to.be.false \
-					for val in VALUES when typeof val isnt 'string'
-				expect(isType(new Map([val]), _Map(String))).to.be.false \
-					for val in VALUES when typeof val isnt 'string'
+				expect(isType(new Map([[1, '1'], [2, val], [3, '3']]), _Map(String)))
+				.to.be.false for val in VALUES when typeof val isnt 'string'
+				expect(isType(new Map([[1234, val]]), _Map(String)))
+				.to.be.false for val in VALUES when typeof val isnt 'string'
 
 		context "Object Type elements", ->
 
