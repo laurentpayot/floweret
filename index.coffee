@@ -4,13 +4,16 @@ error = (msg) -> throw new Error switch msg[0]
 	when '!' then "Invalid type syntax: #{msg[1..]}"
 	else "Type error: #{msg}"
 
+# returns true if object is an empty array
+isEmptyArray = (o) -> Array.isArray(o) and o.length is 0
+
 # type helpers
-maybe = (t=[]) -> if Array.isArray(t) and not t.length then [] else [undefined, null, t]
-promised = (t=[]) -> if Array.isArray(t) and not t.length then Promise else Promise.resolve(t)
-_Set = (t=[]) -> if Array.isArray(t) and not t.length then Set else new Set([t])
-_Map = (t=[]) -> if Array.isArray(t) and not t.length then Map else new Map([t])
-# rest type: returns a function whose name property is '_etc' that returns the type of the rest elements
-etc = (t=[]) -> if Array.isArray(t) and not t.length then etc else (_etc = -> t)
+maybe = (t=[]) -> if isEmptyArray(t) then [] else [undefined, null, t]
+promised = (t=[]) -> if isEmptyArray(t) then Promise else Promise.resolve(t)
+_Set = (t=[]) -> if isEmptyArray(t) then Set else new Set([t])
+_Map = (t=[]) -> if isEmptyArray(t) then Map else new Map([t])
+etc = (t=[]) -> if isEmptyArray(t) then etc else (_etc = -> t)
+anyType = -> if arguments.length then error "!You can not specify a type for anyType." else []
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
 # NB: returning string instead of class because of special array case http://web.mit.edu/jwalden/www/isArray.html
@@ -31,11 +34,13 @@ typeName = (type) -> switch typeOf(type)
 isType = (val, type) -> switch typeOf(type)
 	when 'undefined', 'null', 'String', 'Number', 'Boolean' then val is type # literal type or undefined or null
 	when 'Function' then switch type
-		when maybe then true # `maybe` function used directly
+		# type helpers used directly as functions
+		when anyType, maybe then true
 		when promised then val?.constructor is Promise
 		when _Set then val?.constructor is Set
 		when _Map then val?.constructor is Map
-		else val?.constructor is type # native (Number, String, Object, Array (untyped), Promise…) and class types
+		# native (Number, String, Object, Array (untyped), Promise…) and class types
+		else val?.constructor is type
 	when 'Array' then switch type.length
 		when 0 then true # any type: `[]`
 		when 1 # typed array type, e.g.: `Array(String)`
@@ -69,13 +74,13 @@ sig = (argTypes, resType, f) ->
 			if typeof type is 'function' and (type.name is '_etc' or type is etc) # rest type
 				error "@Rest type must be the last of the arguments types." if i + 1 < argTypes.length
 				rest = true
-				unless type is etc # skip remaining arguments checks if rest type is any type
+				unless type is etc or isEmptyArray(type()) or type() is anyType# skip remaining arguments checks if rest type is any type
 					t = type()
 					for arg, j in args[i..]
 						error "Argument number #{i+j+1} (#{arg}) should be of type #{typeName(type())}
 								instead of #{typeOf(arg)}." unless isType(arg, t)
 			else
-				unless Array.isArray(type) and not type.length # not checking type if type is any type (`[]`)
+				unless isEmptyArray(type) # not checking type if type is any type
 					if args[i] is undefined
 						error "Missing required argument number #{i+1}." unless isType(undefined, type)
 					else
@@ -100,4 +105,4 @@ sig = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {typeOf, isType, sig, maybe, promised, etc, _Set}
+module.exports = {typeOf, isType, sig, maybe, anyType, promised, etc, _Set}

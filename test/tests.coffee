@@ -1,4 +1,4 @@
-{typeOf, isType, sig, maybe, promised, etc, _Set} = require '../index.js' # testing the build, not the source
+{typeOf, isType, sig, maybe, anyType, promised, etc, _Set} = require '../index.js' # testing the build, not the source
 
 chai = require 'chai'
 chaiAsPromised = require 'chai-as-promised'
@@ -93,10 +93,22 @@ describe "isType", ->
 
 	context "Special Types", ->
 
-		context "Any type ([])", ->
+		context "Any type", ->
 
-			it "should return true for all values", ->
+			it "empty array type should return true for all values", ->
 				expect(isType(val, [])).to.be.true for val in VALUES
+
+			it "anyType type should return true for all values", ->
+				expect(isType(val, anyType)).to.be.true for val in VALUES
+
+			it "anyType() type should return true for all values", ->
+				expect(isType(val, anyType())).to.be.true for val in VALUES
+
+			it "anyType(Number) type should throw an error", ->
+				expect(-> isType(1, anyType(Number))).to.throw("You can not specify a type for anyType.")
+
+			it "anyType([]) type should throw an error", ->
+				expect(-> isType(1, anyType([]))).to.throw("You can not specify a type for anyType.")
 
 		context "Maybe type", ->
 
