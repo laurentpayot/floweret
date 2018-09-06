@@ -4,26 +4,24 @@ error = (msg) -> throw new Error switch msg[0]
 	when '@' then "Invalid signature: #{msg[1..]}"
 	else "Type error: #{msg}"
 
-# returns true if object is an empty array
-isEmptyArray = (o) -> Array.isArray(o) and o.length is 0
-
 # type helpers
 anyType = -> if arguments.length then error "!You can not specify a type for 'anyType'." else []
+isAnyType = (o) -> o is anyType or Array.isArray(o) and o.length is 0 # not exported
 maybe = (t) ->
 	error "!You must specify a type for 'maybe'." if not arguments.length
-	if isEmptyArray(t) or t is anyType then [] else [undefined, null, t]
+	if isAnyType(t) then [] else [undefined, null, t]
 promised = (t) -> if not arguments.length then error "!You must specify a type for 'promised'." else Promise.resolve(t)
 etc = (t=[]) -> (_etc = -> t) # returns a function with name property '_etc'
-_Set = (t=[]) -> if isEmptyArray(t) or t is anyType then Set else new Set([t])
+_Set = (t=[]) -> if isAnyType(t) then Set else new Set([t])
 _Map = (t1=[], t2=[]) ->
 	switch arguments.length
 		when 0 then return Map
 		when 1
-			return Map if isEmptyArray(t1) or t1 is anyType
+			return Map if isAnyType(t1)
 			keysType = []
 			valuesType = t1
 		when 2
-			return Map if (isEmptyArray(t1) or t1 is anyType) and (isEmptyArray(t2) or t2 is anyType)
+			return Map if isAnyType(t1) and isAnyType(t2)
 			keysType = t1
 			valuesType = t2
 	new Map([[keysType, valuesType]])
@@ -88,12 +86,12 @@ sig = (argTypes, resType, f) ->
 				error "@Rest type must be the last of the arguments types." if i + 1 < argTypes.length
 				rest = true
 				t = type()
-				unless type is etc or t is anyType or isEmptyArray(t) # no checks if rest type is any type
+				unless type is etc or isAnyType(t) # no checks if rest type is any type
 					for arg, j in args[i..]
 						error "Argument number #{i+j+1} (#{arg}) should be of type #{typeName(type())}
 								instead of #{typeOf(arg)}." unless isType(arg, t)
 			else
-				unless isEmptyArray(type) # not checking type if type is any type
+				unless isAnyType(type) # not checking type if type is any type
 					if args[i] is undefined
 						error "Missing required argument number #{i+1}." unless isType(undefined, type)
 					else
