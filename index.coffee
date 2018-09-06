@@ -1,7 +1,7 @@
 # trows customized error
 error = (msg) -> throw new Error switch msg[0]
 	when '!' then "Invalid type syntax: #{msg[1..]}"
-	when '@' then "Signature: #{msg[1..]}"
+	when '@' then "Invalid signature: #{msg[1..]}"
 	else "Type error: #{msg}"
 
 # returns true if object is an empty array

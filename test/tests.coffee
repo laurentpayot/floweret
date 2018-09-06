@@ -588,7 +588,7 @@ describe "sig", ->
 		it "should throw an error if promised used as a function", ->
 			f = sig [], promised,
 				-> Promise.resolve(1)
-			expect(-> f()).to.throw("Invalid type syntax: You can not use 'promised' directly as a function.")
+			expect(-> f()).to.throw("You can not use 'promised' directly as a function.")
 
 	context "Arguments number", ->
 

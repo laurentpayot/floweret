@@ -9,7 +9,7 @@
         case '!':
           return `Invalid type syntax: ${msg.slice(1)}`;
         case '@':
-          return `Signature: ${msg.slice(1)}`;
+          return `Invalid signature: ${msg.slice(1)}`;
         default:
           return `Type error: ${msg}`;
       }
