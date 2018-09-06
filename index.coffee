@@ -13,9 +13,20 @@ maybe = (t) ->
 	error "!You must specify a type for 'maybe'." if not arguments.length
 	if isEmptyArray(t) or t is anyType then [] else [undefined, null, t]
 promised = (t) -> if not arguments.length then error "!You must specify a type for 'promised'." else Promise.resolve(t)
-_Set = (t=[]) -> if isEmptyArray(t) or t is anyType then Set else new Set([t])
-_Map = (t=[]) -> if isEmptyArray(t) or t is anyType then Map else new Map([t])
 etc = (t=[]) -> (_etc = -> t) # returns a function with name property '_etc'
+_Set = (t=[]) -> if isEmptyArray(t) or t is anyType then Set else new Set([t])
+_Map = (t1=[], t2=[]) ->
+	switch arguments.length
+		when 0 then return Map
+		when 1
+			return Map if isEmptyArray(t1) or t1 is anyType
+			keysType = []
+			valuesType = t1
+		when 2
+			return Map if (isEmptyArray(t1) or t1 is anyType) and (isEmptyArray(t2) or t2 is anyType)
+			keysType = t1
+			valuesType = t2
+	new Map([[keysType, valuesType]])
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
 # NB: returning string instead of class because of special array case http://web.mit.edu/jwalden/www/isArray.html
@@ -41,7 +52,7 @@ isType = (val, type) -> switch typeOf(type)
 		when _Set then val?.constructor is Set
 		when _Map then val?.constructor is Map
 		when promised, maybe then error "!You can not use '#{type.name}' directly as a function."
-		# native types (Number, String, Object, Array (untyped), Promise…) and class types
+		# constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
 		else val?.constructor is type
 	when 'Array' then switch type.length
 		when 0 then true # any type: `[]`
