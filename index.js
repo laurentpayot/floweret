@@ -16,22 +16,35 @@
     })());
   };
 
+  // returns itself or a function with name property '_etc'
+  etc = function(t) {
+    var _etc;
+    if (!arguments.length) {
+      return etc;
+    } else {
+      return _etc = function() {
+        return t;
+      };
+    }
+  };
+
+  // not exported
+  isAnyType = function(o) {
+    return o === anyType || Array.isArray(o) && o.length === 0;
+  };
+
   // type helpers
   anyType = function() {
     if (arguments.length) {
-      return error("!You can not specify a type for 'anyType'.");
+      return error("!'anyType' can not have a type argument.");
     } else {
       return [];
     }
   };
 
-  isAnyType = function(o) {
-    return o === anyType || Array.isArray(o) && o.length === 0; // not exported
-  };
-
   maybe = function(...types) {
     if (!arguments.length) {
-      error("!You must specify at least a type as 'maybe' argument.");
+      error("!'maybe' must have at least one type argument.");
     }
     if (types.some(function(t) {
       return isAnyType(t);
@@ -43,25 +56,20 @@
   };
 
   promised = function(t) {
-    if (!arguments.length) {
-      return error("!You must specify a type for 'promised'.");
+    if (arguments.length !== 1) {
+      error("!'promised' must have exactly one type argument.");
+    }
+    if (isAnyType(t)) {
+      return Promise;
     } else {
       return Promise.resolve(t);
     }
   };
 
-  etc = function(t = []) {
-    var _etc;
-    if (!arguments.length) {
-      return etc;
-    } else {
-      return _etc = function() {
-        return t; // returns itself or a function with name property '_etc'
-      };
-    }
-  };
-
   _Set = function(t = []) {
+    if (arguments.length > 1) {
+      error("!'_Set' can not have more than one type argument.");
+    }
     if (isAnyType(t)) {
       return Set;
     } else {
@@ -69,11 +77,12 @@
     }
   };
 
-  _Map = function(t1 = [], t2 = []) {
+  _Map = function(t1, t2) {
     var keysType, valuesType;
     switch (arguments.length) {
       case 0:
-        return Map;
+        Map;
+        break;
       case 1:
         if (isAnyType(t1)) {
           return Map;
@@ -89,7 +98,7 @@
         }
         break;
       default:
-        error("!Typed map type '_Map' can not have more than two arguments.");
+        error("!'_Map' can not have more than two type arguments.");
     }
     return new Map([[keysType, valuesType]]);
   };
@@ -153,9 +162,9 @@
             return (val != null ? val.constructor : void 0) === Map;
           case promised:
           case maybe:
-            return error(`!You can not use '${type.name}' directly as a function.`);
+            return error(`!'${type.name}' can not be used directly as a function.`);
           case etc:
-            return error("!You can not use 'etc' in types.");
+            return error("!'etc' can not be used in types.");
           default:
             // constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
             return (val != null ? val.constructor : void 0) === type;
@@ -182,21 +191,24 @@
         break;
       case 'Set':
         if (type.size !== 1) {
-          error("!Typed set must have one and only one type.");
+          error("!Typed set must have exactly one type argument.");
         }
         if ((val != null ? val.constructor : void 0) !== Set) {
           return false;
         }
         t = [...type][0];
+        if (isAnyType(t)) {
+          return true;
+        }
         if ((ref = typeOf(t)) === 'undefined' || ref === 'null' || ref === 'String' || ref === 'Number' || ref === 'Boolean') {
-          error(`!You can not have a typed Set of literal type '${t}'.`);
+          error(`!Typed Set can not be a literal of type '${t}'.`);
         }
         return [...val].every(function(e) {
           return isType(e, t);
         });
       case 'Map':
         if (type.size !== 1) {
-          error("!Typed map must have one and only one pair of types.");
+          error("!Typed map must have exactly one pair of types argument.");
         }
         if ((val != null ? val.constructor : void 0) !== Map) {
           return false;

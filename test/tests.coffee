@@ -105,10 +105,10 @@ describe "isType", ->
 				expect(isType(val, anyType())).to.be.true for val in VALUES
 
 			it "anyType(Number) type should throw an error", ->
-				expect(-> isType(1, anyType(Number))).to.throw("You can not specify a type for 'anyType'.")
+				expect(-> isType(1, anyType(Number))).to.throw("'anyType' can not have a type argument.")
 
 			it "anyType([]) type should throw an error", ->
-				expect(-> isType(1, anyType([]))).to.throw("You can not specify a type for 'anyType'.")
+				expect(-> isType(1, anyType([]))).to.throw("'anyType' can not have a type argument.")
 
 		context "Maybe type", ->
 
@@ -151,10 +151,10 @@ describe "isType", ->
 
 			it "maybe() should throw an error when type is ommited", ->
 				expect(-> isType(1, maybe()))
-				.to.be.throw("You must specify at least a type as 'maybe' argument.")
+				.to.be.throw("'maybe' must have at least one type argument.")
 
 			it "maybe should throw an error when used as a function", ->
-				expect(-> isType(1, maybe)).to.throw("You can not use 'maybe' directly as a function.")
+				expect(-> isType(1, maybe)).to.throw("'maybe' can not be used directly as a function.")
 
 	context "Literal Types", ->
 
@@ -530,11 +530,11 @@ describe "isType", ->
 
 		it "should throw an error when etc is used as a function", ->
 			expect(-> isType(1, etc))
-			.to.throw("You can not use 'etc' in types.")
+			.to.throw("'etc' can not be used in types.")
 
 		it "should throw an error when etc is used without parameter", ->
 			expect(-> isType(1, etc()))
-			.to.throw("You can not use 'etc' in types.")
+			.to.throw("'etc' can not be used in types.")
 
 		it "should throw an error when type is not a native type nor an object nor an array of types
 			nor a string or number or boolean literal.", ->
@@ -607,12 +607,12 @@ describe "sig", ->
 		it "should throw an error if promised used without type", ->
 			expect(-> sig [], promised(),
 				-> Promise.resolve(1)
-			).to.throw("You must specify a type for 'promised'.")
+			).to.throw("'promised' must have exactly one type argument.")
 
 		it "should throw an error if promised used as a function", ->
 			f = sig [], promised,
 				-> Promise.resolve(1)
-			expect(-> f()).to.throw("You can not use 'promised' directly as a function.")
+			expect(-> f()).to.throw("'promised' can not be used directly as a function.")
 
 	context "Arguments number", ->
 

@@ -4,23 +4,31 @@ error = (msg) -> throw new Error switch msg[0]
 	when '@' then "Invalid signature: #{msg[1..]}"
 	else "Type error: #{msg}"
 
+ # returns itself or a function with name property '_etc'
+etc = (t) -> if not arguments.length then etc else (_etc = -> t)
+
+# not exported
+isAnyType = (o) -> o is anyType or Array.isArray(o) and o.length is 0
+
 # type helpers
-anyType = -> if arguments.length then error "!You can not specify a type for 'anyType'." else []
-isAnyType = (o) -> o is anyType or Array.isArray(o) and o.length is 0 # not exported
+anyType = -> if arguments.length then error "!'anyType' can not have a type argument." else []
 maybe = (types...) ->
-	error "!You must specify at least a type as 'maybe' argument." unless arguments.length
+	error "!'maybe' must have at least one type argument." unless arguments.length
 	if types.some((t) -> isAnyType(t)) then [] else [undefined, null].concat(types)
-promised = (t) -> unless arguments.length then error "!You must specify a type for 'promised'." else Promise.resolve(t)
-etc = (t=[]) -> unless arguments.length then etc else (_etc = -> t) # returns itself or a function with name property '_etc'
-_Set = (t=[]) -> if isAnyType(t) then Set else new Set([t])
-_Map = (t1=[], t2=[]) ->
+promised = (t) ->
+	error "!'promised' must have exactly one type argument." unless arguments.length is 1
+	if isAnyType(t) then Promise else Promise.resolve(t)
+_Set = (t=[]) ->
+	error "!'_Set' can not have more than one type argument." if arguments.length > 1
+	if isAnyType(t) then Set else new Set([t])
+_Map = (t1, t2) ->
 	switch arguments.length
-		when 0 then return Map
+		when 0 then Map
 		when 1
 			if isAnyType(t1) then return Map else [keysType, valuesType] = [[], t1]
 		when 2
 			if isAnyType(t1) and isAnyType(t2) then return Map else [keysType, valuesType] = [t1, t2]
-		else error "!Typed map type '_Map' can not have more than two arguments."
+		else error "!'_Map' can not have more than two type arguments."
 	new Map([[keysType, valuesType]])
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
@@ -46,8 +54,8 @@ isType = (val, type) -> switch typeOf(type)
 		when anyType then true
 		when _Set then val?.constructor is Set
 		when _Map then val?.constructor is Map
-		when promised, maybe then error "!You can not use '#{type.name}' directly as a function."
-		when etc then error "!You can not use 'etc' in types."
+		when promised, maybe then error "!'#{type.name}' can not be used directly as a function."
+		when etc then error "!'etc' can not be used in types."
 		# constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
 		else val?.constructor is type
 	when 'Array' then switch type.length
@@ -57,14 +65,15 @@ isType = (val, type) -> switch typeOf(type)
 		else # union of types, e.g.: `[Object, null]`
 			type.some((t) -> isType(val, t))
 	when 'Set'
-		error "!Typed set must have one and only one type." unless type.size is 1
+		error "!Typed set must have exactly one type argument." unless type.size is 1
 		return false unless val?.constructor is Set
 		t = [type...][0]
-		error "!You can not have a typed Set
-				of literal type '#{t}'." if typeOf(t) in ['undefined', 'null', 'String', 'Number', 'Boolean']
+		return true if isAnyType(t)
+		error "!Typed Set can not be a literal
+				of type '#{t}'." if typeOf(t) in ['undefined', 'null', 'String', 'Number', 'Boolean']
 		[val...].every((e) -> isType(e, t))
 	when 'Map'
-		error "!Typed map must have one and only one pair of types." unless type.size is 1
+		error "!Typed map must have exactly one pair of types argument." unless type.size is 1
 		return false unless val?.constructor is Map
 		[keysType, valuesType] = Array.from(type)[0]
 		switch
