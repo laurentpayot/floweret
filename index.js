@@ -178,33 +178,32 @@
         }
         if ((val != null ? val.constructor : void 0) !== Set) {
           return false;
-        } else {
-          t = [...type][0];
-          if ((ref = typeOf(t)) === 'undefined' || ref === 'null' || ref === 'String' || ref === 'Number' || ref === 'Boolean') {
-            error(`!You can not have a typed Set of literal type '${t}'.`);
-          }
-          return [...val].every(function(e) {
-            return isType(e, t);
-          });
         }
-        break;
+        t = [...type][0];
+        if ((ref = typeOf(t)) === 'undefined' || ref === 'null' || ref === 'String' || ref === 'Number' || ref === 'Boolean') {
+          error(`!You can not have a typed Set of literal type '${t}'.`);
+        }
+        return [...val].every(function(e) {
+          return isType(e, t);
+        });
       case 'Map':
         if (type.size !== 1) {
           error("!Typed map must have one and only one pair of types.");
         }
         if ((val != null ? val.constructor : void 0) !== Map) {
           return false;
-        } else {
-          [keysType, valuesType] = Array.from(type)[0];
-          keys = Array.from(val.keys());
-          values = Array.from(val.values());
-          return keys.every(function(e) {
-            return isType(e, keysType);
-          }) && values.every(function(e) {
-            return isType(e, valuesType);
-          });
         }
-        break;
+        [keysType, valuesType] = Array.from(type)[0];
+        if (isAnyType(keysType) && isAnyType(valuesType)) {
+          return true;
+        }
+        keys = Array.from(val.keys());
+        values = Array.from(val.values());
+        return keys.every(function(e) {
+          return isType(e, keysType);
+        }) && values.every(function(e) {
+          return isType(e, valuesType);
+        });
       case 'Object': // Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
         if ((val != null ? val.constructor : void 0) !== Object) {
           return false;
