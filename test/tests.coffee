@@ -105,12 +105,18 @@ describe "isType", ->
 				expect(isType(val, anyType())).to.be.true for val in VALUES
 
 			it "anyType(Number) type should throw an error", ->
-				expect(-> isType(1, anyType(Number))).to.throw("You can not specify a type for anyType.")
+				expect(-> isType(1, anyType(Number))).to.throw("You can not specify a type for 'anyType'.")
 
 			it "anyType([]) type should throw an error", ->
-				expect(-> isType(1, anyType([]))).to.throw("You can not specify a type for anyType.")
+				expect(-> isType(1, anyType([]))).to.throw("You can not specify a type for 'anyType'.")
 
 		context "Maybe type", ->
+
+			it "maybe([]) should return empty array.", ->
+				expect(maybe([])).to.be.an('array').that.is.empty
+
+			it "maybe(anyType) should return empty array.", ->
+				expect(maybe(anyType)).to.be.an('array').that.is.empty
 
 			it "should return true when value is undefined or null.", ->
 				for t in NATIVE_TYPES
@@ -128,11 +134,11 @@ describe "isType", ->
 			it "maybe([]) should behave as any type", ->
 				expect(isType(val, maybe([]))).to.be.true for val in VALUES
 
-			it "maybe() should behave as any type when type is ommited", ->
-				expect(isType(val, maybe())).to.be.true for val in VALUES
+			it "maybe() should throw an error when type is ommited", ->
+				expect(-> isType(1, maybe())).to.be.throw("You must specify a type for 'maybe'.")
 
-			it "maybe should behave as any type when used as a function", ->
-				expect(isType(val, maybe)).to.be.true for val in VALUES
+			it "maybe should throw an error when used as a function", ->
+				expect(-> isType(1, maybe)).to.throw("You can not use 'maybe' directly as a function.")
 
 	context "Literal Types", ->
 
@@ -389,6 +395,20 @@ describe "isType", ->
 
 	context "Typed set", ->
 
+		context "Any type elements", ->
+
+			it "_Set() should return Set type.", ->
+				expect(_Set()).to.equal(Set)
+
+			it "_Set([]) should return Set type.", ->
+				expect(_Set([])).to.equal(Set)
+
+			it "_Set(anyType) should return Set type.", ->
+				expect(_Set(anyType)).to.equal(Set)
+
+			it "_Set should behave as Set type.", ->
+				expect(isType(val, _Set)).to.equal(isType(val, Set)) for val in VALUES
+
 		context "Native Type elements", ->
 
 			it "should return false when value is not a set", ->
@@ -475,9 +495,17 @@ describe "isType", ->
 				expect(isType(new Set([val]), _Set([String, Number]))).to.be.false \
 					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
 
-	context "Custom Types (classes)", ->
+	context "Promised type", ->
 
-		it "should return true type is MyClass, false for other types", ->
+		it "should throw an error for a promised number.", ->
+			expect(-> isType(Promise.resolve(1), Promise.resolve(Number)))
+			.to.throw("Type can not be an instance of Promise. Use the Promise class as type instead.")
+			expect(-> isType(Promise.resolve(1), promised(Number)))
+			.to.throw("Type can not be an instance of Promise. Use the Promise class as type instead.")
+
+	context "Custom type (class)", ->
+
+		it "should return true when type is MyClass, false for other types", ->
 			class MyClass
 			mc = new MyClass
 			testTypes(mc, MyClass)
@@ -530,6 +558,11 @@ describe "sig", ->
 				-> 1
 			expect(-> f()).to.throw("Result (1) should be of type String instead of Number.")
 
+		it "should throw an error if function returns undefined", ->
+			f = sig [], [String, Number],
+				->
+			expect(-> f()).to.throw("Result (undefined) should be of type String or Number instead of undefined.")
+
 	context "Asynchronous functions", ->
 
 		it "should return a promise if function returns promise", ->
@@ -546,6 +579,16 @@ describe "sig", ->
 			f = sig [], promised(String),
 				-> Promise.resolve(1)
 			expect(f()).to.be.rejectedWith("Promise result (1) should be of type String instead of Number.")
+
+		it "should throw an error if promised used without type", ->
+			expect(-> sig [], promised(),
+				-> Promise.resolve(1)
+			).to.throw("You must specify a type for 'promised'.")
+
+		it "should throw an error if promised used as a function", ->
+			f = sig [], promised,
+				-> Promise.resolve(1)
+			expect(-> f()).to.throw("Invalid type syntax: You can not use 'promised' directly as a function.")
 
 	context "Arguments number", ->
 

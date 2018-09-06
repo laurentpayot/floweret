@@ -1,19 +1,21 @@
 # trows customized error
 error = (msg) -> throw new Error switch msg[0]
-	when '@' then "Signature: #{msg[1..]}"
 	when '!' then "Invalid type syntax: #{msg[1..]}"
+	when '@' then "Signature: #{msg[1..]}"
 	else "Type error: #{msg}"
 
 # returns true if object is an empty array
 isEmptyArray = (o) -> Array.isArray(o) and o.length is 0
 
 # type helpers
-maybe = (t=[]) -> if isEmptyArray(t) then [] else [undefined, null, t]
-promised = (t=[]) -> if isEmptyArray(t) then Promise else Promise.resolve(t)
-_Set = (t=[]) -> if isEmptyArray(t) then Set else new Set([t])
-_Map = (t=[]) -> if isEmptyArray(t) then Map else new Map([t])
+anyType = -> if arguments.length then error "!You can not specify a type for 'anyType'." else []
+maybe = (t) ->
+	error "!You must specify a type for 'maybe'." if not arguments.length
+	if isEmptyArray(t) or t is anyType then [] else [undefined, null, t]
+promised = (t) -> if not arguments.length then error "!You must specify a type for 'promised'." else Promise.resolve(t)
+_Set = (t=[]) -> if isEmptyArray(t) or t is anyType then Set else new Set([t])
+_Map = (t=[]) -> if isEmptyArray(t) or t is anyType then Map else new Map([t])
 etc = (t=[]) -> (_etc = -> t) # returns a function with name property '_etc'
-anyType = -> if arguments.length then error "!You can not specify a type for anyType." else []
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
 # NB: returning string instead of class because of special array case http://web.mit.edu/jwalden/www/isArray.html
@@ -35,10 +37,10 @@ isType = (val, type) -> switch typeOf(type)
 	when 'undefined', 'null', 'String', 'Number', 'Boolean' then val is type # literal type or undefined or null
 	when 'Function' then switch type
 		# type helpers used directly as functions
-		when anyType, maybe then true
-		when promised then val?.constructor is Promise
+		when anyType then true
 		when _Set then val?.constructor is Set
 		when _Map then val?.constructor is Map
+		when promised, maybe then error "!You can not use '#{type.name}' directly as a function."
 		# native types (Number, String, Object, Array (untyped), Promise…) and class types
 		else val?.constructor is type
 	when 'Array' then switch type.length

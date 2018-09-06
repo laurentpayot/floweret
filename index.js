@@ -6,10 +6,10 @@
   error = function(msg) {
     throw new Error((function() {
       switch (msg[0]) {
-        case '@':
-          return `Signature: ${msg.slice(1)}`;
         case '!':
           return `Invalid type syntax: ${msg.slice(1)}`;
+        case '@':
+          return `Signature: ${msg.slice(1)}`;
         default:
           return `Type error: ${msg}`;
       }
@@ -22,24 +22,35 @@
   };
 
   // type helpers
-  maybe = function(t = []) {
-    if (isEmptyArray(t)) {
+  anyType = function() {
+    if (arguments.length) {
+      return error("!You can not specify a type for 'anyType'.");
+    } else {
+      return [];
+    }
+  };
+
+  maybe = function(t) {
+    if (!arguments.length) {
+      error("!You must specify a type for 'maybe'.");
+    }
+    if (isEmptyArray(t) || t === anyType) {
       return [];
     } else {
       return [void 0, null, t];
     }
   };
 
-  promised = function(t = []) {
-    if (isEmptyArray(t)) {
-      return Promise;
+  promised = function(t) {
+    if (!arguments.length) {
+      return error("!You must specify a type for 'promised'.");
     } else {
       return Promise.resolve(t);
     }
   };
 
   _Set = function(t = []) {
-    if (isEmptyArray(t)) {
+    if (isEmptyArray(t) || t === anyType) {
       return Set;
     } else {
       return new Set([t]);
@@ -47,7 +58,7 @@
   };
 
   _Map = function(t = []) {
-    if (isEmptyArray(t)) {
+    if (isEmptyArray(t) || t === anyType) {
       return Map;
     } else {
       return new Map([t]);
@@ -61,14 +72,7 @@
     };
   };
 
-  anyType = function() {
-    if (arguments.length) {
-      return error("!You can not specify a type for anyType.");
-    } else {
-      return [];
-    }
-  };
-
+  
   // typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
   // NB: returning string instead of class because of special array case http://web.mit.edu/jwalden/www/isArray.html
   typeOf = function(val) {
@@ -121,14 +125,14 @@
         switch (type) {
           // type helpers used directly as functions
           case anyType:
-          case maybe:
             return true;
-          case promised:
-            return (val != null ? val.constructor : void 0) === Promise;
           case _Set:
             return (val != null ? val.constructor : void 0) === Set;
           case _Map:
             return (val != null ? val.constructor : void 0) === Map;
+          case promised:
+          case maybe:
+            return error(`!You can not use '${type.name}' directly as a function.`);
           default:
             // native types (Number, String, Object, Array (untyped), Promise…) and class types
             return (val != null ? val.constructor : void 0) === type;
