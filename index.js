@@ -194,16 +194,27 @@
           return false;
         }
         [keysType, valuesType] = Array.from(type)[0];
-        if (isAnyType(keysType) && isAnyType(valuesType)) {
-          return true;
+        switch (false) {
+          case !(isAnyType(keysType) && isAnyType(valuesType)):
+            return true;
+          case !isAnyType(keysType):
+            return Array.from(val.values()).every(function(e) {
+              return isType(e, valuesType);
+            });
+          case !isAnyType(valuesType):
+            return Array.from(val.keys()).every(function(e) {
+              return isType(e, keysType);
+            });
+          default:
+            keys = Array.from(val.keys());
+            values = Array.from(val.values());
+            return keys.every(function(e) {
+              return isType(e, keysType);
+            }) && values.every(function(e) {
+              return isType(e, valuesType);
+            });
         }
-        keys = Array.from(val.keys());
-        values = Array.from(val.values());
-        return keys.every(function(e) {
-          return isType(e, keysType);
-        }) && values.every(function(e) {
-          return isType(e, valuesType);
-        });
+        break;
       case 'Object': // Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
         if ((val != null ? val.constructor : void 0) !== Object) {
           return false;

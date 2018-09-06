@@ -66,10 +66,14 @@ isType = (val, type) -> switch typeOf(type)
 		error "!Typed map must have one and only one pair of types." unless type.size is 1
 		return false unless val?.constructor is Map
 		[keysType, valuesType] = Array.from(type)[0]
-		return true if isAnyType(keysType) and isAnyType(valuesType)
-		keys = Array.from(val.keys())
-		values = Array.from(val.values())
-		keys.every((e) -> isType(e, keysType)) and values.every((e) -> isType(e, valuesType))
+		switch
+			when isAnyType(keysType) and isAnyType(valuesType) then true
+			when isAnyType(keysType) then Array.from(val.values()).every((e) -> isType(e, valuesType))
+			when isAnyType(valuesType) then Array.from(val.keys()).every((e) -> isType(e, keysType))
+			else
+				keys = Array.from(val.keys())
+				values = Array.from(val.values())
+				keys.every((e) -> isType(e, keysType)) and values.every((e) -> isType(e, valuesType))
 	when 'Object' # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
 		return not Object.keys(val).length unless Object.keys(type).length
