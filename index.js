@@ -56,13 +56,9 @@
 
   etc = function(t = []) {
     var _etc;
-    if (isEmptyArray(t)) {
-      return etc;
-    } else {
-      return _etc = function() {
-        return t;
-      };
-    }
+    return _etc = function() {
+      return t; // returns a function with name property '_etc'
+    };
   };
 
   anyType = function() {
@@ -134,7 +130,7 @@
           case _Map:
             return (val != null ? val.constructor : void 0) === Map;
           default:
-            // native (Number, String, Object, Array (untyped), Promise…) and class types
+            // native types (Number, String, Object, Array (untyped), Promise…) and class types
             return (val != null ? val.constructor : void 0) === type;
         }
         break;
@@ -213,8 +209,8 @@
             error("@Rest type must be the last of the arguments types.");
           }
           rest = true;
-          if (!(type === etc || isEmptyArray(type()) || type() === anyType)) { // skip remaining arguments checks if rest type is any type
-            t = type();
+          t = type();
+          if (!(type === etc || t === anyType || isEmptyArray(t))) { // no checks if rest type is any type
             ref = args.slice(i);
             for (j = m = 0, len1 = ref.length; m < len1; j = ++m) {
               arg = ref[j];
