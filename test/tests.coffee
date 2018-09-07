@@ -1,4 +1,5 @@
-{typeOf, isType, sig, maybe, anyType, promised, etc, typedObject, typedSet, typedMap} = require '../index.js' # testing the build, not the source
+# testing the build, not the source
+{typeOf, isType, sig, maybe, anyType, promised, etc, typedObject, typedSet, typedMap} = require '../index.min.js'
 
 chai = require 'chai'
 chaiAsPromised = require 'chai-as-promised'
