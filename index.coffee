@@ -6,7 +6,6 @@ error = (msg) -> throw new Error switch msg[0]
 	when '@' then "Invalid signature: #{msg[1..]}"
 	else "Type error: #{msg}"
 
-
 ### typed classes ###
 
 class TypedObject
@@ -52,13 +51,20 @@ typedMap = (args...) -> new TypedMap(args...)
 etc = (args...) -> new Etc(args...)
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
-# NB: returning string instead of class because of special array case http://web.mit.edu/jwalden/www/isArray.html
 typeOf = (val) -> if val is undefined or val is null then '' + val else val.constructor.name
 
 # check that a value is of a given type or of any (undefined) type, e.g.: isType("foo", String)
-isType = (val, type) -> switch typeOf(type)
-	when 'undefined', 'null', 'String', 'Number', 'Boolean' then val is type # literal type or undefined or null
-	when 'Function' then switch type
+isType = (val, type) -> if Array.isArray(type) # NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
+	switch type.length
+		when 0 then true # any type: `[]`
+		when 1 # typed array type, e.g.: `Array(String)`
+			return false unless Array.isArray(val)
+			return true if isAnyType(type[0])
+			val.every((e) -> isType(e, type[0]))
+		else type.some((t) -> isType(val, t)) # union of types, e.g.: `[Object, null]`
+else switch type?.constructor
+	when undefined, String, Number, Boolean then val is type # literal type or undefined or null
+	when Function then switch type
 		# type helpers used directly as functions
 		when anyType then true
 		when promised, maybe, typedObject, typedSet, typedMap
@@ -66,32 +72,25 @@ isType = (val, type) -> switch typeOf(type)
 		when etc then error "!'etc' can not be used in types.!!!"
 		# constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
 		else val?.constructor is type
-	when 'Array' then switch type.length
-		when 0 then true # any type: `[]`
-		when 1 # typed array type, e.g.: `Array(String)`
-			return false unless Array.isArray(val)
-			return true if isAnyType(type[0])
-			val.every((e) -> isType(e, type[0]))
-		else type.some((t) -> isType(val, t)) # union of types, e.g.: `[Object, null]`
-	when 'Object' # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
+	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
 		return not Object.keys(val).length unless Object.keys(type).length
 		for k, v of type
 			return false unless isType(val[k], v)
 		true
-	when 'TypedObject'
+	when TypedObject
 		return false unless val?.constructor is Object
 		t = type.type
 		return true if isAnyType(t)
 		Object.values(val).every((v) -> isType(v, t))
-	when 'TypedSet'
+	when TypedSet
 		return false unless val?.constructor is Set
 		t = type.type
 		return true if isAnyType(t)
 		error "!Typed Set type can not be a literal
 				of type '#{t}'." if typeOf(t) in ['undefined', 'null', 'String', 'Number', 'Boolean']
 		[val...].every((e) -> isType(e, t))
-	when 'TypedMap'
+	when TypedMap
 		return false unless val?.constructor is Map
 		{keysType, valuesType} = type
 		switch
@@ -102,9 +101,9 @@ isType = (val, type) -> switch typeOf(type)
 				keys = Array.from(val.keys())
 				values = Array.from(val.values())
 				keys.every((e) -> isType(e, keysType)) and values.every((e) -> isType(e, valuesType))
-	when 'Etc' then error "!'etc' can not be used in types."
+	when Etc then error "!'etc' can not be used in types."
 	else
-		prefix = if typeOf(type) in ['Set', 'Map'] then 'the provided Typed' else ''
+		prefix = if type.constructor in [Set, Map] then 'the provided Typed' else ''
 		error "!Type can not be an instance of #{typeOf(type)}. Use #{prefix}#{typeOf(type)} as type instead."
 
 # not exported: get type name for signature error messages (supposing type is always correct)

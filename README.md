@@ -2,15 +2,17 @@
 runtime-signature
 =================
 
-Type-checking for functions at runtime with native JavaScript types signatures. Primarily designed for CoffeeScript but you can use it in JavaScript as well.
+Type-checking for functions at runtime with native JavaScript types signatures.
+
 
 Features
 --------
 
-* Super-simple syntax: native types
-* Efficient: direct type evaluation, no string to parse
-* Lightweight: ± 100 LOC
-* No dependencies
+* Super-simple native types syntax, highlighted by your editor of choice.
+* Efficient: direct type evaluation, no string to parse.
+* Lightweight: 6.1 kb minified, 2.1 kb minified and gzipped.
+* No dependencies.
+* :coffee: Primarily designed for CoffeeScript but you can use it in JavaScript as well.
 
 Install
 -------
@@ -28,11 +30,11 @@ Usage
 
 > sig( [ <argument 1 type\>, <argument 2 type\>, …, <argument n type\> ], <result type\>, <function\> )
 
-To add a signature to a function, wrap the function with the `sig` function
+To add a signature to a function, wrap the function with the `sig` function.
 
 ### CoffeeScript
 
-You can ommit the parentheses, resulting in a very clean syntax.
+You can ommit the parentheses, resulting in a very clean syntax:
 
 ```coffee
 import { sig } from 'runtime-signature'
@@ -58,7 +60,7 @@ add(5, 1);   // 6
 add('5', 1); // Type error: Argument number 1 (5) should be of type Number instead of String.
 ```
 
-**NB**: For later on, all examples will be on CoffeeScript :coffee:
+**Note**: For later on, all examples will be on CoffeeScript :coffee:
 
 Type syntax
 -----------

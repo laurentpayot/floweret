@@ -147,7 +147,6 @@ etc = function(...args) {
 };
 
 // typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
-// NB: returning string instead of class because of special array case http://web.mit.edu/jwalden/www/isArray.html
 typeOf = function(val) {
   if (val === void 0 || val === null) {
     return '' + val;
@@ -159,121 +158,121 @@ typeOf = function(val) {
 // check that a value is of a given type or of any (undefined) type, e.g.: isType("foo", String)
 isType = function(val, type) {
   var k, keys, keysType, prefix, ref, ref1, t, v, values, valuesType;
-  switch (typeOf(type)) {
-    case 'undefined':
-    case 'null':
-    case 'String':
-    case 'Number':
-    case 'Boolean':
-      return val === type; // literal type or undefined or null
-    case 'Function':
-      switch (type) {
-        // type helpers used directly as functions
-        case anyType:
-          return true;
-        case promised:
-        case maybe:
-        case typedObject:
-        case typedSet:
-        case typedMap:
-          return error(`!'${type.name}' can not be used directly as a function.`);
-        case etc:
-          return error("!'etc' can not be used in types.!!!");
-        default:
-          // constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
-          return (val != null ? val.constructor : void 0) === type;
-      }
-      break;
-    case 'Array':
-      switch (type.length) {
-        case 0:
-          return true; // any type: `[]`
-        case 1: // typed array type, e.g.: `Array(String)`
-          if (!Array.isArray(val)) {
-            return false;
-          }
-          if (isAnyType(type[0])) {
-            return true;
-          }
-          return val.every(function(e) {
-            return isType(e, type[0]);
-          });
-        default:
-          return type.some(function(t) {
-            return isType(val, t); // union of types, e.g.: `[Object, null]`
-          });
-      }
-      break;
-    case 'Object': // Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
-      if ((val != null ? val.constructor : void 0) !== Object) {
-        return false;
-      }
-      if (!Object.keys(type).length) {
-        return !Object.keys(val).length;
-      }
-      for (k in type) {
-        v = type[k];
-        if (!isType(val[k], v)) {
+  if (Array.isArray(type)) { // NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
+    switch (type.length) {
+      case 0:
+        return true; // any type: `[]`
+      case 1: // typed array type, e.g.: `Array(String)`
+        if (!Array.isArray(val)) {
           return false;
         }
-      }
-      return true;
-    case 'TypedObject':
-      if ((val != null ? val.constructor : void 0) !== Object) {
-        return false;
-      }
-      t = type.type;
-      if (isAnyType(t)) {
-        return true;
-      }
-      return Object.values(val).every(function(v) {
-        return isType(v, t);
-      });
-    case 'TypedSet':
-      if ((val != null ? val.constructor : void 0) !== Set) {
-        return false;
-      }
-      t = type.type;
-      if (isAnyType(t)) {
-        return true;
-      }
-      if ((ref = typeOf(t)) === 'undefined' || ref === 'null' || ref === 'String' || ref === 'Number' || ref === 'Boolean') {
-        error(`!Typed Set type can not be a literal of type '${t}'.`);
-      }
-      return [...val].every(function(e) {
-        return isType(e, t);
-      });
-    case 'TypedMap':
-      if ((val != null ? val.constructor : void 0) !== Map) {
-        return false;
-      }
-      ({keysType, valuesType} = type);
-      switch (false) {
-        case !(isAnyType(keysType) && isAnyType(valuesType)):
+        if (isAnyType(type[0])) {
           return true;
-        case !isAnyType(keysType):
-          return Array.from(val.values()).every(function(e) {
-            return isType(e, valuesType);
-          });
-        case !isAnyType(valuesType):
-          return Array.from(val.keys()).every(function(e) {
-            return isType(e, keysType);
-          });
-        default:
-          keys = Array.from(val.keys());
-          values = Array.from(val.values());
-          return keys.every(function(e) {
-            return isType(e, keysType);
-          }) && values.every(function(e) {
-            return isType(e, valuesType);
-          });
-      }
-      break;
-    case 'Etc':
-      return error("!'etc' can not be used in types.");
-    default:
-      prefix = (ref1 = typeOf(type)) === 'Set' || ref1 === 'Map' ? 'the provided Typed' : '';
-      return error(`!Type can not be an instance of ${typeOf(type)}. Use ${prefix}${typeOf(type)} as type instead.`);
+        }
+        return val.every(function(e) {
+          return isType(e, type[0]);
+        });
+      default:
+        return type.some(function(t) {
+          return isType(val, t); // union of types, e.g.: `[Object, null]`
+        });
+    }
+  } else {
+    switch (type != null ? type.constructor : void 0) {
+      case void 0:
+      case String:
+      case Number:
+      case Boolean:
+        return val === type; // literal type or undefined or null
+      case Function:
+        switch (type) {
+          // type helpers used directly as functions
+          case anyType:
+            return true;
+          case promised:
+          case maybe:
+          case typedObject:
+          case typedSet:
+          case typedMap:
+            return error(`!'${type.name}' can not be used directly as a function.`);
+          case etc:
+            return error("!'etc' can not be used in types.!!!");
+          default:
+            // constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
+            return (val != null ? val.constructor : void 0) === type;
+        }
+        break;
+      case Object: // Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
+        if ((val != null ? val.constructor : void 0) !== Object) {
+          return false;
+        }
+        if (!Object.keys(type).length) {
+          return !Object.keys(val).length;
+        }
+        for (k in type) {
+          v = type[k];
+          if (!isType(val[k], v)) {
+            return false;
+          }
+        }
+        return true;
+      case TypedObject:
+        if ((val != null ? val.constructor : void 0) !== Object) {
+          return false;
+        }
+        t = type.type;
+        if (isAnyType(t)) {
+          return true;
+        }
+        return Object.values(val).every(function(v) {
+          return isType(v, t);
+        });
+      case TypedSet:
+        if ((val != null ? val.constructor : void 0) !== Set) {
+          return false;
+        }
+        t = type.type;
+        if (isAnyType(t)) {
+          return true;
+        }
+        if ((ref = typeOf(t)) === 'undefined' || ref === 'null' || ref === 'String' || ref === 'Number' || ref === 'Boolean') {
+          error(`!Typed Set type can not be a literal of type '${t}'.`);
+        }
+        return [...val].every(function(e) {
+          return isType(e, t);
+        });
+      case TypedMap:
+        if ((val != null ? val.constructor : void 0) !== Map) {
+          return false;
+        }
+        ({keysType, valuesType} = type);
+        switch (false) {
+          case !(isAnyType(keysType) && isAnyType(valuesType)):
+            return true;
+          case !isAnyType(keysType):
+            return Array.from(val.values()).every(function(e) {
+              return isType(e, valuesType);
+            });
+          case !isAnyType(valuesType):
+            return Array.from(val.keys()).every(function(e) {
+              return isType(e, keysType);
+            });
+          default:
+            keys = Array.from(val.keys());
+            values = Array.from(val.values());
+            return keys.every(function(e) {
+              return isType(e, keysType);
+            }) && values.every(function(e) {
+              return isType(e, valuesType);
+            });
+        }
+        break;
+      case Etc:
+        return error("!'etc' can not be used in types.");
+      default:
+        prefix = (ref1 = type.constructor) === Set || ref1 === Map ? 'the provided Typed' : '';
+        return error(`!Type can not be an instance of ${typeOf(type)}. Use ${prefix}${typeOf(type)} as type instead.`);
+    }
   }
 };
 
