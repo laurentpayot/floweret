@@ -25,6 +25,7 @@
         error("!typedObject must have exactly one type argument.");
       }
       if (isAnyType(this.type)) {
+        // NB: return needed to force constructor to return Object instead of new TypedObject instance
         return Object;
       }
     }
@@ -38,6 +39,7 @@
         error("!typedSet must have exactly one type argument.");
       }
       if (isAnyType(this.type)) {
+        // NB: return needed to force constructor to return Set instead of new TypedSet instance
         return Set;
       }
     }
@@ -49,7 +51,9 @@
       constructor(type1, type2) {
         switch (arguments.length) {
           case 0:
-            return error("!typedMap must have at least one type argument.");
+            error("!typedMap must have at least one type argument.");
+            break;
+          // NB: returns needed to force constructor to return Map instead of new TypedMap instance
           case 1:
             if (isAnyType(type1)) {
               return Map;
