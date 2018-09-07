@@ -412,8 +412,8 @@ describe "isType", ->
 
 		context "Any type elements", ->
 
-			it "typedSet() should return Set type.", ->
-				expect(typedSet()).to.equal(Set)
+			it "typedSet() should throw an error", ->
+				expect(-> typedSet()).to.throw("typedSet must have exactly one type argument.")
 
 			it "typedSet([]) should return Set type.", ->
 				expect(typedSet([])).to.equal(Set)
@@ -421,8 +421,8 @@ describe "isType", ->
 			it "typedSet(anyType) should return Set type.", ->
 				expect(typedSet(anyType)).to.equal(Set)
 
-			it "typedSet should behave as Set type.", ->
-				expect(isType(val, typedSet)).to.equal(isType(val, Set)) for val in VALUES
+			it "typedSet used as a function should throw an error.", ->
+				expect(-> isType(1, typedSet)).to.throw("'typedSet' can not be used directly as a function.")
 
 		context "Native Type elements", ->
 
@@ -492,8 +492,8 @@ describe "isType", ->
 
 		context "Any type elements", ->
 
-			it "typedMap() should return Map type.", ->
-				expect(typedMap()).to.equal(Map)
+			it "typedMap() should throw an error.", ->
+				expect(-> typedMap()).to.throw("Invalid type syntax: typedMap must have at least one type argument.")
 
 			it "typedMap([]) should return Map type.", ->
 				expect(typedMap([])).to.equal(Map)
@@ -507,8 +507,8 @@ describe "isType", ->
 			it "typedMap(anyType, anyType) should return Map type.", ->
 				expect(typedMap(anyType, anyType)).to.equal(Map)
 
-			it "typedMap should behave as Map type.", ->
-				expect(isType(val, typedMap)).to.equal(isType(val, Map)) for val in VALUES
+			it "typedMap used as a function should throw an error.", ->
+				expect(-> isType(1, typedMap)).to.throw("typedMap' can not be used directly as a function.")
 
 		context "Native Type elements", ->
 
@@ -604,9 +604,9 @@ describe "isType", ->
 
 		it "should throw an error for a promised number.", ->
 			expect(-> isType(Promise.resolve(1), Promise.resolve(Number)))
-			.to.throw("Type can not be an instance of Promise. Use the Promise class as type instead.")
+			.to.throw("Type can not be an instance of Promise. Use Promise as type instead.")
 			expect(-> isType(Promise.resolve(1), promised(Number)))
-			.to.throw("Type can not be an instance of Promise. Use the Promise class as type instead.")
+			.to.throw("Type can not be an instance of Promise. Use Promise as type instead.")
 
 	context "Custom type (class)", ->
 
@@ -628,7 +628,7 @@ describe "isType", ->
 		it "should throw an error when type is not a native type nor an object nor an array of types
 			nor a string or number or boolean literal.", ->
 			expect(-> isType(val, Symbol("foo")))
-			.to.throw("Type can not be an instance of Symbol. Use the Symbol class as type instead.") for val in VALUES
+			.to.throw("Type can not be an instance of Symbol. Use Symbol as type instead.") for val in VALUES
 
 
 ###

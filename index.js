@@ -19,8 +19,8 @@
 
   /* typed classes */
   TypedObject = class TypedObject {
-    constructor(type2) {
-      this.type = type2;
+    constructor(type1) {
+      this.type = type1;
       if (arguments.length !== 1) {
         error("!typedObject must have exactly one type argument.");
       }
@@ -32,8 +32,8 @@
   };
 
   TypedSet = class TypedSet {
-    constructor(type2) {
-      this.type = type2;
+    constructor(type1) {
+      this.type = type1;
       if (arguments.length !== 1) {
         error("!typedSet must have exactly one type argument.");
       }
@@ -63,7 +63,7 @@
               return Map;
             } else {
               [this.keysType, this.valuesType] = [
-                type1,
+                t1,
                 t2 // return needed
               ];
             }
