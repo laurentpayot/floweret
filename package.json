@@ -26,13 +26,14 @@
     "node": ">=7.6.0"
   },
   "scripts": {
-    "build": "coffee -c index.coffee test/tests.coffee",
+    "build": "coffee -c index.coffee test/tests.coffee && uglifyjs -cm -o index.js -- index.js",
     "test": "npm run build && mocha"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "coffeescript": "^2.3.1",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "uglify-es": "^3.3.9"
   }
 }
