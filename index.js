@@ -17,6 +17,68 @@
     })());
   };
 
+  /* typed classes */
+  TypedObject = class TypedObject {
+    constructor(type3) {
+      this.type = type3;
+      if (arguments.length !== 1) {
+        error("!typedObject must have exactly one type argument.");
+      }
+      if (isAnyType(this.type)) {
+        return Object;
+      }
+    }
+
+  };
+
+  TypedSet = class TypedSet {
+    constructor(type3) {
+      this.type = type3;
+      if (arguments.length !== 1) {
+        error("!typedSet must have exactly one type argument.");
+      }
+      if (isAnyType(this.type)) {
+        return Set;
+      }
+    }
+
+  };
+
+  TypedMap = (function() {
+    class TypedMap {
+      constructor(type1, type2) {
+        switch (arguments.length) {
+          case 0:
+            return error("!typedMap must have at least one type argument.");
+          case 1:
+            if (isAnyType(type1)) {
+              return Map;
+            } else {
+              this.valuesType = type1;
+            }
+            break;
+          case 2:
+            if (isAnyType(type1) && isAnyType(type2)) {
+              return Map;
+            } else {
+              [this.keysType, this.valuesType] = [type1, type2];
+            }
+            break;
+          default:
+            error("!typedMap can not have more than two type arguments.");
+        }
+      }
+
+    };
+
+    TypedMap.prototype.keysType = [];
+
+    TypedMap.prototype.valuesType = [];
+
+    return TypedMap;
+
+  }).call(this);
+
   // not exported
   isAnyType = function(o) {
     return o === anyType || Array.isArray(o) && o.length === 0;
@@ -68,72 +130,16 @@
     }
   };
 
-  /* typed classes and their associated helpers */
-  TypedObject = class TypedObject {
-    constructor(type3) {
-      this.type = type3;
-    }
-
+  typedObject = function(...args) {
+    return new TypedObject(...args);
   };
 
-  typedObject = function(type) {
-    if (arguments.length !== 1) {
-      error("!typedObject must have exactly one type argument.");
-    }
-    if (isAnyType(type)) {
-      return Object;
-    } else {
-      return new TypedObject(type);
-    }
+  typedSet = function(...args) {
+    return new TypedSet(...args);
   };
 
-  TypedSet = class TypedSet {
-    constructor(type3) {
-      this.type = type3;
-    }
-
-  };
-
-  typedSet = function(type) {
-    if (arguments.length !== 1) {
-      error("!typedSet must have exactly one type argument.");
-    }
-    if (isAnyType(type)) {
-      return Set;
-    } else {
-      return new TypedSet(type);
-    }
-  };
-
-  TypedMap = class TypedMap {
-    constructor(keysType1, valuesType1) {
-      this.keysType = keysType1;
-      this.valuesType = valuesType1;
-    }
-
-  };
-
-  typedMap = function(type1, type2) {
-    switch (arguments.length) {
-      case 0:
-        return error("!typedMap must have at least one type argument.");
-      case 1:
-        if (isAnyType(type1)) {
-          return Map;
-        } else {
-          return new TypedMap([], type1);
-        }
-        break;
-      case 2:
-        if (isAnyType(type1) && isAnyType(type2)) {
-          return Map;
-        } else {
-          return new TypedMap(type1, type2);
-        }
-        break;
-      default:
-        return error("!typedMap can not have more than two type arguments.");
-    }
+  typedMap = function(...args) {
+    return new TypedMap(...args);
   };
 
   // typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.

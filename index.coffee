@@ -4,6 +4,32 @@ error = (msg) -> throw new Error switch msg[0]
 	when '@' then "Invalid signature: #{msg[1..]}"
 	else "Type error: #{msg}"
 
+
+### typed classes ###
+
+class TypedObject
+	constructor: (@type) ->
+		error "!typedObject must have exactly one type argument." unless arguments.length is 1
+		if isAnyType(@type) then return Object
+
+
+class TypedSet
+	constructor: (@type) ->
+		error "!typedSet must have exactly one type argument." unless arguments.length is 1
+		if isAnyType(@type) then return Set
+
+class TypedMap
+	keysType: []
+	valuesType: []
+	constructor: (type1, type2) -> switch arguments.length
+		when 0 then return error "!typedMap must have at least one type argument."
+		when 1
+			if isAnyType(type1) then return Map else @valuesType = type1
+		when 2
+			if isAnyType(type1) and isAnyType(type2) then return Map else [@keysType, @valuesType] = [type1, type2]
+		else error "!typedMap can not have more than two type arguments."
+
+
 # not exported
 isAnyType = (o) -> o is anyType or Array.isArray(o) and o.length is 0
 
@@ -20,34 +46,9 @@ etc = (type) -> switch arguments.length
 	when 0 then etc
 	when 1 then (_etc = -> type) # returns a function with name property '_etc'
 	else error "!'etc' can not have more than one type argument."
-
-### typed classes and their associated helpers ###
-
-class TypedObject
-	constructor: (@type) ->
-
-typedObject = (type) ->
-	error "!typedObject must have exactly one type argument." unless arguments.length is 1
-	if isAnyType(type) then Object else new TypedObject(type)
-
-class TypedSet
-	constructor: (@type) ->
-
-typedSet = (type) ->
-	error "!typedSet must have exactly one type argument." unless arguments.length is 1
-	if isAnyType(type) then Set else new TypedSet(type)
-
-class TypedMap
-	constructor: (@keysType, @valuesType) ->
-
-typedMap = (type1, type2) -> switch arguments.length
-	when 0 then return error "!typedMap must have at least one type argument."
-	when 1
-		if isAnyType(type1) then return Map else new TypedMap([], type1)
-	when 2
-		if isAnyType(type1) and isAnyType(type2) then return Map else new TypedMap(type1, type2)
-	else error "!typedMap can not have more than two type arguments."
-
+typedObject = (args...) -> new TypedObject(args...)
+typedSet = (args...) -> new TypedSet(args...)
+typedMap = (args...) -> new TypedMap(args...)
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
 # NB: returning string instead of class because of special array case http://web.mit.edu/jwalden/www/isArray.html

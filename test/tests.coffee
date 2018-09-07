@@ -40,15 +40,6 @@ testTypes = (val, type) ->
 	expect(isType(val, t)).to.be.false for t in NATIVE_TYPES when t isnt type
 
 
-describe.skip "DEV", ->
-
-	context "construction", ->
-
-		it "should throw an error if signature is missing its arguments types array", ->
-			typedObject('hehehe')
-
-
-
 ###
 	████████╗██╗   ██╗██████╗ ███████╗ ██████╗ ███████╗
 	╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔═══██╗██╔════╝
