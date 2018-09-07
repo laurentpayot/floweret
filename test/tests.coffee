@@ -1,5 +1,5 @@
 # testing the build, not the source
-{typeOf, isType, sig, maybe, anyType, promised, etc, typedObject, typedSet, typedMap} = require '../index.min.js'
+{typeOf, isType, sig, maybe, anyType, promised, etc, typedObject, typedSet, typedMap} = require '../runtime-signature.min.js'
 
 chai = require 'chai'
 chaiAsPromised = require 'chai-as-promised'
