@@ -30,6 +30,8 @@ class TypedMap
 			if isAnyType(t1) and isAnyType(t2) then return Map else [@keysType, @valuesType] = [t1, t2] # return needed
 		else error "!typedMap can not have more than two type arguments."
 
+class Etc # typed rest arguments list
+	constructor: (@type=[]) -> error "!'etc' can not have more than one type argument." if arguments.length > 1
 
 # not exported
 isAnyType = (o) -> o is anyType or Array.isArray(o) and o.length is 0
@@ -43,13 +45,11 @@ maybe = (types...) ->
 promised = (type) ->
 	error "!'promised' must have exactly one type argument." unless arguments.length is 1
 	if isAnyType(type) then Promise else Promise.resolve(type)
-etc = (type) -> switch arguments.length
-	when 0 then etc
-	when 1 then (_etc = -> type) # returns a function with name property '_etc'
-	else error "!'etc' can not have more than one type argument."
+
 typedObject = (args...) -> new TypedObject(args...)
 typedSet = (args...) -> new TypedSet(args...)
 typedMap = (args...) -> new TypedMap(args...)
+etc = (args...) -> new Etc(args...)
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
 # NB: returning string instead of class because of special array case http://web.mit.edu/jwalden/www/isArray.html
@@ -63,7 +63,7 @@ isType = (val, type) -> switch typeOf(type)
 		when anyType then true
 		when promised, maybe, typedObject, typedSet, typedMap
 			error "!'#{type.name}' can not be used directly as a function."
-		when etc then error "!'etc' can not be used in types."
+		when etc then error "!'etc' can not be used in types.!!!"
 		# constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
 		else val?.constructor is type
 	when 'Array' then switch type.length
@@ -102,6 +102,7 @@ isType = (val, type) -> switch typeOf(type)
 				keys = Array.from(val.keys())
 				values = Array.from(val.values())
 				keys.every((e) -> isType(e, keysType)) and values.every((e) -> isType(e, valuesType))
+	when 'Etc' then error "!'etc' can not be used in types."
 	else
 		prefix = if typeOf(type) in ['Set', 'Map'] then 'the provided Typed' else ''
 		error "!Type can not be an instance of #{typeOf(type)}. Use #{prefix}#{typeOf(type)} as type instead."
@@ -125,13 +126,13 @@ sig = (argTypes, resType, f) ->
 	(args...) -> # returns an unfortunately anonymous function
 		rest = false
 		for type, i in argTypes
-			if typeof type is 'function' and (type.name is '_etc' or type is etc) # rest type
+			if type is etc or type?.constructor is Etc # rest type
 				error "@Rest type must be the last of the arguments types." if i + 1 < argTypes.length
 				rest = true
-				t = type()
-				unless type is etc or isAnyType(t) # no checks if rest type is any type
+				t = if type is etc then [] else type.type
+				unless isAnyType(t) # no checks if rest type is any type
 					for arg, j in args[i..]
-						error "Argument number #{i+j+1} (#{arg}) should be of type #{typeName(type())}
+						error "Argument number #{i+j+1} (#{arg}) should be of type #{typeName(t)}
 								instead of #{typeOf(arg)}." unless isType(arg, t)
 			else
 				unless isAnyType(type) # not checking type if type is any type
@@ -141,11 +142,11 @@ sig = (argTypes, resType, f) ->
 						error "Argument number #{i+1} (#{args[i]}) should be of type #{typeName(type)}
 								instead of #{typeOf(args[i])}." unless isType(args[i], type)
 		error "Too many arguments provided." if args.length > argTypes.length and not rest
-		if isType(resType, Promise)
+		if resType?.constructor is Promise
 			# NB: not using `await` because CS would transpile the returned function as an async one
 			resType.then((promiseType) ->
 				promise = f(args...)
-				error "Function should return a promise." unless isType(promise, Promise)
+				error "Function should return a promise." unless promise?.constructor is Promise
 				promise.then((result) ->
 					error "Promise result (#{result}) should be of type #{typeName(promiseType)}
 							instead of #{typeOf(result)}." unless isType(result, promiseType)
