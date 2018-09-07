@@ -270,7 +270,7 @@
         }
         break;
       default:
-        prefix = (ref1 = typeOf(type)) === 'Set' || ref1 === 'Map' || ref1 === 'WeakSet' || ref1 === 'WeakMap' ? 'the provided Typed' : '';
+        prefix = (ref1 = typeOf(type)) === 'Set' || ref1 === 'Map' ? 'the provided Typed' : '';
         return error(`!Type can not be an instance of ${typeOf(type)}. Use ${prefix}${typeOf(type)} as type instead.`);
     }
   };

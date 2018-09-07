@@ -101,7 +101,7 @@ isType = (val, type) -> switch typeOf(type)
 				values = Array.from(val.values())
 				keys.every((e) -> isType(e, keysType)) and values.every((e) -> isType(e, valuesType))
 	else
-		prefix = if typeOf(type) in ['Set', 'Map', 'WeakSet', 'WeakMap'] then 'the provided Typed' else ''
+		prefix = if typeOf(type) in ['Set', 'Map'] then 'the provided Typed' else ''
 		error "!Type can not be an instance of #{typeOf(type)}. Use #{prefix}#{typeOf(type)} as type instead."
 
 # not exported: get type name for signature error messages (supposing type is always correct)
