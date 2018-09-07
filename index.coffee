@@ -1,3 +1,5 @@
+###* @license MIT (c) 2018 Laurent Payot  ###
+
 # trows customized error
 error = (msg) -> throw new Error switch msg[0]
 	when '!' then "Invalid type syntax: #{msg[1..]}"
