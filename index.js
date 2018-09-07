@@ -190,7 +190,7 @@
         break;
       case 'Set':
         if (type.size !== 1) {
-          error("!Typed set must have exactly one type argument.");
+          error("!Typed Set must have exactly one type element.");
         }
         if ((val != null ? val.constructor : void 0) !== Set) {
           return false;
@@ -207,7 +207,7 @@
         });
       case 'Map':
         if (type.size !== 1) {
-          error("!Typed map must have exactly one pair of types argument.");
+          error("!Typed Map must have exactly one pair of types.");
         }
         if ((val != null ? val.constructor : void 0) !== Map) {
           return false;

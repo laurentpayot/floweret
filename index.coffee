@@ -65,7 +65,7 @@ isType = (val, type) -> switch typeOf(type)
 		else # union of types, e.g.: `[Object, null]`
 			type.some((t) -> isType(val, t))
 	when 'Set'
-		error "!Typed set must have exactly one type argument." unless type.size is 1
+		error "!Typed Set must have exactly one type element." unless type.size is 1
 		return false unless val?.constructor is Set
 		t = [type...][0]
 		return true if isAnyType(t)
@@ -73,7 +73,7 @@ isType = (val, type) -> switch typeOf(type)
 				of type '#{t}'." if typeOf(t) in ['undefined', 'null', 'String', 'Number', 'Boolean']
 		[val...].every((e) -> isType(e, t))
 	when 'Map'
-		error "!Typed map must have exactly one pair of types argument." unless type.size is 1
+		error "!Typed Map must have exactly one pair of types." unless type.size is 1
 		return false unless val?.constructor is Map
 		[keysType, valuesType] = Array.from(type)[0]
 		switch
