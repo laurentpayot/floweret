@@ -67,9 +67,10 @@ isType = (val, type) -> switch typeOf(type)
 	when 'Array' then switch type.length
 		when 0 then true # any type: `[]`
 		when 1 # typed array type, e.g.: `Array(String)`
-			unless Array.isArray(val) then false else val.every((e) -> isType(e, type[0]))
-		else # union of types, e.g.: `[Object, null]`
-			type.some((t) -> isType(val, t))
+			return false unless Array.isArray(val)
+			return true if isAnyType(type[0])
+			val.every((e) -> isType(e, type[0]))
+		else type.some((t) -> isType(val, t)) # union of types, e.g.: `[Object, null]`
 	when 'Object' # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
 		return not Object.keys(val).length unless Object.keys(type).length

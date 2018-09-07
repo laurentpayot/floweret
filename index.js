@@ -181,15 +181,16 @@
           case 1: // typed array type, e.g.: `Array(String)`
             if (!Array.isArray(val)) {
               return false;
-            } else {
-              return val.every(function(e) {
-                return isType(e, type[0]);
-              });
             }
-            break;
+            if (isAnyType(type[0])) {
+              return true;
+            }
+            return val.every(function(e) {
+              return isType(e, type[0]);
+            });
           default:
             return type.some(function(t) {
-              return isType(val, t);
+              return isType(val, t); // union of types, e.g.: `[Object, null]`
             });
         }
         break;
