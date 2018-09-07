@@ -10,7 +10,7 @@ Features
 
 * Super-simple native types syntax, highlighted by your editor of choice.
 * Efficient: direct type evaluation, no string to parse.
-* Lightweight: 6.1 kb minified, 2.1 kb minified and gzipped.
+* Lightweight: 5.8 kb minified, 2.1 kb minified and gzipped.
 * No dependencies.
 * :coffee: Primarily designed for CoffeeScript but you can use it in JavaScript as well.
 

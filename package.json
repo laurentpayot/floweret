@@ -26,7 +26,7 @@
     "node": ">=7.6.0"
   },
   "scripts": {
-    "build": "coffee -cb index.coffee test/tests.coffee && uglifyjs -m --comments -o index.min.js -- index.js",
+    "build": "coffee -cb index.coffee test/tests.coffee && uglifyjs -cm --comments -o index.min.js -- index.js",
     "test": "npm run build && mocha"
   },
   "devDependencies": {
