@@ -25,7 +25,7 @@ class TypedMap
 		when 1
 			if isAnyType(t1) then return Map else @valuesType = t1 # return needed
 		when 2
-			if isAnyType(t1) and isAnyType(t2) then return Map else [@keysType, @valuesType] = [type1, t2] # return needed
+			if isAnyType(t1) and isAnyType(t2) then return Map else [@keysType, @valuesType] = [t1, t2] # return needed
 		else error "!typedMap can not have more than two type arguments."
 
 
