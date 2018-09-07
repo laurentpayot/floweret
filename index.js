@@ -19,13 +19,12 @@
 
   /* typed classes */
   TypedObject = class TypedObject {
-    constructor(type3) {
-      this.type = type3;
+    constructor(type2) {
+      this.type = type2;
       if (arguments.length !== 1) {
         error("!typedObject must have exactly one type argument.");
       }
-      if (isAnyType(this.type)) {
-        // NB: return needed to force constructor to return Object instead of new TypedObject instance
+      if (isAnyType(this.type)) { // return needed
         return Object;
       }
     }
@@ -33,13 +32,12 @@
   };
 
   TypedSet = class TypedSet {
-    constructor(type3) {
-      this.type = type3;
+    constructor(type2) {
+      this.type = type2;
       if (arguments.length !== 1) {
         error("!typedSet must have exactly one type argument.");
       }
-      if (isAnyType(this.type)) {
-        // NB: return needed to force constructor to return Set instead of new TypedSet instance
+      if (isAnyType(this.type)) { // return needed
         return Set;
       }
     }
@@ -48,24 +46,26 @@
 
   TypedMap = (function() {
     class TypedMap {
-      constructor(type1, type2) {
+      constructor(t1, t2) {
         switch (arguments.length) {
           case 0:
             error("!typedMap must have at least one type argument.");
             break;
-          // NB: returns needed to force constructor to return Map instead of new TypedMap instance
           case 1:
-            if (isAnyType(type1)) {
+            if (isAnyType(t1)) {
               return Map;
             } else {
-              this.valuesType = type1;
+              this.valuesType = t1; // return needed
             }
             break;
           case 2:
-            if (isAnyType(type1) && isAnyType(type2)) {
+            if (isAnyType(t1) && isAnyType(t2)) {
               return Map;
             } else {
-              [this.keysType, this.valuesType] = [type1, type2];
+              [this.keysType, this.valuesType] = [
+                type1,
+                t2 // return needed
+              ];
             }
             break;
           default:

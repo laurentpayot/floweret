@@ -10,25 +10,22 @@ error = (msg) -> throw new Error switch msg[0]
 class TypedObject
 	constructor: (@type) ->
 		error "!typedObject must have exactly one type argument." unless arguments.length is 1
-		# NB: return needed to force constructor to return Object instead of new TypedObject instance
-		return Object if isAnyType(@type)
+		return Object if isAnyType(@type) # return needed
 
 class TypedSet
 	constructor: (@type) ->
 		error "!typedSet must have exactly one type argument." unless arguments.length is 1
-		# NB: return needed to force constructor to return Set instead of new TypedSet instance
-		return Set if isAnyType(@type)
+		return Set if isAnyType(@type) # return needed
 
 class TypedMap
 	keysType: []
 	valuesType: []
-	constructor: (type1, type2) -> switch arguments.length
+	constructor: (t1, t2) -> switch arguments.length
 		when 0 then error "!typedMap must have at least one type argument."
-		# NB: returns needed to force constructor to return Map instead of new TypedMap instance
 		when 1
-			if isAnyType(type1) then return Map else @valuesType = type1
+			if isAnyType(t1) then return Map else @valuesType = t1 # return needed
 		when 2
-			if isAnyType(type1) and isAnyType(type2) then return Map else [@keysType, @valuesType] = [type1, type2]
+			if isAnyType(t1) and isAnyType(t2) then return Map else [@keysType, @valuesType] = [type1, t2] # return needed
 		else error "!typedMap can not have more than two type arguments."
 
 
