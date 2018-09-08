@@ -12,12 +12,9 @@ Features
 * Efficient: direct type evaluation, no string to parse.
 * Lightweight: 5.8 kb minified, 2.1 kb minified and gzipped.
 * No dependencies.
-* :coffee: Primarily designed for CoffeeScript but you can use it in JavaScript as well.
 
 Install
 -------
-
-**NB: Not on npm yet, stay tuned!**
 
 ```bash
 $ npm install runtime-signature
@@ -32,35 +29,39 @@ Usage
 
 To add a signature to a function, wrap the function with the `sig` function.
 
+### Javascript
+
+```js
+import { sig } from 'runtime-signature'
+
+const add = sig(
+  [Number, Number], Number,
+  function(a, b) {return a + b}
+)
+```
+or using the ES2015 arrow function syntax:
+
+```js
+import { sig } from 'runtime-signature'
+
+const add = sig(
+  [String, etc], String,
+  (a, b) => a + b 
+)
+```
+
 ### CoffeeScript
 
-You can ommit the parentheses, resulting in a very clean syntax:
+You can ommit the `sig` parentheses, resulting in a very clean syntax:
 
 ```coffee
 import { sig } from 'runtime-signature'
 
 add = sig [Number, Number], Number,
     (a, b) -> a + b
-
-add(5, 1)   # 6
-add('5', 1) # Type error: Argument number 1 (5) should be of type Number instead of String.
 ```
 
-### Javascript
-
-```js
-import { sig } from 'runtime-signature';
-
-const add = sig([Number, Number], Number,
-  function(a, b) {
-    return a + b;
-  });
-
-add(5, 1);   // 6
-add('5', 1); // Type error: Argument number 1 (5) should be of type Number instead of String.
-```
-
-**Note**: For later on, all examples will be on CoffeeScript :coffee:
+**Note**: For readability, all examples below will use the ES2015 arrow function syntax.
 
 Type syntax
 -----------
@@ -69,7 +70,7 @@ Type syntax
 
 > <native type\>
 
-All native JavaScript types are allowed as type:
+All native JavaScript type constructors are allowed as type:
 `Number`, `String`, `Array`, `Object`, `undefined`, `null`, `Promise`, `Map`, `Set`, etc.
 
 ### Union of types
