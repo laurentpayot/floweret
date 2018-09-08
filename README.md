@@ -34,7 +34,7 @@ To add a signature to a function, wrap the function with the `sig` function.
 ```js
 import { sig } from 'runtime-signature'
 
-const add = sig(
+f = sig(
   [Number, Number], Number,
   function(a, b) {return a + b}
 )
@@ -44,20 +44,20 @@ or using the ES2015 arrow function syntax:
 ```js
 import { sig } from 'runtime-signature'
 
-const add = sig(
-  [String, etc], String,
+f = sig(
+  [Number, Number], Number,
   (a, b) => a + b 
 )
 ```
 
 ### CoffeeScript
 
-You can ommit the `sig` parentheses, resulting in a very clean syntax:
+You can ommit the `sig` parentheses, resulting in a decorator-like syntax:
 
 ```coffee
 import { sig } from 'runtime-signature'
 
-add = sig [Number, Number], Number,
+f = sig [Number, Number], Number,
     (a, b) -> a + b
 ```
 
@@ -71,7 +71,19 @@ Type syntax
 > <native type\>
 
 All native JavaScript type constructors are allowed as type:
-`Number`, `String`, `Array`, `Object`, `undefined`, `null`, `Promise`, `Map`, `Set`, etc.
+`Number`, `String`, `Array`, `Object`, `Boolean`, `undefined`, `null`, `Promise`, `Set`, `Map`, `WeakMap`, `WeakSet`, etc.
+
+```js
+import { sig } from 'runtime-signature'
+
+f = sig(
+  [Number, String], Boolean,
+  (a, b) => a + b === '1a'  
+)
+
+f(1, 'a') // true
+f(1, 5)   // Error: Argument number 2 (5) should be of type String instead of Number.
+```
 
 ### Union of types
 
@@ -80,21 +92,36 @@ All native JavaScript type constructors are allowed as type:
 You can create a type that is the union of several types. Simply put them in a list.
 For instance the type `[Number, String]` will accept a number value or a string value value.
 
+```js
+import { sig } from 'runtime-signature'
+
+f = sig(
+  [Number, [Number, String]], String,
+  (a, b) => '' + a + b
+)
+
+f(1, 2)    // '12'
+f(1, '2')  // '12'
+f(1, true) // Type error: Argument number 2 (true) should be of type Number or String instead of Boolean.
+```
+
 ### Maybe type
 
 > maybe( <type\> )
 
-This is simply a shortcut to the union `[<type>, undefined, null]`. Usefull for optional parameters of a function, as shown in the [usage examples above](#usage).
+This is simply a shortcut to the union `[undefined, null, <type>]`. Usefull for optional parameters of a function, as shown in the [usage examples above](#usage).
 
-```coffee
+```js
 import { sig, maybe } from 'runtime-signature'
 
-add = sig [Number, maybe(Number)], Number,
-    (n1, n2=0) -> n1 + n2
+f = sig(
+  [Number, maybe(Number)], Number,
+  (a, b=0) => a + b       
+)
 
-add(5)      # 5
-add(5, 1)   # 6
-add(5, '1') # Error: Argument number 2 (1) should be of type Number instead of String.
+f(5)      # 5
+f(5, 1)   # 6
+f(5, '1') # Type error: Argument number 2 (1) should be of type undefined or null or Number instead of String.
 ```
 
 ### Literal type
