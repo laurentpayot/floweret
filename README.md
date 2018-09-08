@@ -109,37 +109,38 @@ f(1, true) // Type error: Argument number 2 (true) should be of type Number or S
 
 > maybe( <type\> )
 
-This is simply a shortcut to the union `[undefined, null, <type>]`. Usefull for optional parameters of a function, as shown in the [usage examples above](#usage).
+This is simply a shortcut to the union `[undefined, null, <type>]`. Usefull for optional parameters of a function:
 
 ```js
 import { sig, maybe } from 'runtime-signature'
 
 f = sig(
   [Number, maybe(Number)], Number,
-  (a, b=0) => a + b       
+  (a, b=0) => a + b
 )
 
-f(5)      # 5
-f(5, 1)   # 6
-f(5, '1') # Type error: Argument number 2 (1) should be of type undefined or null or Number instead of String.
+f(5)      // 5
+f(5, 1)   // 6
+f(5, '1') // Type error: Argument number 2 (1) should be of type undefined or null or Number instead of String.
 ```
 
 ### Literal type
 
-> <string or number or bolean\>
+> <string or number or boolean\>
 
-Literal types are useful when used inside an union list. You can then create a type of several literal values.
+Literals can only be strings, numbers or booleans. Literal are useful when used inside an union list.
 
 ```js
-['dev', 'prod']
-// or
-[0, 1, -1]
+f = sig(
+  [['development', 'production']], Boolean,
+  (mode) => process.env.NODE_ENV === mode 
+)
+
+f('production') // true or false
+f('staging')    // Type error: Argument number 1 (staging) should be literal 'development' or literal 'production' instead of String.
 ```
 
-:warning: Literals can only be
-
-
-### Typed arrays
+### Typed Array
 
 > Array(<type\>)
 
@@ -147,16 +148,8 @@ You can use the `Array` type for arrays with elements of any type, but most of t
 
 Simply use `Array(Number)` for an array of number.
 
-:warning: If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`). Otherwise you will get the union of types instead of the array of union of types.
-
-* Use `Array([Number, String])` to accept an array of elements that can be numbers or strings, such as `[1, "2", 3]`.
-* Use `[Array(Number), Array(String)]` to accept an array of numbers (such as `[1, 2, 3]`) or an array of strings (such as `["1", "2", "3"]`).
-
-### Typed sets
-
-> _Set(<type\>)
-
-**TODO!**
+:warning: If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`). Use `Array([Number, String])` to accept an array of elements that can be numbers or strings, such as `[1, "2", 3]`.
+If you forget the brackets you will get the union of types instead of the array of union of types, because in JavaScript `Array(Number, String)` is the same as `[Number, String]`.
 
 ### Object type
 
@@ -208,6 +201,25 @@ phoneType = [Number, undefined]
 nameType = {first: String, last: String, middle: [String, undefined]}
 userType = {id: Number, name: nameType, phone: phoneType}
 ```
+### Typed Object
+
+> typedObject(<values type\>)
+
+*Documentation in progress…*
+
+### Typed Set
+
+> typedSet(<elements type\>)
+
+*Documentation in progress…*
+
+### Typed Map
+
+> typedMap(<values type\>)
+or
+> typedMap(<keys type\>, <values type\>)
+
+*Documentation in progress…*
 
 Type tools
 ----------
