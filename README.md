@@ -74,8 +74,6 @@ All native JavaScript type constructors are allowed as type:
 `Number`, `String`, `Array`, `Object`, `Boolean`, `undefined`, `null`, `Promise`, `Set`, `Map`, `WeakMap`, `WeakSet`, etc.
 
 ```js
-import { fn } from 'runtime-signature'
-
 f = fn(
   [Number, String], Boolean,
   (a, b) => a + b === '1a'
@@ -93,8 +91,6 @@ You can create a type that is the union of several types. Simply put them in a l
 For instance the type `[Number, String]` will accept a number or a string.
 
 ```js
-import { fn } from 'runtime-signature'
-
 f = fn(
   [Number, [Number, String]], String,
   (a, b) => '' + a + b
@@ -159,13 +155,44 @@ If you forget the brackets you will get the union of types instead of the array 
 
 You can specify the types of an object values, at any depth.
 
-For instance:
-
 ```js
-{id: Number, name: {first: String, last: String, middle: [String, undefined]}}
+userType = {
+  id: Number,
+  name: {
+    first: String,
+    last: String,
+    middle: [String, undefined]
+  }
+}
+
+fullName = fn(
+  [userType], String,
+  (user) => Object.keys(user.name).join(' ')
+)
+
+Bob = {
+  id: 1234,
+  name: {
+    first: "Robert"
+    last: "Smith"
+  }
+}
+
+fullName(Bob)        // "Robert Smith"
+fullName({id: 1234}) // Type error: Argument number 1 ([object Object]) should be of type custom type object instead of Object.
 ```
 
-*Documentation in progress…*
+:warning: If values of an object argument match all the keys types of the object type, **the argument will be accepted even if it has more keys than the object type**:
+
+```js
+f = fn(
+  [{x: Number, y: Number}], Number,
+  (coords) => coords.x + 2 * coords.y
+)
+
+f({x: 1, y: 2})             // 5
+f({x: 1, y: 2, foo: "bar"}) // 5 (no error)
+```
 
 ### Custom class type
 
@@ -181,7 +208,7 @@ or
 
 > promised(<type\>)
 
-Promised types are usually used as the result type of the function signature.
+Promised types are used for the *result type* of the function signature.
 
 You can use the `Promise` type for promises that resolve with a value of any type, but most of the time it is better to specify the type of the resolved value.
 
