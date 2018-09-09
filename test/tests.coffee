@@ -883,7 +883,7 @@ describe "fn", ->
 
 	context "Error messages", ->
 
-		context "Native type argument", ->
+		context "Uncomposed type argument", ->
 
 			it "should return an error with 'undefined'", ->
 				f = fn [undefined], anyType, ->
@@ -922,8 +922,8 @@ describe "fn", ->
 
 			it "should return an error with 'custom object'", ->
 				f = fn [{a: String, b: Number}], anyType, ->
-				expect( -> f(1))
-				.to.throw("Argument number 1 (1) should be of type custom type object instead of Number.")
+				expect( -> f(a: 1, b: 2))
+				.to.throw("Argument number 1 ([object Object]) should be of type custom type object instead of Object.")
 
 			it "should return an error with 'MyClass", ->
 				class MyClass
@@ -998,6 +998,3 @@ describe "fn", ->
 				f = fn [Array(anyType)], anyType, ->
 				expect( -> f(1))
 				.to.throw("Argument number 1 (1) should be of type array of 'any type' instead of Number.")
-
-		context "Object type argument", ->
-
