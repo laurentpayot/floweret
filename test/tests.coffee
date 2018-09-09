@@ -241,6 +241,12 @@ describe "isType", ->
 		it "should return false if value is empty object but type unempty object.", ->
 			expect(isType({}, {a: Number})).to.be.false
 
+		it "should return true if same object type but one more key.", ->
+			expect(isType({a: 1, b: 2, c: 'foo'}, {a: Number, b: Number})).to.be.true
+
+		it "should return false if same object type but one key less.", ->
+			expect(isType({a: 1}, {a: Number, b: Number})).to.be.false
+
 		it "should return false for a custom type and non object values", ->
 			UserType =
 				id: Number
@@ -255,6 +261,7 @@ describe "isType", ->
 				id: Number
 				name: String
 			expect(isType({id: 1234, name: "Smith"}, UserType)).to.be.true
+			expect(isType({id: 1234, name: "Smith", foo: "bar"}, UserType)).to.be.true
 			expect(isType({foo: 1234, name: "Smith"}, UserType)).to.be.false
 			expect(isType({id: '1234', name: "Smith"}, UserType)).to.be.false
 			expect(isType({id: 1234, name: ["Smith"]}, UserType)).to.be.false

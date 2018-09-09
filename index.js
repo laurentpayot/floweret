@@ -196,7 +196,7 @@ isType = function(val, type) {
           case typedMap:
             return error(`!'${type.name}' can not be used directly as a function.`);
           case etc:
-            return error("!'etc' can not be used in types.!!!");
+            return error("!'etc' can not be used in types.");
           default:
             // constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
             return (val != null ? val.constructor : void 0) === type;
