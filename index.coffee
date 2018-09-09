@@ -69,7 +69,7 @@ else switch type?.constructor
 		when anyType then true
 		when promised, maybe, typedObject, typedSet, typedMap
 			error "!'#{type.name}' can not be used directly as a function."
-		when etc then error "!'etc' can not be used in types.!!!"
+		when etc then error "!'etc' can not be used in types."
 		# constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
 		else val?.constructor is type
 	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`

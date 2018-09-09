@@ -10,7 +10,7 @@ Features
 
 * Super-simple native types syntax, highlighted by your editor of choice.
 * Efficient: direct type evaluation, no string to parse.
-* Lightweight: 5.8 kb minified, 2.1 kb minified and gzipped.
+* Lightweight: 5.9 kb minified, 2.2 kb minified and gzipped.
 * No dependencies.
 
 Install
@@ -163,9 +163,11 @@ For instance:
 {id: Number, name: {first: String, last: String, middle: [String, undefined]}}
 ```
 
-### Custom type (class)
+### Custom class type
 
-**TODO!**
+> <custom class\>
+
+*Documentation in progress…*
 
 ### Promise type
 
@@ -185,12 +187,33 @@ For instance use `Promise.resolve([Object, null])` for a promise that will resol
 
 > []
 
+or
+
+> anyType
+
+```js
+import { fn, anyType } from 'runtime-signature'
+```
+
+*Documentation in progress…*
+
 ### Rest type
 
 > etc(<type\>)
 
+or (untyped)
+
+> etc
+
 :warning: Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
 CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in runtime-signature.
+
+```js
+import { etc } from 'runtime-signature'
+```
+
+*Documentation in progress…*
+
 
 ### Type composition
 
