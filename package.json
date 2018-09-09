@@ -17,6 +17,7 @@
     "signature",
     "runtime",
     "flow",
+    "javascript",
     "typescript",
     "coffeescript",
     "coffee"
