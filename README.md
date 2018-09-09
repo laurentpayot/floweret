@@ -61,10 +61,10 @@ f = fn [Number, Number], Number,
     (a, b) -> a + b
 ```
 
-**Note**: For readability, all examples below will use the ES2015 arrow function syntax.
-
 Type syntax
 -----------
+
+For readability, all examples below will use the ES2015 arrow function syntax.
 
 ### Native types
 
@@ -151,6 +151,8 @@ Simply use `Array(Number)` for an array of number.
 :warning: If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`). Use `Array([Number, String])` to accept an array of elements that can be numbers or strings, such as `[1, "2", 3]`.
 If you forget the brackets you will get the union of types instead of the array of union of types, because in JavaScript `Array(Number, String)` is the same as `[Number, String]`.
 
+*Documentation in progress…*
+
 ### Object type
 
 > {<key 1\>: <type 1\>, <key 2\>: <type 2\>, … , <key n\>: <type n\>}
@@ -163,6 +165,8 @@ For instance:
 {id: Number, name: {first: String, last: String, middle: [String, undefined]}}
 ```
 
+*Documentation in progress…*
+
 ### Custom class type
 
 > <custom class\>
@@ -173,7 +177,7 @@ For instance:
 
 > Promise.resolve(<type\>)
 
-or the shortcut (don't forget to import it)
+or
 
 > promised(<type\>)
 
@@ -182,6 +186,12 @@ Promised types are usually used as the result type of the function signature.
 You can use the `Promise` type for promises that resolve with a value of any type, but most of the time it is better to specify the type of the resolved value.
 
 For instance use `Promise.resolve([Object, null])` for a promise that will resolve with an object or the null value.
+
+```js
+import { fn, promised } from 'runtime-signature'
+```
+
+*Documentation in progress…*
 
 ### Any type wildcard
 
@@ -209,21 +219,11 @@ or (untyped)
 CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in runtime-signature.
 
 ```js
-import { etc } from 'runtime-signature'
+import { fn, etc } from 'runtime-signature'
 ```
 
 *Documentation in progress…*
 
-
-### Type composition
-
-As the types are simply JavaScript expressions, you can assign any type to a variable and use it to create new types.
-
-```js
-phoneType = [Number, undefined]
-nameType = {first: String, last: String, middle: [String, undefined]}
-userType = {id: Number, name: nameType, phone: phoneType}
-```
 ### Typed Object
 
 > typedObject(<values type\>)
@@ -239,10 +239,23 @@ userType = {id: Number, name: nameType, phone: phoneType}
 ### Typed Map
 
 > typedMap(<values type\>)
+
 or
+
 > typedMap(<keys type\>, <values type\>)
 
 *Documentation in progress…*
+
+Type composition
+----------------
+
+As the types are simply JavaScript expressions, you can assign any type to a variable and use it to create new types.
+
+```js
+phoneType = [Number, undefined]
+nameType = {first: String, last: String, middle: [String, undefined]}
+userType = {id: Number, name: nameType, phone: phoneType}
+```
 
 Type tools
 ----------
