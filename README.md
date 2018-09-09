@@ -90,7 +90,7 @@ f(1, 5)   // Error: Argument number 2 (5) should be of type String instead of Nu
 > [ <type 1\>, <type 2\>, … , <type n\> ]
 
 You can create a type that is the union of several types. Simply put them in a list.
-For instance the type `[Number, String]` will accept a number value or a string value value.
+For instance the type `[Number, String]` will accept a number or a string.
 
 ```js
 import { sig } from 'runtime-signature'
@@ -109,7 +109,7 @@ f(1, true) // Type error: Argument number 2 (true) should be of type Number or S
 
 > maybe( <type\> )
 
-This is simply a shortcut to the union `[undefined, null, <type>]`. Usefull for optional parameters of a function:
+This is simply a shortcut to the union `[undefined, null, <type>]`. Usefull for optional parameters of a function.
 
 ```js
 import { sig, maybe } from 'runtime-signature'
