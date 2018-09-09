@@ -118,7 +118,7 @@ typeName = (type) -> switch typeOf(type)
 	else typeOf(type)
 
 # wraps a function to check its arguments types and result type
-sig = (argTypes, resType, f) ->
+fn = (argTypes, resType, f) ->
 	error "@Array of arguments types is missing." unless Array.isArray(argTypes)
 	error "@Result type is missing." if resType?.constructor is Function and not resType.name
 	error "@Function to wrap is missing." unless f?.constructor is Function
@@ -159,4 +159,4 @@ sig = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {typeOf, isType, sig, maybe, anyType, promised, etc, typedObject, typedSet, typedMap}
+module.exports = {typeOf, isType, fn, maybe, anyType, promised, etc, typedObject, typedSet, typedMap}

@@ -25,16 +25,16 @@ $ yarn add runtime-signature
 Usage
 -----
 
-> sig( [ <argument 1 type\>, <argument 2 type\>, …, <argument n type\> ], <result type\>, <function\> )
+> fn( [ <argument 1 type\>, <argument 2 type\>, …, <argument n type\> ], <result type\>, <function\> )
 
-To add a signature to a function, wrap the function with the `sig` function.
+To add a signature to a function, wrap the function with the `fn` function.
 
 ### Javascript
 
 ```js
-import { sig } from 'runtime-signature'
+import { fn } from 'runtime-signature'
 
-f = sig(
+f = fn(
   [Number, Number], Number,
   function(a, b) {return a + b}
 )
@@ -42,22 +42,22 @@ f = sig(
 or using the ES2015 arrow function syntax:
 
 ```js
-import { sig } from 'runtime-signature'
+import { fn } from 'runtime-signature'
 
-f = sig(
+f = fn(
   [Number, Number], Number,
-  (a, b) => a + b 
+  (a, b) => a + b
 )
 ```
 
 ### CoffeeScript
 
-You can ommit the `sig` parentheses, resulting in a decorator-like syntax:
+You can ommit the `fn` parentheses, resulting in a decorator-like syntax:
 
 ```coffee
-import { sig } from 'runtime-signature'
+import { fn } from 'runtime-signature'
 
-f = sig [Number, Number], Number,
+f = fn [Number, Number], Number,
     (a, b) -> a + b
 ```
 
@@ -74,11 +74,11 @@ All native JavaScript type constructors are allowed as type:
 `Number`, `String`, `Array`, `Object`, `Boolean`, `undefined`, `null`, `Promise`, `Set`, `Map`, `WeakMap`, `WeakSet`, etc.
 
 ```js
-import { sig } from 'runtime-signature'
+import { fn } from 'runtime-signature'
 
-f = sig(
+f = fn(
   [Number, String], Boolean,
-  (a, b) => a + b === '1a'  
+  (a, b) => a + b === '1a'
 )
 
 f(1, 'a') // true
@@ -93,9 +93,9 @@ You can create a type that is the union of several types. Simply put them in a l
 For instance the type `[Number, String]` will accept a number or a string.
 
 ```js
-import { sig } from 'runtime-signature'
+import { fn } from 'runtime-signature'
 
-f = sig(
+f = fn(
   [Number, [Number, String]], String,
   (a, b) => '' + a + b
 )
@@ -112,9 +112,9 @@ f(1, true) // Type error: Argument number 2 (true) should be of type Number or S
 This is simply a shortcut to the union `[undefined, null, <type>]`. Usefull for optional parameters of a function.
 
 ```js
-import { sig, maybe } from 'runtime-signature'
+import { fn, maybe } from 'runtime-signature'
 
-f = sig(
+f = fn(
   [Number, maybe(Number)], Number,
   (a, b=0) => a + b
 )
@@ -131,9 +131,9 @@ f(5, '1') // Type error: Argument number 2 (1) should be of type undefined or nu
 Literals can only be strings, numbers or booleans. Literal are useful when used inside an union list.
 
 ```js
-f = sig(
+f = fn(
   [['development', 'production']], Boolean,
-  (mode) => process.env.NODE_ENV === mode 
+  (mode) => process.env.NODE_ENV === mode
 )
 
 f('production') // true or false
@@ -251,7 +251,7 @@ typeOf(Promise.resolve(1)) // 'Promise'
 Features to come
 ----------------
 
-* `sig` as a decorator, [when JavaScript decorators reaches stage 4 and are implemented in CoffeeScript](https://github.com/jashkenas/coffeescript/issues/4917#issuecomment-387220758).
+* `fn` as a decorator, [when JavaScript decorators reaches stage 4 and are implemented in CoffeeScript](https://github.com/jashkenas/coffeescript/issues/4917#issuecomment-387220758).
 
 Licence
 -------

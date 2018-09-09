@@ -1,5 +1,5 @@
 # testing the build, not the source
-{typeOf, isType, sig, maybe, anyType, promised, etc, typedObject, typedSet, typedMap} = require '../runtime-signature.min.js'
+{typeOf, isType, fn, maybe, anyType, promised, etc, typedObject, typedSet, typedMap} = require '../runtime-signature.min.js'
 
 chai = require 'chai'
 chaiAsPromised = require 'chai-as-promised'
@@ -640,243 +640,243 @@ describe "isType", ->
 	███████║██║╚██████╔╝
 	╚══════╝╚═╝ ╚═════╝
 ###
-describe "sig", ->
+describe "fn", ->
 
 	context "Arguments of signature itself", ->
 
 		it "should throw an error if signature is missing its arguments types array", ->
-			expect(-> (sig Number, -> 1))
+			expect(-> (fn Number, -> 1))
 			.to.throw("Array of arguments types is missing.")
 
 		it "should throw an error if signature arguments types array is not an array", ->
-			expect(-> (sig Number, Number, -> 1))
+			expect(-> (fn Number, Number, -> 1))
 			.to.throw("Array of arguments types is missing.")
 
 		it "should throw an error if signature result type is missing", ->
-			expect(-> (sig [Number], -> 1))
+			expect(-> (fn [Number], -> 1))
 			.to.throw("Result type is missing.")
 
 		it "should throw an error if signature function to wrap is missing", ->
-			expect(-> (sig [Number], Number))
+			expect(-> (fn [Number], Number))
 			.to.throw("Function to wrap is missing.")
 
 	context "Synchronous functions", ->
 
 		it "should do nothing if function returns a string", ->
-			f = sig [], String,
+			f = fn [], String,
 				-> "foo"
 			expect(f()).to.equal("foo")
 
 		it "should throw an error if function returns a number", ->
-			f = sig [], String,
+			f = fn [], String,
 				-> 1
 			expect(-> f()).to.throw("Result (1) should be of type String instead of Number.")
 
 		it "should throw an error if function returns undefined", ->
-			f = sig [], [String, Number],
+			f = fn [], [String, Number],
 				->
 			expect(-> f()).to.throw("Result (undefined) should be of type String or Number instead of undefined.")
 
 	context "Asynchronous functions", ->
 
 		it "should return a promise if function returns promise", ->
-			f = sig [], promised(Number),
+			f = fn [], promised(Number),
 				-> Promise.resolve(1)
 			expect(f()?.constructor).to.equal(Promise)
 
 		it "should do nothing if function returns a string promise", ->
-			f = sig [], promised(String),
+			f = fn [], promised(String),
 				-> Promise.resolve("foo")
 			expect(f()).to.eventually.equal("foo")
 
 		it "should throw an error if function returns a number promise", ->
-			f = sig [], promised(String),
+			f = fn [], promised(String),
 				-> Promise.resolve(1)
 			expect(f()).to.be.rejectedWith("Promise result (1) should be of type String instead of Number.")
 
 		it "should throw an error if promised used without type", ->
-			expect(-> sig [], promised(),
+			expect(-> fn [], promised(),
 				-> Promise.resolve(1)
 			).to.throw("'promised' must have exactly one type argument.")
 
 		it "should throw an error if promised used as a function", ->
-			f = sig [], promised,
+			f = fn [], promised,
 				-> Promise.resolve(1)
 			expect(-> f()).to.throw("'promised' can not be used directly as a function.")
 
 	context "Arguments number", ->
 
 		it "should do nothing if function has the right number of arguments", ->
-			f = sig [Number, [Number, String]], [],
+			f = fn [Number, [Number, String]], [],
 				(n1, n2=0) -> n1 + n2
 			expect(f(1, 2)).to.equal(3)
 
 		it "should raise an error if function has too many arguments", ->
-			f = sig [Number, [Number, String]], [],
+			f = fn [Number, [Number, String]], [],
 				(n1, n2=0) -> n1 + n2
 			expect(-> f(1, 2, 3)).to.throw("Too many arguments provided.")
 
 		it "should raise an error if function has too few arguments", ->
-			f = sig [Number, [Number, String]], [],
+			f = fn [Number, [Number, String]], [],
 				(n1, n2=0) -> n1 + n2
 			expect(-> f(1)).to.throw("Missing required argument number 2.")
 
 		it "should do nothing if all unfilled arguments are optional", ->
-			f = sig [Number, [Number, String, undefined]], [],
+			f = fn [Number, [Number, String, undefined]], [],
 				(n1, n2=0) -> n1 + n2
 			expect(f(1)).to.equal(1)
 			expect(f(1, undefined)).to.equal(1)
-			f = sig [Number, [Number, String, undefined], Number], [],
+			f = fn [Number, [Number, String, undefined], Number], [],
 				(n1, n2=0, n3) -> n1 + n2 + n3
 			expect(f(1, undefined, 3)).to.equal(4)
 
 		it "should do nothing if all unfilled arguments type is any type", ->
-			f = sig [Number, []], [],
+			f = fn [Number, []], [],
 				(n1, n2=0) -> n1 + n2
 			expect(f(1)).to.equal(1)
 			expect(f(1, undefined)).to.equal(1)
-			f = sig [Number, [], Number], [],
+			f = fn [Number, [], Number], [],
 				(n1, n2=0, n3) -> n1 + n2 + n3
 			expect(f(1, undefined, 3)).to.equal(4)
 
 		it "should raise an error if some unfilled arguments are not optional", ->
-			f = sig [Number, [Number, String, undefined], Number], [],
+			f = fn [Number, [Number, String, undefined], Number], [],
 				(n1, n2=0, n3) -> n1 + n2 + n3
 			expect(-> f(1)).to.throw("Missing required argument number 3.")
 			expect(-> f(1, 2)).to.throw("Missing required argument number 3.")
 
 		it "should raise an error when an optional argument is filled with null", ->
-			f = sig [Number, [Number, undefined]], [],
+			f = fn [Number, [Number, undefined]], [],
 				(n1, n2=0) -> n1 + n2
 			expect(-> f(1, null))
 			.to.throw("Argument number 2 (null) should be of type Number or undefined instead of null")
 
 		it "should raise an error when only an optional argument and value is null", ->
-			f = sig [undefined], [],
+			f = fn [undefined], [],
 				(n1=0) -> n1
 			expect(-> f(null)).to.throw("Argument number 1 (null) should be of type undefined instead of null.")
 
 		it "should raise an error when only an optional argument and value isnt undefined", ->
-			f = sig [undefined], [],
+			f = fn [undefined], [],
 				(n1=0) -> n1
 			expect(-> f(1)).to.throw("Argument number 1 (1) should be of type undefined instead of Number.")
 
 		it "should do nothing if only an optional argument and value is undefined", ->
-			f = sig [undefined], [],
+			f = fn [undefined], [],
 				(n1=0) -> n1
 			expect(f(undefined)).to.equal(0)
 
 		it "should do nothing if only an optional argument and value is not filled", ->
-			f = sig [undefined], [],
+			f = fn [undefined], [],
 				(n1=0) -> n1
 			expect(f()).to.equal(0)
 
 	context "Rest type", ->
 
 		it "should return the concatenation of zero argument of String type", ->
-			f = sig [etc(String)], String,
+			f = fn [etc(String)], String,
 				(str...) -> str.join('')
 			expect(f()).to.equal('')
-			f = sig [Number, etc(String)], String,
+			f = fn [Number, etc(String)], String,
 				(n, str...) -> n + str.join('')
 			expect(f(1)).to.equal('1')
 
 		it "should return the concatenation of one argument of String type", ->
-			f = sig [etc(String)], String,
+			f = fn [etc(String)], String,
 				(str...) -> str.join('')
 			expect(f('abc')).to.equal('abc')
-			f = sig [Number, etc(String)], String,
+			f = fn [Number, etc(String)], String,
 				(n, str...) -> n + str.join('')
 			expect(f(1, 'abc')).to.equal('1abc')
 
 		it "should return the concatenation of all the arguments of String type", ->
-			f = sig [etc(String)], String,
+			f = fn [etc(String)], String,
 				(str...) -> str.join('')
 			expect(f('a', 'bc', 'def')).to.equal('abcdef')
-			f = sig [Number, etc(String)], String,
+			f = fn [Number, etc(String)], String,
 				(n, str...) -> n + str.join('')
 			expect(f(1, 'a', 'bc', 'def')).to.equal('1abcdef')
 
 		it "should throw an error if an argument is not a string", ->
-			f = sig [etc(String)], String,
+			f = fn [etc(String)], String,
 				(str...) -> str.join('')
 			expect(-> f('a', 5, 'def'))
 			.to.throw("Argument number 2 (5) should be of type String instead of Number.")
-			f = sig [Number, etc(String)], String,
+			f = fn [Number, etc(String)], String,
 				(n, str...) -> n + str.join('')
 			expect(-> f(1, 'a', 5, 'def'))
 			.to.throw("Argument number 3 (5) should be of type String instead of Number.")
 
 		it "should throw an error if an argument is not a number", ->
-			f = sig [etc(Number)], String,
+			f = fn [etc(Number)], String,
 				(str...) -> str.join('')
 			expect(-> f('a', 5, 'def'))
 			.to.throw("Argument number 1 (a) should be of type Number instead of String.")
-			f = sig [Number, etc(Number)], String,
+			f = fn [Number, etc(Number)], String,
 				(n, str...) -> n + str.join('')
 			expect(-> f(1, 'a', 5, 'def'))
 			.to.throw("Argument number 2 (a) should be of type Number instead of String.")
 
 		it "should return the concatenation of all the arguments of String or Number type", ->
-			f = sig [etc([String, Number])], String,
+			f = fn [etc([String, Number])], String,
 				(str...) -> str.join('')
 			expect(f('a', 1, 'def')).to.equal('a1def')
-			f = sig [Number, etc([String, Number])], String,
+			f = fn [Number, etc([String, Number])], String,
 				(n, str...) -> n + str.join('')
 			expect(f(1, 'a', 2, 'def')).to.equal('1a2def')
 
 		it "should throw an error if an argument is not a string or a Number type", ->
-			f = sig [etc([String, Number])], String,
+			f = fn [etc([String, Number])], String,
 				(str...) -> str.join('')
 			expect(-> f('a', true, 'def'))
 			.to.throw("Argument number 2 (true) should be of type String or Number instead of Boolean.")
-			f = sig [Number, etc([String, Number])], String,
+			f = fn [Number, etc([String, Number])], String,
 				(n, str...) -> n + str.join('')
 			expect(-> f(1, 'a', true, 'def'))
 			.to.throw("Argument number 3 (true) should be of type String or Number instead of Boolean.")
 
 		# ### CoffeeScript only ###
 		# it "should NOT throw an error if splat is not the last of the argument types", ->
-		# 	f = sig [Number, etc(String)], String,
+		# 	f = fn [Number, etc(String)], String,
 		# 		(n, str...) -> n + str.join('')
 		# 	expect(f(1, 'a', 'b', 'c')).to.equal("abc1")
-		# 	f = sig [etc(String), Number], String,
+		# 	f = fn [etc(String), Number], String,
 		# 		(str..., n) -> str.join('') + n
 		# 	expect(f('a', 'b', 'c', 1)).to.equal("abc1")
-		# 	f = sig [Number, etc(String), Number], String,
+		# 	f = fn [Number, etc(String), Number], String,
 		# 		(n1, str..., n2) -> n1 + str.join('') + n2
 		# 	expect(f(1, 'a', 'b', 'c', 2)).to.equal("1abc2")
 
 		it "should throw an error if rest type is not the last of the argument types", ->
-			f = sig [etc(String), String], String,
+			f = fn [etc(String), String], String,
 				(str...) -> str.join('')
 			expect(-> f('a', 'bc', 'def'))
 			.to.throw("Rest type must be the last of the arguments types.")
-			f = sig [Number, etc(String), String], String,
+			f = fn [Number, etc(String), String], String,
 				(n, str...) -> n + str.join('')
 			expect(-> f(1, 'a', 'bc', 'def'))
 			.to.throw("Rest type must be the last of the arguments types.")
 
 		it "should return the concatenation of all the arguments of any type", ->
-			f = sig [etc([])], String,
+			f = fn [etc([])], String,
 				(str...) -> str.join('')
 			expect(f('a', 5, 'def')).to.equal('a5def')
-			f = sig [Number, etc([])], String,
+			f = fn [Number, etc([])], String,
 				(n, str...) -> n + str.join('')
 			expect(f(1, 'a', 5, 'def')).to.equal('1a5def')
 
 		it "should behave like etc([]) when type is ommited", ->
-			f = sig [etc()], String,
+			f = fn [etc()], String,
 				(str...) -> str.join('')
 			expect(f('a', 5, 'def')).to.equal('a5def')
-			f = sig [Number, etc()], String,
+			f = fn [Number, etc()], String,
 				(n, str...) -> n + str.join('')
 			expect(f(1, 'a', 5, 'def')).to.equal('1a5def')
 
 		it "should behave like etc([]) when used as a function", ->
-			f = sig [etc], String,
+			f = fn [etc], String,
 				(str...) -> str.join('')
 			expect(f('a', 5, 'def')).to.equal('a5def')
-			# f = sig [Number, etc], String,
+			# f = fn [Number, etc], String,
 			# 	(n, str...) -> n + str.join('')
 			# expect(f(1, 'a', 5, 'def')).to.equal('1a5def')
