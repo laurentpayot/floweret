@@ -107,15 +107,13 @@ else switch type?.constructor
 		error "!Type can not be an instance of #{typeOf(type)}. Use #{prefix}#{typeOf(type)} as type instead."
 
 # not exported: get type name for signature error messages (supposing type is always correct)
-typeName = (type) -> switch typeOf(type)
+typeName = (type) -> if isAnyType(type) then "any type" else switch typeOf(type)
+	when 'undefined', 'null' then typeOf(type)
 	when 'Array'
-		if type.length is 1
-			"array of #{typeName(type[0])}"
-		else
-			(typeName(t) for t in type).join(" or ")
+		if type.length is 1 then "array of '#{typeName(type[0])}'" else (typeName(t) for t in type).join(" or ")
 	when 'Function' then type.name
-	when 'Object' then "custom type"
-	else typeOf(type)
+	when 'Object' then "custom type object"
+	else "literal #{typeOf(type)} '#{type}'"
 
 # wraps a function to check its arguments types and result type
 fn = (argTypes, resType, f) ->

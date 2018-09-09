@@ -279,28 +279,35 @@ isType = function(val, type) {
 // not exported: get type name for signature error messages (supposing type is always correct)
 typeName = function(type) {
   var t;
-  switch (typeOf(type)) {
-    case 'Array':
-      if (type.length === 1) {
-        return `array of ${typeName(type[0])}`;
-      } else {
-        return ((function() {
-          var l, len, results;
-          results = [];
-          for (l = 0, len = type.length; l < len; l++) {
-            t = type[l];
-            results.push(typeName(t));
-          }
-          return results;
-        })()).join(" or ");
-      }
-      break;
-    case 'Function':
-      return type.name;
-    case 'Object':
-      return "custom type";
-    default:
-      return typeOf(type);
+  if (isAnyType(type)) {
+    return "any type";
+  } else {
+    switch (typeOf(type)) {
+      case 'undefined':
+      case 'null':
+        return typeOf(type);
+      case 'Array':
+        if (type.length === 1) {
+          return `array of '${typeName(type[0])}'`;
+        } else {
+          return ((function() {
+            var l, len, results;
+            results = [];
+            for (l = 0, len = type.length; l < len; l++) {
+              t = type[l];
+              results.push(typeName(t));
+            }
+            return results;
+          })()).join(" or ");
+        }
+        break;
+      case 'Function':
+        return type.name;
+      case 'Object':
+        return "custom type object";
+      default:
+        return `literal ${typeOf(type)} '${type}'`;
+    }
   }
 };
 
