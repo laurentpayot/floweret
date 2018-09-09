@@ -253,23 +253,23 @@ import { fn, etc } from 'runtime-signature'
 
 ### Typed Object
 
-> typedObject(<values type\>)
+> TypedObject(<values type\>)
 
 *Documentation in progress…*
 
 ### Typed Set
 
-> typedSet(<elements type\>)
+> TypedSet(<elements type\>)
 
 *Documentation in progress…*
 
 ### Typed Map
 
-> typedMap(<values type\>)
+> TypedMap(<values type\>)
 
 or
 
-> typedMap(<keys type\>, <values type\>)
+> TypedMap(<keys type\>, <values type\>)
 
 *Documentation in progress…*
 
