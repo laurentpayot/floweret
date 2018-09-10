@@ -10,7 +10,7 @@ Features
 
 * Super-simple native types syntax, highlighted by your editor of choice.
 * Efficient: direct type evaluation, no string to parse.
-* Lightweight: 5.9 kb minified, 2.2 kb minified and gzipped.
+* Lightweight: 6.5 kb minified, 2.3 kb minified and gzipped.
 * No dependencies.
 
 Install
