@@ -227,7 +227,7 @@ isType = function(val, type) {
           return false;
         }
         if (!Object.keys(type).length) {
-          return !Object.keys(val).length;
+          return true;
         }
         for (k in type) {
           v = type[k];

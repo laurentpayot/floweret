@@ -235,8 +235,8 @@ describe "isType", ->
 		it "should return true if both value and type are empty object.", ->
 			expect(isType({}, {})).to.be.true
 
-		it "should return false if type is empty object but value unempty object.", ->
-			expect(isType({a: 1}, {})).to.be.false
+		it "should return true if type is empty object but value unempty object.", ->
+			expect(isType({a: 1}, {})).to.be.true
 
 		it "should return false if value is empty object but type unempty object.", ->
 			expect(isType({}, {a: Number})).to.be.false
