@@ -304,8 +304,8 @@ isType = function(val, type) {
 };
 
 // not exported: get type name for signature error messages (supposing type is always correct)
-typeName = function(type) {
-  var t;
+typeName = function(type, val) {
+  var f, t;
   if (isAnyType(type)) {
     return "any type";
   } else {
@@ -330,7 +330,20 @@ typeName = function(type) {
       case Function:
         return type.name;
       case Object:
-        return "custom type object";
+        f = function(o, t) {
+          var k, ref, v;
+          for (k in t) {
+            v = t[k];
+            if (!isType(o[k], v)) {
+              if (((ref = o[k]) != null ? ref.constructor : void 0) === Object) {
+                return k + '.' + f(o[k], t[k]);
+              } else {
+                return k;
+              }
+            }
+          }
+        };
+        return "custom type object with key " + f(val, type) + " of type…";
       case _Tuple:
         return `tuple of ${type.types.length} elements '${((function() {
           var l, len, ref, results;
@@ -387,7 +400,7 @@ fn = function(argTypes, resType, f) {
             }
           } else {
             if (!isType(args[i], type)) {
-              error(`Argument number ${i + 1} (${args[i]}) should be of type ${typeName(type)} instead of ${typeOf(args[i])}.`);
+              error(`Argument number ${i + 1} (${args[i]}) should be of type ${typeName(type, args[i])} instead of ${typeOf(args[i])}.`);
             }
           }
         }

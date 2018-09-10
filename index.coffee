@@ -117,12 +117,16 @@ else switch type?.constructor
 		error "!Type can not be an instance of #{typeOf(type)}. Use #{prefix}#{typeOf(type)} as type instead."
 
 # not exported: get type name for signature error messages (supposing type is always correct)
-typeName = (type) -> if isAnyType(type) then "any type" else switch type?.constructor
+typeName = (type, val) -> if isAnyType(type) then "any type" else switch type?.constructor
 	when undefined then typeOf(type)
 	when Array
 		if type.length is 1 then "array of '#{typeName(type[0])}'" else (typeName(t) for t in type).join(" or ")
 	when Function then type.name
-	when Object then "custom type object"
+	when Object
+		f = (o, t) -> for k, v of t
+			if not isType(o[k], v)
+				return if o[k]?.constructor is Object then k+'.'+f(o[k], t[k]) else k
+		"custom type object with key " + f(val, type) + " of type…"
 	when _Tuple then "tuple of #{type.types.length} elements '#{(typeName(t) for t in type.types).join(", ")}'"
 	else "literal #{typeOf(type)} '#{type}'"
 
@@ -147,7 +151,7 @@ fn = (argTypes, resType, f) ->
 					if args[i] is undefined
 						error "Missing required argument number #{i+1}." unless isType(undefined, type)
 					else
-						error "Argument number #{i+1} (#{args[i]}) should be of type #{typeName(type)}
+						error "Argument number #{i+1} (#{args[i]}) should be of type #{typeName(type, args[i])}
 								instead of #{typeOf(args[i])}." unless isType(args[i], type)
 		error "Too many arguments provided." if args.length > argTypes.length and not rest
 		if resType?.constructor is Promise
