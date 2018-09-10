@@ -1,6 +1,6 @@
 {
   "name": "runtime-signature",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Runtime type-checking with simple JavaScript types signatures.",
   "author": "Laurent Payot",
   "license": "MIT",
