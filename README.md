@@ -173,7 +173,7 @@ fullName = fn(
 Bob = {
   id: 1234,
   name: {
-    first: "Robert"
+    first: "Robert",
     last: "Smith"
   }
 }
