@@ -182,7 +182,7 @@ Bob = {
 fullName(Bob)
 
 // Type error: Argument number 1 should be an object with key 'name.first' of type String instead of Number.
-fullName({id: 1234, name: {first: 1, last: "Smith"})
+fullName({id: 1234, name: {first: 1, last: "Smith"}})
 ```
 
 :warning: If values of an object argument match all the keys types of the object type, **the argument will be accepted even if it has more keys than the object type**:
