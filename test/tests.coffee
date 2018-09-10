@@ -900,9 +900,9 @@ describe "fn", ->
 			f = fn [etc], String,
 				(str...) -> str.join('')
 			expect(f('a', 5, 'def')).to.equal('a5def')
-			# f = fn [Number, etc], String,
-			# 	(n, str...) -> n + str.join('')
-			# expect(f(1, 'a', 5, 'def')).to.equal('1a5def')
+			f = fn [Number, etc], String,
+				(n, str...) -> n + str.join('')
+			expect(f(1, 'a', 5, 'def')).to.equal('1a5def')
 
 	context "Error messages", ->
 
