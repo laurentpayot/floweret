@@ -80,7 +80,6 @@ else switch type?.constructor
 		else val?.constructor is type
 	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
-		return true unless Object.keys(type).length
 		for k, v of type
 			return false unless isType(val[k], v)
 		true
