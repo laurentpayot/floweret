@@ -226,10 +226,10 @@ import { fn, promised } from 'runtime-signature'
 
 or
 
-> anyType
+> AnyType
 
 ```js
-import { fn, anyType } from 'runtime-signature'
+import { fn, AnyType } from 'runtime-signature'
 ```
 
 *Documentation in progress…*

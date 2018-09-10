@@ -38,11 +38,11 @@ class _Etc # typed rest arguments list
 	constructor: (@type=[]) -> error "!'etc' can not have more than one type argument." if arguments.length > 1
 
 # not exported
-isAnyType = (o) -> o is anyType or Array.isArray(o) and o.length is 0
+isAnyType = (o) -> o is AnyType or Array.isArray(o) and o.length is 0
 
 ### type helpers ###
 
-anyType = -> if arguments.length then error "!'anyType' can not have a type argument." else []
+AnyType = -> if arguments.length then error "!'AnyType' can not have a type argument." else []
 maybe = (types...) ->
 	error "!'maybe' must have at least one type argument." unless arguments.length
 	if types.some((t) -> isAnyType(t)) then [] else [undefined, null].concat(types)
@@ -72,7 +72,7 @@ else switch type?.constructor
 	when undefined, String, Number, Boolean then val is type # literal type or undefined or null
 	when Function then switch type
 		# type helpers used directly as functions
-		when anyType then true
+		when AnyType then true
 		when promised, maybe, TypedObject, TypedSet, TypedMap
 			error "!'#{type.name}' can not be used directly as a function."
 		when etc then error "!'etc' can not be used in types."
@@ -168,4 +168,4 @@ fn = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {typeOf, isType, fn, maybe, anyType, promised, etc, Tuple, TypedObject, TypedSet, TypedMap}
+module.exports = {typeOf, isType, fn, maybe, AnyType, promised, etc, Tuple, TypedObject, TypedSet, TypedMap}
