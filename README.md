@@ -80,7 +80,7 @@ f = fn(
 )
 
 f(1, 'a') // true
-f(1, 5)   // Error: Argument number 2 (5) should be of type String instead of Number.
+f(1, 5)   // Type error: Argument number 2 (5) should be of type String instead of Number.
 ```
 
 ### Union of types
@@ -308,7 +308,7 @@ Some handy utilities exported by the package.
 isType("abc", [Number, String]) // true
 ```
 
-### TypeOf
+### typeOf
 
 > typeOf(<value\>)
 
