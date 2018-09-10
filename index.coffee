@@ -97,7 +97,7 @@ else switch type?.constructor
 		t = type.type
 		return true if isAnyType(t)
 		error "!Typed Set type can not be a literal
-				of type '#{t}'." if typeOf(t) in ['undefined', 'null', 'String', 'Number', 'Boolean']
+				of type '#{t}'." if t?.constructor in [undefined, String, Number, Boolean]
 		[val...].every((e) -> isType(e, t))
 	when _TypedMap
 		return false unless val?.constructor is Map

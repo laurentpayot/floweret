@@ -260,7 +260,7 @@ isType = function(val, type) {
         if (isAnyType(t)) {
           return true;
         }
-        if ((ref = typeOf(t)) === 'undefined' || ref === 'null' || ref === 'String' || ref === 'Number' || ref === 'Boolean') {
+        if ((ref = t != null ? t.constructor : void 0) === (void 0) || ref === String || ref === Number || ref === Boolean) {
           error(`!Typed Set type can not be a literal of type '${t}'.`);
         }
         return [...val].every(function(e) {
