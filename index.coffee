@@ -9,7 +9,7 @@ error = (msg) -> throw new Error switch msg[0]
 ### typed classes ###
 
 class _Tuple
-	constructor: (@types) ->
+	constructor: (@types...) ->
 		error "!Tuple must have at least two type arguments." if arguments.length < 2
 		return Array if @types.every((t) -> isAnyType(t)) # return needed
 
@@ -86,7 +86,7 @@ else switch type?.constructor
 		true
 	when _Tuple
 		types = type.types
-		return false unless val?.constructor is Array and val.length = types.length
+		return false unless Array.isArray(val) and val.length is types.length
 		val.every((e, i) -> isType(e, types[i]))
 	when _TypedObject
 		return false unless val?.constructor is Object
@@ -123,6 +123,7 @@ typeName = (type) -> if isAnyType(type) then "any type" else switch type?.constr
 		if type.length is 1 then "array of '#{typeName(type[0])}'" else (typeName(t) for t in type).join(" or ")
 	when Function then type.name
 	when Object then "custom type object"
+	when _Tuple then "tuple of #{type.types.length} elements '#{(typeName(t) for t in type.types).join(", ")}'"
 	else "literal #{typeOf(type)} '#{type}'"
 
 # wraps a function to check its arguments types and result type

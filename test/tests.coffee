@@ -331,15 +331,21 @@ describe "isType", ->
 			expect(isType(null, [UserType, null])).to.be.true
 			expect(isType("foo", [UserType, null])).to.be.false
 
-	context.skip "Tuple type", ->
+	context "Tuple type", ->
 
 		context "Native Type elements", ->
 
-			it "should return true when value is of Tuple type", ->
+			it "should return true when value is an array correspondig to Tuple type", ->
 				expect(isType([1, true, "three"], Tuple(Number, Boolean, String))).to.be.true
 
-			it "should return false when value is an incorrect Tuple", ->
+			it "should return false when value is an array not correspondig to Tuple type", ->
 				expect(isType(["1", true, "three"], Tuple(Number, Boolean, String))).to.be.false
+
+			it "should return false when value is a number", ->
+				expect(isType(1, Tuple(Number, Boolean, String))).to.be.false
+
+			it "should return false when value is an empty array", ->
+				expect(isType([], Tuple(Number, Boolean, String))).to.be.false
 
 	context "Typed array", ->
 
@@ -1015,3 +1021,17 @@ describe "fn", ->
 				f = fn [Array(anyType)], anyType, ->
 				expect( -> f(1))
 				.to.throw("Argument number 1 (1) should be of type array of 'any type' instead of Number.")
+
+		context "Tuple type argument", ->
+
+			it "should return an error with 'tuple of 3 elements 'Number, Boolean, String''", ->
+				f = fn [Tuple(Number, Boolean, String)], anyType, ->
+				expect( -> f(1))
+				.to.throw("Argument number 1 (1) should be of type tuple of
+							3 elements 'Number, Boolean, String' instead of Number")
+
+			it "should return an error with 'tuple of 3 elements 'Number, Object or null, String''", ->
+				f = fn [Tuple(Number, [Object, null], String)], anyType, ->
+				expect( -> f(1))
+				.to.throw("Argument number 1 (1) should be of type tuple of
+							3 elements 'Number, Object or null, String' instead of Number")

@@ -19,7 +19,7 @@ error = function(msg) {
 
 /* typed classes */
 _Tuple = class _Tuple {
-  constructor(types1) {
+  constructor(...types1) {
     this.types = types1;
     if (arguments.length < 2) {
       error("!Tuple must have at least two type arguments.");
@@ -237,7 +237,7 @@ isType = function(val, type) {
         return true;
       case _Tuple:
         types = type.types;
-        if (!((val != null ? val.constructor : void 0) === Array && (val.length = types.length))) {
+        if (!(Array.isArray(val) && val.length === types.length)) {
           return false;
         }
         return val.every(function(e, i) {
@@ -331,6 +331,17 @@ typeName = function(type) {
         return type.name;
       case Object:
         return "custom type object";
+      case _Tuple:
+        return `tuple of ${type.types.length} elements '${((function() {
+          var l, len, ref, results;
+          ref = type.types;
+          results = [];
+          for (l = 0, len = ref.length; l < len; l++) {
+            t = ref[l];
+            results.push(typeName(t));
+          }
+          return results;
+        })()).join(", ")}'`;
       default:
         return `literal ${typeOf(type)} '${type}'`;
     }

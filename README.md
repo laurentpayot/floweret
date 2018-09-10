@@ -85,7 +85,7 @@ f(1, 5)   // Error: Argument number 2 (5) should be of type String instead of Nu
 
 ### Union of types
 
-> [ <type 1\>, <type 2\>, … , <type n\> ]
+> [ <type 1\>, <type 2\>, …, <type n\> ]
 
 You can create a type that is the union of several types. Simply put them in a list.
 For instance the type `[Number, String]` will accept a number or a string.
@@ -151,7 +151,7 @@ If you forget the brackets you will get the union of types instead of the array 
 
 ### Object type
 
-> {<key 1\>: <type 1\>, <key 2\>: <type 2\>, … , <key n\>: <type n\>}
+> {<key 1\>: <type 1\>, <key 2\>: <type 2\>, …, <key n\>: <type n\>}
 
 You can specify the types of an object values, at any depth.
 
@@ -250,6 +250,17 @@ import { fn, etc } from 'runtime-signature'
 ```
 
 *Documentation in progress…*
+
+### Tuple types
+
+> Tuple( <type 1\>, <type 2\>, …, <type n\> )
+
+```js
+import { fn, Tuple } from 'runtime-signature'
+```
+
+*Documentation in progress…*
+
 
 ### Typed Object
 
