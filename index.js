@@ -226,9 +226,6 @@ isType = function(val, type) {
         if ((val != null ? val.constructor : void 0) !== Object) {
           return false;
         }
-        if (!Object.keys(type).length) {
-          return true;
-        }
         for (k in type) {
           v = type[k];
           if (!isType(val[k], v)) {
