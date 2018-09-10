@@ -10,7 +10,7 @@ Features
 
 * Super-simple native types syntax, highlighted by your editor of choice.
 * Efficient: direct type evaluation, no string to parse.
-* Lightweight: 6.5 kb minified, 2.3 kb minified and gzipped.
+* Lightweight: 6.8 kb minified, 2.4 kb minified and gzipped.
 * No dependencies.
 
 Install
@@ -178,8 +178,11 @@ Bob = {
   }
 }
 
-fullName(Bob)        // "Robert Smith"
-fullName({id: 1234}) // Type error: Argument number 1 ([object Object]) should be of type custom type object instead of Object.
+// "Robert Smith"
+fullName(Bob)
+
+// Type error: Argument number 1 should be an object with key 'name.first' being of type String instead of Number.
+fullName({id: 1234, name: {first: 1, last: "Smith"})
 ```
 
 :warning: If values of an object argument match all the keys types of the object type, **the argument will be accepted even if it has more keys than the object type**:

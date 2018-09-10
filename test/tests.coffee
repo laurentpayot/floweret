@@ -943,10 +943,12 @@ describe "fn", ->
 				expect( -> f(false))
 				.to.throw("Argument number 1 (false) should be of type literal Boolean 'true' instead of Boolean.")
 
-			it.only "should return an error with 'custom object'", ->
+			it "should return an error with
+				'Argument number 1 should be an object with key 'a.c' being of type String instead of Number.'", ->
 				f = fn [{a: {b: Number, c: String}, d: Number}], AnyType, ->
 				expect( -> f(a: {b: 1, c: 2}, d: 3))
-				.to.throw("Argument number 1 ([object Object]) should be of type custom type object instead of Object.")
+				.to.throw("Argument number 1 should be an object with key 'a.c'
+							being of type String instead of Number.")
 
 			it "should return an error with 'MyClass", ->
 				class MyClass
