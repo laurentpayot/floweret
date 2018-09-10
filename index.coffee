@@ -116,13 +116,13 @@ else switch type?.constructor
 		prefix = if type.constructor in [Set, Map] then 'the provided Typed' else ''
 		error "!Type can not be an instance of #{typeOf(type)}. Use #{prefix}#{typeOf(type)} as type instead."
 
-# returns list of keys path to where the type do not match + value not maching + type not matching
+# returns a list of keys path to where the type do not match + value not maching + type not matching
 badPath = (obj, typeObj) ->
 	for k, t of typeObj
 		if not isType(obj[k], t)
 			return [k].concat(if obj[k]?.constructor is Object then badPath(obj[k], typeObj[k]) else [obj[k], typeObj[k]])
 
-# returns type name for signature error messages (supposing type is always correct)
+# returns the type name for signature error messages (supposing type is always correct)
 typeName = (type) -> if isAnyType(type) then "any type" else switch type?.constructor
 	when undefined then typeOf(type)
 	when Array
@@ -136,7 +136,7 @@ typeName = (type) -> if isAnyType(type) then "any type" else switch type?.constr
 shouldBe = (val, type) ->
 	if val?.constructor is Object
 		[bp..., bv, bt] = badPath(val, type)
-		"should be an object with key '#{bp.join('.')}' being of type #{typeName(bt)} instead of #{typeOf(bv)}"
+		"should be an object with key '#{bp.join('.')}' of type #{typeName(bt)} instead of #{typeOf(bv)}"
 	else
 		"(#{val}) should be of type #{typeName(type)} instead of #{typeOf(val)}"
 

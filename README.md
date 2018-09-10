@@ -181,7 +181,7 @@ Bob = {
 // "Robert Smith"
 fullName(Bob)
 
-// Type error: Argument number 1 should be an object with key 'name.first' being of type String instead of Number.
+// Type error: Argument number 1 should be an object with key 'name.first' of type String instead of Number.
 fullName({id: 1234, name: {first: 1, last: "Smith"})
 ```
 

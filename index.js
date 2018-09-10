@@ -304,7 +304,7 @@ isType = function(val, type) {
   }
 };
 
-// returns list of keys path to where the type do not match + value not maching + type not matching
+// returns a list of keys path to where the type do not match + value not maching + type not matching
 badPath = function(obj, typeObj) {
   var k, ref, t;
   for (k in typeObj) {
@@ -315,7 +315,7 @@ badPath = function(obj, typeObj) {
   }
 };
 
-// returns type name for signature error messages (supposing type is always correct)
+// returns the type name for signature error messages (supposing type is always correct)
 typeName = function(type) {
   var t;
   if (isAnyType(type)) {
@@ -365,7 +365,7 @@ shouldBe = function(val, type) {
   var bp, bt, bv, ref;
   if ((val != null ? val.constructor : void 0) === Object) {
     ref = badPath(val, type), [...bp] = ref, [bv, bt] = splice.call(bp, -2);
-    return `should be an object with key '${bp.join('.')}' being of type ${typeName(bt)} instead of ${typeOf(bv)}`;
+    return `should be an object with key '${bp.join('.')}' of type ${typeName(bt)} instead of ${typeOf(bv)}`;
   } else {
     return `(${val}) should be of type ${typeName(type)} instead of ${typeOf(val)}`;
   }
