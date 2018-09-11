@@ -1,5 +1,7 @@
 ###* @license MIT (c) 2018 Laurent Payot  ###
 
+{Type} = require './types/Type'
+
 # trows customized error
 error = (msg) -> throw new Error switch msg[0]
 	when '!' then "Invalid type syntax: #{msg[1..]}"
@@ -7,18 +9,6 @@ error = (msg) -> throw new Error switch msg[0]
 	else "Type error: #{msg}"
 
 ### typed classes ###
-
-class Type
-
-class _Tuple extends Type
-	constructor: (@types...) ->
-		super()
-		error "!Tuple must have at least two type arguments." if arguments.length < 2
-		return Array if @types.every((t) -> isAnyType(t)) # return needed
-	validate: (val) ->
-		return false unless Array.isArray(val) and val.length is @types.length
-		val.every((e, i) => isType(e, @types[i]))
-Tuple = (args...) -> new _Tuple(args...)
 
 class _TypedObject extends Type
 	constructor: (@type) ->
@@ -133,8 +123,8 @@ typeName = (type) -> if isAnyType(type) then "any type" else switch type?.constr
 		if type.length is 1 then "array of '#{typeName(type[0])}'" else (typeName(t) for t in type).join(" or ")
 	when Function then type.name
 	when Object then "custom type object"
-	when _Tuple then "tuple of #{type.types.length} elements '#{(typeName(t) for t in type.types).join(", ")}'"
-	else "literal #{typeOf(type)} '#{type}'"
+	else
+		if type instanceof Type and type.typeName then type.typeName() else "literal #{typeOf(type)} '#{type}'"
 
 # type error message comparison part helper
 shouldBe = (val, type) ->
@@ -182,4 +172,4 @@ fn = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {typeOf, isType, fn, maybe, AnyType, promised, etc, Tuple, TypedObject, TypedSet, TypedMap}
+module.exports = {fn, maybe, AnyType, promised, etc, typeOf, isType, isAnyType, typeName, TypedObject, TypedSet, TypedMap}

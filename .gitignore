@@ -18,5 +18,5 @@ yarn-debug.log*
 yarn-error.log*
 
 # ignoring generated JS files
-dist/
+dist
 test/tests.js

@@ -1,5 +1,7 @@
-{typeOf, isType, fn, maybe, AnyType, promised, etc, Tuple, TypedObject, TypedSet, TypedMap} \
+{typeOf, isType, fn, maybe, AnyType, promised, etc, TypedObject, TypedSet, TypedMap} \
 = require '../dist/runtime-signature.min.js' # testing the build, minified, not the source
+
+{Tuple} = require '../dist/types/Tuple'
 
 chai = require 'chai'
 chaiAsPromised = require 'chai-as-promised'
@@ -654,14 +656,13 @@ describe "isType", ->
 			expect(-> isType(val, Symbol("foo")))
 			.to.throw("Type can not be an instance of Symbol. Use Symbol as type instead.") for val in VALUES
 
-
 ###
-	███████╗██╗ ██████╗
-	██╔════╝██║██╔════╝
-	███████╗██║██║  ███╗
-	╚════██║██║██║   ██║
-	███████║██║╚██████╔╝
-	╚══════╝╚═╝ ╚═════╝
+	███████╗███╗   ██╗
+	██╔════╝████╗  ██║
+	█████╗  ██╔██╗ ██║
+	██╔══╝  ██║╚██╗██║
+	██║     ██║ ╚████║
+	╚═╝     ╚═╝  ╚═══╝
 ###
 describe "fn", ->
 
