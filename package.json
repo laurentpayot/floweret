@@ -22,12 +22,12 @@
     "coffeescript",
     "coffee"
   ],
-  "main": "index.js",
+  "main": "dist/index.js",
   "engines": {
     "node": ">=7.6.0"
   },
   "scripts": {
-    "build": "coffee -cb index.coffee test/tests.coffee && uglifyjs -cm --comments -o runtime-signature.min.js -- index.js",
+    "build": "rm -rf dist/ && coffee -cb -o dist/ src/ && coffee -cb test/tests.coffee",
     "test": "npm run build && mocha"
   },
   "devDependencies": {
