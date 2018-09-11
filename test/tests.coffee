@@ -1,7 +1,7 @@
 {typeOf, isType, fn, maybe, AnyType, promised, etc, TypedObject, TypedSet, TypedMap} \
 = require '../dist/runtime-signature.min.js' # testing the build, minified, not the source
 
-{Tuple} = require '../dist/types/Tuple'
+Tuple = require '../dist/types/Tuple'
 
 chai = require 'chai'
 chaiAsPromised = require 'chai-as-promised'

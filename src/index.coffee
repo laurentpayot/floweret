@@ -1,6 +1,7 @@
 ###* @license MIT (c) 2018 Laurent Payot  ###
 
-{Type} = require './types/Type'
+# for custom types
+Type = require './types/Type'
 
 # trows customized error
 error = (msg) -> throw new Error switch msg[0]

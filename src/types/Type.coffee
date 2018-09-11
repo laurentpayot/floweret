@@ -1,3 +1,1 @@
-class Type
-
-module.exports = {Type}
+module.exports = class Type
