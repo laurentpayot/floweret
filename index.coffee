@@ -8,34 +8,65 @@ error = (msg) -> throw new Error switch msg[0]
 
 ### typed classes ###
 
-class _Tuple
+class Type
+
+class _Tuple extends Type
 	constructor: (@types...) ->
+		super()
 		error "!Tuple must have at least two type arguments." if arguments.length < 2
 		return Array if @types.every((t) -> isAnyType(t)) # return needed
+	validate: (val) ->
+		return false unless Array.isArray(val) and val.length is @types.length
+		val.every((e, i) => isType(e, @types[i]))
+Tuple = (args...) -> new _Tuple(args...)
 
-class _TypedObject
+class _TypedObject extends Type
 	constructor: (@type) ->
+		super()
 		error "!TypedObject must have exactly one type argument." unless arguments.length is 1
 		return Object if isAnyType(@type) # return needed
+	validate: (val) ->
+		return false unless val?.constructor is Object
+		return true if isAnyType(@type)
+		Object.values(val).every((v) => isType(v, @type))
+TypedObject = (args...) -> new _TypedObject(args...)
 
-class _TypedSet
+class _TypedSet extends Type
 	constructor: (@type) ->
+		super()
 		error "!TypedSet must have exactly one type argument." unless arguments.length is 1
 		return Set if isAnyType(@type) # return needed
+	validate: (val) ->
+		return false unless val?.constructor is Set
+		return true if isAnyType(@type)
+		error "!Typed Set type can not be a literal
+				of type '#{@type}'." if @type?.constructor in [undefined, String, Number, Boolean]
+		[val...].every((e) => isType(e, @type))
+TypedSet = (args...) -> new _TypedSet(args...)
 
-class _TypedMap
+class _TypedMap extends Type
 	keysType: []
 	valuesType: []
-	constructor: (t1, t2) -> switch arguments.length
-		when 0 then error "!TypedMap must have at least one type argument."
-		when 1
-			if isAnyType(t1) then return Map else @valuesType = t1 # return needed
-		when 2
-			if isAnyType(t1) and isAnyType(t2) then return Map else [@keysType, @valuesType] = [t1, t2] # return needed
-		else error "!TypedMap can not have more than two type arguments."
-
-class _Etc # typed rest arguments list
-	constructor: (@type=[]) -> error "!'etc' can not have more than one type argument." if arguments.length > 1
+	constructor: (t1, t2) ->
+		super()
+		switch arguments.length
+			when 0 then error "!TypedMap must have at least one type argument."
+			when 1
+				if isAnyType(t1) then return Map else @valuesType = t1 # return needed
+			when 2
+				if isAnyType(t1) and isAnyType(t2) then return Map else [@keysType, @valuesType] = [t1, t2] # return needed
+			else error "!TypedMap can not have more than two type arguments."
+	validate: (val) ->
+		return false unless val?.constructor is Map
+		switch
+			when isAnyType(@keysType) and isAnyType(@valuesType) then true
+			when isAnyType(@keysType) then Array.from(val.values()).every((e) => isType(e, @valuesType))
+			when isAnyType(@valuesType) then Array.from(val.keys()).every((e) => isType(e, @keysType))
+			else
+				keys = Array.from(val.keys())
+				values = Array.from(val.values())
+				keys.every((e) => isType(e, @keysType)) and values.every((e) => isType(e, @valuesType))
+TypedMap = (args...) -> new _TypedMap(args...)
 
 # not exported
 isAnyType = (o) -> o is AnyType or Array.isArray(o) and o.length is 0
@@ -50,10 +81,8 @@ promised = (type) ->
 	error "!'promised' must have exactly one type argument." unless arguments.length is 1
 	if isAnyType(type) then Promise else Promise.resolve(type)
 
-Tuple = (args...) -> new _Tuple(args...)
-TypedObject = (args...) -> new _TypedObject(args...)
-TypedSet = (args...) -> new _TypedSet(args...)
-TypedMap = (args...) -> new _TypedMap(args...)
+class _Etc # typed rest arguments list
+	constructor: (@type=[]) -> error "!'etc' can not have more than one type argument." if arguments.length > 1
 etc = (args...) -> new _Etc(args...)
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
@@ -83,37 +112,13 @@ else switch type?.constructor
 		for k, v of type
 			return false unless isType(val[k], v)
 		true
-	when _Tuple
-		types = type.types
-		return false unless Array.isArray(val) and val.length is types.length
-		val.every((e, i) -> isType(e, types[i]))
-	when _TypedObject
-		return false unless val?.constructor is Object
-		t = type.type
-		return true if isAnyType(t)
-		Object.values(val).every((v) -> isType(v, t))
-	when _TypedSet
-		return false unless val?.constructor is Set
-		t = type.type
-		return true if isAnyType(t)
-		error "!Typed Set type can not be a literal
-				of type '#{t}'." if t?.constructor in [undefined, String, Number, Boolean]
-		[val...].every((e) -> isType(e, t))
-	when _TypedMap
-		return false unless val?.constructor is Map
-		{keysType, valuesType} = type
-		switch
-			when isAnyType(keysType) and isAnyType(valuesType) then true
-			when isAnyType(keysType) then Array.from(val.values()).every((e) -> isType(e, valuesType))
-			when isAnyType(valuesType) then Array.from(val.keys()).every((e) -> isType(e, keysType))
-			else
-				keys = Array.from(val.keys())
-				values = Array.from(val.values())
-				keys.every((e) -> isType(e, keysType)) and values.every((e) -> isType(e, valuesType))
 	when _Etc then error "!'etc' can not be used in types."
 	else
-		prefix = if type.constructor in [Set, Map] then 'the provided Typed' else ''
-		error "!Type can not be an instance of #{typeOf(type)}. Use #{prefix}#{typeOf(type)} as type instead."
+		if type instanceof Type
+			type.validate(val)
+		else
+			prefix = if type.constructor in [Set, Map] then 'the provided Typed' else ''
+			error "!Type can not be an instance of #{typeOf(type)}. Use #{prefix}#{typeOf(type)} as type instead."
 
 # returns a list of keys path to where the type do not match + value not maching + type not matching
 badPath = (obj, typeObj) ->
