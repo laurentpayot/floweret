@@ -1,7 +1,10 @@
-{typeOf, isType, fn, maybe, AnyType, promised, etc, TypedObject, TypedSet, TypedMap} \
+{typeOf, isType, fn, maybe, AnyType, promised, etc, TypedMap} \
 = require '../dist/runtime-signature.min.js' # testing the build, minified, not the source
 
+{Type} = require '../dist/types'
 Tuple = require '../dist/types/Tuple'
+TypedObject = require '../dist/types/TypedObject'
+TypedSet = require '../dist/types/TypedSet'
 
 chai = require 'chai'
 chaiAsPromised = require 'chai-as-promised'
@@ -333,298 +336,309 @@ describe "isType", ->
 			expect(isType(null, [UserType, null])).to.be.true
 			expect(isType("foo", [UserType, null])).to.be.false
 
-	context "Tuple type", ->
-
-		context "Native Type elements", ->
-
-			it "should return true when value is an array correspondig to Tuple type", ->
-				expect(isType([1, true, "three"], Tuple(Number, Boolean, String))).to.be.true
-
-			it "should return false when value is an array not correspondig to Tuple type", ->
-				expect(isType(["1", true, "three"], Tuple(Number, Boolean, String))).to.be.false
-
-			it "should return false when value is a number", ->
-				expect(isType(1, Tuple(Number, Boolean, String))).to.be.false
-
-			it "should return false when value is an empty array", ->
-				expect(isType([], Tuple(Number, Boolean, String))).to.be.false
-
-	context "Typed array", ->
-
-		context "Native Type elements", ->
+	context "Custom types", ->
+
+		it "should throw an error when creating an instance of Type", ->
+			expect(-> new Type()).to.throw("Abstract class 'Type' cannot be instantiated directly.")
+
+		context.only "Tuple type", ->
+
+			it "should throw an error when Tuple is used as a function", ->
+				expect(-> isType(1, Tuple)).to.throw("Custom type 'Tuple' can not be used directly as a function.")
+
+			it "should throw an error when Tuple is used without arguments", ->
+				expect(-> isType(1, Tuple())).to.throw("Tuple must have at least two type arguments.")
+
+			context "Native Type elements", ->
+
+				it "should return true when value is an array correspondig to Tuple type", ->
+					expect(isType([1, true, "three"], Tuple(Number, Boolean, String))).to.be.true
+
+				it "should return false when value is an array not correspondig to Tuple type", ->
+					expect(isType(["1", true, "three"], Tuple(Number, Boolean, String))).to.be.false
 
-			it "should return false when value is not an array", ->
-				expect(isType(val, Array(Number))).to.be.false for val in VALUES when not Array.isArray(val)
-				expect(isType(val, Array(String))).to.be.false for val in VALUES when not Array.isArray(val)
+				it "should return false when value is a number", ->
+					expect(isType(1, Tuple(Number, Boolean, String))).to.be.false
 
-			it "should return true for an array of numbers", ->
-				expect(isType([1, 2, 3], Array(Number))).to.be.true
-				expect(isType([1], Array(Number))).to.be.true
-				expect(isType([], Array(Number))).to.be.true
+				it "should return false when value is an empty array", ->
+					expect(isType([], Tuple(Number, Boolean, String))).to.be.false
 
-			it "should return true for an array of strings", ->
-				expect(isType(["foo", "bar", "baz"], Array(String))).to.be.true
-				expect(isType(["foo"], Array(String))).to.be.true
-				expect(isType([], Array(String))).to.be.true
-
-			it "should return false when an element of the array is not a number", ->
-				expect(isType([1, val, 3], Array(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
-				expect(isType([val], Array(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
-
-			it "should return false when an element of the array is not a string", ->
-				expect(isType(["foo", val, "bar"], Array(String))).to.be.false \
-					for val in VALUES when typeof val isnt 'string'
-				expect(isType([val], Array(String))).to.be.false \
-					for val in VALUES when typeof val isnt 'string'
-
-			it "should return true only for empty array or an array of one undefined element
-					when type is an array of one empty item", ->
-				expect(isType([], Array(1))).to.be.true
-				expect(isType([undefined], Array(1))).to.be.true
-				expect(isType(undefined, Array(1))).to.be.false
-				expect(isType([1], Array(1))).to.be.false
-
-			it "should return false when type is an array of two or more empty items", ->
-				expect(isType([undefined], Array(2))).to.be.false
-				expect(isType([undefined, undefined], Array(2))).to.be.false
-				expect(isType(undefined, Array(2))).to.be.false
-				expect(isType([], Array(2))).to.be.false
-				expect(isType([1], Array(2))).to.be.false
-				expect(isType([undefined], Array(3))).to.be.false
-				expect(isType([undefined, undefined, undefined], Array(3))).to.be.false
-				expect(isType(undefined, Array(3))).to.be.false
-				expect(isType([], Array(3))).to.be.false
-				expect(isType([1], Array(3))).to.be.false
-
-		context "Object Type elements", ->
-
-			it "should return false when value is not an array", ->
-				nsType = {n: Number, s: String}
-				expect(isType(val, Array(nsType))).to.be.false for val in VALUES when not Array.isArray(val)
-
-			it "should return true when all elements of the array are of a given object type", ->
-				nsType = {n: Number, s: String}
-				expect(isType([{n: 1, s: "a"}, {n: 2, s: "b"}, {n: 3, s: "c"}], Array(nsType))).to.be.true
-				expect(isType([{n: 1, s: "a"}], Array(nsType))).to.be.true
-				expect(isType([], Array(nsType))).to.be.true
-
-			it "should return false when some elements of the array are not of a given object type", ->
-				nsType = {n: Number, s: String}
-				expect(isType([{n: 1, s: "a"}, val, {n: 3, s: "c"}], Array(nsType))).to.be.false for val in VALUES
-				expect(isType([val], Array(nsType))).to.be.false for val in VALUES
-				expect(isType([{n: 1, s: "a"}, {foo: 2, s: "b"}, {n: 3, s: "c"}], Array(nsType))).to.be.false
-
-		context "Union Type elements", ->
-
-			it "should return false when value is not an array", ->
-				expect(isType(val, Array([Number, String]))).to.be.false for val in VALUES when not Array.isArray(val)
-
-			it "should return true for an array whom values are strings or numbers", ->
-				expect(isType([], Array([String, Number]))).to.be.true
-				expect(isType(["foo", "bar", "baz"], Array([String, Number]))).to.be.true
-				expect(isType(["foo"], Array([String, Number]))).to.be.true
-				expect(isType([1, 2, 3], Array([String, Number]))).to.be.true
-				expect(isType([1], Array([String, Number]))).to.be.true
-				expect(isType(["foo", 1, "bar"], Array([String, Number]))).to.be.true
-				expect(isType([1, "foo", 2], Array([String, Number]))).to.be.true
-
-			it "should return false when an element of the array is not a string nor a number", ->
-				expect(isType(["foo", val, 1], Array([String, Number]))).to.be.false \
-					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
-				expect(isType([val], Array([String, Number]))).to.be.false \
-					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
+		context "Typed array", ->
 
-	context "Typed set", ->
+			context "Native Type elements", ->
 
-		context "Any type elements", ->
+				it "should return false when value is not an array", ->
+					expect(isType(val, Array(Number))).to.be.false for val in VALUES when not Array.isArray(val)
+					expect(isType(val, Array(String))).to.be.false for val in VALUES when not Array.isArray(val)
 
-			it "TypedSet() should throw an error", ->
-				expect(-> TypedSet()).to.throw("TypedSet must have exactly one type argument.")
+				it "should return true for an array of numbers", ->
+					expect(isType([1, 2, 3], Array(Number))).to.be.true
+					expect(isType([1], Array(Number))).to.be.true
+					expect(isType([], Array(Number))).to.be.true
 
-			it "TypedSet([]) should return Set type.", ->
-				expect(TypedSet([])).to.equal(Set)
+				it "should return true for an array of strings", ->
+					expect(isType(["foo", "bar", "baz"], Array(String))).to.be.true
+					expect(isType(["foo"], Array(String))).to.be.true
+					expect(isType([], Array(String))).to.be.true
 
-			it "TypedSet(AnyType) should return Set type.", ->
-				expect(TypedSet(AnyType)).to.equal(Set)
+				it "should return false when an element of the array is not a number", ->
+					expect(isType([1, val, 3], Array(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
+					expect(isType([val], Array(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
 
-			it "TypedSet used as a function should throw an error.", ->
-				expect(-> isType(1, TypedSet)).to.throw("'TypedSet' can not be used directly as a function.")
+				it "should return false when an element of the array is not a string", ->
+					expect(isType(["foo", val, "bar"], Array(String))).to.be.false \
+						for val in VALUES when typeof val isnt 'string'
+					expect(isType([val], Array(String))).to.be.false \
+						for val in VALUES when typeof val isnt 'string'
 
-		context "Native Type elements", ->
+				it "should return true only for empty array or an array of one undefined element
+						when type is an array of one empty item", ->
+					expect(isType([], Array(1))).to.be.true
+					expect(isType([undefined], Array(1))).to.be.true
+					expect(isType(undefined, Array(1))).to.be.false
+					expect(isType([1], Array(1))).to.be.false
 
-			it "should return false when value is not a set", ->
-				expect(isType(val, TypedSet(Number))).to.be.false for val in VALUES when not val?.constructor is Set
-				expect(isType(val, TypedSet(String))).to.be.false for val in VALUES when not val?.constructor is Set
+				it "should return false when type is an array of two or more empty items", ->
+					expect(isType([undefined], Array(2))).to.be.false
+					expect(isType([undefined, undefined], Array(2))).to.be.false
+					expect(isType(undefined, Array(2))).to.be.false
+					expect(isType([], Array(2))).to.be.false
+					expect(isType([1], Array(2))).to.be.false
+					expect(isType([undefined], Array(3))).to.be.false
+					expect(isType([undefined, undefined, undefined], Array(3))).to.be.false
+					expect(isType(undefined, Array(3))).to.be.false
+					expect(isType([], Array(3))).to.be.false
+					expect(isType([1], Array(3))).to.be.false
+
+			context "Object Type elements", ->
 
-			it "should return true for a set of numbers", ->
-				expect(isType(new Set([1, 2, 3]), TypedSet(Number))).to.be.true
-				expect(isType(new Set([1]), TypedSet(Number))).to.be.true
-				expect(isType(new Set([]), TypedSet(Number))).to.be.true
+				it "should return false when value is not an array", ->
+					nsType = {n: Number, s: String}
+					expect(isType(val, Array(nsType))).to.be.false for val in VALUES when not Array.isArray(val)
 
-			it "should return true for a set of strings", ->
-				expect(isType(new Set(["foo", "bar", "baz"]), TypedSet(String))).to.be.true
-				expect(isType(new Set(["foo"]), TypedSet(String))).to.be.true
-				expect(isType(new Set([]), TypedSet(String))).to.be.true
+				it "should return true when all elements of the array are of a given object type", ->
+					nsType = {n: Number, s: String}
+					expect(isType([{n: 1, s: "a"}, {n: 2, s: "b"}, {n: 3, s: "c"}], Array(nsType))).to.be.true
+					expect(isType([{n: 1, s: "a"}], Array(nsType))).to.be.true
+					expect(isType([], Array(nsType))).to.be.true
+
+				it "should return false when some elements of the array are not of a given object type", ->
+					nsType = {n: Number, s: String}
+					expect(isType([{n: 1, s: "a"}, val, {n: 3, s: "c"}], Array(nsType))).to.be.false for val in VALUES
+					expect(isType([val], Array(nsType))).to.be.false for val in VALUES
+					expect(isType([{n: 1, s: "a"}, {foo: 2, s: "b"}, {n: 3, s: "c"}], Array(nsType))).to.be.false
+
+			context "Union Type elements", ->
+
+				it "should return false when value is not an array", ->
+					expect(isType(val, Array([Number, String]))).to.be.false for val in VALUES when not Array.isArray(val)
 
-			it "should return false when an element of the set is not a number", ->
-				expect(isType(new Set([1, val, 3]), TypedSet(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
-				expect(isType(new Set([val]), TypedSet(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
+				it "should return true for an array whom values are strings or numbers", ->
+					expect(isType([], Array([String, Number]))).to.be.true
+					expect(isType(["foo", "bar", "baz"], Array([String, Number]))).to.be.true
+					expect(isType(["foo"], Array([String, Number]))).to.be.true
+					expect(isType([1, 2, 3], Array([String, Number]))).to.be.true
+					expect(isType([1], Array([String, Number]))).to.be.true
+					expect(isType(["foo", 1, "bar"], Array([String, Number]))).to.be.true
+					expect(isType([1, "foo", 2], Array([String, Number]))).to.be.true
 
-			it "should return false when an element of the set is not a string", ->
-				expect(isType(new Set(["foo", val, "bar"]), TypedSet(String))).to.be.false \
-					for val in VALUES when typeof val isnt 'string'
-				expect(isType(new Set([val]), TypedSet(String))).to.be.false \
-					for val in VALUES when typeof val isnt 'string'
+				it "should return false when an element of the array is not a string nor a number", ->
+					expect(isType(["foo", val, 1], Array([String, Number]))).to.be.false \
+						for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
+					expect(isType([val], Array([String, Number]))).to.be.false \
+						for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
 
-		context "Object Type elements", ->
+		context "Typed set", ->
 
-			it "should return false when value is not a set", ->
-				nsType = {n: Number, s: String}
-				expect(isType(val, TypedSet(nsType))).to.be.false for val in VALUES when not val?.constructor is Set
+			context "Any type elements", ->
 
-			it "should return true when all elements of the set are of a given object type", ->
-				nsType = {n: Number, s: String}
-				expect(isType(new Set([{n: 1, s: "a"}, {n: 2, s: "b"}, {n: 3, s: "c"}]), TypedSet(nsType))).to.be.true
-				expect(isType(new Set([{n: 1, s: "a"}]), TypedSet(nsType))).to.be.true
-				expect(isType(new Set([]), TypedSet(nsType))).to.be.true
-
-			it "should return false when some elements of the set are not of a given object type", ->
-				nsType = {n: Number, s: String}
-				expect(isType(new Set([{n: 1, s: "a"}, val, {n: 3, s: "c"}]), TypedSet(nsType))).to.be.false for val in VALUES
-				expect(isType(new Set([val]), TypedSet(nsType))).to.be.false for val in VALUES
-				expect(isType(new Set([{n: 1, s: "a"}, {foo: 2, s: "b"}, {n: 3, s: "c"}]), TypedSet(nsType))).to.be.false
+				it "TypedSet() should throw an error", ->
+					expect(-> TypedSet()).to.throw("TypedSet must have exactly one type argument.")
 
-		context "Union Type elements", ->
+				it "TypedSet([]) should return Set type.", ->
+					expect(TypedSet([])).to.equal(Set)
 
-			it "should return false when value is not a set", ->
-				expect(isType(val, TypedSet([Number, String]))).to.be.false for val in VALUES when not val?.constructor is Set
-
-			it "should return true for a set whom values are strings or numbers", ->
-				expect(isType(new Set([]), TypedSet([String, Number]))).to.be.true
-				expect(isType(new Set(["foo", "bar", "baz"]), TypedSet([String, Number]))).to.be.true
-				expect(isType(new Set(["foo"]), TypedSet([String, Number]))).to.be.true
-				expect(isType(new Set([1, 2, 3]), TypedSet([String, Number]))).to.be.true
-				expect(isType(new Set([1]), TypedSet([String, Number]))).to.be.true
-				expect(isType(new Set(["foo", 1, "bar"]), TypedSet([String, Number]))).to.be.true
-				expect(isType(new Set([1, "foo", 2]), TypedSet([String, Number]))).to.be.true
-
-			it "should return false when an element of the set is not a string nor a number", ->
-				expect(isType(new Set(["foo", val, 1]), TypedSet([String, Number]))).to.be.false \
-					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
-				expect(isType(new Set([val]), TypedSet([String, Number]))).to.be.false \
-					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
+				it "TypedSet(AnyType) should return Set type.", ->
+					expect(TypedSet(AnyType)).to.equal(Set)
 
-	context "Typed map", ->
-
-		context "Any type elements", ->
-
-			it "TypedMap() should throw an error.", ->
-				expect(-> TypedMap()).to.throw("Invalid type syntax: TypedMap must have at least one type argument.")
-
-			it "TypedMap([]) should return Map type.", ->
-				expect(TypedMap([])).to.equal(Map)
-
-			it "TypedMap([], []) should return Map type.", ->
-				expect(TypedMap([], [])).to.equal(Map)
-
-			it "TypedMap(AnyType) should return Map type.", ->
-				expect(TypedMap(AnyType)).to.equal(Map)
-
-			it "TypedMap(AnyType, AnyType) should return Map type.", ->
-				expect(TypedMap(AnyType, AnyType)).to.equal(Map)
-
-			it "TypedMap used as a function should throw an error.", ->
-				expect(-> isType(1, TypedMap)).to.throw("TypedMap' can not be used directly as a function.")
-
-		context "Native Type elements", ->
-
-			it "should return false when value is not a Map", ->
-				expect(isType(val, TypedMap(Number))).to.be.false for val in VALUES when not val?.constructor is Map
-				expect(isType(val, TypedMap(String))).to.be.false for val in VALUES when not val?.constructor is Map
-				expect(isType(val, TypedMap(Number, String))).to.be.false for val in VALUES when not val?.constructor is Map
-				expect(isType(val, TypedMap(String, Number))).to.be.false for val in VALUES when not val?.constructor is Map
-
-			it "should return true for a Map of numbers", ->
-				expect(isType(new Map([['one', 1], ['two', 2], ['three', 3]]), TypedMap(Number))).to.be.true
-				expect(isType(new Map([['one', 1]]), TypedMap(Number))).to.be.true
-				expect(isType(new Map([]), TypedMap(Number))).to.be.true
-
-			it "should return true for a Map of strings -> numbers", ->
-				expect(isType(new Map([['one', 1], ['two', 2], ['three', 3]]), TypedMap(String, Number))).to.be.true
-				expect(isType(new Map([['one', 1]]), TypedMap(String, Number))).to.be.true
-				expect(isType(new Map([]), TypedMap(String, Number))).to.be.true
-
-			it "should return true for a Map of strings", ->
-				expect(isType(new Map([[1, 'one'], [2, 'two'], [3, 'three']]), TypedMap(String))).to.be.true
-				expect(isType(new Map([[1, 'one']]), TypedMap(String))).to.be.true
-				expect(isType(new Map([]), TypedMap(String))).to.be.true
-
-			it "should return true for a Map of numbers -> strings", ->
-				expect(isType(new Map([[1, 'one'], [2, 'two'], [3, 'three']]), TypedMap(Number, String))).to.be.true
-				expect(isType(new Map([[1, 'one']]), TypedMap(Number, String))).to.be.true
-				expect(isType(new Map([]), TypedMap(Number, String))).to.be.true
-
-			it "should return false when an element of the Map is not a number", ->
-				expect(isType(new Map([['one', 1], ['two', val], ['three', 3]]), TypedMap(Number)))
-				.to.be.false for val in VALUES when typeof val isnt 'number'
-				expect(isType(new Map([['foo', val]]), TypedMap(Number)))
-				.to.be.false for val in VALUES when typeof val isnt 'number'
-
-			it "should return false when an element of the Map is not a string", ->
-				expect(isType(new Map([[1, 'one'], [2, val], [3, 'three']]), TypedMap(String)))
-				.to.be.false for val in VALUES when typeof val isnt 'string'
-				expect(isType(new Map([[1234, val]]), TypedMap(String)))
-				.to.be.false for val in VALUES when typeof val isnt 'string'
-
-			it "should return false when a value of the Map number -> string is not a string", ->
-				expect(isType(new Map([[1, 'one'], [2, val], [3, 'three']]), TypedMap(Number, String)))
-				.to.be.false for val in VALUES when typeof val isnt 'string'
-				expect(isType(new Map([[1234, val]]), TypedMap(Number, String)))
-				.to.be.false for val in VALUES when typeof val isnt 'string'
-
-			it "should return false when a key of the Map number -> string is not a string", ->
-				expect(isType(new Map([[1, 'one'], [val, 'two'], [3, 'three']]), TypedMap(Number, String)))
-				.to.be.false for val in VALUES when typeof val isnt 'number'
-				expect(isType(new Map([[val, 'foo']]), TypedMap(Number, String)))
-				.to.be.false for val in VALUES when typeof val isnt 'number'
-
-		context.skip "Object Type elements", ->
-
-			it "should return false when value is not a Map", ->
-				nsType = {n: Number, s: String}
-				expect(isType(val, TypedMap(nsType))).to.be.false for val in VALUES when not val?.constructor is Map
-
-			it "should return true when all elements of the Map are of a given object type", ->
-				nsType = {n: Number, s: String}
-				expect(isType(new Map([{n: 1, s: "a"}, {n: 2, s: "b"}, {n: 3, s: "c"}]), TypedMap(nsType))).to.be.true
-				expect(isType(new Map([{n: 1, s: "a"}]), TypedMap(nsType))).to.be.true
-				expect(isType(new Map([]), TypedMap(nsType))).to.be.true
-
-			it "should return false when some elements of the Map are not of a given object type", ->
-				nsType = {n: Number, s: String}
-				expect(isType(new Map([{n: 1, s: "a"}, val, {n: 3, s: "c"}]), TypedMap(nsType))).to.be.false for val in VALUES
-				expect(isType(new Map([val]), TypedMap(nsType))).to.be.false for val in VALUES
-				expect(isType(new Map([{n: 1, s: "a"}, {foo: 2, s: "b"}, {n: 3, s: "c"}]), TypedMap(nsType))).to.be.false
-
-		context.skip "Union Type elements", ->
-
-			it "should return false when value is not a Map", ->
-				expect(isType(val, TypedMap([Number, String]))).to.be.false for val in VALUES when not val?.constructor is Map
-
-			it "should return true for a Map whom values are strings or numbers", ->
-				expect(isType(new Map([]), TypedMap([String, Number]))).to.be.true
-				expect(isType(new Map(["foo", "bar", "baz"]), TypedMap([String, Number]))).to.be.true
-				expect(isType(new Map(["foo"]), TypedMap([String, Number]))).to.be.true
-				expect(isType(new Map([1, 2, 3]), TypedMap([String, Number]))).to.be.true
-				expect(isType(new Map([1]), TypedMap([String, Number]))).to.be.true
-				expect(isType(new Map(["foo", 1, "bar"]), TypedMap([String, Number]))).to.be.true
-				expect(isType(new Map([1, "foo", 2]), TypedMap([String, Number]))).to.be.true
-
-			it "should return false when an element of the Map is not a string nor a number", ->
-				expect(isType(new Map(["foo", val, 1]), TypedMap([String, Number]))).to.be.false \
-					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
-				expect(isType(new Map([val]), TypedMap([String, Number]))).to.be.false \
-					for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
+				it "TypedSet used as a function should throw an error.", ->
+					expect(-> isType(1, TypedSet)).to.throw("'TypedSet' can not be used directly as a function.")
+
+			context "Native Type elements", ->
+
+				it "should return false when value is not a set", ->
+					expect(isType(val, TypedSet(Number))).to.be.false for val in VALUES when not val?.constructor is Set
+					expect(isType(val, TypedSet(String))).to.be.false for val in VALUES when not val?.constructor is Set
+
+				it "should return true for a set of numbers", ->
+					expect(isType(new Set([1, 2, 3]), TypedSet(Number))).to.be.true
+					expect(isType(new Set([1]), TypedSet(Number))).to.be.true
+					expect(isType(new Set([]), TypedSet(Number))).to.be.true
+
+				it "should return true for a set of strings", ->
+					expect(isType(new Set(["foo", "bar", "baz"]), TypedSet(String))).to.be.true
+					expect(isType(new Set(["foo"]), TypedSet(String))).to.be.true
+					expect(isType(new Set([]), TypedSet(String))).to.be.true
+
+				it "should return false when an element of the set is not a number", ->
+					expect(isType(new Set([1, val, 3]), TypedSet(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
+					expect(isType(new Set([val]), TypedSet(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
+
+				it "should return false when an element of the set is not a string", ->
+					expect(isType(new Set(["foo", val, "bar"]), TypedSet(String))).to.be.false \
+						for val in VALUES when typeof val isnt 'string'
+					expect(isType(new Set([val]), TypedSet(String))).to.be.false \
+						for val in VALUES when typeof val isnt 'string'
+
+			context "Object Type elements", ->
+
+				it "should return false when value is not a set", ->
+					nsType = {n: Number, s: String}
+					expect(isType(val, TypedSet(nsType))).to.be.false for val in VALUES when not val?.constructor is Set
+
+				it "should return true when all elements of the set are of a given object type", ->
+					nsType = {n: Number, s: String}
+					expect(isType(new Set([{n: 1, s: "a"}, {n: 2, s: "b"}, {n: 3, s: "c"}]), TypedSet(nsType))).to.be.true
+					expect(isType(new Set([{n: 1, s: "a"}]), TypedSet(nsType))).to.be.true
+					expect(isType(new Set([]), TypedSet(nsType))).to.be.true
+
+				it "should return false when some elements of the set are not of a given object type", ->
+					nsType = {n: Number, s: String}
+					expect(isType(new Set([{n: 1, s: "a"}, val, {n: 3, s: "c"}]), TypedSet(nsType))).to.be.false for val in VALUES
+					expect(isType(new Set([val]), TypedSet(nsType))).to.be.false for val in VALUES
+					expect(isType(new Set([{n: 1, s: "a"}, {foo: 2, s: "b"}, {n: 3, s: "c"}]), TypedSet(nsType))).to.be.false
+
+			context "Union Type elements", ->
+
+				it "should return false when value is not a set", ->
+					expect(isType(val, TypedSet([Number, String]))).to.be.false for val in VALUES when not val?.constructor is Set
+
+				it "should return true for a set whom values are strings or numbers", ->
+					expect(isType(new Set([]), TypedSet([String, Number]))).to.be.true
+					expect(isType(new Set(["foo", "bar", "baz"]), TypedSet([String, Number]))).to.be.true
+					expect(isType(new Set(["foo"]), TypedSet([String, Number]))).to.be.true
+					expect(isType(new Set([1, 2, 3]), TypedSet([String, Number]))).to.be.true
+					expect(isType(new Set([1]), TypedSet([String, Number]))).to.be.true
+					expect(isType(new Set(["foo", 1, "bar"]), TypedSet([String, Number]))).to.be.true
+					expect(isType(new Set([1, "foo", 2]), TypedSet([String, Number]))).to.be.true
+
+				it "should return false when an element of the set is not a string nor a number", ->
+					expect(isType(new Set(["foo", val, 1]), TypedSet([String, Number]))).to.be.false \
+						for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
+					expect(isType(new Set([val]), TypedSet([String, Number]))).to.be.false \
+						for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
+
+		context "Typed map", ->
+
+			context "Any type elements", ->
+
+				it "TypedMap() should throw an error.", ->
+					expect(-> TypedMap()).to.throw("Invalid type syntax: TypedMap must have at least one type argument.")
+
+				it "TypedMap([]) should return Map type.", ->
+					expect(TypedMap([])).to.equal(Map)
+
+				it "TypedMap([], []) should return Map type.", ->
+					expect(TypedMap([], [])).to.equal(Map)
+
+				it "TypedMap(AnyType) should return Map type.", ->
+					expect(TypedMap(AnyType)).to.equal(Map)
+
+				it "TypedMap(AnyType, AnyType) should return Map type.", ->
+					expect(TypedMap(AnyType, AnyType)).to.equal(Map)
+
+				it "TypedMap used as a function should throw an error.", ->
+					expect(-> isType(1, TypedMap)).to.throw("TypedMap' can not be used directly as a function.")
+
+			context "Native Type elements", ->
+
+				it "should return false when value is not a Map", ->
+					expect(isType(val, TypedMap(Number))).to.be.false for val in VALUES when not val?.constructor is Map
+					expect(isType(val, TypedMap(String))).to.be.false for val in VALUES when not val?.constructor is Map
+					expect(isType(val, TypedMap(Number, String))).to.be.false for val in VALUES when not val?.constructor is Map
+					expect(isType(val, TypedMap(String, Number))).to.be.false for val in VALUES when not val?.constructor is Map
+
+				it "should return true for a Map of numbers", ->
+					expect(isType(new Map([['one', 1], ['two', 2], ['three', 3]]), TypedMap(Number))).to.be.true
+					expect(isType(new Map([['one', 1]]), TypedMap(Number))).to.be.true
+					expect(isType(new Map([]), TypedMap(Number))).to.be.true
+
+				it "should return true for a Map of strings -> numbers", ->
+					expect(isType(new Map([['one', 1], ['two', 2], ['three', 3]]), TypedMap(String, Number))).to.be.true
+					expect(isType(new Map([['one', 1]]), TypedMap(String, Number))).to.be.true
+					expect(isType(new Map([]), TypedMap(String, Number))).to.be.true
+
+				it "should return true for a Map of strings", ->
+					expect(isType(new Map([[1, 'one'], [2, 'two'], [3, 'three']]), TypedMap(String))).to.be.true
+					expect(isType(new Map([[1, 'one']]), TypedMap(String))).to.be.true
+					expect(isType(new Map([]), TypedMap(String))).to.be.true
+
+				it "should return true for a Map of numbers -> strings", ->
+					expect(isType(new Map([[1, 'one'], [2, 'two'], [3, 'three']]), TypedMap(Number, String))).to.be.true
+					expect(isType(new Map([[1, 'one']]), TypedMap(Number, String))).to.be.true
+					expect(isType(new Map([]), TypedMap(Number, String))).to.be.true
+
+				it "should return false when an element of the Map is not a number", ->
+					expect(isType(new Map([['one', 1], ['two', val], ['three', 3]]), TypedMap(Number)))
+					.to.be.false for val in VALUES when typeof val isnt 'number'
+					expect(isType(new Map([['foo', val]]), TypedMap(Number)))
+					.to.be.false for val in VALUES when typeof val isnt 'number'
+
+				it "should return false when an element of the Map is not a string", ->
+					expect(isType(new Map([[1, 'one'], [2, val], [3, 'three']]), TypedMap(String)))
+					.to.be.false for val in VALUES when typeof val isnt 'string'
+					expect(isType(new Map([[1234, val]]), TypedMap(String)))
+					.to.be.false for val in VALUES when typeof val isnt 'string'
+
+				it "should return false when a value of the Map number -> string is not a string", ->
+					expect(isType(new Map([[1, 'one'], [2, val], [3, 'three']]), TypedMap(Number, String)))
+					.to.be.false for val in VALUES when typeof val isnt 'string'
+					expect(isType(new Map([[1234, val]]), TypedMap(Number, String)))
+					.to.be.false for val in VALUES when typeof val isnt 'string'
+
+				it "should return false when a key of the Map number -> string is not a string", ->
+					expect(isType(new Map([[1, 'one'], [val, 'two'], [3, 'three']]), TypedMap(Number, String)))
+					.to.be.false for val in VALUES when typeof val isnt 'number'
+					expect(isType(new Map([[val, 'foo']]), TypedMap(Number, String)))
+					.to.be.false for val in VALUES when typeof val isnt 'number'
+
+			context.skip "Object Type elements", ->
+
+				it "should return false when value is not a Map", ->
+					nsType = {n: Number, s: String}
+					expect(isType(val, TypedMap(nsType))).to.be.false for val in VALUES when not val?.constructor is Map
+
+				it "should return true when all elements of the Map are of a given object type", ->
+					nsType = {n: Number, s: String}
+					expect(isType(new Map([{n: 1, s: "a"}, {n: 2, s: "b"}, {n: 3, s: "c"}]), TypedMap(nsType))).to.be.true
+					expect(isType(new Map([{n: 1, s: "a"}]), TypedMap(nsType))).to.be.true
+					expect(isType(new Map([]), TypedMap(nsType))).to.be.true
+
+				it "should return false when some elements of the Map are not of a given object type", ->
+					nsType = {n: Number, s: String}
+					expect(isType(new Map([{n: 1, s: "a"}, val, {n: 3, s: "c"}]), TypedMap(nsType))).to.be.false for val in VALUES
+					expect(isType(new Map([val]), TypedMap(nsType))).to.be.false for val in VALUES
+					expect(isType(new Map([{n: 1, s: "a"}, {foo: 2, s: "b"}, {n: 3, s: "c"}]), TypedMap(nsType))).to.be.false
+
+			context.skip "Union Type elements", ->
+
+				it "should return false when value is not a Map", ->
+					expect(isType(val, TypedMap([Number, String]))).to.be.false for val in VALUES when not val?.constructor is Map
+
+				it "should return true for a Map whom values are strings or numbers", ->
+					expect(isType(new Map([]), TypedMap([String, Number]))).to.be.true
+					expect(isType(new Map(["foo", "bar", "baz"]), TypedMap([String, Number]))).to.be.true
+					expect(isType(new Map(["foo"]), TypedMap([String, Number]))).to.be.true
+					expect(isType(new Map([1, 2, 3]), TypedMap([String, Number]))).to.be.true
+					expect(isType(new Map([1]), TypedMap([String, Number]))).to.be.true
+					expect(isType(new Map(["foo", 1, "bar"]), TypedMap([String, Number]))).to.be.true
+					expect(isType(new Map([1, "foo", 2]), TypedMap([String, Number]))).to.be.true
+
+				it "should return false when an element of the Map is not a string nor a number", ->
+					expect(isType(new Map(["foo", val, 1]), TypedMap([String, Number]))).to.be.false \
+						for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
+					expect(isType(new Map([val]), TypedMap([String, Number]))).to.be.false \
+						for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
 
 	context "Promised type", ->
 

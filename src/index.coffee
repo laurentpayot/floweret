@@ -1,7 +1,7 @@
 ###* @license MIT (c) 2018 Laurent Payot  ###
 
 # for custom types
-Type = require './types/Type'
+{Type} = require './types'
 
 # trows customized error
 error = (msg) -> throw new Error switch msg[0]
@@ -9,31 +9,6 @@ error = (msg) -> throw new Error switch msg[0]
 	when '@' then "Invalid signature: #{msg[1..]}"
 	else "Type error: #{msg}"
 
-### typed classes ###
-
-class _TypedObject extends Type
-	constructor: (@type) ->
-		super()
-		error "!TypedObject must have exactly one type argument." unless arguments.length is 1
-		return Object if isAnyType(@type) # return needed
-	validate: (val) ->
-		return false unless val?.constructor is Object
-		return true if isAnyType(@type)
-		Object.values(val).every((v) => isType(v, @type))
-TypedObject = (args...) -> new _TypedObject(args...)
-
-class _TypedSet extends Type
-	constructor: (@type) ->
-		super()
-		error "!TypedSet must have exactly one type argument." unless arguments.length is 1
-		return Set if isAnyType(@type) # return needed
-	validate: (val) ->
-		return false unless val?.constructor is Set
-		return true if isAnyType(@type)
-		error "!Typed Set type can not be a literal
-				of type '#{@type}'." if @type?.constructor in [undefined, String, Number, Boolean]
-		[val...].every((e) => isType(e, @type))
-TypedSet = (args...) -> new _TypedSet(args...)
 
 class _TypedMap extends Type
 	keysType: []
@@ -93,11 +68,13 @@ else switch type?.constructor
 	when Function then switch type
 		# type helpers used directly as functions
 		when AnyType then true
-		when promised, maybe, TypedObject, TypedSet, TypedMap
-			error "!'#{type.name}' can not be used directly as a function."
+		when promised, maybe then error "!'#{type.name}' can not be used directly as a function."
 		when etc then error "!'etc' can not be used in types."
-		# constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
-		else val?.constructor is type
+		else
+			if type.parentClass is Type and not type.asFunction
+				error "!Custom type '#{type.class.name}' can not be used directly as a function."
+			else # constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
+				val?.constructor is type
 	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
 		for k, v of type
@@ -173,4 +150,4 @@ fn = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {fn, maybe, AnyType, promised, etc, typeOf, isType, isAnyType, typeName, TypedObject, TypedSet, TypedMap}
+module.exports = {fn, maybe, AnyType, promised, etc, typeOf, isType, isAnyType, typeName, TypedMap}
