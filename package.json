@@ -30,7 +30,7 @@
     "build": "rm -rf dist/ && coffee -cb -o dist/ src/",
     "build-tests": "coffee -cb test/tests.coffee",
     "test": "npm run build && npm run build-tests && mocha",
-    "publish": "npm run test && npm publish"
+    "deploy": "npm run test && npm publish"
   },
   "devDependencies": {
     "chai": "^4.1.2",
