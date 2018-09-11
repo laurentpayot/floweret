@@ -47,9 +47,9 @@ promised = (type) ->
 	error "!'promised' must have exactly one type argument." unless arguments.length is 1
 	if isAnyType(type) then Promise else Promise.resolve(type)
 
-class _Etc # typed rest arguments list
+class Etc # typed rest arguments list
 	constructor: (@type=[]) -> error "!'etc' can not have more than one type argument." if arguments.length > 1
-etc = (args...) -> new _Etc(args...)
+etc = -> new Etc(arguments...)
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
 typeOf = (val) -> if val is undefined or val is null then '' + val else val.constructor.name
@@ -71,8 +71,11 @@ else switch type?.constructor
 		when promised, maybe then error "!'#{type.name}' can not be used directly as a function."
 		when etc then error "!'etc' can not be used in types."
 		else
-			if type.parentClass is Type and not type.asFunction
-				error "!Custom type '#{type.class.name}' can not be used directly as a function."
+			if type.parentClass is Type
+				if type.asFunctionArgs
+					type(type.asFunctionArgs...).validate(val)
+				else
+					error "!Custom type '#{type.class.name}' can not be used directly as a function."
 			else # constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
 				val?.constructor is type
 	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
@@ -80,7 +83,7 @@ else switch type?.constructor
 		for k, v of type
 			return false unless isType(val[k], v)
 		true
-	when _Etc then error "!'etc' can not be used in types."
+	when Etc then error "!'etc' can not be used in types."
 	else
 		if type instanceof Type
 			type.validate(val)
@@ -120,15 +123,15 @@ fn = (argTypes, resType, f) ->
 	(args...) -> # returns an unfortunately anonymous function
 		rest = false
 		for type, i in argTypes
-			if type is etc or type?.constructor is _Etc # rest type
+			if type is etc or type?.constructor is Etc # rest type
 				error "@Rest type must be the last of the arguments types." if i + 1 < argTypes.length
 				rest = true
 				t = if type is etc then [] else type.type
-				unless isAnyType(t) # no checks if rest type is any type
+				unless isAnyType(t)
 					for arg, j in args[i..]
 						error "Argument number #{i+j+1} #{shouldBe(arg, t)}." unless isType(arg, t)
 			else
-				unless isAnyType(type) # not checking type if type is any type
+				unless isAnyType(type)
 					if args[i] is undefined
 						error "Missing required argument number #{i+1}." unless isType(undefined, type)
 					else

@@ -12,6 +12,5 @@ class Tuple extends Type
 	typeName: ->
 		"tuple of #{@types.length} elements '#{(typeName(t) for t in @types).join(", ")}'"
 
-
-module.exports = createHelper(Tuple, false) # cannot be used as a function
+module.exports = createHelper(Tuple)
 

@@ -2,6 +2,7 @@
 = require '../dist/runtime-signature.min.js' # testing the build, minified, not the source
 
 {Type} = require '../dist/types'
+Integer = require '../dist/types/Integer'
 Tuple = require '../dist/types/Tuple'
 TypedObject = require '../dist/types/TypedObject'
 TypedSet = require '../dist/types/TypedSet'
@@ -341,7 +342,27 @@ describe "isType", ->
 		it "should throw an error when creating an instance of Type", ->
 			expect(-> new Type()).to.throw("Abstract class 'Type' cannot be instantiated directly.")
 
-		context.only "Tuple type", ->
+		context.only "Integer type", ->
+
+			it "should not throw an error when Integer is used as a function", ->
+				expect(isType(1, Integer)).to.be.true
+
+			it "should not throw an error when Integer is used without arguments", ->
+				expect(isType(1, Integer())).to.be.true
+
+			it "should return true for an integer number", ->
+				expect(isType(1, Integer)).to.be.true
+				expect(isType(0, Integer)).to.be.true
+				expect(isType(-0, Integer)).to.be.true
+				expect(isType(-1, Integer)).to.be.true
+
+			it "should return false for an decimal number", ->
+				expect(isType(1.1, Integer)).to.be.false
+				expect(isType(0.1, Integer)).to.be.false
+				expect(isType(-0.1, Integer)).to.be.false
+				expect(isType(-1.1, Integer)).to.be.false
+
+		context "Tuple type", ->
 
 			it "should throw an error when Tuple is used as a function", ->
 				expect(-> isType(1, Tuple)).to.throw("Custom type 'Tuple' can not be used directly as a function.")
@@ -362,6 +383,22 @@ describe "isType", ->
 
 				it "should return false when value is an empty array", ->
 					expect(isType([], Tuple(Number, Boolean, String))).to.be.false
+
+		context.only "Typed object", ->
+
+			it "should throw an error when TypedObject is used as a function", ->
+				expect(-> isType(1, TypedObject)).to.throw("Custom type 'TypedObject' can not be used directly as a function.")
+
+			it "should throw an error when TypedObject is used without arguments", ->
+				expect(-> isType(1, TypedObject())).to.throw("TypedObject must have exactly one type argument.")
+
+		context "Typed object", ->
+
+			it "should throw an error when TypedObject is used as a function", ->
+				expect(-> isType(1, TypedObject)).to.throw("Custom type 'TypedObject' can not be used directly as a function.")
+
+			it "should throw an error when TypedObject is used without arguments", ->
+				expect(-> isType(1, TypedObject())).to.throw("TypedObject must have exactly one type argument.")
 
 		context "Typed array", ->
 
