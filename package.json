@@ -28,8 +28,9 @@
   },
   "scripts": {
     "build": "rm -rf dist/ && coffee -cb -o dist/ src/",
+    "minify": "uglifyjs -cm --comments -o dist/runtime-signature.min.js -- dist/index.js",
     "build-tests": "coffee -cb test/tests.coffee",
-    "test": "npm run build && npm run build-tests && mocha",
+    "test": "npm run build && npm run minify && npm run build-tests && mocha",
     "deploy": "npm run test && npm publish"
   },
   "devDependencies": {
