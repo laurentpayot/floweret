@@ -90,14 +90,17 @@ badPath = (obj, typeObj) ->
 								else [obj[k], typeObj[k]])
 
 # returns the type name for signature error messages (supposing type is always correct)
-typeName = (type) -> if isAnyType(type) then "any type" else switch type?.constructor
-	when undefined then typeOf(type)
-	when Array
-		if type.length is 1 then "array of '#{typeName(type[0])}'" else (typeName(t) for t in type).join(" or ")
-	when Function then type.name
-	when Object then "custom type object"
-	else
-		if type instanceof Type and type.typeName then type.typeName() else "literal #{typeOf(type)} '#{type}'"
+typeName = (type) -> switch
+	when isAnyType(type) then "any type"
+	when type is EmptyArray then "empty array"
+	else switch type?.constructor
+		when undefined then typeOf(type)
+		when Array
+			if type.length is 1 then "array of '#{typeName(type[0])}'" else (typeName(t) for t in type).join(" or ")
+		when Function then type.name
+		when Object then "custom type object"
+		else
+			if type instanceof Type and type.typeName then type.typeName() else "literal #{typeOf(type)} '#{type}'"
 
 # type error message comparison part helper
 shouldBe = (val, type) ->

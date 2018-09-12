@@ -1045,6 +1045,13 @@ describe "fn", ->
 				expect( -> f(1))
 				.to.throw("Argument number 1 (1) should be of type MyClass instead of Number.")
 
+			it "should return an error with 'empty array'", ->
+				f = fn [EmptyArray], AnyType, ->
+				expect( -> f(1))
+				.to.throw("Argument number 1 (1) should be of type empty array instead of Number.")
+				expect( -> f([1]))
+				.to.throw("Argument number 1 (1) should be of type empty array instead of Array.")
+
 		context "Union type argument", ->
 
 			it "should return an error with 'undefined or null'", ->
