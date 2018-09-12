@@ -4,6 +4,7 @@
 {Type} = require '../dist/types'
 AnyType = require '../dist/types/AnyType'
 Integer = require '../dist/types/Integer'
+Natural = require '../dist/types/Natural'
 Tuple = require '../dist/types/Tuple'
 TypedObject = require '../dist/types/TypedObject'
 TypedSet = require '../dist/types/TypedSet'
@@ -346,6 +347,12 @@ describe "isType", ->
 
 		context "Integer type", ->
 
+			it "should throw an error when Integer arguments are not numers", ->
+				expect(-> isType(1, Integer('100'))).to.throw("Integer arguments must be numbers.")
+				expect(-> isType(1, Integer(1, '100'))).to.throw("Integer arguments must be numbers.")
+				expect(-> isType(1, Integer('1', 100))).to.throw("Integer arguments must be numbers.")
+				expect(-> isType(1, Integer('1', '100'))).to.throw("Integer arguments must be numbers.")
+
 			it "should not throw an error when Integer is used as a function", ->
 				expect(isType(1, Integer)).to.be.true
 
@@ -363,6 +370,21 @@ describe "isType", ->
 				expect(isType(0.1, Integer)).to.be.false
 				expect(isType(-0.1, Integer)).to.be.false
 				expect(isType(-1.1, Integer)).to.be.false
+
+		context "Natural type", ->
+
+			it "should throw an error when Natural arguments are not numers", ->
+				expect(-> isType(1, Natural('100'))).to.throw("Natural arguments must be numbers.")
+
+			it "should return false for an negative integer", ->
+				expect(isType(-1, Natural)).to.be.false
+
+			it "should return true for an positive integer", ->
+				expect(isType(1, Natural)).to.be.true
+
+			it "should return true for zero", ->
+				expect(isType(0, Natural)).to.be.true
+				expect(isType(-0, Natural)).to.be.true
 
 		context "Tuple type", ->
 
