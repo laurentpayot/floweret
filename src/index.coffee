@@ -1,45 +1,25 @@
 ###* @license MIT (c) 2018 Laurent Payot  ###
 
-# for custom types
-{Type} = require './types'
+AnyType = require './types/AnyType'
+{Type, InvalidTypeError} = require './types'
+
+class InvalidSignatureError extends Error
+	constructor: (msg) -> super("Invalid signature: " + msg)
+
+class TypeError extends Error
+	constructor: (msg) -> super("Type not matching: " + msg)
 
 # trows customized error
-error = (msg) -> throw new Error switch msg[0]
-	when '!' then "Invalid type syntax: #{msg[1..]}"
-	when '@' then "Invalid signature: #{msg[1..]}"
-	else "Type error: #{msg}"
-
-
-class _TypedMap extends Type
-	keysType: []
-	valuesType: []
-	constructor: (t1, t2) ->
-		super()
-		switch arguments.length
-			when 0 then error "!TypedMap must have at least one type argument."
-			when 1
-				if isAnyType(t1) then return Map else @valuesType = t1 # return needed
-			when 2
-				if isAnyType(t1) and isAnyType(t2) then return Map else [@keysType, @valuesType] = [t1, t2] # return needed
-			else error "!TypedMap can not have more than two type arguments."
-	validate: (val) ->
-		return false unless val?.constructor is Map
-		switch
-			when isAnyType(@keysType) and isAnyType(@valuesType) then true
-			when isAnyType(@keysType) then Array.from(val.values()).every((e) => isType(e, @valuesType))
-			when isAnyType(@valuesType) then Array.from(val.keys()).every((e) => isType(e, @keysType))
-			else
-				keys = Array.from(val.keys())
-				values = Array.from(val.values())
-				keys.every((e) => isType(e, @keysType)) and values.every((e) => isType(e, @valuesType))
-TypedMap = (args...) -> new _TypedMap(args...)
+error = (msg) -> switch msg[0]
+	when '!' then throw new InvalidTypeError msg[1..]
+	when '@' then throw new InvalidSignatureError msg[1..]
+	else throw new TypeError msg
 
 # not exported
 isAnyType = (o) -> o is AnyType or Array.isArray(o) and o.length is 0
 
 ### type helpers ###
 
-AnyType = -> if arguments.length then error "!'AnyType' can not have a type argument." else []
 maybe = (types...) ->
 	error "!'maybe' must have at least one type argument." unless arguments.length
 	if types.some((t) -> isAnyType(t)) then [] else [undefined, null].concat(types)
@@ -153,4 +133,4 @@ fn = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {fn, maybe, AnyType, promised, etc, typeOf, isType, isAnyType, typeName, TypedMap}
+module.exports = {fn, maybe, promised, etc, typeOf, isType, isAnyType, typeName}

@@ -1,9 +1,9 @@
-class CustomTypeError extends Error
-	constructor: (msg) -> super("Custom type error: " + msg)
+class InvalidTypeError extends Error
+	constructor: (msg) -> super("Type error: " + msg)
 
 class Type
 	constructor: ->
-		if @constructor is Type then throw new CustomTypeError("Abstract class 'Type' cannot be instantiated directly.")
+		throw new InvalidTypeError("Abstract class 'Type' cannot be instantiated directly.") if @constructor is Type
 	validate: -> false # false if child class valitate missing
 
 createHelper = (childClass, asFunction=false) ->
@@ -13,4 +13,4 @@ createHelper = (childClass, asFunction=false) ->
 	h.asFunction = asFunction
 	h
 
-module.exports ={Type, CustomTypeError, createHelper}
+module.exports ={Type, InvalidTypeError, createHelper}

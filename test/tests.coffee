@@ -1,11 +1,13 @@
-{typeOf, isType, fn, maybe, AnyType, promised, etc, TypedMap} \
-= require '../dist/runtime-signature.min.js' # testing the build, minified, not the source
+# testing the build, minified, not the source
+{typeOf, isType, fn, maybe, promised, etc} = require '../dist/runtime-signature.min.js'
 
 {Type} = require '../dist/types'
+AnyType = require '../dist/types/AnyType'
 Integer = require '../dist/types/Integer'
 Tuple = require '../dist/types/Tuple'
 TypedObject = require '../dist/types/TypedObject'
 TypedSet = require '../dist/types/TypedSet'
+TypedMap = require '../dist/types/TypedMap'
 
 chai = require 'chai'
 chaiAsPromised = require 'chai-as-promised'
@@ -342,7 +344,7 @@ describe "isType", ->
 		it "should throw an error when creating an instance of Type", ->
 			expect(-> new Type()).to.throw("Abstract class 'Type' cannot be instantiated directly.")
 
-		context.only "Integer type", ->
+		context "Integer type", ->
 
 			it "should not throw an error when Integer is used as a function", ->
 				expect(isType(1, Integer)).to.be.true
@@ -383,14 +385,6 @@ describe "isType", ->
 
 				it "should return false when value is an empty array", ->
 					expect(isType([], Tuple(Number, Boolean, String))).to.be.false
-
-		context.only "Typed object", ->
-
-			it "should throw an error when TypedObject is used as a function", ->
-				expect(-> isType(1, TypedObject)).to.throw("Custom type 'TypedObject' can not be used directly as a function.")
-
-			it "should throw an error when TypedObject is used without arguments", ->
-				expect(-> isType(1, TypedObject())).to.throw("TypedObject must have exactly one type argument.")
 
 		context "Typed object", ->
 
@@ -570,7 +564,7 @@ describe "isType", ->
 			context "Any type elements", ->
 
 				it "TypedMap() should throw an error.", ->
-					expect(-> TypedMap()).to.throw("Invalid type syntax: TypedMap must have at least one type argument.")
+					expect(-> TypedMap()).to.throw("TypedMap must have at least one type argument.")
 
 				it "TypedMap([]) should return Map type.", ->
 					expect(TypedMap([])).to.equal(Map)
