@@ -72,8 +72,8 @@ else switch type?.constructor
 		when etc then error "!'etc' can not be used in types."
 		else
 			if type.rootClass is Type
-				if type.asFunctionArgs.length
-					type(type.asFunctionArgs...).validate(val)
+				if type.asFunction
+					type().validate(val) # using default type arguments
 				else
 					error "!Custom type '#{type.class.name}' can not be used directly as a function."
 			else # constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes

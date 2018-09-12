@@ -20,6 +20,6 @@ class Integer extends Type
 		return false if @min isnt undefined and val < min
 		true
 
-# passing a default argument (undefined) to allow Integer to be used as a function
-module.exports = createHelper(Integer, undefined)
+# truthy second argument to allow Integer to be used as a function
+module.exports = createHelper(Integer, true)
 
