@@ -13,4 +13,4 @@ createHelper = (childClass, asFunction=false) ->
 	h.asFunction = asFunction
 	h
 
-module.exports ={Type, InvalidTypeError, createHelper}
+module.exports = {Type, InvalidTypeError, createHelper}

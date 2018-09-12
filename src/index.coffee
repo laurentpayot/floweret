@@ -38,11 +38,20 @@ typeOf = (val) -> if val is undefined or val is null then '' + val else val.cons
 isType = (val, type) -> if Array.isArray(type) # NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
 	switch type.length
 		when 0 then true # any type: `[]`
-		when 1 # typed array type, e.g.: `Array(String)`
+		when 1
 			return false unless Array.isArray(val)
 			return true if isAnyType(type[0])
-			val.every((e) -> isType(e, type[0]))
-		else type.some((t) -> isType(val, t)) # union of types, e.g.: `[Object, null]`
+			unless Object.values(type).length # array of one empty value: sized array `Array(1)`
+				val.length is 1
+			else # typed array type, e.g.: `Array(String)`
+				val.every((e) -> isType(e, type[0]))
+		else
+			# NB: checking two first values instead of `Object.values(type).length` for performance reasons
+			if type[0] is undefined and type[1] is undefined # array of empty values: sized array, e.g.: `Array(1000)`)
+				return false unless Array.isArray(val)
+				val.length is type.length
+			else
+				type.some((t) -> isType(val, t)) # union of types, e.g.: `[Object, null]`
 else switch type?.constructor
 	when undefined, String, Number, Boolean then val is type # literal type or undefined or null
 	when Function then switch type
@@ -75,7 +84,8 @@ else switch type?.constructor
 badPath = (obj, typeObj) ->
 	for k, t of typeObj
 		if not isType(obj[k], t)
-			return [k].concat(if obj[k]?.constructor is Object then badPath(obj[k], typeObj[k]) else [obj[k], typeObj[k]])
+			return [k].concat(if obj[k]?.constructor is Object then badPath(obj[k], typeObj[k]) \
+								else [obj[k], typeObj[k]])
 
 # returns the type name for signature error messages (supposing type is always correct)
 typeName = (type) -> if isAnyType(type) then "any type" else switch type?.constructor
