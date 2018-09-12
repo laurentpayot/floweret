@@ -3,6 +3,7 @@
 
 {Type} = require '../dist/types'
 AnyType = require '../dist/types/AnyType'
+EmptyArray = require '../dist/types/EmptyArray'
 Integer = require '../dist/types/Integer'
 Natural = require '../dist/types/Natural'
 Tuple = require '../dist/types/Tuple'
@@ -101,6 +102,12 @@ describe "typeOf (add more tests!!!)", ->
 describe "isType", ->
 
 	context "Special Types", ->
+
+		context "EmptyArray type", ->
+
+			it "EmptyArray type should return true for empty array only", ->
+				expect(isType([], EmptyArray)).to.be.true
+				expect(isType(v, EmptyArray)).to.be.false for v in VALUES when not (Array.isArray(v) and not v.length)
 
 		context "Any type", ->
 

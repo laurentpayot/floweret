@@ -1,7 +1,8 @@
 ###* @license MIT (c) 2018 Laurent Payot  ###
 
-AnyType = require './types/AnyType'
 {Type, InvalidTypeError} = require './types'
+AnyType = require './types/AnyType'
+EmptyArray = require './types/EmptyArray'
 
 class InvalidSignatureError extends Error
 	constructor: (msg) -> super("Invalid signature: " + msg)
@@ -57,6 +58,7 @@ else switch type?.constructor
 	when Function then switch type
 		# type helpers used directly as functions
 		when AnyType then true
+		when EmptyArray then Array.isArray(val) and not val.length
 		when promised, maybe then error "!'#{type.name}' can not be used directly as a function."
 		when etc then error "!'etc' can not be used in types."
 		else
