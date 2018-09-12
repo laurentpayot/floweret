@@ -71,8 +71,8 @@ else switch type?.constructor
 		when promised, maybe then error "!'#{type.name}' can not be used directly as a function."
 		when etc then error "!'etc' can not be used in types."
 		else
-			if type.parentClass is Type
-				if type.asFunctionArgs
+			if type.rootClass is Type
+				if type.asFunctionArgs.length
 					type(type.asFunctionArgs...).validate(val)
 				else
 					error "!Custom type '#{type.class.name}' can not be used directly as a function."

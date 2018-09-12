@@ -6,6 +6,8 @@ class Integer extends Type
 	max = undefined
 	constructor: (n1, n2) ->
 		super() # needed
+		throw new CustomTypeError "Integer arguments must be numbers." \
+			unless typeof n1 in ['undefined', 'number'] and typeof n2 in ['undefined', 'number']
 		switch arguments.length
 			when 0 then # nothing
 			when 1 then @max = n1
@@ -18,5 +20,6 @@ class Integer extends Type
 		return false if @min isnt undefined and val < min
 		true
 
-module.exports = createHelper(Integer, [])
+# passing a default argument (undefined) to allow Integer to be used as a function
+module.exports = createHelper(Integer, undefined)
 
