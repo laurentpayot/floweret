@@ -121,10 +121,10 @@ describe "isType", ->
 				expect(isType(val, AnyType())).to.be.true for val in VALUES
 
 			it "AnyType(Number) type should throw an error", ->
-				expect(-> isType(1, AnyType(Number))).to.throw("'AnyType' can not have a type argument.")
+				expect(-> isType(1, AnyType(Number))).to.throw("AnyType cannot have any arguments.")
 
 			it "AnyType([]) type should throw an error", ->
-				expect(-> isType(1, AnyType([]))).to.throw("'AnyType' can not have a type argument.")
+				expect(-> isType(1, AnyType([]))).to.throw("AnyType cannot have any arguments.")
 
 		context "Maybe type", ->
 
@@ -1110,13 +1110,18 @@ describe "fn", ->
 				expect( -> f(1))
 				.to.throw("Argument number 1 (1) should be of type array of 'custom type object' instead of Number.")
 
-			it "should return an error with 'array of 'any type''", ->
+			it "Array([]) should return an error with 'array of 'any type''", ->
 				f = fn [Array([])], AnyType, ->
 				expect( -> f(1))
 				.to.throw("Argument number 1 (1) should be of type array of 'any type' instead of Number.")
 
-			it "should return an error with 'array of 'any type''", ->
+			it "Array(AnyType)] should return an error with 'array of 'any type''", ->
 				f = fn [Array(AnyType)], AnyType, ->
+				expect( -> f(1))
+				.to.throw("Argument number 1 (1) should be of type array of 'any type' instead of Number.")
+
+			it "Array(AnyType()) should return an error with 'array of 'any type''", ->
+				f = fn [Array(AnyType())], AnyType, ->
 				expect( -> f(1))
 				.to.throw("Argument number 1 (1) should be of type array of 'any type' instead of Number.")
 

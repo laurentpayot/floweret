@@ -88,13 +88,15 @@ badPath = (obj, typeObj) ->
 
 # returns the type name for signature error messages (supposing type is always correct)
 typeName = (type) -> switch
-	when isAnyType(type) then "any type"
 	when type is EmptyArray then "empty array"
 	else switch type?.constructor
 		when undefined then typeOf(type)
-		when Array
-			if type.length is 1 then "array of '#{typeName(type[0])}'" else (typeName(t) for t in type).join(" or ")
-		when Function then type.name
+		when Array then switch type.length
+			when 0 then "any type"
+			when 1 then "array of '#{typeName(type[0])}'"
+			else (typeName(t) for t in type).join(" or ")
+		when Function
+			if type.rootClass is Type then type().typeName() else type.name
 		when Object then "custom type object"
 		else
 			if type instanceof Type then type.typeName() else "literal #{typeOf(type)} '#{type}'"

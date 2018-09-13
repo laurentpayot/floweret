@@ -1,8 +1,8 @@
-{InvalidTypeError} = require '.'
+{Type} = require '.'
 
-AnyType = ->
-	throw new InvalidTypeError "'AnyType' can not have a type argument." if arguments.length
-	# returns the function itself
-	AnyType
+class AnyType extends Type
+	constructor: -> super(arguments, 0, 0) # no arguments
+	validate: (val) -> true
+	typeName: -> "any type"
 
-module.exports = AnyType
+module.exports = Type.createHelper(AnyType)
