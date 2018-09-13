@@ -1,6 +1,6 @@
 {
   "name": "runtime-signature",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Runtime type-checking with simple JavaScript types signatures.",
   "author": "Laurent Payot",
   "license": "MIT",
@@ -23,6 +23,7 @@
     "coffee"
   ],
   "main": "dist/index.js",
+  "files": ["dist"],
   "engines": {
     "node": ">=7.6.0"
   },

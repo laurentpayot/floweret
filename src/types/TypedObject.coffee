@@ -3,8 +3,7 @@
 
 class TypedObject extends Type
 	constructor: (@type) ->
-		super() # needed
-		throw new InvalidTypeError "TypedObject must have exactly one type argument." unless arguments.length is 1
+		super(arguments, 1, 1) # 1 argument
 		return Object if isAnyType(@type) # return needed
 	validate: (val) ->
 		return false unless val?.constructor is Object

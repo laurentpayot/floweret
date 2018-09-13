@@ -3,8 +3,7 @@
 
 class TypedSet extends Type
 	constructor: (@type) ->
-		super()
-		throw new InvalidTypeError "TypedSet must have exactly one type argument." unless arguments.length is 1
+		super(arguments, 1, 1) # 1 argument
 		return Set if isAnyType(@type) # return needed
 	validate: (val) ->
 		return false unless val?.constructor is Set

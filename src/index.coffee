@@ -22,14 +22,14 @@ isAnyType = (o) -> o is AnyType or Array.isArray(o) and o.length is 0
 ### type helpers ###
 
 maybe = (types...) ->
-	error "!'maybe' must have at least one type argument." unless arguments.length
+	error "!'maybe' must have at least 1 argument." unless arguments.length
 	if types.some((t) -> isAnyType(t)) then [] else [undefined, null].concat(types)
 promised = (type) ->
-	error "!'promised' must have exactly one type argument." unless arguments.length is 1
+	error "!'promised' must have exactly 1 argument." unless arguments.length is 1
 	if isAnyType(type) then Promise else Promise.resolve(type)
 
 class Etc # typed rest arguments list
-	constructor: (@type=[]) -> error "!'etc' can not have more than one type argument." if arguments.length > 1
+	constructor: (@type=[]) -> error "!'etc' must have at most 1 argument." if arguments.length > 1
 etc = -> new Etc(arguments...)
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
@@ -63,10 +63,7 @@ else switch type?.constructor
 		when etc then error "!'etc' can not be used in types."
 		else
 			if type.rootClass is Type
-				if type.asFunction
-					type().validate(val) # using default type arguments
-				else
-					error "!Custom type '#{type.class.name}' can not be used directly as a function."
+				type().validate(val) # using default type arguments
 			else # constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
 				val?.constructor is type
 	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
@@ -100,7 +97,7 @@ typeName = (type) -> switch
 		when Function then type.name
 		when Object then "custom type object"
 		else
-			if type instanceof Type and type.typeName then type.typeName() else "literal #{typeOf(type)} '#{type}'"
+			if type instanceof Type then type.typeName() else "literal #{typeOf(type)} '#{type}'"
 
 # type error message comparison part helper
 shouldBe = (val, type) ->

@@ -3,8 +3,7 @@
 
 class Tuple extends Type
 	constructor: (@types...) ->
-		super() # needed
-		throw new InvalidTypeError "Tuple must have at least two type arguments." if arguments.length < 2
+		super(arguments, 2) # 2 or more arguments
 		return Array(types.length) if @types.every((t) -> isAnyType(t)) # return needed
 	validate: (val) ->
 		return false unless Array.isArray(val) and val.length is @types.length

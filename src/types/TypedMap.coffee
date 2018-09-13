@@ -5,14 +5,11 @@ class TypedMap extends Type
 	keysType: []
 	valuesType: []
 	constructor: (t1, t2) ->
-		super()
-		switch arguments.length
-			when 0 then throw new InvalidTypeError "TypedMap must have at least one type argument."
-			when 1
-				if isAnyType(t1) then return Map else @valuesType = t1 # return needed
-			when 2
-				if isAnyType(t1) and isAnyType(t2) then return Map else [@keysType, @valuesType] = [t1, t2] # return needed
-			else throw new InvalidTypeError "TypedMap can not have more than two type arguments."
+		super(arguments, 1, 2) # 1 or 2 arguments
+		if arguments.length is 1
+			if isAnyType(t1) then return Map else @valuesType = t1 # return needed
+		else
+			if isAnyType(t1) and isAnyType(t2) then return Map else [@keysType, @valuesType] = [t1, t2] # return needed
 	validate: (val) ->
 		return false unless val?.constructor is Map
 		switch

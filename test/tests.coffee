@@ -167,7 +167,7 @@ describe "isType", ->
 
 			it "maybe() should throw an error when type is ommited", ->
 				expect(-> isType(1, maybe()))
-				.to.be.throw("'maybe' must have at least one type argument.")
+				.to.be.throw("'maybe' must have at least 1 argument.")
 
 			it "maybe should throw an error when used as a function", ->
 				expect(-> isType(1, maybe)).to.throw("'maybe' can not be used directly as a function.")
@@ -429,10 +429,10 @@ describe "isType", ->
 		context "Tuple type", ->
 
 			it "should throw an error when Tuple is used as a function", ->
-				expect(-> isType(1, Tuple)).to.throw("Custom type 'Tuple' can not be used directly as a function.")
+				expect(-> isType(1, Tuple)).to.throw("Tuple must have at least 2 arguments.")
 
 			it "should throw an error when Tuple is used without arguments", ->
-				expect(-> isType(1, Tuple())).to.throw("Tuple must have at least two type arguments.")
+				expect(-> isType(1, Tuple())).to.throw("Tuple must have at least 2 arguments.")
 
 			context "Native Type elements", ->
 
@@ -451,10 +451,10 @@ describe "isType", ->
 		context "Typed object", ->
 
 			it "should throw an error when TypedObject is used as a function", ->
-				expect(-> isType(1, TypedObject)).to.throw("Custom type 'TypedObject' can not be used directly as a function.")
+				expect(-> isType(1, TypedObject)).to.throw("TypedObject must have exactly 1 argument.")
 
 			it "should throw an error when TypedObject is used without arguments", ->
-				expect(-> isType(1, TypedObject())).to.throw("TypedObject must have exactly one type argument.")
+				expect(-> isType(1, TypedObject())).to.throw("TypedObject must have exactly 1 argument.")
 
 		context "Typed array", ->
 
@@ -527,16 +527,16 @@ describe "isType", ->
 			context "Any type elements", ->
 
 				it "TypedSet() should throw an error", ->
-					expect(-> TypedSet()).to.throw("TypedSet must have exactly one type argument.")
+					expect(-> TypedSet()).to.throw("TypedSet must have exactly 1 argument.")
+
+				it "TypedSet used as a function should throw an error.", ->
+					expect(-> isType(1, TypedSet)).to.throw("TypedSet must have exactly 1 argument.")
 
 				it "TypedSet([]) should return Set type.", ->
 					expect(TypedSet([])).to.equal(Set)
 
 				it "TypedSet(AnyType) should return Set type.", ->
 					expect(TypedSet(AnyType)).to.equal(Set)
-
-				it "TypedSet used as a function should throw an error.", ->
-					expect(-> isType(1, TypedSet)).to.throw("'TypedSet' can not be used directly as a function.")
 
 			context "Native Type elements", ->
 
@@ -607,7 +607,10 @@ describe "isType", ->
 			context "Any type elements", ->
 
 				it "TypedMap() should throw an error.", ->
-					expect(-> TypedMap()).to.throw("TypedMap must have at least one type argument.")
+					expect(-> TypedMap()).to.throw("TypedMap must have at least 1 argument.")
+
+				it "TypedMap used as a function should throw an error.", ->
+					expect(-> isType(1, TypedMap)).to.throw("TypedMap must have at least 1 argument.")
 
 				it "TypedMap([]) should return Map type.", ->
 					expect(TypedMap([])).to.equal(Map)
@@ -620,9 +623,6 @@ describe "isType", ->
 
 				it "TypedMap(AnyType, AnyType) should return Map type.", ->
 					expect(TypedMap(AnyType, AnyType)).to.equal(Map)
-
-				it "TypedMap used as a function should throw an error.", ->
-					expect(-> isType(1, TypedMap)).to.throw("TypedMap' can not be used directly as a function.")
 
 			context "Native Type elements", ->
 
@@ -809,7 +809,7 @@ describe "fn", ->
 		it "should throw an error if promised used without type", ->
 			expect(-> fn [], promised(),
 				-> Promise.resolve(1)
-			).to.throw("'promised' must have exactly one type argument.")
+			).to.throw("'promised' must have exactly 1 argument.")
 
 		it "should throw an error if promised used as a function", ->
 			f = fn [], promised,
