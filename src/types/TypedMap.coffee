@@ -1,4 +1,4 @@
-{Type, InvalidTypeError, createHelper} = require '.'
+{Type, InvalidTypeError} = require '.'
 {isType, isAnyType} = require '..'
 
 class TypedMap extends Type
@@ -21,4 +21,4 @@ class TypedMap extends Type
 				values = Array.from(val.values())
 				keys.every((e) => isType(e, @keysType)) and values.every((e) => isType(e, @valuesType))
 
-module.exports = createHelper(TypedMap)
+module.exports = Type.createHelper(TypedMap)

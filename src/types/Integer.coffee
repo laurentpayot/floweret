@@ -1,4 +1,4 @@
-{Type, InvalidTypeError, createHelper} = require '.'
+{Type, InvalidTypeError} = require '.'
 
 class Integer extends Type
 	min = undefined
@@ -19,5 +19,5 @@ class Integer extends Type
 		return false if @min isnt undefined and val < min
 		true
 
-module.exports = createHelper(Integer)
+module.exports = Type.createHelper(Integer)
 

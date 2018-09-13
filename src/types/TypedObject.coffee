@@ -1,4 +1,4 @@
-{Type, InvalidTypeError, createHelper} = require '.'
+{Type, InvalidTypeError} = require '.'
 {isType, isAnyType} = require '..'
 
 class TypedObject extends Type
@@ -10,4 +10,4 @@ class TypedObject extends Type
 		return true if isAnyType(@type)
 		Object.values(val).every((v) => isType(v, @type))
 
-module.exports = createHelper(TypedObject)
+module.exports = Type.createHelper(TypedObject)

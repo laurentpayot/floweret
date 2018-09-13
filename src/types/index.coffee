@@ -5,12 +5,11 @@ class InvalidTypeError extends Error
 s = (n) -> if n is 1 then '' else 's'
 
 class Type
-	# rootClass = Type
-	# # static class
-	# @createHelper = (childClass) ->
-	# 	h = -> new childClass(arguments...)
-	# 	h.class = childClass
-	# 	h
+	# static class
+	@createHelper = (childClass) ->
+		h = -> new childClass(arguments...)
+		h.rootClass = Type
+		h
 	constructor: (args, min, max) ->
 		@error "Abstract class 'Type' cannot be instantiated directly." if @constructor is Type
 		@error "Super needs child type arguments as its first argument." unless arguments.length
@@ -24,16 +23,15 @@ class Type
 			else
 				if l > max then @error "#{@constructor.name} must have at most #{max} argument#{s(max)}."
 				if l < min then @error "#{@constructor.name} must have at least #{min} argument#{s(min)}."
-
 	validate: -> false # false if child class valitate missing
 	typeName: -> @constructor.name
 	error: (msg) -> throw new InvalidTypeError msg
 
 
-createHelper = (childClass) ->
-	h = -> new childClass(arguments...)
-	h.rootClass = Type
-	h.class = childClass
-	h
+# createHelper = (childClass) ->
+# 	h = -> new childClass(arguments...)
+# 	h.rootClass = Type
+# 	h.class = childClass
+# 	h
 
-module.exports = {Type, InvalidTypeError, createHelper}
+module.exports = {Type, InvalidTypeError}

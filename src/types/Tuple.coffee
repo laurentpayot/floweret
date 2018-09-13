@@ -1,4 +1,4 @@
-{Type, InvalidTypeError, createHelper} = require '.'
+{Type, InvalidTypeError} = require '.'
 {isType, isAnyType, typeName} = require '..'
 
 class Tuple extends Type
@@ -11,5 +11,4 @@ class Tuple extends Type
 	typeName: ->
 		"tuple of #{@types.length} elements '#{(typeName(t) for t in @types).join(", ")}'"
 
-module.exports = createHelper(Tuple)
-
+module.exports = Type.createHelper(Tuple)

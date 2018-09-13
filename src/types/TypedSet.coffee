@@ -1,4 +1,4 @@
-{Type, InvalidTypeError, createHelper} = require '.'
+{Type, InvalidTypeError} = require '.'
 {isType, isAnyType} = require '..'
 
 class TypedSet extends Type
@@ -12,4 +12,4 @@ class TypedSet extends Type
 									of type '#{@type}'." if @type?.constructor in [undefined, String, Number, Boolean]
 		[val...].every((e) => isType(e, @type))
 
-module.exports = createHelper(TypedSet)
+module.exports = Type.createHelper(TypedSet)
