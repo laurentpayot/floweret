@@ -2,7 +2,6 @@
 
 {Type, InvalidTypeError} = require './types'
 AnyType = require './types/AnyType'
-EmptyArray = require './types/EmptyArray'
 
 class InvalidSignatureError extends Error
 	constructor: (msg) -> super("Invalid signature: " + msg)
@@ -58,7 +57,6 @@ else switch type?.constructor
 	when Function then switch type
 		# type helpers used directly as functions
 		when AnyType then true
-		when EmptyArray then Array.isArray(val) and not val.length
 		when promised, maybe then error "!'#{type.name}' can not be used directly as a function."
 		when etc then error "!'etc' can not be used in types."
 		else
@@ -87,19 +85,17 @@ badPath = (obj, typeObj) ->
 								else [obj[k], typeObj[k]])
 
 # returns the type name for signature error messages (supposing type is always correct)
-typeName = (type) -> switch
-	when type is EmptyArray then "empty array"
-	else switch type?.constructor
-		when undefined then typeOf(type)
-		when Array then switch type.length
-			when 0 then "any type"
-			when 1 then "array of '#{typeName(type[0])}'"
-			else (typeName(t) for t in type).join(" or ")
-		when Function
-			if type.rootClass is Type then type().typeName() else type.name
-		when Object then "custom type object"
-		else
-			if type instanceof Type then type.typeName() else "literal #{typeOf(type)} '#{type}'"
+typeName = (type) -> switch type?.constructor
+	when undefined then typeOf(type)
+	when Array then switch type.length
+		when 0 then "any type"
+		when 1 then "array of '#{typeName(type[0])}'"
+		else (typeName(t) for t in type).join(" or ")
+	when Function
+		if type.rootClass is Type then type().typeName() else type.name
+	when Object then "custom type object"
+	else
+		if type instanceof Type then type.typeName() else "literal #{typeOf(type)} '#{type}'"
 
 # type error message comparison part helper
 shouldBe = (val, type) ->

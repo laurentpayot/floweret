@@ -109,6 +109,10 @@ describe "isType", ->
 				expect(isType([], EmptyArray)).to.be.true
 				expect(isType(v, EmptyArray)).to.be.false for v in VALUES when not (Array.isArray(v) and not v.length)
 
+			it "EmptyArray() type should return true for empty array only", ->
+				expect(isType([], EmptyArray())).to.be.true
+				expect(isType(v, EmptyArray())).to.be.false for v in VALUES when not (Array.isArray(v) and not v.length)
+
 		context "Any type", ->
 
 			it "empty array type should return true for all values", ->

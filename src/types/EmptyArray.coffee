@@ -1,8 +1,8 @@
-{InvalidTypeError} = require '.'
+{Type} = require '.'
 
-EmptyArray = ->
-	throw new InvalidTypeError "'EmptyArray' can not have a type argument." if arguments.length
-	# returns the function itself
-	EmptyArray
+class EmptyArray extends Type
+	constructor: -> super(arguments, 0, 0) # no arguments
+	validate: (val) -> Array.isArray(val) and not val.length
+	typeName: -> "empty array"
 
-module.exports = EmptyArray
+module.exports = Type.createHelper(EmptyArray)
