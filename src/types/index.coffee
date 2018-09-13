@@ -29,10 +29,4 @@ class Type
 	error: (msg) -> throw new InvalidTypeError msg
 
 
-# createHelper = (childClass) ->
-# 	h = -> new childClass(arguments...)
-# 	h.rootClass = Type
-# 	h.class = childClass
-# 	h
-
 module.exports = {Type, InvalidTypeError}

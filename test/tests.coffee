@@ -1,5 +1,5 @@
 # testing the build, minified, not the source
-{typeOf, isType, fn, maybe, promised, etc} = require '../dist/runtime-signature.min.js'
+{typeOf, isType, isAnyType, fn, maybe, promised, etc} = require '../dist/runtime-signature.min.js'
 
 {Type} = require '../dist/types'
 AnyType = require '../dist/types/AnyType'
@@ -90,6 +90,28 @@ describe "typeOf (add more tests!!!)", ->
 	it "should return 'Function' for an Function value even after Function.name modification", ->
 		Function.name = "foo"
 		expect(typeOf(->)).to.equal('Function')
+
+###
+	██╗███████╗ █████╗ ███╗   ██╗██╗   ██╗████████╗██╗   ██╗██████╗ ███████╗
+	██║██╔════╝██╔══██╗████╗  ██║╚██╗ ██╔╝╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔════╝
+	██║███████╗███████║██╔██╗ ██║ ╚████╔╝    ██║    ╚████╔╝ ██████╔╝█████╗
+	██║╚════██║██╔══██║██║╚██╗██║  ╚██╔╝     ██║     ╚██╔╝  ██╔═══╝ ██╔══╝
+	██║███████║██║  ██║██║ ╚████║   ██║      ██║      ██║   ██║     ███████╗
+	╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝      ╚═╝   ╚═╝     ╚══════╝
+###
+describe "isAnyType", ->
+
+	it "should return false for native types", ->
+		expect(isAnyType(t)).to.be.false for t in NATIVE_TYPES
+
+	it "should return true for empty array", ->
+		expect(isAnyType([])).to.be.true
+
+	it "should return true for AnyType", ->
+		expect(isAnyType(AnyType)).to.be.true
+
+	it "should return true for AnyType()", ->
+		expect(isAnyType(AnyType())).to.be.true
 
 ###
 	██╗███████╗████████╗██╗   ██╗██████╗ ███████╗
@@ -437,6 +459,30 @@ describe "isType", ->
 
 			it "should throw an error when Tuple is used without arguments", ->
 				expect(-> isType(1, Tuple())).to.throw("Tuple must have at least 2 arguments.")
+
+			context "Any Type elements", ->
+
+				it "Tuple of [] should return array of empty elements", ->
+					t = Tuple([], [])
+					expect(t).to.be.an('array').that.is.not.empty
+					expect(t).to.have.lengthOf(2)
+					expect(t[0]).to.be.undefined
+					expect(t[1]).to.be.undefined
+
+				it "Tuple of AnyType should return array of empty elements", ->
+					t = Tuple(AnyType, AnyType)
+					expect(t).to.be.an('array').that.is.not.empty
+					expect(t).to.have.lengthOf(2)
+					expect(t[0]).to.be.undefined
+					expect(t[1]).to.be.undefined
+
+				it "Tuple of AnyType() should return array of empty elements", ->
+					t = Tuple(AnyType(), AnyType())
+					expect(t).to.be.an('array').that.is.not.empty
+					expect(t).to.have.lengthOf(2)
+					expect(t[0]).to.be.undefined
+					expect(t[1]).to.be.undefined
+
 
 			context "Native Type elements", ->
 

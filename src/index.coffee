@@ -15,8 +15,8 @@ error = (msg) -> switch msg[0]
 	when '@' then throw new InvalidSignatureError msg[1..]
 	else throw new TypeError msg
 
-# not exported
-isAnyType = (o) -> o is AnyType or Array.isArray(o) and o.length is 0
+AnyTypeClass = AnyType().constructor
+isAnyType = (o) -> Array.isArray(o) and o.length is 0 or o is AnyType or o instanceof AnyTypeClass
 
 ### type helpers ###
 
