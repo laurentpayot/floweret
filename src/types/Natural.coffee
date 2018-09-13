@@ -1,10 +1,10 @@
-{Type, InvalidTypeError} = require '.'
+{Type} = require '.'
 Integer = require './Integer'
 
 class Natural extends Integer().constructor
 	constructor: (n1, n2) ->
 		super(n1, n2)
-		throw new InvalidTypeError "#{@constructor.name} arguments must be positive integers." if n1 < 0 or n2 < 0
+		@error "#{@constructor.name} arguments must be positive integers." if n1 < 0 or n2 < 0
 	validate: (val) ->
 		super(val) and val >= 0
 

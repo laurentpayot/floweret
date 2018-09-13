@@ -1,4 +1,4 @@
-{Type, InvalidTypeError} = require '.'
+{Type} = require '.'
 {isType, isAnyType} = require '..'
 
 class TypedSet extends Type
@@ -8,8 +8,8 @@ class TypedSet extends Type
 	validate: (val) ->
 		return false unless val?.constructor is Set
 		return true if isAnyType(@type)
-		throw new InvalidTypeError "Typed Set type can not be a literal
-									of type '#{@type}'." if @type?.constructor in [undefined, String, Number, Boolean]
+		@error "Typed Set type can not be a literal
+				of type '#{@type}'." if @type?.constructor in [undefined, String, Number, Boolean]
 		[val...].every((e) => isType(e, @type))
 
 module.exports = Type.createHelper(TypedSet)

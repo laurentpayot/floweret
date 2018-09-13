@@ -1,4 +1,4 @@
-{Type, InvalidTypeError} = require '.'
+{Type} = require '.'
 {isType, isAnyType, typeName} = require '..'
 
 class Tuple extends Type
