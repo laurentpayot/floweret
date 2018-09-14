@@ -92,7 +92,8 @@ shouldBe = (val, type) ->
 fn = (argTypes, resType, f) ->
 	error "@Array of arguments types is missing." unless Array.isArray(argTypes)
 	error "@Result type is missing." if resType instanceof Function and not resType.name
-	error "@Function to wrap is missing." unless f instanceof Function
+	error "@Function to wrap is missing." unless f instanceof Function and not f.name
+	error "@Too many arguments." if arguments.length > 3
 	(args...) -> # returns an unfortunately anonymous function
 		rest = false
 		for type, i in argTypes

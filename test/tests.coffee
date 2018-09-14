@@ -834,6 +834,18 @@ describe "fn", ->
 			expect(-> (fn [Number], Number))
 			.to.throw("Function to wrap is missing.")
 
+		it "should throw an error if signature function to wrap is not an anonymous function", ->
+			expect(-> (fn [Number], Number, Number)).to.throw("Function to wrap is missing.")
+			expect(-> (fn [Number], Number, undefined)).to.throw("Function to wrap is missing.")
+			expect(-> (fn [Number], Number, null)).to.throw("Function to wrap is missing.")
+			expect(-> (fn [Number], Number, "foo")).to.throw("Function to wrap is missing.")
+			expect(-> (fn [Number], Number, Function)).to.throw("Function to wrap is missing.")
+			expect(-> (fn [Number], Number, f = -> 1)).to.throw("Function to wrap is missing.")
+
+		it "should throw an error if too many signature arguments", ->
+			expect(-> (fn [Number], Number, (-> 1), Number))
+			.to.throw("Too many arguments.")
+
 	context "Synchronous functions", ->
 
 		it "should do nothing if function returns a string", ->
