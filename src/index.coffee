@@ -81,12 +81,14 @@ getTypeName = (type) -> switch type?.constructor
 		if type instanceof Type then type.getTypeName() else "literal #{typeOf(type)} '#{type}'"
 
 # type error message comparison part helper
-shouldBe = (val, type) ->
-	if val?.constructor is Object
-		[bp..., bv, bt] = badPath(val, type)
-		"should be an object with key '#{bp.join('.')}' of type #{getTypeName(bt)} instead of #{typeOf(bv)}"
-	else
-		"(#{val}) should be of type #{getTypeName(type)} instead of #{typeOf(val)}"
+shouldBe = (val, type, promised=false) ->
+	apo = if promised then "a promise of " else ''
+	switch
+		when val?.constructor is Object
+			[bp..., bv, bt] = badPath(val, type)
+			"should be #{apo}an object with key '#{bp.join('.')}' of type #{getTypeName(bt)} instead of #{typeOf(bv)}"
+		else
+			"(#{val}) should be #{apo or 'of type '}#{getTypeName(type)} instead of #{typeOf(val)}"
 
 # wraps a function to check its arguments types and result type
 fn = (argTypes, resType, f) ->
@@ -115,7 +117,7 @@ fn = (argTypes, resType, f) ->
 			# NB: not using `await` because CS would transpile the returned function as an async one
 			resType.then((promiseType) ->
 				promise = f(args...)
-				error "Function should return a promise." unless promise instanceof Promise
+				error "Result #{shouldBe(promise, promiseType, true)}." unless promise instanceof Promise
 				promise.then((result) ->
 					error "Promise result #{shouldBe(result, promiseType)}." unless isType(result, promiseType)
 					result

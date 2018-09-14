@@ -882,6 +882,11 @@ describe "fn", ->
 				-> Promise.resolve(1)
 			expect(f()).to.be.rejectedWith("Promise result (1) should be of type String instead of Number.")
 
+		it "should throw an error if function does not return a promise", ->
+			f = fn [], promised(String),
+				-> '1'
+			expect(f()).to.be.rejectedWith("Result (1) should be a promise of String instead of String.")
+
 		it "should throw an error if promised used without type", ->
 			expect(-> fn [], promised(),
 				-> Promise.resolve(1)
