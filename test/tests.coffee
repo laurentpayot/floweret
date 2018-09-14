@@ -1,9 +1,10 @@
 # testing the build, minified, not the source
-{typeOf, isType, isAnyType, fn, etc} = require '../dist/runtime-signature.min.js'
+{typeOf, isType, isAnyType, fn} = require '../dist/runtime-signature.min.js'
 
 {Type} = require '../dist/types'
 maybe = require '../dist/types/maybe'
 promised = require '../dist/types/promised'
+etc = require '../dist/types/etc'
 AnyType = require '../dist/types/AnyType'
 EmptyArray = require '../dist/types/EmptyArray'
 Integer = require '../dist/types/Integer'
@@ -794,11 +795,11 @@ describe "isType", ->
 
 		it "should throw an error when etc is used as a function", ->
 			expect(-> isType(1, etc))
-			.to.throw("'etc' can not be used in types.")
+			.to.throw("'etc' cannot be used in types.")
 
 		it "should throw an error when etc is used without parameter", ->
 			expect(-> isType(1, etc()))
-			.to.throw("'etc' can not be used in types.")
+			.to.throw("'etc' cannot be used in types.")
 
 		it "should throw an error when type is not a native type nor an object nor an array of types
 			nor a string or number or boolean literal.", ->
