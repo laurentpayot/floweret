@@ -1,6 +1,6 @@
 {
   "name": "runtime-signature",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Runtime type-checking with simple JavaScript types signatures.",
   "author": "Laurent Payot",
   "license": "MIT",
@@ -22,8 +22,6 @@
     "coffeescript",
     "coffee"
   ],
-  "main": "dist/index.js",
-  "files": ["dist"],
   "engines": {
     "node": ">=7.6.0"
   },
@@ -32,7 +30,7 @@
     "minify": "uglifyjs -cm --comments -o dist/runtime-signature.min.js -- dist/index.js",
     "build-tests": "coffee -cb test/tests.coffee",
     "test": "npm run build && npm run minify && npm run build-tests && mocha",
-    "deploy": "npm run test && npm publish"
+    "deploy": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm publish"
   },
   "devDependencies": {
     "chai": "^4.1.2",
