@@ -840,7 +840,9 @@ describe "fn", ->
 			expect(-> (fn [Number], Number, null)).to.throw("Function to wrap is missing.")
 			expect(-> (fn [Number], Number, "foo")).to.throw("Function to wrap is missing.")
 			expect(-> (fn [Number], Number, Function)).to.throw("Function to wrap is missing.")
-			expect(-> (fn [Number], Number, f = -> 1)).to.throw("Function to wrap is missing.")
+			expect(-> (fn [Number], Number, foo = -> 1)).to.throw("Function to wrap is missing.")
+			class Foo
+			expect(-> (fn [Number], Number, Foo)).to.throw("Function to wrap is missing.")
 
 		it "should throw an error if too many signature arguments", ->
 			expect(-> (fn [Number], Number, (-> 1), Number))
