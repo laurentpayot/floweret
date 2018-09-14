@@ -1,4 +1,4 @@
-CustomType = require '.'
+CustomType = require './CustomType'
 IntegerHelper = require './Integer'
 
 Integer = IntegerHelper().constructor

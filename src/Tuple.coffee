@@ -1,4 +1,4 @@
-CustomType = require '.'
+CustomType = require './CustomType'
 {isType, isAnyType, getTypeName} = require '..'
 
 class Tuple extends CustomType

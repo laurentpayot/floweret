@@ -1,4 +1,4 @@
-CustomType = require '.'
+CustomType = require './CustomType'
 
 class AnyType extends CustomType
 	constructor: -> super(arguments, 0, 0) # no arguments

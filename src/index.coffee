@@ -1,8 +1,8 @@
 ###* @license MIT (c) 2018 Laurent Payot  ###
 
-CustomType = require './types'
-AnyTypeHelper = require './types/AnyType'
-EtcHelper = require './types/etc'
+CustomType = require './CustomType'
+AnyTypeHelper = require './AnyType'
+EtcHelper = require './etc'
 
 class InvalidSignatureError extends Error
 	constructor: (msg) -> super("Invalid signature: " + msg)

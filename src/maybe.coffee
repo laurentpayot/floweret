@@ -1,4 +1,4 @@
-CustomType = require '.'
+CustomType = require './CustomType'
 {isAnyType} = require '..'
 
 class Maybe extends CustomType

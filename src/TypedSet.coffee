@@ -1,4 +1,4 @@
-CustomType = require '.'
+CustomType = require './CustomType'
 {isType, isAnyType} = require '..'
 
 class TypedSet extends CustomType

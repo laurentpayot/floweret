@@ -1,4 +1,4 @@
-CustomType = require '.'
+CustomType = require './CustomType'
 
 class Etc extends CustomType
 	constructor: (@type=[]) ->

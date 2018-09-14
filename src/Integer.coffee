@@ -1,4 +1,4 @@
-CustomType = require '.'
+CustomType = require './CustomType'
 
 class Integer extends CustomType
 	min = undefined
