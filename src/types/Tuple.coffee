@@ -1,5 +1,5 @@
 {Type} = require '.'
-{isType, isAnyType, typeName} = require '..'
+{isType, isAnyType, getTypeName} = require '..'
 
 class Tuple extends Type
 	constructor: (@types...) ->
@@ -8,7 +8,7 @@ class Tuple extends Type
 	validate: (val) ->
 		return false unless Array.isArray(val) and val.length is @types.length
 		val.every((e, i) => isType(e, @types[i]))
-	typeName: ->
-		"tuple of #{@types.length} elements '#{(typeName(t) for t in @types).join(", ")}'"
+	getTypeName: ->
+		"tuple of #{@types.length} elements '#{(getTypeName(t) for t in @types).join(", ")}'"
 
 module.exports = Type.createHelper(Tuple)

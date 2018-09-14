@@ -77,25 +77,25 @@ badPath = (obj, typeObj) ->
 								else [obj[k], typeObj[k]])
 
 # returns the type name for signature error messages (supposing type is always correct)
-typeName = (type) -> switch type?.constructor
+getTypeName = (type) -> switch type?.constructor
 	when undefined then typeOf(type)
 	when Array then switch type.length
 		when 0 then "any type"
-		when 1 then "array of '#{typeName(type[0])}'"
-		else (typeName(t) for t in type).join(" or ")
+		when 1 then "array of '#{getTypeName(type[0])}'"
+		else (getTypeName(t) for t in type).join(" or ")
 	when Function
-		if type.rootClass is Type then type().typeName() else type.name
+		if type.rootClass is Type then type().getTypeName() else type.name
 	when Object then "custom type object"
 	else
-		if type instanceof Type then type.typeName() else "literal #{typeOf(type)} '#{type}'"
+		if type instanceof Type then type.getTypeName() else "literal #{typeOf(type)} '#{type}'"
 
 # type error message comparison part helper
 shouldBe = (val, type) ->
 	if val?.constructor is Object
 		[bp..., bv, bt] = badPath(val, type)
-		"should be an object with key '#{bp.join('.')}' of type #{typeName(bt)} instead of #{typeOf(bv)}"
+		"should be an object with key '#{bp.join('.')}' of type #{getTypeName(bt)} instead of #{typeOf(bv)}"
 	else
-		"(#{val}) should be of type #{typeName(type)} instead of #{typeOf(val)}"
+		"(#{val}) should be of type #{getTypeName(type)} instead of #{typeOf(val)}"
 
 # wraps a function to check its arguments types and result type
 fn = (argTypes, resType, f) ->
@@ -135,4 +135,4 @@ fn = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {fn, etc, typeOf, isType, isAnyType, typeName}
+module.exports = {fn, etc, typeOf, isType, isAnyType, getTypeName}

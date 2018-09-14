@@ -25,7 +25,7 @@ class Type
 				if l > max then @error "'#{name}' must have at most #{max} argument#{s(max)}."
 				if l < min then @error "'#{name}' must have at least #{min} argument#{s(min)}."
 	validate: -> false # false if child class valitate missing
-	typeName: -> @constructor.name
+	getTypeName: -> @constructor.name
 	error: (msg) -> throw new InvalidTypeError msg
 
 
