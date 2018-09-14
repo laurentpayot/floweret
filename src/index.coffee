@@ -91,8 +91,8 @@ shouldBe = (val, type) ->
 # wraps a function to check its arguments types and result type
 fn = (argTypes, resType, f) ->
 	error "@Array of arguments types is missing." unless Array.isArray(argTypes)
-	error "@Result type is missing." if resType?.constructor is Function and not resType.name
-	error "@Function to wrap is missing." unless f?.constructor is Function
+	error "@Result type is missing." if resType instanceof Function and not resType.name
+	error "@Function to wrap is missing." unless f instanceof Function
 	(args...) -> # returns an unfortunately anonymous function
 		rest = false
 		for type, i in argTypes
@@ -110,11 +110,11 @@ fn = (argTypes, resType, f) ->
 					else
 						error "Argument number #{i+1} #{shouldBe(args[i], type)}." unless isType(args[i], type)
 		error "Too many arguments provided." if args.length > argTypes.length and not rest
-		if resType?.constructor is Promise
+		if resType instanceof Promise
 			# NB: not using `await` because CS would transpile the returned function as an async one
 			resType.then((promiseType) ->
 				promise = f(args...)
-				error "Function should return a promise." unless promise?.constructor is Promise
+				error "Function should return a promise." unless promise instanceof Promise
 				promise.then((result) ->
 					error "Promise result #{shouldBe(result, promiseType)}." unless isType(result, promiseType)
 					result
