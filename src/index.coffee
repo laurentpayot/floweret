@@ -1,28 +1,23 @@
 ###* @license MIT (c) 2018 Laurent Payot  ###
 
-{Type, InvalidTypeError} = require './types'
-AnyType = require './types/AnyType'
+{Type} = require './types'
+AnyTypeHelper = require './types/AnyType'
+EtcHelper = require './types/etc'
 
 class InvalidSignatureError extends Error
 	constructor: (msg) -> super("Invalid signature: " + msg)
 
-class TypeError extends Error
+class TypeMatchError extends Error
 	constructor: (msg) -> super("Type not matching: " + msg)
 
 # trows customized error
 error = (msg) -> switch msg[0]
-	when '!' then throw new InvalidTypeError msg[1..]
 	when '@' then throw new InvalidSignatureError msg[1..]
-	else throw new TypeError msg
+	else throw new TypeMatchError msg
 
-AnyTypeClass = AnyType().constructor
-isAnyType = (o) -> Array.isArray(o) and o.length is 0 or o is AnyType or o instanceof AnyTypeClass
-
-### type helpers ###
-
-class Etc # typed rest arguments list
-	constructor: (@type=[]) -> error "!'etc' must have at most 1 argument." if arguments.length > 1
-etc = -> new Etc(arguments...)
+Etc = EtcHelper().constructor
+AnyType = AnyTypeHelper().constructor
+isAnyType = (o) -> Array.isArray(o) and o.length is 0 or o is AnyTypeHelper or o instanceof AnyType
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
 typeOf = (val) -> if val is undefined or val is null then '' + val else val.constructor.name
@@ -47,27 +42,23 @@ isType = (val, type) -> if Array.isArray(type) # NB: special Array case http://w
 				type.some((t) -> isType(val, t)) # union of types, e.g.: `[Object, null]`
 else switch type?.constructor
 	when undefined, String, Number, Boolean then val is type # literal type or undefined or null
-	when Function then switch type
-		# type helpers used directly as functions
-		when AnyType then true
-		when etc then error "!'etc' can not be used in types."
-		else
-			if type.rootClass is Type # type is a helper
-				type().validate(val) # using default helper arguments
-			else # constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
-				val?.constructor is type
+	when Function
+		if type.rootClass is Type # type is a helper
+			type().validate(val) # using default helper arguments
+		else # constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
+			val?.constructor is type
 	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
 		for k, v of type
 			return false unless isType(val[k], v)
 		true
-	when Etc then error "!'etc' can not be used in types."
 	else
 		if type instanceof Type
 			type.validate(val)
 		else
 			prefix = if type.constructor in [Set, Map] then 'the provided Typed' else ''
-			error "!Type can not be an instance of #{typeOf(type)}. Use #{prefix}#{typeOf(type)} as type instead."
+			Type.error "Type can not be an instance of #{typeOf(type)}.
+						Use #{prefix}#{typeOf(type)} as type instead."
 
 # returns a list of keys path to where the type do not match + value not maching + type not matching
 badPath = (obj, typeObj) ->
@@ -105,10 +96,10 @@ fn = (argTypes, resType, f) ->
 	(args...) -> # returns an unfortunately anonymous function
 		rest = false
 		for type, i in argTypes
-			if type is etc or type?.constructor is Etc # rest type
+			if type is EtcHelper or type instanceof Etc # rest type
 				error "@Rest type must be the last of the arguments types." if i + 1 < argTypes.length
 				rest = true
-				t = if type is etc then [] else type.type
+				t = (if type is EtcHelper then type() else type).type # using default helper parameters
 				unless isAnyType(t)
 					for arg, j in args[i..]
 						error "Argument number #{i+j+1} #{shouldBe(arg, t)}." unless isType(arg, t)
@@ -135,4 +126,4 @@ fn = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {fn, etc, typeOf, isType, isAnyType, getTypeName}
+module.exports = {fn, typeOf, isType, isAnyType, getTypeName}
