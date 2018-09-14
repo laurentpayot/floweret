@@ -78,7 +78,10 @@ getTypeName = (type) -> switch type?.constructor
 		if type.rootClass is Type then type().getTypeName() else type.name
 	when Object then "custom type object"
 	else
-		if type instanceof Type then type.getTypeName() else "literal #{typeOf(type)} '#{type}'"
+		if type instanceof Type
+			type.getTypeName()
+		else
+			"literal #{typeOf(type)} #{if typeof type is 'string' then '"'+type+'"' else type}"
 
 # type error message comparison part helper
 shouldBe = (val, type, promised=false) ->

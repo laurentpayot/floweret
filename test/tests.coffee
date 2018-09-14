@@ -1101,17 +1101,17 @@ describe "fn", ->
 			it "should return an error with 'literal String 'foo'", ->
 				f = fn ['foo'], AnyType, ->
 				expect( -> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'literal String 'foo'' instead of Number.")
+				.to.throw("Argument number 1 (1) should be of type 'literal String \"foo\"' instead of Number.")
 
-			it "should return an error with 'literal Number '1'", ->
+			it "should return an error with 'literal Number 1'", ->
 				f = fn [1], AnyType, ->
 				expect( -> f('1'))
-				.to.throw("Argument number 1 (1) should be of type 'literal Number '1'' instead of String.")
+				.to.throw("Argument number 1 (1) should be of type 'literal Number 1' instead of String.")
 
 			it "should return an error with 'literal Boolean 'true'", ->
 				f = fn [true], AnyType, ->
 				expect( -> f(false))
-				.to.throw("Argument number 1 (false) should be of type 'literal Boolean 'true'' instead of Boolean.")
+				.to.throw("Argument number 1 (false) should be of type 'literal Boolean true' instead of Boolean.")
 
 			it "should return an error with
 				'Argument number 1 should be an object with key 'a.c' of type 'String' instead of Number.'", ->
@@ -1149,25 +1149,25 @@ describe "fn", ->
 				f = fn [['foo', 'bar']], AnyType, ->
 				expect( -> f('a'))
 				.to.throw("Argument number 1 (a) should be of type
-							'literal String 'foo' or literal String 'bar'' instead of String.")
+							'literal String \"foo\" or literal String \"bar\"' instead of String.")
 
-			it "should return an error with 'literal Number '1' or literal Number '2''", ->
+			it "should return an error with 'literal Number 1 or literal Number 2'", ->
 				f = fn [[1, 2]], AnyType, ->
 				expect( -> f(3))
 				.to.throw("Argument number 1 (3) should be of type
-							'literal Number '1' or literal Number '2'' instead of Number.")
+							'literal Number 1 or literal Number 2' instead of Number.")
 
-			it "should return an error with 'literal String '1' or literal Number '1'", ->
+			it "should return an error with 'literal String \"1\" or literal Number '1'", ->
 				f = fn [['1', 1]], AnyType, ->
 				expect( -> f(3))
 				.to.throw("Argument number 1 (3) should be of type
-							'literal String '1' or literal Number '1'' instead of Number.")
+							'literal String \"1\" or literal Number 1' instead of Number.")
 
-			it "should return an error with 'literal Boolean 'true' or literal Boolean 'false'", ->
+			it "should return an error with 'literal Boolean true or literal Boolean false", ->
 				f = fn [[true, false]], AnyType, ->
 				expect( -> f(1))
 				.to.throw("Argument number 1 (1) should be of type
-							'literal Boolean 'true' or literal Boolean 'false'' instead of Number.")
+							'literal Boolean true or literal Boolean false' instead of Number.")
 
 		context "Typed Array type argument", ->
 
