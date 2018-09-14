@@ -1,5 +1,5 @@
 CustomType = require './CustomType'
-{isType, isAnyType, getTypeName} = require '..'
+{isType, isAnyType, getTypeName} = require '.'
 
 class Tuple extends CustomType
 	constructor: (@types...) ->

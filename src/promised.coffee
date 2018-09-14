@@ -1,5 +1,5 @@
 CustomType = require './CustomType'
-{isAnyType} = require '..'
+{isAnyType} = require '.'
 
 class Promised extends CustomType
 	constructor: (@type) ->

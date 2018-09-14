@@ -1,5 +1,5 @@
 CustomType = require './CustomType'
-{isType, isAnyType} = require '..'
+{isType, isAnyType} = require '.'
 
 class TypedObject extends CustomType
 	constructor: (@type) ->

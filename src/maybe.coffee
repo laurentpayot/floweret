@@ -1,5 +1,5 @@
 CustomType = require './CustomType'
-{isAnyType} = require '..'
+{isAnyType} = require '.'
 
 class Maybe extends CustomType
 	constructor: (@types...) ->
