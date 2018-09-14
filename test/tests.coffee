@@ -416,10 +416,10 @@ describe "isType", ->
 		context "Integer type", ->
 
 			it "should throw an error when Integer arguments are not numers", ->
-				expect(-> isType(1, Integer('100'))).to.throw("Integer arguments must be numbers.")
-				expect(-> isType(1, Integer(1, '100'))).to.throw("Integer arguments must be numbers.")
-				expect(-> isType(1, Integer('1', 100))).to.throw("Integer arguments must be numbers.")
-				expect(-> isType(1, Integer('1', '100'))).to.throw("Integer arguments must be numbers.")
+				expect(-> isType(1, Integer('100'))).to.throw("'Integer' arguments must be numbers.")
+				expect(-> isType(1, Integer(1, '100'))).to.throw("'Integer' arguments must be numbers.")
+				expect(-> isType(1, Integer('1', 100))).to.throw("'Integer' arguments must be numbers.")
+				expect(-> isType(1, Integer('1', '100'))).to.throw("'Integer' arguments must be numbers.")
 
 			it "should not throw an error when Integer is used as a function", ->
 				expect(isType(1, Integer)).to.be.true
@@ -442,7 +442,16 @@ describe "isType", ->
 		context "Natural type", ->
 
 			it "should throw an error when Natural arguments are not numers", ->
-				expect(-> isType(1, Natural('100'))).to.throw("Natural arguments must be numbers.")
+				expect(-> isType(1, Natural('100')))
+				.to.throw("'Natural' arguments must be numbers.")
+
+			it "should throw an error when Natural arguments are negative", ->
+				expect(-> isType(1, Natural(-1)))
+				.to.throw("'Natural' arguments must be positive numbers.")
+
+			it "should throw an error when Natural arguments are negative", ->
+				expect(-> isType(1, Natural(-100, -10)))
+				.to.throw("'Natural' arguments must be positive numbers.")
 
 			it "should return false for an negative integer", ->
 				expect(isType(-1, Natural)).to.be.false
