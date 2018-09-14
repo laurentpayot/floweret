@@ -20,10 +20,6 @@ isAnyType = (o) -> Array.isArray(o) and o.length is 0 or o is AnyType or o insta
 
 ### type helpers ###
 
-promised = (type) ->
-	error "!'promised' must have exactly 1 argument." unless arguments.length is 1
-	if isAnyType(type) then Promise else Promise.resolve(type)
-
 class Etc # typed rest arguments list
 	constructor: (@type=[]) -> error "!'etc' must have at most 1 argument." if arguments.length > 1
 etc = -> new Etc(arguments...)
@@ -54,7 +50,6 @@ else switch type?.constructor
 	when Function then switch type
 		# type helpers used directly as functions
 		when AnyType then true
-		when promised then error "!'#{type.name}' can not be used directly as a function."
 		when etc then error "!'etc' can not be used in types."
 		else
 			if type.rootClass is Type # type is a helper
@@ -140,4 +135,4 @@ fn = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {fn, promised, etc, typeOf, isType, isAnyType, typeName}
+module.exports = {fn, etc, typeOf, isType, isAnyType, typeName}

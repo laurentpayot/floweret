@@ -1,8 +1,9 @@
 # testing the build, minified, not the source
-{typeOf, isType, isAnyType, fn, promised, etc} = require '../dist/runtime-signature.min.js'
+{typeOf, isType, isAnyType, fn, etc} = require '../dist/runtime-signature.min.js'
 
 {Type} = require '../dist/types'
 maybe = require '../dist/types/maybe'
+promised = require '../dist/types/promised'
 AnyType = require '../dist/types/AnyType'
 EmptyArray = require '../dist/types/EmptyArray'
 Integer = require '../dist/types/Integer'
@@ -865,7 +866,7 @@ describe "fn", ->
 		it "should throw an error if promised used as a function", ->
 			f = fn [], promised,
 				-> Promise.resolve(1)
-			expect(-> f()).to.throw("'promised' can not be used directly as a function.")
+			expect(-> f()).to.throw("'promised' must have exactly 1 argument.")
 
 	context "Arguments number", ->
 

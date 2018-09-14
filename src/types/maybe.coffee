@@ -1,4 +1,4 @@
-{Type, AnyType} = require '.'
+{Type} = require '.'
 {isAnyType} = require '..'
 
 class Maybe extends Type
