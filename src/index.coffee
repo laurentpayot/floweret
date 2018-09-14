@@ -86,9 +86,9 @@ shouldBe = (val, type, promised=false) ->
 	switch
 		when val?.constructor is Object
 			[bp..., bv, bt] = badPath(val, type)
-			"should be #{apo}an object with key '#{bp.join('.')}' of type #{getTypeName(bt)} instead of #{typeOf(bv)}"
+			"should be #{apo}an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}' instead of #{typeOf(bv)}"
 		else
-			"(#{val}) should be #{apo or 'of type '}#{getTypeName(type)} instead of #{typeOf(val)}"
+			"(#{val}) should be #{apo or 'of type '}'#{getTypeName(type)}' instead of #{typeOf(val)}"
 
 # wraps a function to check its arguments types and result type
 fn = (argTypes, resType, f) ->
