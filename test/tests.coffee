@@ -1,7 +1,8 @@
 # testing the build, minified, not the source
-{typeOf, isType, isAnyType, fn, maybe, promised, etc} = require '../dist/runtime-signature.min.js'
+{typeOf, isType, isAnyType, fn, promised, etc} = require '../dist/runtime-signature.min.js'
 
 {Type} = require '../dist/types'
+maybe = require '../dist/types/maybe'
 AnyType = require '../dist/types/AnyType'
 EmptyArray = require '../dist/types/EmptyArray'
 Integer = require '../dist/types/Integer'
@@ -147,10 +148,10 @@ describe "isType", ->
 				expect(isType(val, AnyType())).to.be.true for val in VALUES
 
 			it "AnyType(Number) type should throw an error", ->
-				expect(-> isType(1, AnyType(Number))).to.throw("AnyType cannot have any arguments.")
+				expect(-> isType(1, AnyType(Number))).to.throw("'AnyType' cannot have any arguments.")
 
 			it "AnyType([]) type should throw an error", ->
-				expect(-> isType(1, AnyType([]))).to.throw("AnyType cannot have any arguments.")
+				expect(-> isType(1, AnyType([]))).to.throw("'AnyType' cannot have any arguments.")
 
 		context "Maybe type", ->
 
@@ -196,7 +197,7 @@ describe "isType", ->
 				.to.be.throw("'maybe' must have at least 1 argument.")
 
 			it "maybe should throw an error when used as a function", ->
-				expect(-> isType(1, maybe)).to.throw("'maybe' can not be used directly as a function.")
+				expect(-> isType(1, maybe)).to.throw("'maybe' must have at least 1 argument")
 
 	context "Literal Types", ->
 
@@ -455,10 +456,10 @@ describe "isType", ->
 		context "Tuple type", ->
 
 			it "should throw an error when Tuple is used as a function", ->
-				expect(-> isType(1, Tuple)).to.throw("Tuple must have at least 2 arguments.")
+				expect(-> isType(1, Tuple)).to.throw("'Tuple' must have at least 2 arguments.")
 
 			it "should throw an error when Tuple is used without arguments", ->
-				expect(-> isType(1, Tuple())).to.throw("Tuple must have at least 2 arguments.")
+				expect(-> isType(1, Tuple())).to.throw("'Tuple' must have at least 2 arguments.")
 
 			context "Any Type elements", ->
 
@@ -501,10 +502,10 @@ describe "isType", ->
 		context "Typed object", ->
 
 			it "should throw an error when TypedObject is used as a function", ->
-				expect(-> isType(1, TypedObject)).to.throw("TypedObject must have exactly 1 argument.")
+				expect(-> isType(1, TypedObject)).to.throw("'TypedObject' must have exactly 1 argument.")
 
 			it "should throw an error when TypedObject is used without arguments", ->
-				expect(-> isType(1, TypedObject())).to.throw("TypedObject must have exactly 1 argument.")
+				expect(-> isType(1, TypedObject())).to.throw("'TypedObject' must have exactly 1 argument.")
 
 		context "Typed array", ->
 
@@ -577,10 +578,10 @@ describe "isType", ->
 			context "Any type elements", ->
 
 				it "TypedSet() should throw an error", ->
-					expect(-> TypedSet()).to.throw("TypedSet must have exactly 1 argument.")
+					expect(-> TypedSet()).to.throw("'TypedSet' must have exactly 1 argument.")
 
 				it "TypedSet used as a function should throw an error.", ->
-					expect(-> isType(1, TypedSet)).to.throw("TypedSet must have exactly 1 argument.")
+					expect(-> isType(1, TypedSet)).to.throw("'TypedSet' must have exactly 1 argument.")
 
 				it "TypedSet([]) should return Set type.", ->
 					expect(TypedSet([])).to.equal(Set)
@@ -657,10 +658,10 @@ describe "isType", ->
 			context "Any type elements", ->
 
 				it "TypedMap() should throw an error.", ->
-					expect(-> TypedMap()).to.throw("TypedMap must have at least 1 argument.")
+					expect(-> TypedMap()).to.throw("'TypedMap' must have at least 1 argument.")
 
 				it "TypedMap used as a function should throw an error.", ->
-					expect(-> isType(1, TypedMap)).to.throw("TypedMap must have at least 1 argument.")
+					expect(-> isType(1, TypedMap)).to.throw("'TypedMap' must have at least 1 argument.")
 
 				it "TypedMap([]) should return Map type.", ->
 					expect(TypedMap([])).to.equal(Map)

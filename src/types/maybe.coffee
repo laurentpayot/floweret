@@ -1,14 +1,11 @@
-{Type} = require '.'
-{isType, isAnyType, typeName} = require '..'
+{Type, AnyType} = require '.'
+{isAnyType} = require '..'
 
-class Tuple extends Type
+class Maybe extends Type
 	constructor: (@types...) ->
-		super(arguments, 2) # 2 or more arguments
-		return Array(types.length) if @types.every((t) -> isAnyType(t)) # return needed
-	validate: (val) ->
-		return false unless Array.isArray(val) and val.length is @types.length
-		val.every((e, i) => isType(e, @types[i]))
-	typeName: ->
-		"tuple of #{@types.length} elements '#{(typeName(t) for t in @types).join(", ")}'"
+		super(arguments, 1) # 1 or more arguments
+		# return needed to always return an array instead of a new Maybe instance
+		return if @types.some((t) -> isAnyType(t)) then [] else [undefined, null].concat(@types)
+	helperName: "maybe"
 
-module.exports = Type.createHelper(Tuple)
+module.exports = Type.createHelper(Maybe)

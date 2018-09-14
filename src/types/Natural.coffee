@@ -1,7 +1,9 @@
 {Type} = require '.'
-Integer = require './Integer'
+IntegerHelper = require './Integer'
 
-class Natural extends Integer().constructor
+Integer = IntegerHelper().constructor
+
+class Natural extends Integer
 	constructor: (n1, n2) ->
 		super(n1, n2)
 		@error "#{@constructor.name} arguments must be positive integers." if n1 < 0 or n2 < 0

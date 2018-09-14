@@ -20,9 +20,6 @@ isAnyType = (o) -> Array.isArray(o) and o.length is 0 or o is AnyType or o insta
 
 ### type helpers ###
 
-maybe = (types...) ->
-	error "!'maybe' must have at least 1 argument." unless arguments.length
-	if types.some((t) -> isAnyType(t)) then [] else [undefined, null].concat(types)
 promised = (type) ->
 	error "!'promised' must have exactly 1 argument." unless arguments.length is 1
 	if isAnyType(type) then Promise else Promise.resolve(type)
@@ -57,11 +54,11 @@ else switch type?.constructor
 	when Function then switch type
 		# type helpers used directly as functions
 		when AnyType then true
-		when promised, maybe then error "!'#{type.name}' can not be used directly as a function."
+		when promised then error "!'#{type.name}' can not be used directly as a function."
 		when etc then error "!'etc' can not be used in types."
 		else
-			if type.rootClass is Type
-				type().validate(val) # using default type arguments
+			if type.rootClass is Type # type is a helper
+				type().validate(val) # using default helper arguments
 			else # constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
 				val?.constructor is type
 	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
@@ -143,4 +140,4 @@ fn = (argTypes, resType, f) ->
 			result
 
 
-module.exports = {fn, maybe, promised, etc, typeOf, isType, isAnyType, typeName}
+module.exports = {fn, promised, etc, typeOf, isType, isAnyType, typeName}
