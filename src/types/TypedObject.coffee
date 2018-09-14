@@ -1,7 +1,7 @@
-Type = require '.'
+CustomType = require '.'
 {isType, isAnyType} = require '..'
 
-class TypedObject extends Type
+class TypedObject extends CustomType
 	constructor: (@type) ->
 		super(arguments, 1, 1) # exactly 1 argument
 		return Object if isAnyType(@type) # return needed
@@ -10,4 +10,4 @@ class TypedObject extends Type
 		return true if isAnyType(@type)
 		Object.values(val).every((v) => isType(v, @type))
 
-module.exports = Type.createHelper(TypedObject)
+module.exports = CustomType.createHelper(TypedObject)

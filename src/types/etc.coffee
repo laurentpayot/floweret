@@ -1,9 +1,9 @@
-Type = require '.'
+CustomType = require '.'
 
-class Etc extends Type
+class Etc extends CustomType
 	constructor: (@type=[]) ->
 		super(arguments, 0, 1) # up to 1 argument
-	validate: -> Type.error "'#{@helperName}' cannot be used in types."
+	validate: -> CustomType.error "'#{@helperName}' cannot be used in types."
 	helperName: "etc"
 
-module.exports = Type.createHelper(Etc)
+module.exports = CustomType.createHelper(Etc)

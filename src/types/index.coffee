@@ -3,29 +3,29 @@ class InvalidTypeError extends Error
 
 s = (n) -> if n is 1 then '' else 's'
 
-class Type
+class CustomType
 	# static methods
 	@error: (msg) -> throw new InvalidTypeError msg
 	@createHelper: (childClass) ->
 		h = -> new childClass(arguments...)
-		h.rootClass = Type
+		h.rootClass = CustomType
 		h
 	constructor: (args, min, max) ->
-		Type.error "Abstract class 'Type' cannot be instantiated directly." if @constructor is Type
-		Type.error "Super needs child type arguments as its first argument." unless arguments.length
+		CustomType.error "Abstract class 'CustomType' cannot be instantiated directly." if @constructor is CustomType
+		CustomType.error "Super needs child type arguments as its first argument." unless arguments.length
 		l = args.length
 		name = @helperName or @constructor.name
 		switch
 			when max is undefined
-				if min and l < min then Type.error "'#{name}' must have at least #{min} argument#{s(min)}."
+				if min and l < min then CustomType.error "'#{name}' must have at least #{min} argument#{s(min)}."
 			when min is max
-				if min is 0 and l then Type.error "'#{name}' cannot have any arguments."
-				if l isnt min then Type.error "'#{name}' must have exactly #{min} argument#{s(min)}."
+				if min is 0 and l then CustomType.error "'#{name}' cannot have any arguments."
+				if l isnt min then CustomType.error "'#{name}' must have exactly #{min} argument#{s(min)}."
 			else
-				if l > max then Type.error "'#{name}' must have at most #{max} argument#{s(max)}."
-				if l < min then Type.error "'#{name}' must have at least #{min} argument#{s(min)}."
+				if l > max then CustomType.error "'#{name}' must have at most #{max} argument#{s(max)}."
+				if l < min then CustomType.error "'#{name}' must have at least #{min} argument#{s(min)}."
 	validate: -> false # false if child class valitate missing
 	getTypeName: -> @constructor.name
 
 
-module.exports = Type
+module.exports = CustomType

@@ -1,7 +1,7 @@
-Type = require '.'
+CustomType = require '.'
 {isType, isAnyType} = require '..'
 
-class TypedMap extends Type
+class TypedMap extends CustomType
 	keysType: []
 	valuesType: []
 	constructor: (t1, t2) ->
@@ -21,4 +21,4 @@ class TypedMap extends Type
 				values = Array.from(val.values())
 				keys.every((e) => isType(e, @keysType)) and values.every((e) => isType(e, @valuesType))
 
-module.exports = Type.createHelper(TypedMap)
+module.exports = CustomType.createHelper(TypedMap)

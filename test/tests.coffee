@@ -1,7 +1,7 @@
 # testing the build, minified, not the source
 {typeOf, isType, isAnyType, fn} = require '../dist/runtime-signature.min.js'
 
-Type = require '../dist/types'
+CustomType = require '../dist/types'
 maybe = require '../dist/types/maybe'
 promised = require '../dist/types/promised'
 etc = require '../dist/types/etc'
@@ -292,7 +292,7 @@ describe "isType", ->
 		it "should return false if same object type but one key less.", ->
 			expect(isType({a: 1}, {a: Number, b: Number})).to.be.false
 
-		it "should return false for a custom type and non object values", ->
+		it "should return false for an object type and non object values", ->
 			UserType =
 				id: Number
 				name: String
@@ -301,7 +301,7 @@ describe "isType", ->
 			expect(isType(val, UserType)).to.be.false \
 				for val in VALUES when val isnt undefined and val isnt null and val.constructor isnt Object
 
-		it "should return true for a shallow custom type, false otherwise", ->
+		it "should return true for a shallow object type, false otherwise", ->
 			UserType =
 				id: Number
 				name: String
@@ -314,7 +314,7 @@ describe "isType", ->
 			expect(isType({id: 1234}, UserType)).to.be.false
 			expect(isType({}, UserType)).to.be.false
 
-		it "should return true for a deep custom type, false otherwise", ->
+		it "should return true for a deep object type, false otherwise", ->
 			UserType =
 				id: Number
 				name:
@@ -334,7 +334,7 @@ describe "isType", ->
 			expect(isType({id: '1234', name: "Smith"}, UserType)).to.be.false
 			expect(isType({id: 1234, name: ["Smith"]}, UserType)).to.be.false
 
-		it "should return false for custom type {name: 'Number'} and a number value", ->
+		it "should return false for object type {name: 'Number'} and a number value", ->
 			expect(isType(1, {name: 'Number'})).to.be.false
 
 	context "Sized Array", ->
@@ -401,7 +401,7 @@ describe "isType", ->
 			expect(isType(null, [Object, null])).to.be.true
 			expect(isType("foo", [Object, null])).to.be.false
 
-		it "should return true for a custom type or null value, false otherwise", ->
+		it "should return true for an object type or null value, false otherwise", ->
 			UserType =
 				id: Number
 				name: String
@@ -411,8 +411,8 @@ describe "isType", ->
 
 	context "Custom types", ->
 
-		it "should throw an error when creating an instance of Type", ->
-			expect(-> new Type()).to.throw("Abstract class 'Type' cannot be instantiated directly.")
+		it "should throw an error when creating an instance of CustomType", ->
+			expect(-> new CustomType()).to.throw("Abstract class 'CustomType' cannot be instantiated directly.")
 
 		context "Integer type", ->
 
@@ -472,7 +472,7 @@ describe "isType", ->
 			it "should throw an error when Tuple is used without arguments", ->
 				expect(-> isType(1, Tuple())).to.throw("'Tuple' must have at least 2 arguments.")
 
-			context "Any Type elements", ->
+			context "Any type elements", ->
 
 				it "Tuple of [] should return array of empty elements", ->
 					t = Tuple([], [])
@@ -496,7 +496,7 @@ describe "isType", ->
 					expect(t[1]).to.be.undefined
 
 
-			context "Native Type elements", ->
+			context "Native type elements", ->
 
 				it "should return true when value is an array correspondig to Tuple type", ->
 					expect(isType([1, true, "three"], Tuple(Number, Boolean, String))).to.be.true
@@ -520,7 +520,7 @@ describe "isType", ->
 
 		context "Typed array", ->
 
-			context "Native Type elements", ->
+			context "Native type elements", ->
 
 				it "should return false when value is not an array", ->
 					expect(isType(val, Array(Number))).to.be.false for val in VALUES when not Array.isArray(val)
@@ -546,7 +546,7 @@ describe "isType", ->
 					expect(isType([val], Array(String))).to.be.false \
 						for val in VALUES when typeof val isnt 'string'
 
-			context "Object Type elements", ->
+			context "Object type elements", ->
 
 				it "should return false when value is not an array", ->
 					nsType = {n: Number, s: String}
@@ -564,7 +564,7 @@ describe "isType", ->
 					expect(isType([val], Array(nsType))).to.be.false for val in VALUES
 					expect(isType([{n: 1, s: "a"}, {foo: 2, s: "b"}, {n: 3, s: "c"}], Array(nsType))).to.be.false
 
-			context "Union Type elements", ->
+			context "Union type elements", ->
 
 				it "should return false when value is not an array", ->
 					expect(isType(val, Array([Number, String]))).to.be.false for val in VALUES when not Array.isArray(val)
@@ -600,7 +600,7 @@ describe "isType", ->
 				it "TypedSet(AnyType) should return Set type.", ->
 					expect(TypedSet(AnyType)).to.equal(Set)
 
-			context "Native Type elements", ->
+			context "Native type elements", ->
 
 				it "should return false when value is not a set", ->
 					expect(isType(val, TypedSet(Number))).to.be.false for val in VALUES when not val?.constructor is Set
@@ -626,7 +626,7 @@ describe "isType", ->
 					expect(isType(new Set([val]), TypedSet(String))).to.be.false \
 						for val in VALUES when typeof val isnt 'string'
 
-			context "Object Type elements", ->
+			context "Object type elements", ->
 
 				it "should return false when value is not a set", ->
 					nsType = {n: Number, s: String}
@@ -644,7 +644,7 @@ describe "isType", ->
 					expect(isType(new Set([val]), TypedSet(nsType))).to.be.false for val in VALUES
 					expect(isType(new Set([{n: 1, s: "a"}, {foo: 2, s: "b"}, {n: 3, s: "c"}]), TypedSet(nsType))).to.be.false
 
-			context "Union Type elements", ->
+			context "Union type elements", ->
 
 				it "should return false when value is not a set", ->
 					expect(isType(val, TypedSet([Number, String]))).to.be.false for val in VALUES when not val?.constructor is Set
@@ -686,7 +686,7 @@ describe "isType", ->
 				it "TypedMap(AnyType, AnyType) should return Map type.", ->
 					expect(TypedMap(AnyType, AnyType)).to.equal(Map)
 
-			context "Native Type elements", ->
+			context "Native type elements", ->
 
 				it "should return false when value is not a Map", ->
 					expect(isType(val, TypedMap(Number))).to.be.false for val in VALUES when not val?.constructor is Map
@@ -738,7 +738,7 @@ describe "isType", ->
 					expect(isType(new Map([[val, 'foo']]), TypedMap(Number, String)))
 					.to.be.false for val in VALUES when typeof val isnt 'number'
 
-			context.skip "Object Type elements", ->
+			context.skip "Object type elements", ->
 
 				it "should return false when value is not a Map", ->
 					nsType = {n: Number, s: String}
@@ -756,7 +756,7 @@ describe "isType", ->
 					expect(isType(new Map([val]), TypedMap(nsType))).to.be.false for val in VALUES
 					expect(isType(new Map([{n: 1, s: "a"}, {foo: 2, s: "b"}, {n: 3, s: "c"}]), TypedMap(nsType))).to.be.false
 
-			context.skip "Union Type elements", ->
+			context.skip "Union type elements", ->
 
 				it "should return false when value is not a Map", ->
 					expect(isType(val, TypedMap([Number, String]))).to.be.false for val in VALUES when not val?.constructor is Map
@@ -1186,10 +1186,10 @@ describe "fn", ->
 				expect( -> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'array of 'String or Number'' instead of Number.")
 
-			it "should return an error with 'array of 'custom type object''", ->
+			it "should return an error with 'array of 'object type object''", ->
 				f = fn [Array({a: String, b: Number})], AnyType, ->
 				expect( -> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'array of 'custom type object'' instead of Number.")
+				.to.throw("Argument number 1 (1) should be of type 'array of 'object type'' instead of Number.")
 
 			it "Array([]) should return an error with 'array of 'any type''", ->
 				f = fn [Array([])], AnyType, ->

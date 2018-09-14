@@ -1,6 +1,6 @@
 ###* @license MIT (c) 2018 Laurent Payot  ###
 
-Type = require './types'
+CustomType = require './types'
 AnyTypeHelper = require './types/AnyType'
 EtcHelper = require './types/etc'
 
@@ -43,7 +43,7 @@ isType = (val, type) -> if Array.isArray(type) # NB: special Array case http://w
 else switch type?.constructor
 	when undefined, String, Number, Boolean then val is type # literal type or undefined or null
 	when Function
-		if type.rootClass is Type # type is a helper
+		if type.rootClass is CustomType # type is a helper
 			type().validate(val) # using default helper arguments
 		else # constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
 			val?.constructor is type
@@ -53,12 +53,12 @@ else switch type?.constructor
 			return false unless isType(val[k], v)
 		true
 	else
-		if type instanceof Type
+		if type instanceof CustomType
 			type.validate(val)
 		else
 			prefix = if type.constructor in [Set, Map] then 'the provided Typed' else ''
-			Type.error "Type can not be an instance of #{typeOf(type)}.
-						Use #{prefix}#{typeOf(type)} as type instead."
+			CustomType.error "Type can not be an instance of #{typeOf(type)}.
+								Use #{prefix}#{typeOf(type)} as type instead."
 
 # returns a list of keys path to where the type do not match + value not maching + type not matching
 badPath = (obj, typeObj) ->
@@ -75,10 +75,10 @@ getTypeName = (type) -> switch type?.constructor
 		when 1 then "array of '#{getTypeName(type[0])}'"
 		else (getTypeName(t) for t in type).join(" or ")
 	when Function
-		if type.rootClass is Type then type().getTypeName() else type.name
-	when Object then "custom type object"
+		if type.rootClass is CustomType then type().getTypeName() else type.name
+	when Object then "object type"
 	else
-		if type instanceof Type
+		if type instanceof CustomType
 			type.getTypeName()
 		else
 			"literal #{typeOf(type)} #{if typeof type is 'string' then '"'+type+'"' else type}"
