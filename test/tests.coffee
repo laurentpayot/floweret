@@ -1,7 +1,7 @@
 # testing the build, minified, not the source
 {typeOf, isType, isAnyType, fn} = require '../dist/runtime-signature.min.js'
 
-{Type} = require '../dist/types'
+Type = require '../dist/types'
 maybe = require '../dist/types/maybe'
 promised = require '../dist/types/promised'
 etc = require '../dist/types/etc'

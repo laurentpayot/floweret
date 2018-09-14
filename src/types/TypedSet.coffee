@@ -1,4 +1,4 @@
-{Type} = require '.'
+Type = require '.'
 {isType, isAnyType} = require '..'
 
 class TypedSet extends Type

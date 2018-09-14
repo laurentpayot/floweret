@@ -1,4 +1,4 @@
-{Type} = require '.'
+Type = require '.'
 {isType, isAnyType, getTypeName} = require '..'
 
 class Tuple extends Type

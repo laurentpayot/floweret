@@ -1,4 +1,4 @@
-{Type} = require '.'
+Type = require '.'
 
 class Integer extends Type
 	min = undefined

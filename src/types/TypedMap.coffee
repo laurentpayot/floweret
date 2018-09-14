@@ -1,4 +1,4 @@
-{Type} = require '.'
+Type = require '.'
 {isType, isAnyType} = require '..'
 
 class TypedMap extends Type

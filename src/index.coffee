@@ -1,6 +1,6 @@
 ###* @license MIT (c) 2018 Laurent Payot  ###
 
-{Type} = require './types'
+Type = require './types'
 AnyTypeHelper = require './types/AnyType'
 EtcHelper = require './types/etc'
 

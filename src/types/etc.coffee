@@ -1,4 +1,4 @@
-{Type} = require '.'
+Type = require '.'
 
 class Etc extends Type
 	constructor: (@type=[]) ->

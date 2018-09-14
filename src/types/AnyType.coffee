@@ -1,4 +1,4 @@
-{Type} = require '.'
+Type = require '.'
 
 class AnyType extends Type
 	constructor: -> super(arguments, 0, 0) # no arguments

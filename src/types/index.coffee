@@ -28,4 +28,4 @@ class Type
 	getTypeName: -> @constructor.name
 
 
-module.exports = {Type, InvalidTypeError}
+module.exports = Type

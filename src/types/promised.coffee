@@ -1,4 +1,4 @@
-{Type} = require '.'
+Type = require '.'
 {isAnyType} = require '..'
 
 class Promised extends Type
