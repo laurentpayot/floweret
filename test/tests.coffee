@@ -1219,3 +1219,13 @@ describe "fn", ->
 				expect( -> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'tuple of
 							3 elements 'Number, Object or null, String'' instead of Number")
+
+	context.only "Result", ->
+
+		it "should return a result error", ->
+			f = fn [Number, [undefined, Number]], Number,
+				(a, b) ->
+					result = a + b
+					console.log "*** result =", result
+					result
+			expect( -> f(1)).to.throw("Result")
