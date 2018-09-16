@@ -19,11 +19,12 @@ chaiAsPromised = require 'chai-as-promised'
 chai.use(chaiAsPromised)
 expect = chai.expect
 
-NATIVE_TYPES = [undefined, null, Boolean, Number, NaN, String, Array, Date,
+NATIVE_TYPES = [undefined, null, NaN, Boolean, Number, String, Array, Date,
 				Object, Function, Promise, Int8Array, Set, Map, Symbol]
 VALUES = [
 	undefined
 	null
+	NaN
 	1.1 # number
 	0 # number
 	true # boolean
@@ -51,7 +52,8 @@ VALUES = [
 
 testTypes = (val, type) ->
 	expect(isType(val, type)).to.be.true
-	expect(isType(val, t)).to.be.false for t in NATIVE_TYPES when t isnt type
+	expect(isType(val, t)).to.be.false \
+		for t in NATIVE_TYPES when not(t is type or Number.isNaN val and Number.isNaN type)
 
 
 ###
@@ -239,6 +241,12 @@ describe "isType", ->
 
 		it "should return true for a null type, false for other types", ->
 			testTypes(null, null)
+
+		it "should return true for NaN type, false for other types", ->
+			expect(isType(NaN, NaN)).to.be.true
+			expect(isType(NaN, Number)).to.be.false
+			expect(isType(1, NaN)).to.be.false
+			testTypes(NaN, NaN)
 
 		it "should return true for a number type, false for other types", ->
 			testTypes(1.1, Number)
@@ -1223,12 +1231,10 @@ describe "fn", ->
 				.to.throw("Argument number 1 (1) should be of type 'tuple of
 							3 elements 'Number, Object or null, String'' instead of Number")
 
-	context.skip "Result", ->
+		context "Result", ->
 
-		it "should return a result error", ->
-			f = fn [Number, [undefined, Number]], Number,
-				(a, b) ->
-					result = a + b
-					console.log "*** result =", result
-					result
-			expect( -> f(1)).to.throw("Result")
+			it "should return a result error with ''Number' instead of NaN'", ->
+				f = fn [Number, [undefined, Number]], Number,
+					(a, b) -> a + b # missing default b value
+				expect( -> f(1))
+				.to.throw("Result (NaN) should be of type 'Number' instead of NaN.")
