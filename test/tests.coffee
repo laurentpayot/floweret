@@ -19,8 +19,8 @@ chaiAsPromised = require 'chai-as-promised'
 chai.use(chaiAsPromised)
 expect = chai.expect
 
-NATIVE_TYPES = [undefined, null, Boolean, Number, String, Array, Date, Object,
-				Function, Promise, Int8Array, Set, Map, Symbol]
+NATIVE_TYPES = [undefined, null, Boolean, Number, NaN, String, Array, Date,
+				Object, Function, Promise, Int8Array, Set, Map, Symbol]
 VALUES = [
 	undefined
 	null
@@ -63,6 +63,9 @@ testTypes = (val, type) ->
 	   ╚═╝      ╚═╝   ╚═╝     ╚══════╝ ╚═════╝ ╚═╝
 ###
 describe "typeOf (add more tests!!!)", ->
+
+	it "should return 'NaN' for NaN", ->
+		expect(typeOf(NaN)).to.equal('NaN')
 
 	it "should return 'Object' for an object value, something else otherwise", ->
 		expect(typeOf({})).to.equal('Object')
@@ -1220,7 +1223,7 @@ describe "fn", ->
 				.to.throw("Argument number 1 (1) should be of type 'tuple of
 							3 elements 'Number, Object or null, String'' instead of Number")
 
-	context.only "Result", ->
+	context.skip "Result", ->
 
 		it "should return a result error", ->
 			f = fn [Number, [undefined, Number]], Number,

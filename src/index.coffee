@@ -19,8 +19,8 @@ Etc = EtcHelper().constructor
 AnyType = AnyTypeHelper().constructor
 isAnyType = (o) -> Array.isArray(o) and o.length is 0 or o is AnyTypeHelper or o instanceof AnyType
 
-# typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, Promise etc.
-typeOf = (val) -> if val is undefined or val is null then '' + val else val.constructor.name
+# typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, NaN, Promise etc.
+typeOf = (val) -> if val in [undefined, null] or Number.isNaN(val) then '' + val else val.constructor.name
 
 # check that a value is of a given type or of any (undefined) type, e.g.: isType("foo", String)
 isType = (val, type) -> if Array.isArray(type) # NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
