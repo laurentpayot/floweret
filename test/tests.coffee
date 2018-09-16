@@ -168,11 +168,15 @@ describe "isType", ->
 			it "maybe(AnyType) should return empty array.", ->
 				expect(maybe(AnyType)).to.be.an('array').that.is.empty
 
-			it "maybe(Number, [], String) should return empty array.", ->
-				expect(maybe(Number, [], String)).to.be.an('array').that.is.empty
+			it "maybe should throw an error when used as with more than 1 argument", ->
+				expect(-> isType(1, maybe(Number, String)))
+				.to.throw("'maybe' must have exactly 1 argument")
 
-			it "maybe(Number, AnyType) should return empty array.", ->
-				expect(maybe(Number, AnyType, String)).to.be.an('array').that.is.empty
+			it "maybe([]) should return empty array.", ->
+				expect(maybe([])).to.be.an('array').that.is.empty
+
+			it "maybe(AnyType) should return empty array.", ->
+				expect(maybe(AnyType)).to.be.an('array').that.is.empty
 
 			it "should return true when value is undefined or null.", ->
 				for t in NATIVE_TYPES
@@ -187,12 +191,6 @@ describe "isType", ->
 				expect(isType("Énorme !", maybe(String))).to.be.true
 				expect(isType("Énorme !", maybe(t))).to.be.false for t in NATIVE_TYPES when t and t isnt String
 
-			it "should return true for a Number or a String or undefined or null", ->
-				expect(isType(1, maybe(Number, String))).to.be.true
-				expect(isType('1', maybe(Number, String))).to.be.true
-				expect(isType(undefined, maybe(Number, String))).to.be.true
-				expect(isType(null, maybe(Number, String))).to.be.true
-
 			it "should return true for a Number or a String or undefined or null, when union is used", ->
 				expect(isType(1, maybe([Number, String]))).to.be.true
 				expect(isType('1', maybe([Number, String]))).to.be.true
@@ -201,10 +199,10 @@ describe "isType", ->
 
 			it "maybe() should throw an error when type is ommited", ->
 				expect(-> isType(1, maybe()))
-				.to.be.throw("'maybe' must have at least 1 argument.")
+				.to.be.throw("'maybe' must have exactly 1 argument.")
 
 			it "maybe should throw an error when used as a function", ->
-				expect(-> isType(1, maybe)).to.throw("'maybe' must have at least 1 argument")
+				expect(-> isType(1, maybe)).to.throw("'maybe' must have exactly 1 argument")
 
 	context "Literal Types", ->
 

@@ -2,10 +2,10 @@ CustomType = require './CustomType'
 {isAnyType} = require '.'
 
 class Maybe extends CustomType
-	constructor: (@types...) ->
-		super(arguments, 1) # 1 or more arguments
+	constructor: (@type) ->
+		super(arguments, 1, 1) # exactly 1 arguments
 		# return needed to always return an array instead of a new Maybe instance
-		return if @types.some((t) -> isAnyType(t)) then [] else [undefined, null].concat(@types)
+		return if isAnyType(@type) then [] else [undefined, null, @type]
 	helperName: "maybe"
 
 module.exports = CustomType.createHelper(Maybe)
