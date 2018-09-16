@@ -30,7 +30,8 @@
     "minify": "uglifyjs -cm --comments -o dist/runtime-signature.min.js -- dist/index.js",
     "build-tests": "coffee -cb test/tests.coffee",
     "test": "npm run build && npm run minify && npm run build-tests && mocha",
-    "deploy": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm publish"
+    "link": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm link",
+    "publish": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm publish"
   },
   "devDependencies": {
     "chai": "^4.1.2",
