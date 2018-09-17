@@ -1,5 +1,5 @@
 # testing the build, minified, not the source
-{typeOf, isType, isAnyType, fn} = require '../dist/runtime-signature.min.js'
+{typeOf, isType, isAnyType, fn} = require '../dist/rflow.min.js'
 
 CustomType = require '../dist/CustomType'
 maybe = require '../dist/maybe'
