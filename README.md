@@ -1,5 +1,5 @@
 
-rflow
+floweret
 =================
 
 Type-checking for functions at runtime with native JavaScript types signatures.
@@ -17,9 +17,9 @@ Install
 -------
 
 ```bash
-$ npm install rflow
+$ npm install floweret
 # or
-$ yarn add rflow
+$ yarn add floweret
 ```
 
 Usage
@@ -32,7 +32,7 @@ To add a signature to a function, wrap the function with the `fn` function.
 ### Javascript
 
 ```js
-import { fn } from 'rflow'
+import { fn } from 'floweret'
 
 f = fn(
   [Number, Number], Number,
@@ -42,7 +42,7 @@ f = fn(
 or using the ES2015 arrow function syntax:
 
 ```js
-import { fn } from 'rflow'
+import { fn } from 'floweret'
 
 f = fn(
   [Number, Number], Number,
@@ -55,7 +55,7 @@ f = fn(
 You can ommit the `fn` parentheses, resulting in a decorator-like syntax:
 
 ```coffee
-import { fn } from 'rflow'
+import { fn } from 'floweret'
 
 f = fn [Number, Number], Number,
     (a, b) -> a + b
@@ -108,7 +108,7 @@ f(1, true) // Type error: Argument number 2 (true) should be of type Number or S
 This is simply a shortcut to the union `[undefined, null, <type>]`. Usefull for optional parameters of a function.
 
 ```js
-import { fn, maybe } from 'rflow'
+import { fn, maybe } from 'floweret'
 
 f = fn(
   [Number, maybe(Number)], Number,
@@ -218,7 +218,7 @@ You can use the `Promise` type for promises that resolve with a value of any typ
 For instance use `Promise.resolve([Object, null])` for a promise that will resolve with an object or the null value.
 
 ```js
-import { fn, promised } from 'rflow'
+import { fn, promised } from 'floweret'
 ```
 
 *Documentation in progress…*
@@ -232,7 +232,7 @@ or
 > AnyType
 
 ```js
-import { fn, AnyType } from 'rflow'
+import { fn, AnyType } from 'floweret'
 ```
 
 *Documentation in progress…*
@@ -246,10 +246,10 @@ or (untyped)
 > etc
 
 :warning: Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
-CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in rflow.
+CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in floweret.
 
 ```js
-import { fn, etc } from 'rflow'
+import { fn, etc } from 'floweret'
 ```
 
 *Documentation in progress…*
@@ -259,7 +259,7 @@ import { fn, etc } from 'rflow'
 > Tuple( <type 1\>, <type 2\>, …, <type n\> )
 
 ```js
-import { fn, Tuple } from 'rflow'
+import { fn, Tuple } from 'floweret'
 ```
 
 *Documentation in progress…*

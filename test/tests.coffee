@@ -1,5 +1,5 @@
 # testing the build, minified, not the source
-{typeOf, isType, isAnyType, fn} = require '../dist/rflow.min.js'
+{typeOf, isType, isAnyType, fn} = require '../dist/floweret.min.js'
 
 CustomType = require '../dist/CustomType'
 maybe = require '../dist/maybe'

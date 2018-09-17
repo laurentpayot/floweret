@@ -1,13 +1,13 @@
 {
-  "name": "rflow",
+  "name": "floweret",
   "version": "0.1.0",
-  "description": "Flow-like runtime type-checking with native JavaScript types.",
+  "description": "Lightweight flow-like runtime type-checking with native JavaScript types.",
   "author": "Laurent Payot",
   "license": "MIT",
-  "homepage": "https://github.com/laurentpayot/rflow#readme",
+  "homepage": "https://github.com/laurentpayot/floweret#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/laurentpayot/rflow"
+    "url": "https://github.com/laurentpayot/floweret"
   },
   "keywords": [
     "type-checking",
@@ -27,7 +27,7 @@
   },
   "scripts": {
     "build": "rm -rf dist/ && coffee -cb -o dist/ src/",
-    "minify": "uglifyjs -cm --comments -o dist/rflow.min.js -- dist/index.js",
+    "minify": "uglifyjs -cm --comments -o dist/floweret.min.js -- dist/index.js",
     "build-tests": "coffee -cb test/tests.coffee",
     "test": "npm run build && npm run minify && npm run build-tests && mocha",
     "link": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm link",
