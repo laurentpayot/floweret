@@ -4,8 +4,9 @@ CustomType = require './CustomType'
 class Maybe extends CustomType
 	constructor: (@type) ->
 		super(arguments, 1, 1) # exactly 1 argument
+		@warn "AnyType is not needed as '#{@helperName}' argument." if isAnyType(@type)
 		# return needed to always return an array instead of a new Maybe instance
-		return if isAnyType(@type) then [] else [undefined, null, @type]
+		return [undefined, null, @type]
 	helperName: "maybe"
 
 module.exports = CustomType.createHelper(Maybe)

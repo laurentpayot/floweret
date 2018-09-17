@@ -4,11 +4,10 @@ CustomType = require './CustomType'
 class And extends CustomType
 	constructor: (@types...) ->
 		super(arguments, 2) # or more arguments
-		# return needed to always return an array instead of a new And instance
 		for t, i in @types
-			@warn "AnyType is not needed as and() argument number #{i}." if isAnyType(t)
-			@warn "Literal #{getTypeName(t)} (#{t}) not needed as and() argument
-					number #{i}." if typeof type? in ['undefined', 'number', 'string', 'boolean']
+			@warn "AnyType is not needed as '#{@helperName}' argument number #{i}." if isAnyType(t)
+			@warn "Literal #{getTypeName(t)} (#{t}) not needed as '#{@helperName}' argument number
+					#{i}." if typeof type? in ['undefined', 'number', 'string', 'boolean'] # typeof NaN is 'number'
 	validate: (val) ->
 		@types.every((t) -> isType(val, t))
 	helperName: "and"

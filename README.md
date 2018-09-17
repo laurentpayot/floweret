@@ -1,17 +1,15 @@
+:blossom: Floweret
+==================
 
-floweret
-=================
-
-Type-checking for functions at runtime with native JavaScript types signatures.
+Lightweight type-checking of functions at runtime.
 
 
 Features
 --------
 
-* Super-simple native types syntax, highlighted by your editor of choice.
-* Efficient: direct type evaluation, no string to parse.
-* Lightweight: 6.7 kb minified, 2.4 kb minified and gzipped.
-* No dependencies.
+* Simple: native Javascript type signatures.
+* Efficient: direct type comparison, no string to parse.
+* Lightweight: around 2 kb minified and gzipped. No dependencies.
 
 Install
 -------
@@ -108,7 +106,8 @@ f(1, true) // Type error: Argument number 2 (true) should be of type Number or S
 This is simply a shortcut to the union `[undefined, null, <type>]`. Usefull for optional parameters of a function.
 
 ```js
-import { fn, maybe } from 'floweret'
+import { fn } from 'floweret'
+import maybe from 'floweret/maybe'
 
 f = fn(
   [Number, maybe(Number)], Number,
@@ -146,6 +145,12 @@ Simply use `Array(Number)` for an array of number.
 
 :warning: If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`). Use `Array([Number, String])` to accept an array of elements that can be numbers or strings, such as `[1, "2", 3]`.
 If you forget the brackets you will get the union of types instead of the array of union of types, because in JavaScript `Array(Number, String)` is the same as `[Number, String]`.
+
+*Documentation in progress…*
+
+### Sized Array
+
+> Array(<length\>)
 
 *Documentation in progress…*
 
@@ -197,9 +202,9 @@ f({x: 1, y: 2})             // 5
 f({x: 1, y: 2, foo: "bar"}) // 5 (no error)
 ```
 
-### Custom class type
+### Class type
 
-> <custom class\>
+> <class\>
 
 *Documentation in progress…*
 
@@ -218,7 +223,7 @@ You can use the `Promise` type for promises that resolve with a value of any typ
 For instance use `Promise.resolve([Object, null])` for a promise that will resolve with an object or the null value.
 
 ```js
-import { fn, promised } from 'floweret'
+import promised from 'floweret/promised'
 ```
 
 *Documentation in progress…*
@@ -232,7 +237,7 @@ or
 > AnyType
 
 ```js
-import { fn, AnyType } from 'floweret'
+import AnyType from 'floweret/AnyType'
 ```
 
 *Documentation in progress…*
@@ -249,7 +254,49 @@ or (untyped)
 CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in floweret.
 
 ```js
-import { fn, etc } from 'floweret'
+import etc from 'floweret/etc'
+```
+
+*Documentation in progress…*
+
+### Logical operators
+
+#### or
+
+> or( <type 1\>, <type 2\>, …, <type n\> )
+
+This is the same as putting types into brackets, but more explicit.
+
+```js
+import or from 'floweret/or'
+```
+
+*Documentation in progress…*
+
+#### and
+
+> and( <type 1\>, <type 2\>, …, <type n\> )
+
+```js
+import and from 'floweret/and'
+```
+
+*Documentation in progress…*
+
+#### not
+
+> not( <type\> )
+
+```js
+import not from 'floweret/not'
+```
+
+:warning: :coffee: `not` is a reserved CoffeeScript token.
+Use another identifier to import the `not` operator in a CoffeeScript file:
+
+```coffee
+# CoffeeScript
+import Not from 'floweret/not'
 ```
 
 *Documentation in progress…*
@@ -259,11 +306,10 @@ import { fn, etc } from 'floweret'
 > Tuple( <type 1\>, <type 2\>, …, <type n\> )
 
 ```js
-import { fn, Tuple } from 'floweret'
+import Tuple from 'floweret/Tuple'
 ```
 
 *Documentation in progress…*
-
 
 ### Typed Object
 
@@ -328,7 +374,7 @@ typeOf(Promise.resolve(1)) // 'Promise'
 Features to come
 ----------------
 
-* `fn` as a decorator, [when JavaScript decorators reaches stage 4 and are implemented in CoffeeScript](https://github.com/jashkenas/coffeescript/issues/4917#issuecomment-387220758).
+* `fn` as a decorator, [when JavaScript decorators reach stage 4 and are implemented in CoffeeScript](https://github.com/jashkenas/coffeescript/issues/4917#issuecomment-387220758).
 
 Licence
 -------
