@@ -1,3 +1,5 @@
+sinon = require 'sinon'
+
 # testing the build, minified, not the source
 {typeOf, isType, isAnyType, fn} = require '../dist/floweret.min.js'
 
@@ -54,6 +56,8 @@ testTypes = (val, type) ->
 	expect(isType(val, type)).to.be.true
 	expect(isType(val, t)).to.be.false \
 		for t in NATIVE_TYPES when not(t is type or Number.isNaN val and Number.isNaN type)
+
+warnSpy = sinon.spy(CustomType, 'warn')
 
 
 ###
@@ -162,21 +166,19 @@ describe "isType", ->
 
 		context "Maybe type", ->
 
-			it "maybe([]) should return empty array.", ->
-				expect(maybe([])).to.be.an('array').that.is.empty
+			it "maybe([]) should return an array and a warning.", ->
+				warnSpy.resetHistory()
+				expect(maybe([])).to.eql([undefined, null, []]) # eql is deep equal
+				expect(warnSpy.withArgs("AnyType is not needed as 'maybe' argument.").calledOnce).to.be.true
 
 			it "maybe(AnyType) should return empty array.", ->
-				expect(maybe(AnyType)).to.be.an('array').that.is.empty
+				warnSpy.resetHistory()
+				expect(maybe(AnyType)).to.eql([undefined, null, AnyType]) # eql is deep equal
+				expect(warnSpy.withArgs("AnyType is not needed as 'maybe' argument.").calledOnce).to.be.true
 
 			it "maybe should throw an error when used as with more than 1 argument", ->
 				expect(-> isType(1, maybe(Number, String)))
 				.to.throw("'maybe' must have exactly 1 argument")
-
-			it "maybe([]) should return empty array.", ->
-				expect(maybe([])).to.be.an('array').that.is.empty
-
-			it "maybe(AnyType) should return empty array.", ->
-				expect(maybe(AnyType)).to.be.an('array').that.is.empty
 
 			it "should return true when value is undefined or null.", ->
 				for t in NATIVE_TYPES

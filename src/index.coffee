@@ -1,14 +1,14 @@
-###* @license MIT (c) 2018 Laurent Payot  ###
+###* Floweret @license MIT (c) 2018 Laurent Payot ###
 
 CustomType = require './CustomType'
 AnyTypeHelper = require './AnyType'
 EtcHelper = require './etc'
 
 class InvalidSignatureError extends Error
-	constructor: (msg) -> super("Invalid signature: " + msg)
+	constructor: (msg) -> super("Floweret invalid signature: " + msg)
 
 class TypeMatchError extends Error
-	constructor: (msg) -> super("Type not matching: " + msg)
+	constructor: (msg) -> super("Floweret type not matching: " + msg)
 
 # trows customized error
 error = (msg) -> switch msg[0]
