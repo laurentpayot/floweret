@@ -6,6 +6,7 @@ s = (n) -> if n is 1 then '' else 's'
 class CustomType
 	# static methods
 	@error: (msg) -> throw new InvalidTypeError msg
+	@warn: (msg) -> console.warn msg unless process?.env.NODE_ENV is 'production'
 	@createHelper: (childClass) ->
 		h = -> new childClass(arguments...)
 		h.rootClass = CustomType

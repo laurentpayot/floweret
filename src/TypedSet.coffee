@@ -3,7 +3,7 @@ CustomType = require './CustomType'
 
 class TypedSet extends CustomType
 	constructor: (@type) ->
-		super(arguments, 1, 1) # 1 argument
+		super(arguments, 1, 1) # exactly 1 argument
 		return Set if isAnyType(@type) # return needed
 		CustomType.error "'#{@constructor.name}' argument can not be a literal
 					of type '#{@type}'." if @type?.constructor in [undefined, String, Number, Boolean]
