@@ -1,4 +1,8 @@
 sinon = require 'sinon'
+chai = require 'chai'
+chaiAsPromised = require 'chai-as-promised'
+chai.use(chaiAsPromised)
+expect = chai.expect
 
 # testing the build, minified, not the source
 {typeOf, isType, isAnyType, fn} = require '../dist/floweret.min.js'
@@ -16,10 +20,6 @@ TypedObject = require '../dist/TypedObject'
 TypedSet = require '../dist/TypedSet'
 TypedMap = require '../dist/TypedMap'
 
-chai = require 'chai'
-chaiAsPromised = require 'chai-as-promised'
-chai.use(chaiAsPromised)
-expect = chai.expect
 
 NATIVE_TYPES = [undefined, null, NaN, Boolean, Number, String, Array, Date,
 				Object, Function, Promise, Int8Array, Set, Map, Symbol]
