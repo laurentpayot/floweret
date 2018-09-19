@@ -25,7 +25,7 @@ class CustomType
 			else
 				if l > max then CustomType.error "'#{name}' must have at most #{max} argument#{s(max)}."
 				if l < min then CustomType.error "'#{name}' must have at least #{min} argument#{s(min)}."
-	validate: -> false # false if child class valitate missing
+	validate: -> false # false if child class validate() missing
 	getTypeName: -> @constructor.name
 
 
