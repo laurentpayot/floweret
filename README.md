@@ -1,14 +1,15 @@
 :blossom: Floweret
 ==================
 
-Lightweight type-checking of functions at runtime.
+Runtime type-checking for everyone.
 
 
 Features
 --------
 
-* Simple: native Javascript type signatures.
+* Easy: use native Javascript types.
 * Lightweight: around 2 kb minified and gzipped. No dependencies.
+* Powerfull: rest parameters type and more.
 * Efficient: direct type comparison, no string to parse.
 * Customizable: create your own types.
 

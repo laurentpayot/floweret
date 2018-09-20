@@ -1,7 +1,7 @@
 {
   "name": "floweret",
   "version": "0.1.1",
-  "description": "Lightweight type-checking of functions at runtime.",
+  "description": "Runtime type-checking for everyone.",
   "author": "Laurent Payot",
   "license": "MIT",
   "homepage": "https://github.com/laurentpayot/floweret#readme",
