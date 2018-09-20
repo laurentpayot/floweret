@@ -8,8 +8,9 @@ Features
 --------
 
 * Simple: native Javascript type signatures.
-* Efficient: direct type comparison, no string to parse.
 * Lightweight: around 2 kb minified and gzipped. No dependencies.
+* Efficient: direct type comparison, no string to parse.
+* Customizable: create your own types.
 
 Install
 -------
