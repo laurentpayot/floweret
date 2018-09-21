@@ -171,8 +171,8 @@ describe "isType", ->
 				expect(maybe([])).to.eql([undefined, null, []]) # eql is deep equal
 				expect(warnSpy.withArgs("AnyType is not needed as 'maybe' argument.").calledOnce).to.be.true
 
-			# it "maybe(AnyType) should return empty array.", ->
-			# 	warnSpy.resetHistory()
+			it "maybe(AnyType) should return empty array.", ->
+				warnSpy.resetHistory()
 				expect(maybe(AnyType)).to.eql([undefined, null, AnyType]) # eql is deep equal
 				expect(warnSpy.withArgs("AnyType is not needed as 'maybe' argument.").calledOnce).to.be.true
 
@@ -475,7 +475,7 @@ describe "isType", ->
 				expect(isType(0, Natural)).to.be.true
 				expect(isType(-0, Natural)).to.be.true
 
-		context.only "Tuple type", ->
+		context "Tuple type", ->
 
 			it "should throw an error when Tuple is used as a function", ->
 				expect(-> isType(1, Tuple)).to.throw("'Tuple' must have at least 2 arguments.")
@@ -608,11 +608,29 @@ describe "isType", ->
 				it "TypedSet used as a function should throw an error.", ->
 					expect(-> isType(1, TypedSet)).to.throw("'TypedSet' must have exactly 1 argument.")
 
-				it "TypedSet([]) should return Set type.", ->
-					expect(TypedSet([])).to.equal(Set)
+				it "TypedSet([]) should return a TypedSet and log a warning.", ->
+					warnSpy.resetHistory()
+					t = TypedSet([])
+					expect(t.constructor.name).to.equal("TypedSet")
+					expect(t.type).to.eql([]) # eql is deep equal
+					expect(warnSpy.withArgs("Use 'Set' type instead of a TypedSet
+											with values of any type.").calledOnce).to.be.true
 
-				it "TypedSet(AnyType) should return Set type.", ->
-					expect(TypedSet(AnyType)).to.equal(Set)
+				it "TypedSet(AnyType) should return a TypedSet and log a warning.", ->
+					warnSpy.resetHistory()
+					t = TypedSet(AnyType)
+					expect(t.constructor.name).to.equal("TypedSet")
+					expect(t.type).to.eql(AnyType) # eql is deep equal
+					expect(warnSpy.withArgs("Use 'Set' type instead of a TypedSet
+											with values of any type.").calledOnce).to.be.true
+
+				it "TypedSet(AnyType()) should return a TypedSet and log a warning.", ->
+					warnSpy.resetHistory()
+					t = TypedSet(AnyType())
+					expect(t.constructor.name).to.equal("TypedSet")
+					expect(t.type).to.eql(AnyType()) # eql is deep equal
+					expect(warnSpy.withArgs("Use 'Set' type instead of a TypedSet
+											with values of any type.").calledOnce).to.be.true
 
 			context "Native type elements", ->
 
@@ -688,17 +706,53 @@ describe "isType", ->
 				it "TypedMap used as a function should throw an error.", ->
 					expect(-> isType(1, TypedMap)).to.throw("'TypedMap' must have at least 1 argument.")
 
-				it "TypedMap([]) should return Map type.", ->
-					expect(TypedMap([])).to.equal(Map)
+				it "TypedMap([]) should return a TypedMap and log a warning.", ->
+					warnSpy.resetHistory()
+					t = TypedMap([])
+					expect(t.constructor.name).to.equal("TypedMap")
+					expect(t.valuesType).to.eql([]) # eql is deep equal
+					expect(warnSpy.withArgs("Use 'Map' type instead of a TypedMap
+											with values of any type.").calledOnce).to.be.true
 
-				it "TypedMap([], []) should return Map type.", ->
-					expect(TypedMap([], [])).to.equal(Map)
+				it "TypedMap([], []) should return a TypedMap and log a warning.", ->
+					warnSpy.resetHistory()
+					t = TypedMap([], [])
+					expect(t.constructor.name).to.equal("TypedMap")
+					expect([t.valuesType, t.keysType]).to.eql([[], []]) # eql is deep equal
+					expect(warnSpy.withArgs("Use 'Map' type instead of a TypedMap
+											with keys and values of any type.").calledOnce).to.be.true
 
-				it "TypedMap(AnyType) should return Map type.", ->
-					expect(TypedMap(AnyType)).to.equal(Map)
+				it "TypedMap(AnyType) should return a TypedMap and log a warning.", ->
+					warnSpy.resetHistory()
+					t = TypedMap(AnyType)
+					expect(t.constructor.name).to.equal("TypedMap")
+					expect(t.valuesType).to.eql(AnyType) # eql is deep equal
+					expect(warnSpy.withArgs("Use 'Map' type instead of a TypedMap
+											with values of any type.").calledOnce).to.be.true
 
-				it "TypedMap(AnyType, AnyType) should return Map type.", ->
-					expect(TypedMap(AnyType, AnyType)).to.equal(Map)
+				it "TypedMap(AnyType, AnyType) should return a TypedMap and log a warning.", ->
+					warnSpy.resetHistory()
+					t = TypedMap(AnyType, AnyType)
+					expect(t.constructor.name).to.equal("TypedMap")
+					expect([t.valuesType, t.keysType]).to.eql([AnyType, AnyType]) # eql is deep equal
+					expect(warnSpy.withArgs("Use 'Map' type instead of a TypedMap
+											with keys and values of any type.").calledOnce).to.be.true
+
+				it "TypedMap(AnyType()) should return a TypedMap and log a warning.", ->
+					warnSpy.resetHistory()
+					t = TypedMap(AnyType())
+					expect(t.constructor.name).to.equal("TypedMap")
+					expect(t.valuesType).to.eql(AnyType()) # eql is deep equal
+					expect(warnSpy.withArgs("Use 'Map' type instead of a TypedMap
+											with values of any type.").calledOnce).to.be.true
+
+				it "TypedMap(AnyType(), AnyType()) should return a TypedMap and log a warning.", ->
+					warnSpy.resetHistory()
+					t = TypedMap(AnyType(), AnyType())
+					expect(t.constructor.name).to.equal("TypedMap")
+					expect([t.valuesType, t.keysType]).to.eql([AnyType(), AnyType()]) # eql is deep equal
+					expect(warnSpy.withArgs("Use 'Map' type instead of a TypedMap
+											with keys and values of any type.").calledOnce).to.be.true
 
 			context "Native type elements", ->
 
