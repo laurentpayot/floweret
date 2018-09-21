@@ -171,8 +171,8 @@ describe "isType", ->
 				expect(maybe([])).to.eql([undefined, null, []]) # eql is deep equal
 				expect(warnSpy.withArgs("AnyType is not needed as 'maybe' argument.").calledOnce).to.be.true
 
-			it "maybe(AnyType) should return empty array.", ->
-				warnSpy.resetHistory()
+			# it "maybe(AnyType) should return empty array.", ->
+			# 	warnSpy.resetHistory()
 				expect(maybe(AnyType)).to.eql([undefined, null, AnyType]) # eql is deep equal
 				expect(warnSpy.withArgs("AnyType is not needed as 'maybe' argument.").calledOnce).to.be.true
 
@@ -475,7 +475,7 @@ describe "isType", ->
 				expect(isType(0, Natural)).to.be.true
 				expect(isType(-0, Natural)).to.be.true
 
-		context "Tuple type", ->
+		context.only "Tuple type", ->
 
 			it "should throw an error when Tuple is used as a function", ->
 				expect(-> isType(1, Tuple)).to.throw("'Tuple' must have at least 2 arguments.")
@@ -485,26 +485,29 @@ describe "isType", ->
 
 			context "Any type elements", ->
 
-				it "Tuple of [] should return array of empty elements", ->
+				it "Tuple of [] should return a Tuple and log a warning.", ->
+					warnSpy.resetHistory()
 					t = Tuple([], [])
-					expect(t).to.be.an('array').that.is.not.empty
-					expect(t).to.have.lengthOf(2)
-					expect(t[0]).to.be.undefined
-					expect(t[1]).to.be.undefined
+					expect(t.constructor.name).to.equal("Tuple")
+					expect(t.types).to.eql([[], []]) # eql is deep equal
+					expect(warnSpy.withArgs("Use 'Array(2)' type instead of a Tuple
+											of 2 values of any type'.").calledOnce).to.be.true
 
 				it "Tuple of AnyType should return array of empty elements", ->
+					warnSpy.resetHistory()
 					t = Tuple(AnyType, AnyType)
-					expect(t).to.be.an('array').that.is.not.empty
-					expect(t).to.have.lengthOf(2)
-					expect(t[0]).to.be.undefined
-					expect(t[1]).to.be.undefined
+					expect(t.constructor.name).to.equal("Tuple")
+					expect(t.types).to.eql([AnyType, AnyType]) # eql is deep equal
+					expect(warnSpy.withArgs("Use 'Array(2)' type instead of a Tuple
+											of 2 values of any type'.").calledOnce).to.be.true
 
 				it "Tuple of AnyType() should return array of empty elements", ->
+					warnSpy.resetHistory()
 					t = Tuple(AnyType(), AnyType())
-					expect(t).to.be.an('array').that.is.not.empty
-					expect(t).to.have.lengthOf(2)
-					expect(t[0]).to.be.undefined
-					expect(t[1]).to.be.undefined
+					expect(t.constructor.name).to.equal("Tuple")
+					expect(t.types).to.eql([AnyType(), AnyType()]) # eql is deep equal
+					expect(warnSpy.withArgs("Use 'Array(2)' type instead of a Tuple
+											of 2 values of any type'.").calledOnce).to.be.true
 
 
 			context "Native type elements", ->
