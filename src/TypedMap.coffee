@@ -7,9 +7,13 @@ class TypedMap extends CustomType
 	constructor: (t1, t2) ->
 		super(arguments, 1, 2) # 1 or 2 arguments
 		if arguments.length is 1
-			if isAnyType(t1) then return Map else @valuesType = t1 # return needed
+			CustomType.warn "Use 'Map' type instead of a #{@constructor.name}
+							with values of any type." if isAnyType(t1)
+			@valuesType = t1
 		else
-			if isAnyType(t1) and isAnyType(t2) then return Map else [@keysType, @valuesType] = [t1, t2] # return needed
+			CustomType.warn "Use 'Map' type instead of a #{@constructor.name}
+							with keys and values of any type." if isAnyType(t1) and isAnyType(t2)
+			[@keysType, @valuesType] = [t1, t2]
 	validate: (val) ->
 		return false unless val?.constructor is Map
 		switch
