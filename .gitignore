@@ -5,6 +5,7 @@ node_modules
 .idea
 .vscode/*.json
 !.vscode/launch.json
+!.vscode/tasks.json
 *.suo
 *.ntvs*
 *.njsproj
