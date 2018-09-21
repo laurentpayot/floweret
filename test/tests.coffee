@@ -19,6 +19,9 @@ Tuple = require '../dist/Tuple'
 TypedObject = require '../dist/TypedObject'
 TypedSet = require '../dist/TypedSet'
 TypedMap = require '../dist/TypedMap'
+And = require '../dist/and'
+Or = require '../dist/or'
+Not = require '../dist/not'
 
 
 NATIVE_TYPES = [undefined, null, NaN, Boolean, Number, String, Array, Date,
@@ -485,7 +488,7 @@ describe "isType", ->
 
 			context "Any type elements", ->
 
-				it "Tuple of [] should return a Tuple and log a warning.", ->
+				it "Tuple of [] should return a Tuple instance and log a warning.", ->
 					warnSpy.resetHistory()
 					t = Tuple([], [])
 					expect(t.constructor.name).to.equal("Tuple")
@@ -608,7 +611,7 @@ describe "isType", ->
 				it "TypedSet used as a function should throw an error.", ->
 					expect(-> isType(1, TypedSet)).to.throw("'TypedSet' must have exactly 1 argument.")
 
-				it "TypedSet([]) should return a TypedSet and log a warning.", ->
+				it "TypedSet([]) should return a TypedSet instance and log a warning.", ->
 					warnSpy.resetHistory()
 					t = TypedSet([])
 					expect(t.constructor.name).to.equal("TypedSet")
@@ -616,7 +619,7 @@ describe "isType", ->
 					expect(warnSpy.withArgs("Use 'Set' type instead of a TypedSet
 											with values of any type.").calledOnce).to.be.true
 
-				it "TypedSet(AnyType) should return a TypedSet and log a warning.", ->
+				it "TypedSet(AnyType) should return a TypedSet instance and log a warning.", ->
 					warnSpy.resetHistory()
 					t = TypedSet(AnyType)
 					expect(t.constructor.name).to.equal("TypedSet")
@@ -624,7 +627,7 @@ describe "isType", ->
 					expect(warnSpy.withArgs("Use 'Set' type instead of a TypedSet
 											with values of any type.").calledOnce).to.be.true
 
-				it "TypedSet(AnyType()) should return a TypedSet and log a warning.", ->
+				it "TypedSet(AnyType()) should return a TypedSet instance and log a warning.", ->
 					warnSpy.resetHistory()
 					t = TypedSet(AnyType())
 					expect(t.constructor.name).to.equal("TypedSet")
@@ -706,7 +709,7 @@ describe "isType", ->
 				it "TypedMap used as a function should throw an error.", ->
 					expect(-> isType(1, TypedMap)).to.throw("'TypedMap' must have at least 1 argument.")
 
-				it "TypedMap([]) should return a TypedMap and log a warning.", ->
+				it "TypedMap([]) should return a TypedMap instance and log a warning.", ->
 					warnSpy.resetHistory()
 					t = TypedMap([])
 					expect(t.constructor.name).to.equal("TypedMap")
@@ -714,7 +717,7 @@ describe "isType", ->
 					expect(warnSpy.withArgs("Use 'Map' type instead of a TypedMap
 											with values of any type.").calledOnce).to.be.true
 
-				it "TypedMap([], []) should return a TypedMap and log a warning.", ->
+				it "TypedMap([], []) should return a TypedMap instance and log a warning.", ->
 					warnSpy.resetHistory()
 					t = TypedMap([], [])
 					expect(t.constructor.name).to.equal("TypedMap")
@@ -722,7 +725,7 @@ describe "isType", ->
 					expect(warnSpy.withArgs("Use 'Map' type instead of a TypedMap
 											with keys and values of any type.").calledOnce).to.be.true
 
-				it "TypedMap(AnyType) should return a TypedMap and log a warning.", ->
+				it "TypedMap(AnyType) should return a TypedMap instance and log a warning.", ->
 					warnSpy.resetHistory()
 					t = TypedMap(AnyType)
 					expect(t.constructor.name).to.equal("TypedMap")
@@ -730,7 +733,7 @@ describe "isType", ->
 					expect(warnSpy.withArgs("Use 'Map' type instead of a TypedMap
 											with values of any type.").calledOnce).to.be.true
 
-				it "TypedMap(AnyType, AnyType) should return a TypedMap and log a warning.", ->
+				it "TypedMap(AnyType, AnyType) should return a TypedMap instance and log a warning.", ->
 					warnSpy.resetHistory()
 					t = TypedMap(AnyType, AnyType)
 					expect(t.constructor.name).to.equal("TypedMap")
@@ -738,7 +741,7 @@ describe "isType", ->
 					expect(warnSpy.withArgs("Use 'Map' type instead of a TypedMap
 											with keys and values of any type.").calledOnce).to.be.true
 
-				it "TypedMap(AnyType()) should return a TypedMap and log a warning.", ->
+				it "TypedMap(AnyType()) should return a TypedMap instance and log a warning.", ->
 					warnSpy.resetHistory()
 					t = TypedMap(AnyType())
 					expect(t.constructor.name).to.equal("TypedMap")
@@ -746,7 +749,7 @@ describe "isType", ->
 					expect(warnSpy.withArgs("Use 'Map' type instead of a TypedMap
 											with values of any type.").calledOnce).to.be.true
 
-				it "TypedMap(AnyType(), AnyType()) should return a TypedMap and log a warning.", ->
+				it "TypedMap(AnyType(), AnyType()) should return a TypedMap instance and log a warning.", ->
 					warnSpy.resetHistory()
 					t = TypedMap(AnyType(), AnyType())
 					expect(t.constructor.name).to.equal("TypedMap")
@@ -1295,3 +1298,15 @@ describe "fn", ->
 					(a, b) -> a + b # missing default b value
 				expect( -> f(1))
 				.to.throw("Result (NaN) should be of type 'Number' instead of NaN.")
+
+	context.skip "Logical operators", ->
+
+		context "And", ->
+
+			it "And with [] values should return an And instance and log a warning.", ->
+				warnSpy.resetHistory()
+				t = And(Number, [])
+				expect(t.constructor.name).to.equal("And")
+				expect(t.types).to.eql([Number, []]) # eql is deep equal
+				expect(warnSpy.withArgs("AnyType is not needed as
+										'And' argument number #{2}.").calledOnce).to.be.true
