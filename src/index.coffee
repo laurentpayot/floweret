@@ -4,16 +4,11 @@ CustomType = require './CustomType'
 AnyTypeHelper = require './AnyType'
 EtcHelper = require './etc'
 
-class InvalidSignatureError extends Error
-	constructor: (msg) -> super("Floweret invalid signature: " + msg)
-
-class TypeMatchError extends Error
-	constructor: (msg) -> super("Floweret type not matching: " + msg)
+class InvalidSignature extends Error
+class TypeMismatch extends Error
 
 # trows customized error
-error = (msg) -> switch msg[0]
-	when '@' then throw new InvalidSignatureError msg[1..]
-	else throw new TypeMatchError msg
+error = (msg) -> if msg[0] is '@' then throw new InvalidSignature msg[1..] else throw new TypeMismatch msg
 
 Etc = EtcHelper().constructor
 AnyType = AnyTypeHelper().constructor

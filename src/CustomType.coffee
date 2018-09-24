@@ -1,11 +1,10 @@
-class InvalidTypeError extends Error
-	constructor: (msg) -> super("Floweret invalid type: " + msg)
+class InvalidType extends Error
 
 s = (n) -> if n is 1 then '' else 's'
 
 class CustomType
 	# static methods
-	@error: (msg) -> throw new InvalidTypeError msg
+	@error: (msg) -> throw new InvalidType msg
 	@warn: (msg) -> console.warn("Floweret type:", msg) unless process?.env.NODE_ENV is 'production'
 	@createHelper: (childClass) ->
 		h = -> new childClass(arguments...)
