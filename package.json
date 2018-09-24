@@ -26,12 +26,13 @@
     "node": ">=7.6.0"
   },
   "scripts": {
-    "build": "rm -rf dist/ && coffee -cb -o dist/ src/",
+    "build": "rm -rf dist/ && coffee -cmb -o dist/ src/",
     "minify": "uglifyjs -cm --comments -o dist/floweret.min.js -- dist/index.js",
-    "build-tests": "npm run build && npm run minify && coffee -cm test/tests.coffee",
-    "test": "npm run build-tests && mocha",
+    "build-tests": "coffee -cm test/tests.coffee",
+    "build-all": "npm run build && npm run minify && npm run build-tests",
+    "test": "npm run build-all && mocha",
     "link": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm link",
-    "publish": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm publish"
+    "publish": "npm run test && cp package.json dist && cp *.md dist && cd dist && rm *.js.map && npm publish"
   },
   "devDependencies": {
     "chai": "^4.1.2",

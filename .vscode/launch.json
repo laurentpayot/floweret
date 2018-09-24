@@ -7,7 +7,23 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "Tests",
+			"name": "Tests (full build)",
+			"preLaunchTask": "build-all",
+			"program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+			"args": [
+				"-u",
+				"tdd",
+				"--timeout",
+				"999999",
+				"--colors",
+				"${workspaceFolder}/test"
+			],
+			"internalConsoleOptions": "openOnSessionStart"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Tests (Mocha only)",
 			"preLaunchTask": "build-tests",
 			"program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
 			"args": [
