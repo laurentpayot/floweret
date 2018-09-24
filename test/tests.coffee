@@ -1299,7 +1299,7 @@ describe "fn", ->
 				expect( -> f(1))
 				.to.throw("Result (NaN) should be of type 'Number' instead of NaN.")
 
-	context.skip "Logical operators", ->
+	context "Logical operators", ->
 
 		context "And", ->
 
@@ -1309,4 +1309,4 @@ describe "fn", ->
 				expect(t.constructor.name).to.equal("And")
 				expect(t.types).to.eql([Number, []]) # eql is deep equal
 				expect(warnSpy.withArgs("AnyType is not needed as
-										'And' argument number #{2}.").calledOnce).to.be.true
+										'and' argument number #{2}.").calledOnce).to.be.true
