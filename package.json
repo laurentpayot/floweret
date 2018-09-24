@@ -1,6 +1,6 @@
 {
   "name": "floweret",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Runtime type-checking for everyone.",
   "author": "Laurent Payot",
   "license": "MIT",
@@ -28,8 +28,8 @@
   "scripts": {
     "build": "rm -rf dist/ && coffee -cb -o dist/ src/",
     "minify": "uglifyjs -cm --comments -o dist/floweret.min.js -- dist/index.js",
-    "build-tests": "coffee -cb test/tests.coffee",
-    "test": "npm run build && npm run minify && npm run build-tests && mocha",
+    "build-tests": "npm run build && npm run minify && coffee -cm test/tests.coffee",
+    "test": "npm run build-tests && mocha",
     "link": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm link",
     "publish": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm publish"
   },

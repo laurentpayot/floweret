@@ -7,7 +7,7 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "Mocha Tests",
+			"name": "Tests",
 			"preLaunchTask": "build-tests",
 			"program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
 			"args": [
@@ -19,19 +19,6 @@
 				"${workspaceFolder}/test"
 			],
 			"internalConsoleOptions": "openOnSessionStart"
-		},
-		{
-			"type": "node",
-			"request": "launch",
-			"name": "Tests",
-			"cwd": "${workspaceFolder}",
-			"runtimeExecutable": "npm",
-			"runtimeArgs": [
-				"run-script",
-				"test"
-			],
-			"port": 9229,
-			"timeout": 20000 // for slow configs
 		}
 	]
 }

@@ -21,3 +21,4 @@ yarn-error.log*
 # ignoring generated JS files
 dist
 test/tests.js
+*.js.map
