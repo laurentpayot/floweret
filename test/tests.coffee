@@ -172,14 +172,14 @@ describe "isType", ->
 			it "maybe([]) should return an array and a warning.", ->
 				warnSpy.resetHistory()
 				expect(maybe([])).to.eql([undefined, null, []]) # eql is deep equal
-				expect(warnSpy.calledOnceWith(
+				expect(warnSpy.calledOnceWithExactly(
 					"AnyType is not needed as 'maybe' argument."
 				)).to.be.true
 
 			it "maybe(AnyType) should return empty array.", ->
 				warnSpy.resetHistory()
 				expect(maybe(AnyType)).to.eql([undefined, null, AnyType]) # eql is deep equal
-				expect(warnSpy.calledOnceWith(
+				expect(warnSpy.calledOnceWithExactly(
 					"AnyType is not needed as 'maybe' argument."
 				)).to.be.true
 
@@ -497,7 +497,7 @@ describe "isType", ->
 					t = Tuple([], [])
 					expect(t.constructor.name).to.equal("Tuple")
 					expect(t.types).to.eql([[], []]) # eql is deep equal
-					expect(warnSpy.calledOnceWith(
+					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Array(2)' type instead of a Tuple of 2 values of any type'."
 					)).to.be.true
 
@@ -506,7 +506,7 @@ describe "isType", ->
 					t = Tuple(AnyType, AnyType)
 					expect(t.constructor.name).to.equal("Tuple")
 					expect(t.types).to.eql([AnyType, AnyType]) # eql is deep equal
-					expect(warnSpy.calledOnceWith(
+					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Array(2)' type instead of a Tuple of 2 values of any type'."
 					)).to.be.true
 
@@ -515,7 +515,7 @@ describe "isType", ->
 					t = Tuple(AnyType(), AnyType())
 					expect(t.constructor.name).to.equal("Tuple")
 					expect(t.types).to.eql([AnyType(), AnyType()]) # eql is deep equal
-					expect(warnSpy.calledOnceWith(
+					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Array(2)' type instead of a Tuple of 2 values of any type'."
 					)).to.be.true
 
@@ -623,7 +623,7 @@ describe "isType", ->
 					t = TypedSet([])
 					expect(t.constructor.name).to.equal("TypedSet")
 					expect(t.type).to.eql([]) # eql is deep equal
-					expect(warnSpy.calledOnceWith(
+					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Set' type instead of a TypedSet with values of any type."
 					)).to.be.true
 
@@ -632,7 +632,7 @@ describe "isType", ->
 					t = TypedSet(AnyType)
 					expect(t.constructor.name).to.equal("TypedSet")
 					expect(t.type).to.eql(AnyType) # eql is deep equal
-					expect(warnSpy.calledOnceWith(
+					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Set' type instead of a TypedSet with values of any type."
 					)).to.be.true
 
@@ -641,7 +641,7 @@ describe "isType", ->
 					t = TypedSet(AnyType())
 					expect(t.constructor.name).to.equal("TypedSet")
 					expect(t.type).to.eql(AnyType()) # eql is deep equal
-					expect(warnSpy.calledOnceWith(
+					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Set' type instead of a TypedSet with values of any type."
 					)).to.be.true
 
@@ -724,7 +724,7 @@ describe "isType", ->
 					t = TypedMap([])
 					expect(t.constructor.name).to.equal("TypedMap")
 					expect(t.valuesType).to.eql([]) # eql is deep equal
-					expect(warnSpy.calledOnceWith(
+					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with values of any type."
 					)).to.be.true
 
@@ -733,7 +733,7 @@ describe "isType", ->
 					t = TypedMap([], [])
 					expect(t.constructor.name).to.equal("TypedMap")
 					expect([t.valuesType, t.keysType]).to.eql([[], []]) # eql is deep equal
-					expect(warnSpy.calledOnceWith(
+					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with keys and values of any type."
 					)).to.be.true
 
@@ -742,7 +742,7 @@ describe "isType", ->
 					t = TypedMap(AnyType)
 					expect(t.constructor.name).to.equal("TypedMap")
 					expect(t.valuesType).to.eql(AnyType) # eql is deep equal
-					expect(warnSpy.calledOnceWith(
+					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with values of any type."
 					)).to.be.true
 
@@ -751,7 +751,7 @@ describe "isType", ->
 					t = TypedMap(AnyType, AnyType)
 					expect(t.constructor.name).to.equal("TypedMap")
 					expect([t.valuesType, t.keysType]).to.eql([AnyType, AnyType]) # eql is deep equal
-					expect(warnSpy.calledOnceWith(
+					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with keys and values of any type."
 					)).to.be.true
 
@@ -760,7 +760,7 @@ describe "isType", ->
 					t = TypedMap(AnyType())
 					expect(t.constructor.name).to.equal("TypedMap")
 					expect(t.valuesType).to.eql(AnyType()) # eql is deep equal
-					expect(warnSpy.calledOnceWith(
+					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with values of any type."
 					)).to.be.true
 
@@ -769,7 +769,7 @@ describe "isType", ->
 					t = TypedMap(AnyType(), AnyType())
 					expect(t.constructor.name).to.equal("TypedMap")
 					expect([t.valuesType, t.keysType]).to.eql([AnyType(), AnyType()]) # eql is deep equal
-					expect(warnSpy.calledOnceWith(
+					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with keys and values of any type."
 					)).to.be.true
 
@@ -1324,15 +1324,23 @@ describe "fn", ->
 				t = And(Number, [])
 				expect(t.constructor.name).to.equal("And")
 				expect(t.types).to.eql([Number, []]) # eql is deep equal
-				expect(warnSpy.calledOnceWith(
+				expect(warnSpy.calledOnceWithExactly(
 					"AnyType is not needed as 'and' argument number #{2}."
 				)).to.be.true
 
-			it "And with undefined value should return an And instance and log warnings.", ->
+			it "And with undefined value should return an And instance and log a warning.", ->
 				warnSpy.resetHistory()
 				t = And(undefined, Number)
 				expect(t.constructor.name).to.equal("And")
 				expect(t.types).to.eql([undefined, Number]) # eql is deep equal
-				expect(warnSpy.calledOnceWith(
+				expect(warnSpy.calledOnceWithExactly(
 					"Literal undefined (undefined) not needed as 'and' argument number 1."
 				)).to.be.true
+
+			it "And with literal values should return an And instance and log warnings.", ->
+				warnSpy.resetHistory()
+				t = And(undefined, null, 1, "foo", true, NaN)
+				expect(t.constructor.name).to.equal("And")
+				expect(t.types).to.eql([undefined, null, 1, "foo", true, NaN]) # eql is deep equal
+				expect(warnSpy.callCount).to.equal(6)
+				expect(warnSpy.alwaysCalledWithMatch("Literal")).to.be.true
