@@ -7,11 +7,11 @@ Runtime type-checking for everyone.
 Features
 --------
 
-* Easy: use native Javascript types.
-* Lightweight: around 2 kb minified and gzipped. No dependencies.
-* Powerfull: rest parameters type and more.
-* Efficient: direct type comparison, no string to parse.
-* Customizable: create your own types.
+* **Easy**: use native Javascript types, highlighted by your editor of choice.
+* **Lightweight**: around 2 kb minified and gzipped. No dependencies.
+* **Efficient**: direct type comparison, no string to parse.
+* **Powerfull**: logical operators, tuples, regular expressions, rest parameters and more…
+* **Customizable**: create your own types for your own needs.
 
 Install
 -------
@@ -28,13 +28,14 @@ Usage
 > fn( [ <argument 1 type\>, <argument 2 type\>, …, <argument n type\> ], <result type\>, <function\> )
 
 To add a signature to a function, wrap the function with the `fn` function.
+`fn` arguments are first the *array* of input types, followed by the result type, and finally the function itself:
 
 ### Javascript
 
 ```js
 import { fn } from 'floweret'
 
-f = fn(
+add = fn(
   [Number, Number], Number,
   function(a, b) {return a + b}
 )
@@ -44,7 +45,7 @@ or using the ES2015 arrow function syntax:
 ```js
 import { fn } from 'floweret'
 
-f = fn(
+add = fn(
   [Number, Number], Number,
   (a, b) => a + b
 )
@@ -57,8 +58,8 @@ You can ommit the `fn` parentheses, resulting in a decorator-like syntax:
 ```coffee
 import { fn } from 'floweret'
 
-f = fn [Number, Number], Number,
-    (a, b) -> a + b
+add = fn [Number, Number], Number,
+  (a, b) -> a + b
 ```
 
 Type syntax
@@ -71,7 +72,7 @@ For readability, all examples below will use the ES2015 arrow function syntax.
 > <native type\>
 
 All native JavaScript type constructors are allowed as type:
-`Number`, `String`, `Array`, `Object`, `Boolean`, `undefined`, `null`, `Promise`, `Set`, `Map`, `WeakMap`, `WeakSet`, etc.
+`Number`, `String`, `Array`, `Object`, `Boolean`, `RegExp`, `undefined`, `null`, `Promise`, `Set`, `Map`, `WeakMap`, `WeakSet`, etc.
 
 ```js
 f = fn(
@@ -123,9 +124,9 @@ f(5, '1') // Type error: Argument number 2 (1) should be of type undefined or nu
 
 ### Literal type
 
-> <string or number or boolean\>
+> <string or number or boolean or undefined or null or NaN\>
 
-Literals can only be strings, numbers or booleans. Literal are useful when used inside an union list.
+A literal can only be a string, a number, a booleans or be equal to undefined or null or NaN. Literals are useful when used inside an union list.
 
 ```js
 f = fn(
@@ -136,6 +137,15 @@ f = fn(
 f('production') // true or false
 f('staging')    // Type error: Argument number 1 (staging) should be literal 'development' or literal 'production' instead of String.
 ```
+
+### Regular Expressions
+
+> <regular expression\>
+
+When the type is a regular expression, if the value is a string it will be tested to see if it matches the regular expression.
+:warning: Regular expressions are slow so if you need to check a lot of data consider creating a custom type (see below) with a `validate` method using String prototype methods instead.
+
+*Documentation in progress…*
 
 ### Typed Array
 

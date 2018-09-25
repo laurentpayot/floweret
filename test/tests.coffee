@@ -973,6 +973,20 @@ describe "isType", ->
 				expect(isType(false, t)).to.be.true
 				expect(isType(NaN, t)).to.be.true
 
+	context "Regular expressions", ->
+
+		it "should return true only for a regular expression value when type is RegExp", ->
+			expect(isType(/foo/, RegExp)).to.be.true
+			expect(isType("foo", RegExp)).to.be.false
+
+		it "should test the value when type is a regular expression instance", ->
+			expect(isType("foo", /foo/)).to.be.true
+			expect(isType("bar", /foo/)).to.be.false
+			expect(isType("", /foo/)).to.be.false
+			expect(isType(/foo/, /foo/)).to.be.false
+			expect(isType(1, /foo/)).to.be.false
+
+
 ###
 	███████╗███╗   ██╗
 	██╔════╝████╗  ██║

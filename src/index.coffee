@@ -37,17 +37,18 @@ isType = (val, type) -> if Array.isArray(type) # NB: special Array case http://w
 				type.some((t) -> isType(val, t)) # union of types, e.g.: `[Object, null]`
 else switch type?.constructor
 	when undefined, String, Number, Boolean # literal type or undefined or null or NaN (NaN.constuctor is Number!)
-		if Number.isNaN type then Number.isNaN val else val is type
+		if Number.isNaN(type) then Number.isNaN(val) else val is type
 	when Function
 		if type.rootClass is CustomType # type is a helper
 			type().validate(val) # using default helper arguments
 		else # constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
-			if Number.isNaN val then false else val?.constructor is type # NB: NaN.constuctor is Number!
+			not Number.isNaN(val) and val?.constructor is type # NB: NaN.constuctor is Number!
 	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
 		for k, v of type
 			return false unless isType(val[k], v)
 		true
+	when RegExp then typeof val is 'string' and type.test(val)
 	else
 		if type instanceof CustomType
 			type.validate(val)
