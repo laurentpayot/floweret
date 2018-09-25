@@ -1325,7 +1325,7 @@ describe "fn", ->
 				expect(t.constructor.name).to.equal("And")
 				expect(t.types).to.eql([Number, []]) # eql is deep equal
 				expect(warnSpy.calledOnceWithExactly(
-					"AnyType is not needed as 'and' argument number #{2}."
+					"AnyType is not needed as 'and' argument number 2."
 				)).to.be.true
 
 			it "And with undefined value should return an And instance and log a warning.", ->
@@ -1344,3 +1344,25 @@ describe "fn", ->
 				expect(t.types).to.eql([undefined, null, 1, "foo", true, NaN]) # eql is deep equal
 				expect(warnSpy.callCount).to.equal(6)
 				expect(warnSpy.alwaysCalledWithMatch("Literal")).to.be.true
+
+			it "isType with and() should return true only if value in intersection of array types", ->
+				t = And(Array(Number), Array(2))
+				expect(isType([1, 2], t)).to.be.true
+				expect(isType([1], t)).to.be.false
+				expect(isType([1, "two"], t)).to.be.false
+
+			it "isType with and() should return true only if value in intersection of unions of literal types", ->
+				t = And(["foo", "bar"], ["bar", "baz"])
+				expect(isType("bar", t)).to.be.true
+				expect(isType("foo", t)).to.be.false
+				expect(isType("baz", t)).to.be.false
+
+		context.only "Or", ->
+
+			it "Or with [] values should return an array and log a warning.", ->
+				warnSpy.resetHistory()
+				t = Or(Number, [])
+				expect(t).to.eql([Number, []]) # eql is deep equal
+				expect(warnSpy.calledOnceWithExactly(
+					"AnyType is inadequate as 'or' argument number 2."
+				)).to.be.true
