@@ -21,18 +21,15 @@ typeOf = (val) -> if val in [undefined, null] or Number.isNaN(val) then '' + val
 isType = (val, type) -> if Array.isArray(type) # NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
 	switch type.length
 		when 0 then true # any type: `[]`
-		when 1
-			return false unless Array.isArray(val)
-			return true if isAnyType(type[0])
-			unless Object.values(type).length # array of one empty value: sized array `Array(1)`
-				val.length is 1
-			else # typed array type, e.g.: `Array(String)`
-				val.every((e) -> isType(e, type[0]))
+		when 1 then switch
+			when not Array.isArray(val) then false
+			when isAnyType(type[0]) then true
+			when not Object.values(type).length then val.length is 1 # array of one empty value: sized array `Array(1)`
+			else val.every((e) -> isType(e, type[0])) # typed array type, e.g.: `Array(String)`
 		else
 			# NB: checking two first values instead of `Object.values(type).length` for performance reasons
 			if type[0] is undefined and type[1] is undefined # array of empty values: sized array, e.g.: `Array(1000)`)
-				return false unless Array.isArray(val)
-				val.length is type.length
+				Array.isArray(val) and val.length is type.length
 			else
 				type.some((t) -> isType(val, t)) # union of types, e.g.: `[Object, null]`
 else switch type?.constructor
@@ -48,7 +45,7 @@ else switch type?.constructor
 		for k, v of type
 			return false unless isType(val[k], v)
 		true
-	when RegExp then typeof val is 'string' and type.test(val)
+	when RegExp then val?.constructor is String and type.test(val)
 	else
 		if type instanceof CustomType
 			type.validate(val)
