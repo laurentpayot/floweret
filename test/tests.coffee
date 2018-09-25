@@ -893,6 +893,86 @@ describe "isType", ->
 			expect(-> isType(val, Symbol("foo")))
 			.to.throw("Type can not be an instance of Symbol. Use Symbol as type instead.") for val in VALUES
 
+	context "Logical operators", ->
+
+		context "And", ->
+
+			it "And with a single value should throw an error", ->
+				expect(-> And(1)).to.throw("'and' must have at least 2 arguments.")
+
+			it "And with [] values should return an And instance and log a warning.", ->
+				warnSpy.resetHistory()
+				t = And(Number, [])
+				expect(t.constructor.name).to.equal("And")
+				expect(t.types).to.eql([Number, []])
+				expect(warnSpy.calledOnceWithExactly(
+					"AnyType is not needed as 'and' argument number 2."
+				)).to.be.true
+
+			it "And with undefined value should return an And instance and log a warning.", ->
+				warnSpy.resetHistory()
+				t = And(undefined, Number)
+				expect(t.constructor.name).to.equal("And")
+				expect(t.types).to.eql([undefined, Number])
+				expect(warnSpy.calledOnceWithExactly(
+					"Literal undefined (undefined) not needed as 'and' argument number 1."
+				)).to.be.true
+
+			it "And with literal values should return an And instance and log warnings.", ->
+				warnSpy.resetHistory()
+				t = And(undefined, null, 1, "foo", true, NaN)
+				expect(t.constructor.name).to.equal("And")
+				expect(t.types).to.eql([undefined, null, 1, "foo", true, NaN])
+				expect(warnSpy.callCount).to.equal(6)
+				expect(warnSpy.alwaysCalledWithMatch("Literal")).to.be.true
+
+			it "isType with and() should return true only if value in intersection of array types", ->
+				t = And(Array(Number), Array(2))
+				expect(isType([1, 2], t)).to.be.true
+				expect(isType([1], t)).to.be.false
+				expect(isType([1, "two"], t)).to.be.false
+
+			it "isType with and() should return true only if value in intersection of unions of literal types", ->
+				t = And(["foo", "bar"], ["bar", "baz"])
+				expect(isType("bar", t)).to.be.true
+				expect(isType("foo", t)).to.be.false
+				expect(isType("baz", t)).to.be.false
+
+		context "Or", ->
+
+			it "Or with a single value should throw an error", ->
+				expect(-> Or(1)).to.throw("'or' must have at least 2 arguments.")
+
+			it "Or with [] values should return an array and log a warning.", ->
+				warnSpy.resetHistory()
+				t = Or(Number, [])
+				expect(t).to.eql([Number, []])
+				expect(warnSpy.calledOnceWithExactly(
+					"AnyType is inadequate as 'or' argument number 2."
+				)).to.be.true
+
+		context "Not", ->
+
+			it "Not with more than a single value should throw an error", ->
+				expect(-> Not(1, 2)).to.throw("'not' must have exactly 1 argument.")
+
+			it "Not with [] value should return a Not instance and log a warning.", ->
+				warnSpy.resetHistory()
+				t = Not([])
+				expect(t.constructor.name).to.equal("Not")
+				expect(t.type).to.eql([])
+				expect(warnSpy.calledOnceWithExactly(
+					"AnyType is inadequate as 'not' argument."
+				)).to.be.true
+
+			it "isType with not() should return true only if value is not of the given type", ->
+				t = Not([String, Number])
+				expect(isType("foo", t)).to.be.false
+				expect(isType(1, t)).to.be.false
+				expect(isType(true, t)).to.be.true
+				expect(isType(false, t)).to.be.true
+				expect(isType(NaN, t)).to.be.true
+
 ###
 	███████╗███╗   ██╗
 	██╔════╝████╗  ██║
@@ -1314,83 +1394,3 @@ describe "fn", ->
 					(a, b) -> a + b # missing default b value
 				expect(-> f(1))
 				.to.throw("Result (NaN) should be of type 'Number' instead of NaN.")
-
-	context "Logical operators", ->
-
-		context "And", ->
-
-			it "And with a single value should throw an error", ->
-				expect(-> And(1)).to.throw("'and' must have at least 2 arguments.")
-
-			it "And with [] values should return an And instance and log a warning.", ->
-				warnSpy.resetHistory()
-				t = And(Number, [])
-				expect(t.constructor.name).to.equal("And")
-				expect(t.types).to.eql([Number, []])
-				expect(warnSpy.calledOnceWithExactly(
-					"AnyType is not needed as 'and' argument number 2."
-				)).to.be.true
-
-			it "And with undefined value should return an And instance and log a warning.", ->
-				warnSpy.resetHistory()
-				t = And(undefined, Number)
-				expect(t.constructor.name).to.equal("And")
-				expect(t.types).to.eql([undefined, Number])
-				expect(warnSpy.calledOnceWithExactly(
-					"Literal undefined (undefined) not needed as 'and' argument number 1."
-				)).to.be.true
-
-			it "And with literal values should return an And instance and log warnings.", ->
-				warnSpy.resetHistory()
-				t = And(undefined, null, 1, "foo", true, NaN)
-				expect(t.constructor.name).to.equal("And")
-				expect(t.types).to.eql([undefined, null, 1, "foo", true, NaN])
-				expect(warnSpy.callCount).to.equal(6)
-				expect(warnSpy.alwaysCalledWithMatch("Literal")).to.be.true
-
-			it "isType with and() should return true only if value in intersection of array types", ->
-				t = And(Array(Number), Array(2))
-				expect(isType([1, 2], t)).to.be.true
-				expect(isType([1], t)).to.be.false
-				expect(isType([1, "two"], t)).to.be.false
-
-			it "isType with and() should return true only if value in intersection of unions of literal types", ->
-				t = And(["foo", "bar"], ["bar", "baz"])
-				expect(isType("bar", t)).to.be.true
-				expect(isType("foo", t)).to.be.false
-				expect(isType("baz", t)).to.be.false
-
-		context "Or", ->
-
-			it "Or with a single value should throw an error", ->
-				expect(-> Or(1)).to.throw("'or' must have at least 2 arguments.")
-
-			it "Or with [] values should return an array and log a warning.", ->
-				warnSpy.resetHistory()
-				t = Or(Number, [])
-				expect(t).to.eql([Number, []])
-				expect(warnSpy.calledOnceWithExactly(
-					"AnyType is inadequate as 'or' argument number 2."
-				)).to.be.true
-
-		context "Not", ->
-
-			it "Not with more than a single value should throw an error", ->
-				expect(-> Not(1, 2)).to.throw("'not' must have exactly 1 argument.")
-
-			it "Not with [] value should return a Not instance and log a warning.", ->
-				warnSpy.resetHistory()
-				t = Not([])
-				expect(t.constructor.name).to.equal("Not")
-				expect(t.type).to.eql([])
-				expect(warnSpy.calledOnceWithExactly(
-					"AnyType is inadequate as 'not' argument."
-				)).to.be.true
-
-			it "isType with not() should return true only if value is not of the given type", ->
-				t = Not([String, Number])
-				expect(isType("foo", t)).to.be.false
-				expect(isType(1, t)).to.be.false
-				expect(isType(true, t)).to.be.true
-				expect(isType(false, t)).to.be.true
-				expect(isType(NaN, t)).to.be.true
