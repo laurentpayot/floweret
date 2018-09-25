@@ -171,14 +171,14 @@ describe "isType", ->
 
 			it "maybe([]) should return an array and a warning.", ->
 				warnSpy.resetHistory()
-				expect(maybe([])).to.eql([undefined, null, []]) # eql is deep equal
+				expect(maybe([])).to.eql([undefined, null, []])
 				expect(warnSpy.calledOnceWithExactly(
 					"AnyType is not needed as 'maybe' argument."
 				)).to.be.true
 
 			it "maybe(AnyType) should return empty array.", ->
 				warnSpy.resetHistory()
-				expect(maybe(AnyType)).to.eql([undefined, null, AnyType]) # eql is deep equal
+				expect(maybe(AnyType)).to.eql([undefined, null, AnyType])
 				expect(warnSpy.calledOnceWithExactly(
 					"AnyType is not needed as 'maybe' argument."
 				)).to.be.true
@@ -496,7 +496,7 @@ describe "isType", ->
 					warnSpy.resetHistory()
 					t = Tuple([], [])
 					expect(t.constructor.name).to.equal("Tuple")
-					expect(t.types).to.eql([[], []]) # eql is deep equal
+					expect(t.types).to.eql([[], []])
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Array(2)' type instead of a Tuple of 2 values of any type'."
 					)).to.be.true
@@ -505,7 +505,7 @@ describe "isType", ->
 					warnSpy.resetHistory()
 					t = Tuple(AnyType, AnyType)
 					expect(t.constructor.name).to.equal("Tuple")
-					expect(t.types).to.eql([AnyType, AnyType]) # eql is deep equal
+					expect(t.types).to.eql([AnyType, AnyType])
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Array(2)' type instead of a Tuple of 2 values of any type'."
 					)).to.be.true
@@ -514,7 +514,7 @@ describe "isType", ->
 					warnSpy.resetHistory()
 					t = Tuple(AnyType(), AnyType())
 					expect(t.constructor.name).to.equal("Tuple")
-					expect(t.types).to.eql([AnyType(), AnyType()]) # eql is deep equal
+					expect(t.types).to.eql([AnyType(), AnyType()])
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Array(2)' type instead of a Tuple of 2 values of any type'."
 					)).to.be.true
@@ -622,7 +622,7 @@ describe "isType", ->
 					warnSpy.resetHistory()
 					t = TypedSet([])
 					expect(t.constructor.name).to.equal("TypedSet")
-					expect(t.type).to.eql([]) # eql is deep equal
+					expect(t.type).to.eql([])
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Set' type instead of a TypedSet with values of any type."
 					)).to.be.true
@@ -631,7 +631,7 @@ describe "isType", ->
 					warnSpy.resetHistory()
 					t = TypedSet(AnyType)
 					expect(t.constructor.name).to.equal("TypedSet")
-					expect(t.type).to.eql(AnyType) # eql is deep equal
+					expect(t.type).to.eql(AnyType)
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Set' type instead of a TypedSet with values of any type."
 					)).to.be.true
@@ -640,7 +640,7 @@ describe "isType", ->
 					warnSpy.resetHistory()
 					t = TypedSet(AnyType())
 					expect(t.constructor.name).to.equal("TypedSet")
-					expect(t.type).to.eql(AnyType()) # eql is deep equal
+					expect(t.type).to.eql(AnyType())
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Set' type instead of a TypedSet with values of any type."
 					)).to.be.true
@@ -723,7 +723,7 @@ describe "isType", ->
 					warnSpy.resetHistory()
 					t = TypedMap([])
 					expect(t.constructor.name).to.equal("TypedMap")
-					expect(t.valuesType).to.eql([]) # eql is deep equal
+					expect(t.valuesType).to.eql([])
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with values of any type."
 					)).to.be.true
@@ -732,7 +732,7 @@ describe "isType", ->
 					warnSpy.resetHistory()
 					t = TypedMap([], [])
 					expect(t.constructor.name).to.equal("TypedMap")
-					expect([t.valuesType, t.keysType]).to.eql([[], []]) # eql is deep equal
+					expect([t.valuesType, t.keysType]).to.eql([[], []])
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with keys and values of any type."
 					)).to.be.true
@@ -741,7 +741,7 @@ describe "isType", ->
 					warnSpy.resetHistory()
 					t = TypedMap(AnyType)
 					expect(t.constructor.name).to.equal("TypedMap")
-					expect(t.valuesType).to.eql(AnyType) # eql is deep equal
+					expect(t.valuesType).to.eql(AnyType)
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with values of any type."
 					)).to.be.true
@@ -750,7 +750,7 @@ describe "isType", ->
 					warnSpy.resetHistory()
 					t = TypedMap(AnyType, AnyType)
 					expect(t.constructor.name).to.equal("TypedMap")
-					expect([t.valuesType, t.keysType]).to.eql([AnyType, AnyType]) # eql is deep equal
+					expect([t.valuesType, t.keysType]).to.eql([AnyType, AnyType])
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with keys and values of any type."
 					)).to.be.true
@@ -759,7 +759,7 @@ describe "isType", ->
 					warnSpy.resetHistory()
 					t = TypedMap(AnyType())
 					expect(t.constructor.name).to.equal("TypedMap")
-					expect(t.valuesType).to.eql(AnyType()) # eql is deep equal
+					expect(t.valuesType).to.eql(AnyType())
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with values of any type."
 					)).to.be.true
@@ -768,7 +768,7 @@ describe "isType", ->
 					warnSpy.resetHistory()
 					t = TypedMap(AnyType(), AnyType())
 					expect(t.constructor.name).to.equal("TypedMap")
-					expect([t.valuesType, t.keysType]).to.eql([AnyType(), AnyType()]) # eql is deep equal
+					expect([t.valuesType, t.keysType]).to.eql([AnyType(), AnyType()])
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with keys and values of any type."
 					)).to.be.true
@@ -1167,92 +1167,92 @@ describe "fn", ->
 
 			it "should return an error with 'undefined'", ->
 				f = fn [undefined], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'undefined' instead of Number.")
 
 			it "should return an error with 'null'", ->
 				f = fn [null], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'null' instead of Number.")
 
 			it "should return an error with 'String'", ->
 				f = fn [String], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'String' instead of Number.")
 
 			it "should return an error with 'Array'", ->
 				f = fn [Array], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'Array' instead of Number.")
 
 			it "should return an error with 'literal String 'foo'", ->
 				f = fn ['foo'], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'literal String \"foo\"' instead of Number.")
 
 			it "should return an error with 'literal Number 1'", ->
 				f = fn [1], AnyType, ->
-				expect( -> f('1'))
+				expect(-> f('1'))
 				.to.throw("Argument number 1 (1) should be of type 'literal Number 1' instead of String.")
 
 			it "should return an error with 'literal Boolean 'true'", ->
 				f = fn [true], AnyType, ->
-				expect( -> f(false))
+				expect(-> f(false))
 				.to.throw("Argument number 1 (false) should be of type 'literal Boolean true' instead of Boolean.")
 
 			it "should return an error with
 				'Argument number 1 should be an object with key 'a.c' of type 'String' instead of Number.'", ->
 				f = fn [{a: {b: Number, c: String}, d: Number}], AnyType, ->
-				expect( -> f(a: {b: 1, c: 2}, d: 3))
+				expect(-> f(a: {b: 1, c: 2}, d: 3))
 				.to.throw("Argument number 1 should be an object with key 'a.c'
 							of type 'String' instead of Number.")
 
 			it "should return an error with 'MyClass", ->
 				class MyClass
 				f = fn [MyClass], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'MyClass' instead of Number.")
 
 			it "should return an error with 'empty array'", ->
 				f = fn [EmptyArray], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'empty array' instead of Number.")
-				expect( -> f([1]))
+				expect(-> f([1]))
 				.to.throw("Argument number 1 (1) should be of type 'empty array' instead of Array.")
 
 		context "Union type argument", ->
 
 			it "should return an error with 'undefined or null'", ->
 				f = fn [[undefined, null]], AnyType, ->
-				expect( -> f(true))
+				expect(-> f(true))
 				.to.throw("Argument number 1 (true) should be of type 'undefined or null' instead of Boolean.")
 
 			it "should return an error with 'String or Number'", ->
 				f = fn [[String, Number]], AnyType, ->
-				expect( -> f(true))
+				expect(-> f(true))
 				.to.throw("Argument number 1 (true) should be of type 'String or Number' instead of Boolean.")
 
 			it "should return an error with 'literal 'foo' or literal 'bar''", ->
 				f = fn [['foo', 'bar']], AnyType, ->
-				expect( -> f('a'))
+				expect(-> f('a'))
 				.to.throw("Argument number 1 (a) should be of type
 							'literal String \"foo\" or literal String \"bar\"' instead of String.")
 
 			it "should return an error with 'literal Number 1 or literal Number 2'", ->
 				f = fn [[1, 2]], AnyType, ->
-				expect( -> f(3))
+				expect(-> f(3))
 				.to.throw("Argument number 1 (3) should be of type
 							'literal Number 1 or literal Number 2' instead of Number.")
 
 			it "should return an error with 'literal String \"1\" or literal Number '1'", ->
 				f = fn [['1', 1]], AnyType, ->
-				expect( -> f(3))
+				expect(-> f(3))
 				.to.throw("Argument number 1 (3) should be of type
 							'literal String \"1\" or literal Number 1' instead of Number.")
 
 			it "should return an error with 'literal Boolean true or literal Boolean false", ->
 				f = fn [[true, false]], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type
 							'literal Boolean true or literal Boolean false' instead of Number.")
 
@@ -1260,50 +1260,50 @@ describe "fn", ->
 
 			it "should return an error with 'array of 'Number''", ->
 				f = fn [Array(Number)], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'array of 'Number'' instead of Number.")
 
 			it "should return an error with 'array of 'Promise''", ->
 				f = fn [Array(Promise)], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'array of 'Promise'' instead of Number.")
 
 			it "should return an error with 'array of 'String or Number''", ->
 				f = fn [Array([String, Number])], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'array of 'String or Number'' instead of Number.")
 
 			it "should return an error with 'array of 'object type object''", ->
 				f = fn [Array({a: String, b: Number})], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'array of 'object type'' instead of Number.")
 
 			it "Array([]) should return an error with 'array of 'any type''", ->
 				f = fn [Array([])], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'array of 'any type'' instead of Number.")
 
 			it "Array(AnyType)] should return an error with 'array of 'any type''", ->
 				f = fn [Array(AnyType)], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'array of 'any type'' instead of Number.")
 
 			it "Array(AnyType()) should return an error with 'array of 'any type''", ->
 				f = fn [Array(AnyType())], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'array of 'any type'' instead of Number.")
 
 		context "Tuple type argument", ->
 
 			it "should return an error with 'tuple of 3 elements 'Number, Boolean, String''", ->
 				f = fn [Tuple(Number, Boolean, String)], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'tuple of
 							3 elements 'Number, Boolean, String'' instead of Number")
 
 			it "should return an error with 'tuple of 3 elements 'Number, Object or null, String''", ->
 				f = fn [Tuple(Number, [Object, null], String)], AnyType, ->
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'tuple of
 							3 elements 'Number, Object or null, String'' instead of Number")
 
@@ -1312,18 +1312,21 @@ describe "fn", ->
 			it "should return a result error with ''Number' instead of NaN'", ->
 				f = fn [Number, [undefined, Number]], Number,
 					(a, b) -> a + b # missing default b value
-				expect( -> f(1))
+				expect(-> f(1))
 				.to.throw("Result (NaN) should be of type 'Number' instead of NaN.")
 
 	context "Logical operators", ->
 
 		context "And", ->
 
+			it "And with a single value should throw an error", ->
+				expect(-> And(1)).to.throw("'and' must have at least 2 arguments.")
+
 			it "And with [] values should return an And instance and log a warning.", ->
 				warnSpy.resetHistory()
 				t = And(Number, [])
 				expect(t.constructor.name).to.equal("And")
-				expect(t.types).to.eql([Number, []]) # eql is deep equal
+				expect(t.types).to.eql([Number, []])
 				expect(warnSpy.calledOnceWithExactly(
 					"AnyType is not needed as 'and' argument number 2."
 				)).to.be.true
@@ -1332,7 +1335,7 @@ describe "fn", ->
 				warnSpy.resetHistory()
 				t = And(undefined, Number)
 				expect(t.constructor.name).to.equal("And")
-				expect(t.types).to.eql([undefined, Number]) # eql is deep equal
+				expect(t.types).to.eql([undefined, Number])
 				expect(warnSpy.calledOnceWithExactly(
 					"Literal undefined (undefined) not needed as 'and' argument number 1."
 				)).to.be.true
@@ -1341,7 +1344,7 @@ describe "fn", ->
 				warnSpy.resetHistory()
 				t = And(undefined, null, 1, "foo", true, NaN)
 				expect(t.constructor.name).to.equal("And")
-				expect(t.types).to.eql([undefined, null, 1, "foo", true, NaN]) # eql is deep equal
+				expect(t.types).to.eql([undefined, null, 1, "foo", true, NaN])
 				expect(warnSpy.callCount).to.equal(6)
 				expect(warnSpy.alwaysCalledWithMatch("Literal")).to.be.true
 
@@ -1357,12 +1360,37 @@ describe "fn", ->
 				expect(isType("foo", t)).to.be.false
 				expect(isType("baz", t)).to.be.false
 
-		context.only "Or", ->
+		context "Or", ->
+
+			it "Or with a single value should throw an error", ->
+				expect(-> Or(1)).to.throw("'or' must have at least 2 arguments.")
 
 			it "Or with [] values should return an array and log a warning.", ->
 				warnSpy.resetHistory()
 				t = Or(Number, [])
-				expect(t).to.eql([Number, []]) # eql is deep equal
+				expect(t).to.eql([Number, []])
 				expect(warnSpy.calledOnceWithExactly(
 					"AnyType is inadequate as 'or' argument number 2."
 				)).to.be.true
+
+		context "Not", ->
+
+			it "Not with more than a single value should throw an error", ->
+				expect(-> Not(1, 2)).to.throw("'not' must have exactly 1 argument.")
+
+			it "Not with [] value should return a Not instance and log a warning.", ->
+				warnSpy.resetHistory()
+				t = Not([])
+				expect(t.constructor.name).to.equal("Not")
+				expect(t.type).to.eql([])
+				expect(warnSpy.calledOnceWithExactly(
+					"AnyType is inadequate as 'not' argument."
+				)).to.be.true
+
+			it "isType with not() should return true only if value is not of the given type", ->
+				t = Not([String, Number])
+				expect(isType("foo", t)).to.be.false
+				expect(isType(1, t)).to.be.false
+				expect(isType(true, t)).to.be.true
+				expect(isType(false, t)).to.be.true
+				expect(isType(NaN, t)).to.be.true
