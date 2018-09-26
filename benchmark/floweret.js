@@ -6,8 +6,8 @@ let title = ""
 console.log("\n*** Floweret ***")
 
 // example from https://codemix.github.io/flow-runtime/#/
-Person = {name: String}
-greet = fn(
+const Person = {name: String}
+const greet = fn(
 	[Person], String,
 	function (person) {
 		return 'Hello ' + person.name
