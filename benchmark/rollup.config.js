@@ -23,6 +23,15 @@ const plugins = [
 
 export default [
 	{
+		input: 'no-type-checking.js',
+		output: {
+			file: 'bundles/no-type-checking.bundle.js',
+			format: 'umd',
+			name: 'myBundle'
+		},
+		plugins
+	},
+	{
 		input: 'floweret.js',
 		output: {
 			file: 'bundles/floweret.bundle.js',
