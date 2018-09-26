@@ -9,7 +9,7 @@ Features
 
 * **Easy**: Native Javascript types. No need for Babel.
 * **Lightweight**: 2 kb minified and gzipped. No dependencies. Does not bloat your build with type-checking functions calls everywhere.
-* **Efficient**: Direct type comparison, no string to parse. 10 times faster than [Flow-runtime](https://codemix.github.io/flow-runtime/#/).
+* **Efficient**: Direct type comparison, no string to parse. [10 times faster](#benchmark) than [Flow-runtime](https://codemix.github.io/flow-runtime/).
 * **Powerfull**: Logical operators, tuples, regular expressions, rest parameters and more…
 * **Customizable**: Create your own types for your own needs.
 
@@ -388,6 +388,31 @@ Features to come
 ----------------
 
 * `fn` as a decorator, [when JavaScript decorators reach stage 4 and are implemented in CoffeeScript](https://github.com/jashkenas/coffeescript/issues/4917#issuecomment-387220758).
+
+Benchmark
+---------
+
+Run the benchmark with `npm run benchmark`.
+
+```
+Bundling format: umd
+
+2233 bytes      floweret.bundle.js.gz
+21135 bytes     flow-runtime.bundle.js.gz
+288 bytes       no-type-checking.bundle.js.gz
+
+*** No type-checking ***
+100000 greets: 3.438ms
+100000 reductions: 28.914ms
+
+*** Floweret ***
+100000 greets: 39.772ms
+100000 reductions: 444.938ms
+
+*** Flow-runtime ***
+100000 greets: 1104.284ms
+100000 reductions: 4688.026ms
+```
 
 Licence
 -------
