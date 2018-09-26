@@ -12,7 +12,11 @@ const plugins = [
 		sourceMap: false
 	}),
 	terser({
-		sourcemap: false
+		sourcemap: false,
+		compress: {
+			hoist_vars: true // needed for Floweret bundle
+		},
+		mangle: true
 	}),
 	gzipPlugin()
 ]
