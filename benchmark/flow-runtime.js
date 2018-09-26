@@ -1,7 +1,5 @@
-const TIMES = 100 * 1000
-const SIZE = 100
 const t = require('flow-runtime')
-let title = ""
+const TIMES = 100 * 1000
 
 console.log("\n*** Flow-runtime ***")
 
@@ -15,26 +13,24 @@ function greet(person) {
 }
 t.annotate(greet, t.function(t.param('person', Person), t.return(t.string())))
 
-title = `${TIMES} times greet`
-console.time(title)
+console.time(TIMES + " greets")
 for (let i = 0; i < TIMES; i++) {
 	greet({ name: 'Alice' })
 }
-console.timeEnd(title)
+console.timeEnd(TIMES + " greets")
 
 
 function f(a) {
 	let _aType = t.array(t.number())
 	const _returnType = t.return(t.number())
 	t.param('a', _aType).assert(a)
-	return _returnType.assert(a.length)
+	return _returnType.assert(a.reduce((acc, cur) => acc + cur))
 }
 t.annotate(f, t.function(t.param('a', t.array(t.number())), t.return(t.number())))
-const a = [...Array(SIZE).keys()]
+const a = [...Array(100).keys()]
 
-title = `${TIMES} times ${SIZE} elements`
-console.time(title)
+console.time(TIMES + " reductions")
 for (let i = 0; i < TIMES; i++) {
 	f(a)
 }
-console.timeEnd(title)
+console.timeEnd(TIMES + " reductions")

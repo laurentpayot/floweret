@@ -1,6 +1,4 @@
 const TIMES = 100 * 1000
-const SIZE = 100
-let title = ""
 
 console.log("\n*** No type-checking ***")
 
@@ -9,22 +7,20 @@ function greet(person) {
 	return 'Hello ' + person.name
 }
 
-title = `${TIMES} times greet`
-console.time(title)
+console.time(TIMES + " greets")
 for (let i = 0; i < TIMES; i++) {
 	greet({ name: 'Alice' })
 }
-console.timeEnd(title)
+console.timeEnd(TIMES + " greets")
 
 
 function f(a) {
-	return a.length
+	return a.reduce((acc, cur) => acc + cur)
 }
-const a = [...Array(SIZE).keys()]
+const a = [...Array(100).keys()]
 
-title = `${TIMES} times ${SIZE} elements`
-console.time(title)
+console.time(TIMES + " reductions")
 for (let i = 0; i < TIMES; i++) {
 	f(a)
 }
-console.timeEnd(title)
+console.timeEnd(TIMES + " reductions")
