@@ -31,9 +31,9 @@
     "build-tests": "coffee -cm test/tests.coffee",
     "build-all": "npm run build && npm run minify && npm run build-tests",
     "test": "npm run build-all && mocha",
-    "benchmark": "cd benchmark && node no-type-checking.js && node floweret.js && node flow-runtime.js && echo",
     "bundle": "cd benchmark && rollup -c && echo && cd bundles && stat --printf='%s bytes\t%n\n' *.gz",
-    "benchmark-bundle": "npm run bundle && cd benchmark/bundles && node no-type-checking.bundle.js && node floweret.bundle.js && node flow-runtime.bundle.js && echo",
+    "benchmark": "npm run bundle && cd benchmark/bundles && node no-type-checking.bundle.js && node floweret.bundle.js && node flow-runtime.bundle.js && echo",
+    "benchmark-unbundled": "cd benchmark && node no-type-checking.js && node floweret.js && node flow-runtime.js && echo",
     "link": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm link",
     "publish": "npm run test && cp package.json dist && cp *.md dist && cd dist && rm floweret.min.js && rm *.js.map && npm publish"
   },
