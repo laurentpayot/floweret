@@ -1,6 +1,6 @@
 {
   "name": "floweret",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Runtime type-checking for everyone.",
   "author": "Laurent Payot",
   "license": "MIT",
