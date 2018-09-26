@@ -1,6 +1,7 @@
 import commonjs from 'rollup-plugin-commonjs'
 import nodeResolve from 'rollup-plugin-node-resolve'
 import { terser } from "rollup-plugin-terser"
+import gzipPlugin from 'rollup-plugin-gzip'
 
 const plugins = [
 	nodeResolve({
@@ -12,7 +13,8 @@ const plugins = [
 	}),
 	terser({
 		sourcemap: false
-	})
+	}),
+	gzipPlugin()
 ]
 
 export default [

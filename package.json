@@ -44,6 +44,7 @@
     "mocha": "^5.2.0",
     "rollup": "^0.66.2",
     "rollup-plugin-commonjs": "^9.1.8",
+    "rollup-plugin-gzip": "^2.0.0",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-terser": "^3.0.0",
     "sinon": "^6.3.4"
