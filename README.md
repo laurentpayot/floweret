@@ -7,11 +7,11 @@ Runtime type-checking for everyone.
 Features
 --------
 
-* **Easy**: use native Javascript types, highlighted by your editor of choice.
-* **Lightweight**: around 2 kb minified and gzipped. No dependencies.
-* **Efficient**: direct type comparison, no string to parse.
-* **Powerfull**: logical operators, tuples, regular expressions, rest parameters and more…
-* **Customizable**: create your own types for your own needs.
+* **Easy**: Native Javascript types. No need for Babel.
+* **Lightweight**: 2 kb minified and gzipped. No dependencies. Does not bloat your build with type-checking functions calls everywhere.
+* **Efficient**: Direct type comparison, no string to parse. 10 times faster than [Flow-runtime](https://codemix.github.io/flow-runtime/#/).
+* **Powerfull**: Logical operators, tuples, regular expressions, rest parameters and more…
+* **Customizable**: Create your own types for your own needs.
 
 Install
 -------
@@ -37,7 +37,7 @@ import { fn } from 'floweret'
 
 add = fn(
   [Number, Number], Number,
-  function(a, b) {return a + b}
+  function (a, b) {return a + b}
 )
 ```
 or using the ES2015 arrow function syntax:
@@ -143,6 +143,7 @@ f('staging')    // Type error: Argument number 1 (staging) should be literal 'de
 > <regular expression\>
 
 When the type is a regular expression, if the value is a string it will be tested to see if it matches the regular expression.
+
 :warning: Regular expressions are slow so if you need to check a lot of data consider creating a custom type (see below) with a `validate` method using String prototype methods instead.
 
 *Documentation in progress…*
