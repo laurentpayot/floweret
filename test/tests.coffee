@@ -71,7 +71,9 @@ warnSpy = sinon.spy(CustomType, 'warn')
 	   ██║      ██║   ██║     ███████╗╚██████╔╝██║
 	   ╚═╝      ╚═╝   ╚═╝     ╚══════╝ ╚═════╝ ╚═╝
 ###
-describe "typeOf (add more tests!!!)", ->
+describe "typeOf", ->
+
+	# TODO: add more tests
 
 	it "should return 'NaN' for NaN", ->
 		expect(typeOf(NaN)).to.equal('NaN')
@@ -386,7 +388,6 @@ describe "isType", ->
 			expect(isType([1, true, "tree"], Array(4))).to.be.false
 			expect(isType([undefined, true, "tree"], Array(4))).to.be.false
 			expect(isType([1, undefined, "tree"], Array(4))).to.be.false
-
 
 	context "Union Types", ->
 
