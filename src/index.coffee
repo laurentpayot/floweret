@@ -52,7 +52,7 @@ else switch type?.constructor
 			CustomType.error "Type can not be an instance of #{typeOf(type)}.
 								Use #{prefix}#{typeOf(type)} as type instead."
 
-# returns a list of keys path to where the type do not match + value not maching + type not matching
+# returns a list of keys path to the mismatched type + value not maching + type not matching
 badPath = (obj, typeObj) ->
 	for k, t of typeObj
 		if not isType(obj[k], t)
@@ -79,11 +79,15 @@ getTypeName = (type) -> switch type?.constructor
 shouldBe = (val, type, promised=false) ->
 	apo = if promised then "a promise of " else ''
 	switch
-		when val?.constructor is Object
+		when Array.isArray(val) and Array.isArray(type)
+			i = val.findIndex((e) -> not isType(e, type[0]))
+			"should be #{apo}an array with element #{i} of type '#{getTypeName(type[0])}' instead of #{typeOf(val[i])}"
+		when val?.constructor is Object and type?.constructor is Object
 			[bp..., bv, bt] = badPath(val, type)
 			"should be #{apo}an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}' instead of #{typeOf(bv)}"
 		else
-			"(#{val}) should be #{apo or 'of type '}'#{getTypeName(type)}' instead of #{typeOf(val)}"
+			prefix = if Array.isArray(val) or val?.constructor is Object then '' else "(#{val}) "
+			"#{prefix}should be #{apo or 'of type '}'#{getTypeName(type)}' instead of #{typeOf(val)}"
 
 # wraps a function to check its arguments types and result type
 fn = (argTypes, resType, f) ->

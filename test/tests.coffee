@@ -1274,6 +1274,12 @@ describe "fn", ->
 				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'String' instead of Number.")
 
+			it "should return an error with
+				'Argument number 1 should be of type 'Number' instead of Array.'", ->
+				f = fn [Number], AnyType, ->
+				expect(-> f([1, 2]))
+				.to.throw("Argument number 1 should be of type 'Number' instead of Array.")
+
 			it "should return an error with 'Array'", ->
 				f = fn [Array], AnyType, ->
 				expect(-> f(1))
@@ -1295,6 +1301,12 @@ describe "fn", ->
 				.to.throw("Argument number 1 (false) should be of type 'literal Boolean true' instead of Boolean.")
 
 			it "should return an error with
+				'Argument number 1 should be of type 'Number' instead of Object.'", ->
+				f = fn [Number], AnyType, ->
+				expect(-> f(a: {b: 1, c: 2}, d: 3))
+				.to.throw("Argument number 1 should be of type 'Number' instead of Object.")
+
+			it "should return an error with
 				'Argument number 1 should be an object with key 'a.c' of type 'String' instead of Number.'", ->
 				f = fn [{a: {b: Number, c: String}, d: Number}], AnyType, ->
 				expect(-> f(a: {b: 1, c: 2}, d: 3))
@@ -1312,7 +1324,7 @@ describe "fn", ->
 				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'empty array' instead of Number.")
 				expect(-> f([1]))
-				.to.throw("Argument number 1 (1) should be of type 'empty array' instead of Array.")
+				.to.throw("Argument number 1 should be of type 'empty array' instead of Array.")
 
 		context "Union type argument", ->
 
@@ -1386,6 +1398,18 @@ describe "fn", ->
 				f = fn [Array(AnyType())], AnyType, ->
 				expect(-> f(1))
 				.to.throw("Argument number 1 (1) should be of type 'array of 'any type'' instead of Number.")
+
+			it "Array(Number) should return an error with 'array with element 2 of type 'Number' instead of String.'", ->
+				f = fn [Array(Number)], AnyType, ->
+				expect(-> f([1, 2, "three", 4]))
+				.to.throw("Argument number 1 should be an array with element 2 of type 'Number' instead of String.")
+
+			it "Array(Number) should return an error with
+				'array with element 0 of type 'Number or String' instead of Boolean.'", ->
+				f = fn [Array([Number, String])], AnyType, ->
+				expect(-> f([true]))
+				.to.throw("Argument number 1 should be an array with element 0 of type
+							'Number or String' instead of Boolean.")
 
 		context "Tuple type argument", ->
 
