@@ -3,6 +3,12 @@ import nodeResolve from 'rollup-plugin-node-resolve'
 import { terser } from "rollup-plugin-terser"
 import gzipPlugin from 'rollup-plugin-gzip'
 
+// const format = 'cjs'
+// const format = 'iife'
+const format = 'umd'
+
+console.log("Bundling format:", format)
+
 const plugins = [
 	nodeResolve({
 		jsnext: true,
@@ -26,8 +32,8 @@ export default [
 		input: 'no-type-checking.js',
 		output: {
 			file: 'bundles/no-type-checking.bundle.js',
-			format: 'umd',
-			name: 'myBundle'
+			name: 'myBundle',
+			format
 		},
 		plugins
 	},
@@ -35,8 +41,8 @@ export default [
 		input: 'floweret.js',
 		output: {
 			file: 'bundles/floweret.bundle.js',
-			format: 'umd',
-			name: 'myBundle'
+			name: 'myBundle',
+			format
 		},
 		plugins
 	},
@@ -44,8 +50,8 @@ export default [
 		input: 'flow-runtime.js',
 		output: {
 			file: 'bundles/flow-runtime.bundle.js',
-			format: 'umd',
-			name: 'myBundle'
+			name: 'myBundle',
+			format
 		},
 		plugins
 	}
