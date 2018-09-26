@@ -1,5 +1,6 @@
-import commonjs from 'rollup-plugin-commonjs';
-import nodeResolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs'
+import nodeResolve from 'rollup-plugin-node-resolve'
+import { terser } from "rollup-plugin-terser"
 
 const plugins = [
 	nodeResolve({
@@ -8,6 +9,9 @@ const plugins = [
 	}),
 	commonjs({
 		sourceMap: false
+	}),
+	terser({
+		sourcemap: false
 	})
 ]
 
