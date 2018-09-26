@@ -24,7 +24,9 @@ console.timeEnd(title)
 
 const f = fn(
 	[Array(Number)], Number,
-	(a) => a.length
+	function (a) {
+		return a.length
+	}
 )
 const a = [...Array(SIZE).keys()]
 
