@@ -6,8 +6,6 @@ EtcHelper = require './etc'
 
 class InvalidSignature extends Error
 class TypeMismatch extends Error
-
-# trows customized error
 error = (msg) -> if msg[0] is '@' then throw new InvalidSignature msg[1..] else throw new TypeMismatch msg
 
 Etc = EtcHelper().constructor
@@ -39,7 +37,7 @@ else switch type?.constructor
 		if type.rootClass is CustomType # type is a helper
 			type().validate(val) # using default helper arguments
 		else # constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
-			not Number.isNaN(val) and val?.constructor is type # NB: NaN.constuctor is Number!
+			not Number.isNaN(val) and val?.constructor is type # NB: NaN.constuctor is Number
 	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
 		for k, v of type
@@ -124,6 +122,5 @@ fn = (argTypes, resType, f) ->
 			result = f(args...)
 			error "Result #{shouldBe(result, resType)}." unless isType(result, resType)
 			result
-
 
 module.exports = {fn, typeOf, isType, isAnyType, getTypeName}
