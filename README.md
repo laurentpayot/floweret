@@ -397,9 +397,9 @@ Run the benchmark with `npm run benchmark`.
 ```
 Bundling format: umd
 
-2233 bytes      floweret.bundle.js.gz
-21135 bytes     flow-runtime.bundle.js.gz
-288 bytes       no-type-checking.bundle.js.gz
+2233 bytes      floweret-benchmark.min.js.gz
+21135 bytes     flow-runtime-benchmark.min.js.gz
+288 bytes       no-type-checking-benchmark.min.js.gz
 
 *** No type-checking ***
 100000 greets: 3.438ms

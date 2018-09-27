@@ -31,7 +31,7 @@ export default [
 	{
 		input: 'no-type-checking.js',
 		output: {
-			file: 'bundles/no-type-checking.bundle.js',
+			file: 'bundles/no-type-checking-benchmark.min.js',
 			name: 'myBundle',
 			format
 		},
@@ -40,7 +40,7 @@ export default [
 	{
 		input: 'floweret.js',
 		output: {
-			file: 'bundles/floweret.bundle.js',
+			file: 'bundles/floweret-benchmark.min.js',
 			name: 'myBundle',
 			format
 		},
@@ -49,7 +49,7 @@ export default [
 	{
 		input: 'flow-runtime.js',
 		output: {
-			file: 'bundles/flow-runtime.bundle.js',
+			file: 'bundles/flow-runtime-benchmark.min.js',
 			name: 'myBundle',
 			format
 		},
