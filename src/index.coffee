@@ -6,7 +6,7 @@ EtcHelper = require './etc'
 
 class InvalidSignature extends Error
 class TypeMismatch extends Error
-error = (msg) -> if msg[0] is '@' then throw InvalidSignature msg[1..] else throw TypeMismatch msg
+error = (msg) -> if msg[0] is '@' then throw new InvalidSignature msg[1..] else throw new TypeMismatch msg
 
 Etc = EtcHelper().constructor
 AnyType = AnyTypeHelper().constructor
