@@ -7,7 +7,7 @@ Runtime type-checking for everyone.
 Features
 --------
 
-* **Easy**: Native Javascript types. No need for Babel.
+* **Easy**: Native JavaScript types. No need for Babel.
 * **Lightweight**: 2 kb minified and gzipped. No dependencies. Does not bloat your build with type-checking functions calls everywhere.
 * **Efficient**: Direct type comparison, no string to parse. [10 times faster](#benchmark) than [Flow-runtime](https://codemix.github.io/flow-runtime/).
 * **Powerfull**: Logical operators, tuples, regular expressions, rest parameters and more…
@@ -35,7 +35,7 @@ To add a signature to a function, wrap the function with the `fn` function.
 ```js
 import { fn } from 'floweret'
 
-add = fn(
+const add = fn(
   [Number, Number], Number,
   function (a, b) {return a + b}
 )
@@ -45,7 +45,7 @@ or using the ES2015 arrow function syntax:
 ```js
 import { fn } from 'floweret'
 
-add = fn(
+const add = fn(
   [Number, Number], Number,
   (a, b) => a + b
 )
@@ -75,13 +75,13 @@ All native JavaScript type constructors are allowed as type:
 `Number`, `String`, `Array`, `Object`, `Boolean`, `RegExp`, `undefined`, `null`, `Promise`, `Set`, `Map`, `WeakMap`, `WeakSet`, etc.
 
 ```js
-f = fn(
+const f = fn(
   [Number, String], Boolean,
   (a, b) => a + b === '1a'
 )
 
 f(1, 'a') // true
-f(1, 5)   // Type error: Argument number 2 (5) should be of type String instead of Number.
+f(1, 5)   // TypeMismatch: Argument number 2 (5) should be of type 'String' instead of Number.
 ```
 
 ### Union of types
@@ -92,14 +92,14 @@ You can create a type that is the union of several types. Simply put them in a l
 For instance the type `[Number, String]` will accept a number or a string.
 
 ```js
-f = fn(
+const f = fn(
   [Number, [Number, String]], String,
   (a, b) => '' + a + b
 )
 
 f(1, 2)    // '12'
 f(1, '2')  // '12'
-f(1, true) // Type error: Argument number 2 (true) should be of type Number or String instead of Boolean.
+f(1, true) // TypeMismatch: Argument number 2 (true) should be of type 'Number or String' instead of Boolean.
 ```
 
 ### Maybe type
@@ -112,14 +112,14 @@ This is simply a shortcut to the union `[undefined, null, <type>]`. Usefull for 
 import { fn } from 'floweret'
 import maybe from 'floweret/maybe'
 
-f = fn(
+const f = fn(
   [Number, maybe(Number)], Number,
   (a, b=0) => a + b
 )
 
 f(5)      // 5
 f(5, 1)   // 6
-f(5, '1') // Type error: Argument number 2 (1) should be of type undefined or null or Number instead of String.
+f(5, '1') // TypeMismatch: Argument number 2 (1) should be of type 'undefined or null or Number' instead of String.
 ```
 
 ### Literal type
@@ -129,13 +129,13 @@ f(5, '1') // Type error: Argument number 2 (1) should be of type undefined or nu
 A literal can only be a string, a number, a booleans or be equal to undefined or null or NaN. Literals are useful when used inside an union list.
 
 ```js
-f = fn(
-  [['development', 'production']], Boolean,
-  (mode) => process.env.NODE_ENV === mode
+const turn = fn(
+  [['left', 'right']], undefined,
+  (direction) => console.log("turning", direction)
 )
 
-f('production') // true or false
-f('staging')    // Type error: Argument number 1 (staging) should be literal 'development' or literal 'production' instead of String.
+turn('left')  // "turning left"
+turn('light') // TypeMismatch: Argument number 1 (light) should be of type 'literal String "left" or literal String "right"' instead of String.
 ```
 
 ### Regular Expressions
