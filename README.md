@@ -344,7 +344,7 @@ This is the same as putting types into brackets, but more explicit.
 import or from 'floweret/or'
 ```
 
-* **:coffee:** `or` is a reserved CoffeeScript word. Use another identifier for imports:
+* **:coffee:** `or` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
 
   ```coffee
   # CoffeeScript
@@ -369,7 +369,7 @@ weeklyTotal([1, 1, 2, 2, 5, 5, 1]) // 17
 weeklyTotal([1, 1, 2, 2, 5, 5]) // Argument #1 should be of type ''array of 'Number'' and 'array of 7 elements'' instead of Array.
 ```
 
-* **:coffee:** `and` is a reserved CoffeeScript word. Use another identifier for imports:
+* **:coffee:** `and` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
 
   ```coffee
   # CoffeeScript
@@ -386,7 +386,7 @@ weeklyTotal([1, 1, 2, 2, 5, 5]) // Argument #1 should be of type ''array of 'Num
 import not from 'floweret/not'
 ```
 
-* **:coffee:** `not` is a reserved CoffeeScript word. Use another identifier for imports:
+* **:coffee:** `not` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
 
   ```coffee
   # CoffeeScript
