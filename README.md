@@ -37,6 +37,7 @@ const add = fn(
   function (a, b) {return a + b}
 )
 ```
+
 or using the ES2015 arrow function syntax:
 
 ```js
@@ -48,11 +49,12 @@ const add = fn(
 )
 ```
 
-### :coffee: CoffeeScript
+### CoffeeScript
 
 You can ommit the `fn` parentheses, resulting in a decorator-like syntax:
 
 ```coffee
+# CoffeeScript
 import { fn } from 'floweret'
 
 add = fn [Number, Number], Number,
@@ -140,7 +142,7 @@ turn('light') // TypeMismatch: Argument number 1 (light) should be of type 'lite
 
 When the type is a regular expression, if the value is a string it will be tested to see if it matches the regular expression.
 
-:warning: Regular expressions are slow so if you need to check a lot of data consider creating a custom type (see below) with a `validate` method using String prototype methods instead.
+* **:warning:** Regular expressions are slow so if you need to check a lot of data consider creating a custom type (see below) with a `validate` method using String prototype methods instead.
 
 *Documentation in progress…*
 
@@ -152,7 +154,7 @@ You can use the `Array` type for arrays with elements of any type, but most of t
 
 Simply use `Array(Number)` for an array of number.
 
-:warning: If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`). Use `Array([Number, String])` to accept an array of elements that can be numbers or strings, such as `[1, "2", 3]`.
+* **:warning:** If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`). Use `Array([Number, String])` to accept an array of elements that can be numbers or strings, such as `[1, "2", 3]`.
 If you forget the brackets you will get the union of types instead of the array of union of types, because in JavaScript `Array(Number, String)` is the same as `[Number, String]`.
 
 *Documentation in progress…*
@@ -199,7 +201,7 @@ fullName(Bob)
 fullName({id: 1234, name: {first: 1, last: "Smith"}})
 ```
 
-:warning: If values of an object argument match all the keys types of the object type, **the argument will be accepted even if it has more keys than the object type**:
+* **:warning:** If values of an object argument match all the keys types of the object type, **the argument will be accepted even if it has more keys than the object type**:
 
 ```js
 f = fn(
@@ -259,12 +261,12 @@ or (untyped)
 
 > etc
 
-:warning: Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
-:coffee: CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in floweret.
-
 ```js
 import etc from 'floweret/etc'
 ```
+
+* **:warning:** Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
+* **:coffee:** CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in floweret.
 
 *Documentation in progress…*
 
@@ -280,12 +282,12 @@ This is the same as putting types into brackets, but more explicit.
 import or from 'floweret/or'
 ```
 
-:coffee: `or` is a reserved CoffeeScript word. Use another identifier for imports:
+* **:coffee:** `or` is a reserved CoffeeScript word. Use another identifier for imports:
 
-```coffee
-# CoffeeScript
-import Or from 'floweret/or'
-```
+  ```coffee
+  # CoffeeScript
+  import Or from 'floweret/or'
+  ```
 
 *Documentation in progress…*
 
@@ -297,12 +299,12 @@ import Or from 'floweret/or'
 import and from 'floweret/and'
 ```
 
-:coffee: `and` is a reserved CoffeeScript word. Use another identifier for imports:
+* **:coffee:** `and` is a reserved CoffeeScript word. Use another identifier for imports:
 
-```coffee
-# CoffeeScript
-import And from 'floweret/and'
-```
+  ```coffee
+  # CoffeeScript
+  import And from 'floweret/and'
+  ```
 
 *Documentation in progress…*
 
@@ -314,12 +316,12 @@ import And from 'floweret/and'
 import not from 'floweret/not'
 ```
 
-:coffee: `not` is a reserved CoffeeScript word. Use another identifier for imports:
+* **:coffee:** `not` is a reserved CoffeeScript word. Use another identifier for imports:
 
-```coffee
-# CoffeeScript
-import Not from 'floweret/not'
-```
+  ```coffee
+  # CoffeeScript
+  import Not from 'floweret/not'
+  ```
 
 *Documentation in progress…*
 
@@ -419,6 +421,6 @@ Bundling format: umd
 100000 reductions: 4748.253ms
 ```
 
-## Licence
+## License
 
-MIT
+[MIT](https://choosealicense.com/licenses/mit/)
