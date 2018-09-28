@@ -19,16 +19,16 @@ for (let i = 0; i < TIMES; i++) {
 console.timeEnd(TIMES + " greets")
 
 
-const f = fn(
+const sum = fn(
 	[Array(Number)], Number,
 	function (a) {
-		return a.reduce((acc, cur) => acc + cur)
+		return a.reduce((acc, curr) => acc + curr)
 	}
 )
 const a = [...Array(100).keys()]
 
-console.time(TIMES + " reductions")
+console.time(TIMES + " sums")
 for (let i = 0; i < TIMES; i++) {
-	f(a)
+	sum(a)
 }
-console.timeEnd(TIMES + " reductions")
+console.timeEnd(TIMES + " sums")

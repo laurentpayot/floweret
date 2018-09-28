@@ -20,17 +20,17 @@ for (let i = 0; i < TIMES; i++) {
 console.timeEnd(TIMES + " greets")
 
 
-function f(a) {
+function sum(a) {
 	let _aType = t.array(t.number())
 	const _returnType = t.return(t.number())
 	t.param('a', _aType).assert(a)
-	return _returnType.assert(a.reduce((acc, cur) => acc + cur))
+	return _returnType.assert(a.reduce((acc, curr) => acc + curr))
 }
-t.annotate(f, t.function(t.param('a', t.array(t.number())), t.return(t.number())))
+t.annotate(sum, t.function(t.param('a', t.array(t.number())), t.return(t.number())))
 const a = [...Array(100).keys()]
 
-console.time(TIMES + " reductions")
+console.time(TIMES + " sums")
 for (let i = 0; i < TIMES; i++) {
-	f(a)
+	sum(a)
 }
-console.timeEnd(TIMES + " reductions")
+console.timeEnd(TIMES + " sums")
