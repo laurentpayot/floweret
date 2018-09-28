@@ -68,10 +68,14 @@ typeValue = (val) -> (t = typeOf(val)) + switch t
 # returns the type name for signature error messages (supposing type is always correct)
 getTypeName = (type) -> switch type?.constructor
 	when undefined then typeOf(type)
-	when Array then switch type.length
-		when 0 then "any type"
-		when 1 then "array of '#{getTypeName(type[0])}'"
-		else (getTypeName(t) for t in type).join(" or ")
+	when Array
+		typedArray = not Object.values(type).length
+		switch type.length
+			when 0 then "any type"
+			when 1
+				if typedArray then "array of one element" else "array of '#{getTypeName(type[0])}'"
+			else
+				if typedArray then "array of #{type.length} elements" else (getTypeName(t) for t in type).join(" or ")
 	when Function
 		if type.rootClass is CustomType then type().getTypeName() else type.name
 	when Object then "object type"

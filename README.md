@@ -366,6 +366,7 @@ const weeklyTotal = fn(
 )
 
 weeklyTotal([1, 1, 2, 2, 5, 5, 1]) // 17
+weeklyTotal([1, 1, 2, 2, 5, 5]) // Argument #1 should be of type ''array of 'Number'' and 'array of 7 elements'' instead of Array.
 ```
 
 * **:coffee:** `and` is a reserved CoffeeScript word. Use another identifier for imports:
@@ -481,21 +482,21 @@ npm run benchmark
 The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple functions](https://github.com/laurentpayot/floweret/tree/master/benchmark). Feel free to make your own benchmarks
 
 ```txt
-floweret-benchmark.min.js.gz          2325 bytes
+floweret-benchmark.min.js.gz          2358 bytes
 flow-runtime-benchmark.min.js.gz      21133 bytes
 no-type-checking-benchmark.min.js.gz  287 bytes
 
 *** No type-checking ***
-100000 greets: 3.471ms
-100000 sums: 33.552ms
+100000 greets: 3.447ms
+100000 sums: 36.097ms
 
 *** Floweret ***
-100000 greets: 31.699ms
-100000 sums: 435.207ms
+100000 greets: 33.274ms
+100000 sums: 448.260ms
 
 *** Flow-runtime ***
-100000 greets: 1099.931ms
-100000 sums: 4896.131ms
+100000 greets: 1099.640ms
+100000 sums: 4623.753ms
 ```
 
 ## License

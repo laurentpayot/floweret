@@ -1,5 +1,5 @@
 CustomType = require './CustomType'
-{isType, isAnyType, typeOf} = require '.'
+{isType, isAnyType, typeOf, getTypeName} = require '.'
 
 class And extends CustomType
 	constructor: (@types...) ->
@@ -8,8 +8,8 @@ class And extends CustomType
 			CustomType.warn "AnyType is not needed as '#{@helperName}' argument number #{i+1}." if isAnyType(t)
 			CustomType.warn "Literal #{typeOf(t)} (#{t}) not needed as '#{@helperName}' argument number
 							#{i+1}." if typeOf(t) in ['undefined', 'null', 'Number', 'String', 'Boolean', 'NaN']
-	validate: (val) ->
-		@types.every((t) -> isType(val, t))
+	validate: (val) -> @types.every((t) -> isType(val, t))
+	getTypeName: -> ("'#{getTypeName(t)}'" for t in @types).join(" and ")
 	helperName: "and"
 
 module.exports = CustomType.createHelper(And)

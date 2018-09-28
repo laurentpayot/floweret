@@ -1464,6 +1464,30 @@ describe "fn", ->
 				.to.throw("Argument #1 should be of type 'tuple of
 							3 elements 'Number, Object or null, String'' instead of Number 1.")
 
+
+		context "Logical operators", ->
+
+			context "And", ->
+
+				it "should return an error with ''array of 'Number'' and 'array of 3 elements''", ->
+					f = fn [And(Array(Number), Array(3))], AnyType, ->
+					expect(-> f(1))
+					.to.throw("Argument #1 should be of type
+								''array of 'Number'' and 'array of 3 elements'' instead of Number 1.")
+
+			context "Not", ->
+
+				it "should return an error with 'not 'Number''", ->
+					f = fn [Not(Number)], AnyType, ->
+					expect(-> f(1))
+					.to.throw("Argument #1 should be of type 'not 'Number'' instead of Number 1.")
+
+				it "should return an error with 'not 'Number or array of 'Number'''", ->
+					f = fn [Not([Number, Array(Number)])], AnyType, ->
+					expect(-> f(1))
+					.to.throw("Argument #1 should be of type
+								'not 'Number or array of 'Number''' instead of Number 1.")
+
 		context "Result", ->
 
 			it "should return a result error with ''Number' instead of NaN'", ->
