@@ -1,11 +1,10 @@
-:blossom: Floweret
-==================
+# :blossom: Floweret
 
 Runtime type-checking for everyone.
 
+---
 
-Features
---------
+## Features
 
 * **Easy**: Native JavaScript types. No need for Babel.
 * **Lightweight**: 2 kb minified and gzipped. No dependencies. Does not bloat your build with type-checking functions calls everywhere.
@@ -13,8 +12,7 @@ Features
 * **Powerfull**: Logical operators, tuples, regular expressions, rest parameters and more…
 * **Customizable**: Create your own types for your own needs.
 
-Install
--------
+## Install
 
 ```bash
 $ npm install floweret
@@ -22,8 +20,7 @@ $ npm install floweret
 $ yarn add floweret
 ```
 
-Usage
------
+## Usage
 
 > fn( [ <argument 1 type\>, <argument 2 type\>, …, <argument n type\> ], <result type\>, <function\> )
 
@@ -51,7 +48,7 @@ const add = fn(
 )
 ```
 
-### CoffeeScript
+### :coffee: CoffeeScript
 
 You can ommit the `fn` parentheses, resulting in a decorator-like syntax:
 
@@ -62,8 +59,7 @@ add = fn [Number, Number], Number,
   (a, b) -> a + b
 ```
 
-Type syntax
------------
+## Type syntax
 
 For readability, all examples below will use the ES2015 arrow function syntax.
 
@@ -264,7 +260,7 @@ or (untyped)
 > etc
 
 :warning: Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
-CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in floweret.
+:coffee: CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in floweret.
 
 ```js
 import etc from 'floweret/etc'
@@ -284,6 +280,13 @@ This is the same as putting types into brackets, but more explicit.
 import or from 'floweret/or'
 ```
 
+:coffee: `or` is a reserved CoffeeScript word. Use another identifier for imports:
+
+```coffee
+# CoffeeScript
+import Or from 'floweret/or'
+```
+
 *Documentation in progress…*
 
 #### and
@@ -292,6 +295,13 @@ import or from 'floweret/or'
 
 ```js
 import and from 'floweret/and'
+```
+
+:coffee: `and` is a reserved CoffeeScript word. Use another identifier for imports:
+
+```coffee
+# CoffeeScript
+import And from 'floweret/and'
 ```
 
 *Documentation in progress…*
@@ -304,8 +314,7 @@ import and from 'floweret/and'
 import not from 'floweret/not'
 ```
 
-:warning: :coffee: `not` is a reserved CoffeeScript token.
-Use another identifier to import the `not` operator in a CoffeeScript file:
+:coffee: `not` is a reserved CoffeeScript word. Use another identifier for imports:
 
 ```coffee
 # CoffeeScript
@@ -346,8 +355,7 @@ or
 
 *Documentation in progress…*
 
-Type composition
-----------------
+## Type composition
 
 As the types are simply JavaScript expressions, you can assign any type to a variable and use it to create new types.
 
@@ -357,8 +365,7 @@ nameType = {first: String, last: String, middle: [String, undefined]}
 userType = {id: Number, name: nameType, phone: phoneType}
 ```
 
-Type tools
-----------
+## Type tools
 
 Some handy utilities exported by the package.
 
@@ -384,37 +391,34 @@ typeOf([1, 2]) // 'Array'
 typeOf(Promise.resolve(1)) // 'Promise'
 ```
 
-Features to come
-----------------
+## Features to come
 
 * `fn` as a decorator, [when JavaScript decorators reach stage 4 and are implemented in CoffeeScript](https://github.com/jashkenas/coffeescript/issues/4917#issuecomment-387220758).
 
-Benchmark
----------
+## Benchmark
 
 Run the benchmark with `npm run benchmark`.
 
-```
+```txt
 Bundling format: umd
 
-2233 bytes      floweret-benchmark.min.js.gz
+2259 bytes      floweret-benchmark.min.js.gz
 21135 bytes     flow-runtime-benchmark.min.js.gz
 288 bytes       no-type-checking-benchmark.min.js.gz
 
 *** No type-checking ***
-100000 greets: 3.438ms
-100000 reductions: 28.914ms
+100000 greets: 3.450ms
+100000 reductions: 28.208ms
 
 *** Floweret ***
-100000 greets: 39.772ms
-100000 reductions: 444.938ms
+100000 greets: 31.858ms
+100000 reductions: 435.132ms
 
 *** Flow-runtime ***
-100000 greets: 1104.284ms
-100000 reductions: 4688.026ms
+100000 greets: 1152.076ms
+100000 reductions: 4748.253ms
 ```
 
-Licence
--------
+## Licence
 
 MIT
