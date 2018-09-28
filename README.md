@@ -1,6 +1,6 @@
 # :blossom: Floweret
 
-A [2kb, fast](#benchmark), runtime type-checker with Flow-*like* features.
+A [2 kB, fast](#benchmark), runtime type-checker with Flow-*like* features.
 
 ## Contents
 
@@ -30,6 +30,7 @@ A [2kb, fast](#benchmark), runtime type-checker with Flow-*like* features.
   * [Typed Set](#typed-set)
   * [Typed Map](#typed-map)
 * [Type composition](#type-composition)
+* [Custom types](#custom-types)
 * [Type tools](#type-tools)
   * [isType](#istype)
   * [typeOf](#typeof)
@@ -149,12 +150,12 @@ f(5, '1') // TypeMismatch: Argument #2  should be of type 'undefined or null or 
 
 > <string or number or boolean or undefined or null or NaN\>
 
-A literal can only be a string, a number, a booleans or be equal to undefined or null or NaN. Literals are useful when used inside an union list.
+A literal can only be a string, a number, a boolean or be equal to `undefined` or `null` or `NaN`. Literals are useful when used inside an union list.
 
 ```js
 const turn = fn(
-  [['left', 'right']], undefined,
-  (direction) => console.log("turning", direction)
+  [['left', 'right']], String,
+  (direction) => "turning " + direction
 )
 
 turn('left')  // "turning left"
@@ -174,26 +175,37 @@ const Email = /\S+@\S+\.\S+/ // simple email RegExp, do not use in production
 
 const showEmail = fn(
   [Email, String, String], undefined,
-  (email, subject, content) => console.table({email, subject, content})
+  (email, subject, content) => console.table({ email, subject, content })
 )
 
-showEmail('laurent@example.com', "Hi", "Hello!") // no error
-showEmail('laurent.example.com', "Hi", "Hello!") // Argument #1 should be of type 'string matching regular expression /\S+@\S+\.\S+/' instead of String "laurent.example.com".
+// nice email display
+showEmail('laurent@example.com', "Hi", "Hello!")
+
+// TypeMismatch: Argument #1 should be of type 'string matching regular expression /\S+@\S+\.\S+/' instead of String "laurent.example.com".
+showEmail('laurent.example.com', "Hi", "Hello!")
 ```
 
 ### Typed Array
 
 > Array(<type\>)
 
-You can use the `Array` type for arrays with elements of any type, but most of the time it is better to specify the type of the elements.
+You can use the `Array` constructor type for arrays with elements of any type, but most of the time it is better to specify the type of the elements.
 
 Simply use `Array(Number)` for an array of number.
 
-* **:warning:** If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`). Use `Array([Number, String])` to accept an array of elements that can be numbers or strings, such as `[1, "2", 3]`.
+```js
+const sum = fn(
+  [Array(Number)], Number,
+  (array) => array.reduce((acc, curr) => acc + curr)
+)
 
-If you forget the brackets you will get the union of types instead of the array of union of types, because in JavaScript `Array(Number, String)` is the same as `[Number, String]`.
+sum([1, 2, 3])   // 6
+sum([1, 2, '3']) // TypeMismatch: Argument #1 should be an array with element 2 of type 'Number' instead of String "3".
+```
 
-*Documentation in progress…*
+* **:warning:** If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`).
+  * Use `Array([Number, String])` to accept an array of elements that can be numbers or strings, such as `[1, "2", 3]`.
+  * If you forget the brackets you will get the union of types instead of the array of union of types, because in JavaScript `Array(Number, String)` is the same as `[Number, String]`.
 
 ### Sized Array
 
@@ -403,6 +415,10 @@ nameType = {first: String, last: String, middle: [String, undefined]}
 userType = {id: Number, name: nameType, phone: phoneType}
 ```
 
+## Custom types
+
+*Documentation in progress…*
+
 ## Type tools
 
 Some handy utilities exported by the package.
@@ -444,23 +460,21 @@ npm run benchmark
 The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple functions](https://github.com/laurentpayot/floweret/tree/master/benchmark). Feel free to make your own benchmarks
 
 ```txt
-Bundling format: umd
-
-2259 bytes      floweret-benchmark.min.js.gz
-21135 bytes     flow-runtime-benchmark.min.js.gz
-288 bytes       no-type-checking-benchmark.min.js.gz
+floweret-benchmark.min.js.gz          2289 bytes
+flow-runtime-benchmark.min.js.gz      21133 bytes
+no-type-checking-benchmark.min.js.gz  287 bytes
 
 *** No type-checking ***
-100000 greets: 3.450ms
-100000 reductions: 28.208ms
+100000 greets: 8.174ms
+100000 sums: 29.433ms
 
 *** Floweret ***
-100000 greets: 31.858ms
-100000 reductions: 435.132ms
+100000 greets: 31.484ms
+100000 sums: 439.768ms
 
 *** Flow-runtime ***
-100000 greets: 1152.076ms
-100000 reductions: 4748.253ms
+100000 greets: 1110.186ms
+100000 sums: 4728.939ms
 ```
 
 ## License
