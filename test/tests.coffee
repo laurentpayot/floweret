@@ -625,7 +625,7 @@ describe "isType", ->
 					expect(t.constructor.name).to.equal("TypedSet")
 					expect(t.type).to.eql([])
 					expect(warnSpy.calledOnceWithExactly(
-						"Use 'Set' type instead of a TypedSet with values of any type."
+						"Use 'Set' type instead of a TypedSet with elements of any type."
 					)).to.be.true
 
 				it "TypedSet(AnyType) should return a TypedSet instance and log a warning.", ->
@@ -634,7 +634,7 @@ describe "isType", ->
 					expect(t.constructor.name).to.equal("TypedSet")
 					expect(t.type).to.eql(AnyType)
 					expect(warnSpy.calledOnceWithExactly(
-						"Use 'Set' type instead of a TypedSet with values of any type."
+						"Use 'Set' type instead of a TypedSet with elements of any type."
 					)).to.be.true
 
 				it "TypedSet(AnyType()) should return a TypedSet instance and log a warning.", ->
@@ -643,7 +643,7 @@ describe "isType", ->
 					expect(t.constructor.name).to.equal("TypedSet")
 					expect(t.type).to.eql(AnyType())
 					expect(warnSpy.calledOnceWithExactly(
-						"Use 'Set' type instead of a TypedSet with values of any type."
+						"Use 'Set' type instead of a TypedSet with elements of any type."
 					)).to.be.true
 
 			context "Native type elements", ->
@@ -1464,8 +1464,58 @@ describe "fn", ->
 				.to.throw("Argument #1 should be of type 'tuple of
 							3 elements 'Number, Object or null, String'' instead of Number 1.")
 
+		context "Typed set type argument", ->
+
+			it "should return an error with 'set of 'Number''", ->
+				f = fn [TypedSet(Number)], AnyType, ->
+				expect(-> f(1))
+				.to.throw("Argument #1 should be of type 'set of 'Number'' instead of Number 1.")
+
+			it "should return an error with 'set of 'String''", ->
+				f = fn [TypedSet(String)], AnyType, ->
+				expect(-> f(new Set(['a', 1])))
+				.to.throw("Argument #1 should be of type 'set of 'String'' instead of Set.")
+
+		context "Typed object type argument", ->
+
+			it "should return an error with 'object with values of type 'Number''", ->
+				f = fn [TypedObject(Number)], AnyType, ->
+				expect(-> f(1))
+				.to.throw("Argument #1 should be of type 'object with values of type 'Number'' instead of Number 1.")
+
+			it "should return an error with 'set of 'String''", ->
+				f = fn [TypedObject(String)], AnyType, ->
+				expect(-> f({a: 'foo', b: 1}))
+				.to.throw("Argument #1 should be of type 'object with values of type 'String'' instead of Object.")
+
+		context "Typed map type argument", ->
+
+			it "should return an error with 'map with values of type 'Number''", ->
+				f = fn [TypedMap(Number)], AnyType, ->
+				expect(-> f(1))
+				.to.throw("Argument #1 should be of type 'map with values of type 'Number'' instead of Number 1.")
+
+			it "should return an error with 'map with values of type 'String''", ->
+				f = fn [TypedMap(String)], AnyType, ->
+				expect(-> f(new Map([[1, 'foo'], [2, 2]])))
+				.to.throw("Argument #1 should be of type 'map with values of type 'String'' instead of Map.")
+
+			it "should return an error with 'map with keys of type 'Number' and values of type 'String''", ->
+				f = fn [TypedMap(Number, String)], AnyType, ->
+				expect(-> f(1))
+				.to.throw("Argument #1 should be of type
+							'map with keys of type 'Number' and values of type 'String'' instead of Number 1.")
+
+			it "should return an error with
+						''map with keys of type 'Number' and values of type 'String'' instead of Map.'", ->
+				f = fn [TypedMap(Number, String)], AnyType, ->
+				expect(-> f(new Map([[1, 'foo'], ['two', 'bar']])))
+				.to.throw("Argument #1 should be of type
+							'map with keys of type 'Number' and values of type 'String'' instead of Map.")
 
 		context "Logical operators", ->
+
+			# NB: Or() returns an array, not an Or instance, see array tests
 
 			context "And", ->
 

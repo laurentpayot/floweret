@@ -1,5 +1,5 @@
 CustomType = require './CustomType'
-{isType, isAnyType} = require '.'
+{isType, isAnyType, getTypeName} = require '.'
 
 class TypedObject extends CustomType
 	constructor: (@type) ->
@@ -10,5 +10,6 @@ class TypedObject extends CustomType
 		return false unless val?.constructor is Object
 		return true if isAnyType(@type)
 		Object.values(val).every((v) => isType(v, @type))
+	getTypeName: -> "object with values of type '#{getTypeName(@type)}'"
 
 module.exports = CustomType.createHelper(TypedObject)

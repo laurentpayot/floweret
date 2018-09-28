@@ -9,7 +9,6 @@ class Tuple extends CustomType
 	validate: (val) ->
 		return false unless Array.isArray(val) and val.length is @types.length
 		val.every((e, i) => isType(e, @types[i]))
-	getTypeName: ->
-		"tuple of #{@types.length} elements '#{(getTypeName(t) for t in @types).join(", ")}'"
+	getTypeName: -> "tuple of #{@types.length} elements '#{(getTypeName(t) for t in @types).join(", ")}'"
 
 module.exports = CustomType.createHelper(Tuple)
