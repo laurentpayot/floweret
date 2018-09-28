@@ -8,7 +8,7 @@ Runtime type-checking for everyone.
 * **Powerfull**: Logical operators, tuples, regular expressions, rest parameters and more…
 * **Customizable**: Create your own types for your own needs.
 
-## Table Of Content
+## Contents
 
 * [Install](#install)
 * [Usage](#usage)
@@ -110,7 +110,7 @@ const f = fn(
 )
 
 f(1, 'a') // true
-f(1, 5)   // TypeMismatch: Argument number 2 (5) should be of type 'String' instead of Number.
+f(1, 5)   // TypeMismatch: Argument #2  should be of type 'String' instead of Number 5.
 ```
 
 ### Union of types
@@ -128,7 +128,7 @@ const f = fn(
 
 f(1, 2)    // '12'
 f(1, '2')  // '12'
-f(1, true) // TypeMismatch: Argument number 2 (true) should be of type 'Number or String' instead of Boolean.
+f(1, true) // TypeMismatch: Argument #2 should be of type 'Number or String' instead of Boolean true.
 ```
 
 ### Maybe type
@@ -148,7 +148,7 @@ const f = fn(
 
 f(5)      // 5
 f(5, 1)   // 6
-f(5, '1') // TypeMismatch: Argument number 2 (1) should be of type 'undefined or null or Number' instead of String.
+f(5, '1') // TypeMismatch: Argument #2  should be of type 'undefined or null or Number' instead of String "1".
 ```
 
 ### Literal type
@@ -164,7 +164,7 @@ const turn = fn(
 )
 
 turn('left')  // "turning left"
-turn('light') // TypeMismatch: Argument number 1 (light) should be of type 'literal String "left" or literal String "right"' instead of String.
+turn('light') // TypeMismatch: Argument #1 should be of type 'literal String "left" or literal String "right"' instead of String "light".
 ```
 
 ### Regular Expressions
