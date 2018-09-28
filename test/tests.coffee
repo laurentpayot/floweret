@@ -1043,12 +1043,12 @@ describe "fn", ->
 		it "should throw an error if function returns a number", ->
 			f = fn [], String,
 				-> 1
-			expect(-> f()).to.throw("Result (1) should be of type 'String' instead of Number.")
+			expect(-> f()).to.throw("Result should be of type 'String' instead of Number 1.")
 
 		it "should throw an error if function returns undefined", ->
 			f = fn [], [String, Number],
 				->
-			expect(-> f()).to.throw("Result (undefined) should be of type 'String or Number' instead of undefined.")
+			expect(-> f()).to.throw("Result should be of type 'String or Number' instead of undefined.")
 
 	context "Asynchronous functions", ->
 
@@ -1065,12 +1065,12 @@ describe "fn", ->
 		it "should throw an error if function returns a number promise", ->
 			f = fn [], promised(String),
 				-> Promise.resolve(1)
-			expect(f()).to.be.rejectedWith("Promise result (1) should be of type 'String' instead of Number.")
+			expect(f()).to.be.rejectedWith("Promise result should be of type 'String' instead of Number 1.")
 
 		it "should throw an error if function does not return a promise", ->
 			f = fn [], promised(String),
 				-> '1'
-			expect(f()).to.be.rejectedWith("Result (1) should be a promise of 'String' instead of String.")
+			expect(f()).to.be.rejectedWith("Result should be a promise of 'String' instead of String \"1\".")
 
 		it "should throw an error if promised used without type", ->
 			expect(-> fn [], promised(),
@@ -1127,17 +1127,17 @@ describe "fn", ->
 			f = fn [Number, [Number, undefined]], [],
 				(n1, n2=0) -> n1 + n2
 			expect(-> f(1, null))
-			.to.throw("Argument number 2 (null) should be of type 'Number or undefined' instead of null")
+			.to.throw("Argument #2 should be of type 'Number or undefined' instead of null.")
 
 		it "should raise an error when only an optional argument and value is null", ->
 			f = fn [undefined], [],
 				(n1=0) -> n1
-			expect(-> f(null)).to.throw("Argument number 1 (null) should be of type 'undefined' instead of null.")
+			expect(-> f(null)).to.throw("Argument #1 should be of type 'undefined' instead of null.")
 
 		it "should raise an error when only an optional argument and value isnt undefined", ->
 			f = fn [undefined], [],
 				(n1=0) -> n1
-			expect(-> f(1)).to.throw("Argument number 1 (1) should be of type 'undefined' instead of Number.")
+			expect(-> f(1)).to.throw("Argument #1 should be of type 'undefined' instead of Number 1.")
 
 		it "should do nothing if only an optional argument and value is undefined", ->
 			f = fn [undefined], [],
@@ -1179,21 +1179,21 @@ describe "fn", ->
 			f = fn [etc(String)], String,
 				(str...) -> str.join('')
 			expect(-> f('a', 5, 'def'))
-			.to.throw("Argument number 2 (5) should be of type 'String' instead of Number.")
+			.to.throw("Argument #2 should be of type 'String' instead of Number 5.")
 			f = fn [Number, etc(String)], String,
 				(n, str...) -> n + str.join('')
 			expect(-> f(1, 'a', 5, 'def'))
-			.to.throw("Argument number 3 (5) should be of type 'String' instead of Number.")
+			.to.throw("Argument #3 should be of type 'String' instead of Number 5.")
 
 		it "should throw an error if an argument is not a number", ->
 			f = fn [etc(Number)], String,
 				(str...) -> str.join('')
 			expect(-> f('a', 5, 'def'))
-			.to.throw("Argument number 1 (a) should be of type 'Number' instead of String.")
+			.to.throw("Argument #1 should be of type 'Number' instead of String \"a\".")
 			f = fn [Number, etc(Number)], String,
 				(n, str...) -> n + str.join('')
 			expect(-> f(1, 'a', 5, 'def'))
-			.to.throw("Argument number 2 (a) should be of type 'Number' instead of String.")
+			.to.throw("Argument #2 should be of type 'Number' instead of String \"a\".")
 
 		it "should return the concatenation of all the arguments of String or Number type", ->
 			f = fn [etc([String, Number])], String,
@@ -1207,11 +1207,11 @@ describe "fn", ->
 			f = fn [etc([String, Number])], String,
 				(str...) -> str.join('')
 			expect(-> f('a', true, 'def'))
-			.to.throw("Argument number 2 (true) should be of type 'String or Number' instead of Boolean.")
+			.to.throw("Argument #2 should be of type 'String or Number' instead of Boolean true.")
 			f = fn [Number, etc([String, Number])], String,
 				(n, str...) -> n + str.join('')
 			expect(-> f(1, 'a', true, 'def'))
-			.to.throw("Argument number 3 (true) should be of type 'String or Number' instead of Boolean.")
+			.to.throw("Argument #3 should be of type 'String or Number' instead of Boolean true.")
 
 		# ### CoffeeScript only ###
 		# it "should NOT throw an error if splat is not the last of the argument types", ->
@@ -1266,168 +1266,167 @@ describe "fn", ->
 			it "should return an error with 'undefined'", ->
 				f = fn [undefined], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'undefined' instead of Number.")
+				.to.throw("Argument #1 should be of type 'undefined' instead of Number 1.")
 
 			it "should return an error with 'null'", ->
 				f = fn [null], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'null' instead of Number.")
+				.to.throw("Argument #1 should be of type 'null' instead of Number 1.")
 
 			it "should return an error with 'String'", ->
 				f = fn [String], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'String' instead of Number.")
+				.to.throw("Argument #1 should be of type 'String' instead of Number 1.")
 
 			it "should return an error with
 				'Argument number 1 should be of type 'Number' instead of Array.'", ->
 				f = fn [Number], AnyType, ->
 				expect(-> f([1, 2]))
-				.to.throw("Argument number 1 should be of type 'Number' instead of Array.")
+				.to.throw("Argument #1 should be of type 'Number' instead of Array.")
 
 			it "should return an error with 'Array'", ->
 				f = fn [Array], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'Array' instead of Number.")
+				.to.throw("Argument #1 should be of type 'Array' instead of Number 1.")
 
 			it "should return an error with 'literal String 'foo'", ->
 				f = fn ['foo'], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'literal String \"foo\"' instead of Number.")
+				.to.throw("Argument #1 should be of type 'literal String \"foo\"' instead of Number 1.")
 
 			it "should return an error with 'literal Number 1'", ->
 				f = fn [1], AnyType, ->
 				expect(-> f('1'))
-				.to.throw("Argument number 1 (1) should be of type 'literal Number 1' instead of String.")
+				.to.throw("Argument #1 should be of type 'literal Number 1' instead of String \"1\".")
 
 			it "should return an error with 'literal Boolean 'true'", ->
 				f = fn [true], AnyType, ->
 				expect(-> f(false))
-				.to.throw("Argument number 1 (false) should be of type 'literal Boolean true' instead of Boolean.")
+				.to.throw("Argument #1 should be of type 'literal Boolean true' instead of Boolean false.")
 
 			it "should return an error with
 				'Argument number 1 should be of type 'Number' instead of Object.'", ->
 				f = fn [Number], AnyType, ->
 				expect(-> f(a: {b: 1, c: 2}, d: 3))
-				.to.throw("Argument number 1 should be of type 'Number' instead of Object.")
+				.to.throw("Argument #1 should be of type 'Number' instead of Object.")
 
 			it "should return an error with
-				'Argument number 1 should be an object with key 'a.c' of type 'String' instead of Number.'", ->
+				'Argument number 1 should be an object with key 'a.c' of type 'String' instead of Number 1.'", ->
 				f = fn [{a: {b: Number, c: String}, d: Number}], AnyType, ->
 				expect(-> f(a: {b: 1, c: 2}, d: 3))
-				.to.throw("Argument number 1 should be an object with key 'a.c'
-							of type 'String' instead of Number.")
+				.to.throw("Argument #1 should be an object with key 'a.c' of type 'String' instead of Number 2.")
 
 			it "should return an error with 'MyClass", ->
 				class MyClass
 				f = fn [MyClass], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'MyClass' instead of Number.")
+				.to.throw("Argument #1 should be of type 'MyClass' instead of Number 1.")
 
 			it "should return an error with 'empty array'", ->
 				f = fn [EmptyArray], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'empty array' instead of Number.")
+				.to.throw("Argument #1 should be of type 'empty array' instead of Number 1.")
 				expect(-> f([1]))
-				.to.throw("Argument number 1 should be of type 'empty array' instead of Array.")
+				.to.throw("Argument #1 should be of type 'empty array' instead of Array.")
 
 		context "Union type argument", ->
 
 			it "should return an error with 'undefined or null'", ->
 				f = fn [[undefined, null]], AnyType, ->
 				expect(-> f(true))
-				.to.throw("Argument number 1 (true) should be of type 'undefined or null' instead of Boolean.")
+				.to.throw("Argument #1 should be of type 'undefined or null' instead of Boolean true.")
 
 			it "should return an error with 'String or Number'", ->
 				f = fn [[String, Number]], AnyType, ->
 				expect(-> f(true))
-				.to.throw("Argument number 1 (true) should be of type 'String or Number' instead of Boolean.")
+				.to.throw("Argument #1 should be of type 'String or Number' instead of Boolean true.")
 
 			it "should return an error with 'literal 'foo' or literal 'bar''", ->
 				f = fn [['foo', 'bar']], AnyType, ->
 				expect(-> f('a'))
-				.to.throw("Argument number 1 (a) should be of type
-							'literal String \"foo\" or literal String \"bar\"' instead of String.")
+				.to.throw("Argument #1 should be of type
+							'literal String \"foo\" or literal String \"bar\"' instead of String \"a\".")
 
 			it "should return an error with 'literal Number 1 or literal Number 2'", ->
 				f = fn [[1, 2]], AnyType, ->
 				expect(-> f(3))
-				.to.throw("Argument number 1 (3) should be of type
-							'literal Number 1 or literal Number 2' instead of Number.")
+				.to.throw("Argument #1 should be of type
+							'literal Number 1 or literal Number 2' instead of Number 3.")
 
 			it "should return an error with 'literal String \"1\" or literal Number '1'", ->
 				f = fn [['1', 1]], AnyType, ->
 				expect(-> f(3))
-				.to.throw("Argument number 1 (3) should be of type
-							'literal String \"1\" or literal Number 1' instead of Number.")
+				.to.throw("Argument #1 should be of type
+							'literal String \"1\" or literal Number 1' instead of Number 3.")
 
 			it "should return an error with 'literal Boolean true or literal Boolean false", ->
 				f = fn [[true, false]], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type
-							'literal Boolean true or literal Boolean false' instead of Number.")
+				.to.throw("Argument #1 should be of type
+							'literal Boolean true or literal Boolean false' instead of Number 1.")
 
 		context "Typed Array type argument", ->
 
 			it "should return an error with 'array of 'Number''", ->
 				f = fn [Array(Number)], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'array of 'Number'' instead of Number.")
+				.to.throw("Argument #1 should be of type 'array of 'Number'' instead of Number 1.")
 
 			it "should return an error with 'array of 'Promise''", ->
 				f = fn [Array(Promise)], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'array of 'Promise'' instead of Number.")
+				.to.throw("Argument #1 should be of type 'array of 'Promise'' instead of Number 1.")
 
 			it "should return an error with 'array of 'String or Number''", ->
 				f = fn [Array([String, Number])], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'array of 'String or Number'' instead of Number.")
+				.to.throw("Argument #1 should be of type 'array of 'String or Number'' instead of Number 1.")
 
 			it "should return an error with 'array of 'object type object''", ->
 				f = fn [Array({a: String, b: Number})], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'array of 'object type'' instead of Number.")
+				.to.throw("Argument #1 should be of type 'array of 'object type'' instead of Number 1.")
 
 			it "Array([]) should return an error with 'array of 'any type''", ->
 				f = fn [Array([])], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'array of 'any type'' instead of Number.")
+				.to.throw("Argument #1 should be of type 'array of 'any type'' instead of Number 1.")
 
 			it "Array(AnyType)] should return an error with 'array of 'any type''", ->
 				f = fn [Array(AnyType)], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'array of 'any type'' instead of Number.")
+				.to.throw("Argument #1 should be of type 'array of 'any type'' instead of Number 1.")
 
 			it "Array(AnyType()) should return an error with 'array of 'any type''", ->
 				f = fn [Array(AnyType())], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'array of 'any type'' instead of Number.")
+				.to.throw("Argument #1 should be of type 'array of 'any type'' instead of Number 1.")
 
 			it "Array(Number) should return an error with 'array with element 2 of type 'Number' instead of String.'", ->
 				f = fn [Array(Number)], AnyType, ->
 				expect(-> f([1, 2, "three", 4]))
-				.to.throw("Argument number 1 should be an array with element 2 of type 'Number' instead of String.")
+				.to.throw("Argument #1 should be an array with element 2 of type 'Number' instead of String \"three\".")
 
 			it "Array(Number) should return an error with
 				'array with element 0 of type 'Number or String' instead of Boolean.'", ->
 				f = fn [Array([Number, String])], AnyType, ->
 				expect(-> f([true]))
-				.to.throw("Argument number 1 should be an array with element 0 of type
-							'Number or String' instead of Boolean.")
+				.to.throw("Argument #1 should be an array with element 0 of type
+							'Number or String' instead of Boolean true.")
 
 		context "Tuple type argument", ->
 
 			it "should return an error with 'tuple of 3 elements 'Number, Boolean, String''", ->
 				f = fn [Tuple(Number, Boolean, String)], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'tuple of
-							3 elements 'Number, Boolean, String'' instead of Number")
+				.to.throw("Argument #1 should be of type 'tuple of
+							3 elements 'Number, Boolean, String'' instead of Number 1.")
 
 			it "should return an error with 'tuple of 3 elements 'Number, Object or null, String''", ->
 				f = fn [Tuple(Number, [Object, null], String)], AnyType, ->
 				expect(-> f(1))
-				.to.throw("Argument number 1 (1) should be of type 'tuple of
-							3 elements 'Number, Object or null, String'' instead of Number")
+				.to.throw("Argument #1 should be of type 'tuple of
+							3 elements 'Number, Object or null, String'' instead of Number 1.")
 
 		context "Result", ->
 
@@ -1435,4 +1434,4 @@ describe "fn", ->
 				f = fn [Number, [undefined, Number]], Number,
 					(a, b) -> a + b # missing default b value
 				expect(-> f(1))
-				.to.throw("Result (NaN) should be of type 'Number' instead of NaN.")
+				.to.throw("Result should be of type 'Number' instead of NaN.")
