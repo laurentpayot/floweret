@@ -2,15 +2,46 @@
 
 Runtime type-checking for everyone.
 
----
-
-## Features
-
 * **Easy**: Native JavaScript types. No need for Babel.
 * **Lightweight**: 2 kb minified and gzipped. No dependencies. Does not bloat your build with type-checking functions calls everywhere.
 * **Efficient**: Direct type comparison, no string to parse. [10 times faster](#benchmark) than [Flow-runtime](https://codemix.github.io/flow-runtime/).
 * **Powerfull**: Logical operators, tuples, regular expressions, rest parameters and more…
 * **Customizable**: Create your own types for your own needs.
+
+## Table Of Content
+
+* [Install](#install)
+* [Usage](#usage)
+  * [JavaScript](#javascript)
+  * [CoffeeScript](#coffeescript)
+* [Type syntax](#type-syntax)
+  * [Native types](#native-types)
+  * [Union of types](#union-of-types)
+  * [Maybe type](#maybe-type)
+  * [Literal type](#literal-type)
+  * [Regular Expressions](#regular-expressions)
+  * [Typed Array](#typed-array)
+  * [Sized Array](#sized-array)
+  * [Object type](#object-type)
+  * [Class type](#class-type)
+  * [Promise type](#promise-type)
+  * [Any type wildcard](#any-type-wildcard)
+  * [Rest type](#rest-type)
+  * [Logical operators](#logical-operators)
+    * [or](#or)
+    * [and](#and)
+    * [not](#not)
+  * [Tuple types](#tuple-types)
+  * [Typed Object](#typed-object)
+  * [Typed Set](#typed-set)
+  * [Typed Map](#typed-map)
+* [Type composition](#type-composition)
+* [Type tools](#type-tools)
+  * [isType](#istype)
+  * [typeOf](#typeof)
+* [Features to come](#features-to-come)
+* [Benchmark](#benchmark)
+* [License](#license)
 
 ## Install
 
@@ -27,7 +58,7 @@ $ yarn add floweret
 To add a signature to a function, wrap the function with the `fn` function.
 `fn` arguments are first the *array* of input types, followed by the result type, and finally the function itself:
 
-### Javascript
+### JavaScript
 
 ```js
 import { fn } from 'floweret'
