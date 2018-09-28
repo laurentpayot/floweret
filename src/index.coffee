@@ -59,6 +59,12 @@ badPath = (obj, typeObj) ->
 			return [k].concat(if obj[k]?.constructor is Object then badPath(obj[k], typeObj[k]) \
 								else [obj[k], typeObj[k]])
 
+# show the type of the value and the value itself if string or number or boolean
+typeValue = (val) -> (t = typeOf(val)) + switch t
+	when 'String' then ' "' + val + '"'
+	when 'Number', 'Boolean' then ' ' + val
+	else ''
+
 # returns the type name for signature error messages (supposing type is always correct)
 getTypeName = (type) -> switch type?.constructor
 	when undefined then typeOf(type)
@@ -73,21 +79,20 @@ getTypeName = (type) -> switch type?.constructor
 		if type instanceof CustomType
 			type.getTypeName()
 		else
-			"literal #{typeOf(type)} #{if typeof type is 'string' then '"'+type+'"' else type}"
+			"literal #{typeValue(type)}"
 
 # type error message comparison part helper
 shouldBe = (val, type, promised=false) ->
 	apo = if promised then "a promise of " else ''
-	switch
+	"should be " + switch
 		when Array.isArray(val) and Array.isArray(type)
 			i = val.findIndex((e) -> not isType(e, type[0]))
-			"should be #{apo}an array with element #{i} of type '#{getTypeName(type[0])}' instead of #{typeOf(val[i])}"
+			"#{apo}an array with element #{i} of type '#{getTypeName(type[0])}' instead of #{typeValue(val[i])}"
 		when val?.constructor is Object and type?.constructor is Object
 			[bp..., bv, bt] = badPath(val, type)
-			"should be #{apo}an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}' instead of #{typeOf(bv)}"
+			"#{apo}an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}' instead of #{typeValue(bv)}"
 		else
-			prefix = if Array.isArray(val) or val?.constructor is Object then '' else "(#{val}) "
-			"#{prefix}should be #{apo or 'of type '}'#{getTypeName(type)}' instead of #{typeOf(val)}"
+			"#{apo or 'of type '}'#{getTypeName(type)}' instead of #{typeValue(val)}"
 
 # wraps a function to check its arguments types and result type
 fn = (argTypes, resType, f) ->
@@ -104,13 +109,13 @@ fn = (argTypes, resType, f) ->
 				t = (if type is EtcHelper then type() else type).type # using default helper parameters
 				unless isAnyType(t)
 					for arg, j in args[i..]
-						error "Argument number #{i+j+1} #{shouldBe(arg, t)}." unless isType(arg, t)
+						error "Argument ##{i+j+1} #{shouldBe(arg, t)}." unless isType(arg, t)
 			else
 				unless isAnyType(type)
 					if args[i] is undefined
 						error "Missing required argument number #{i+1}." unless isType(undefined, type)
 					else
-						error "Argument number #{i+1} #{shouldBe(args[i], type)}." unless isType(args[i], type)
+						error "Argument ##{i+1} #{shouldBe(args[i], type)}." unless isType(args[i], type)
 		error "Too many arguments provided." if args.length > argTypes.length and not rest
 		if resType instanceof Promise
 			# NB: not using `await` because CS would transpile the returned function as an async one
