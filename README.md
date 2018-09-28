@@ -211,7 +211,15 @@ sum([1, 2, '3']) // TypeMismatch: Argument #1 should be an array with element 2 
 
 > Array(<length\>)
 
-*Documentation in progress…*
+```js
+const pokerHand = fn(
+  [Array(5)], String,
+  (cards) => cards.join('-')
+)
+
+pokerHand([7, 9, "Q", "K", 1])     // 7-9-Q-K-1
+pokerHand([7, 9, 10, "Q", "K", 1]) // TypeMismatch: Argument #1 should be an array with a length of 5 instead of 6.
+```
 
 ### Object type
 
@@ -460,21 +468,21 @@ npm run benchmark
 The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple functions](https://github.com/laurentpayot/floweret/tree/master/benchmark). Feel free to make your own benchmarks
 
 ```txt
-floweret-benchmark.min.js.gz          2289 bytes
+floweret-benchmark.min.js.gz          2325 bytes
 flow-runtime-benchmark.min.js.gz      21133 bytes
 no-type-checking-benchmark.min.js.gz  287 bytes
 
 *** No type-checking ***
-100000 greets: 8.174ms
-100000 sums: 29.433ms
+100000 greets: 3.471ms
+100000 sums: 33.552ms
 
 *** Floweret ***
-100000 greets: 31.484ms
-100000 sums: 439.768ms
+100000 greets: 31.699ms
+100000 sums: 435.207ms
 
 *** Flow-runtime ***
-100000 greets: 1110.186ms
-100000 sums: 4728.939ms
+100000 greets: 1099.931ms
+100000 sums: 4896.131ms
 ```
 
 ## License

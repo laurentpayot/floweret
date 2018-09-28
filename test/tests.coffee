@@ -1322,6 +1322,31 @@ describe "fn", ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'MyClass' instead of Number 1.")
 
+			it "should return an error with 'array of'", ->
+				f = fn [Array(Number)], AnyType, ->
+				expect(-> f(1))
+				.to.throw("Argument #1 should be of type 'array of 'Number'' instead of Number 1.")
+
+			it "should return an error with 'array with element 1 of type 'Number' instead of String \"2\"'", ->
+				f = fn [Array(Number)], AnyType, ->
+				expect(-> f([1, '2', 3]))
+				.to.throw("Argument #1 should be an array with element 1 of type 'Number' instead of String \"2\".")
+
+			it "should return an error with 'array with a length of 4 instead of 3", ->
+				f = fn [Array(4)], AnyType, ->
+				expect(-> f([1, '2', 3]))
+				.to.throw("Argument #1 should be an array with a length of 4 instead of 3.")
+
+			it "should return an error with 'an array with a length of 2 instead of 3.", ->
+				f = fn [Array(2)], AnyType, ->
+				expect(-> f([1, '2', 3]))
+				.to.throw("Argument #1 should be an array with a length of 2 instead of 3.")
+
+			it "should return an error with 'of type 'Number or String' instead of Array", ->
+				f = fn [[Number, String]], AnyType, ->
+				expect(-> f([1]))
+				.to.throw("Argument #1 should be of type 'Number or String' instead of Array.")
+
 			it "should return an error with 'empty array'", ->
 				f = fn [EmptyArray], AnyType, ->
 				expect(-> f(1))
@@ -1339,7 +1364,6 @@ describe "fn", ->
 				expect(-> f("bar"))
 				.to.throw("Argument #1 should be of type
 							'string matching regular expression /foo/' instead of String \"bar\".")
-
 
 		context "Union type argument", ->
 

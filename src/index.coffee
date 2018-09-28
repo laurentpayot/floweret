@@ -86,9 +86,12 @@ getTypeName = (type) -> switch type?.constructor
 shouldBe = (val, type, promised=false) ->
 	apo = if promised then "a promise of " else ''
 	"should be " + switch
-		when Array.isArray(val) and Array.isArray(type)
-			i = val.findIndex((e) -> not isType(e, type[0]))
-			"#{apo}an array with element #{i} of type '#{getTypeName(type[0])}' instead of #{typeValue(val[i])}"
+		when Array.isArray(val) and Array.isArray(type) and (type.length is 1 or not Object.values(type).length)
+			if not Object.values(type).length # sized array
+				"#{apo}an array with a length of #{type.length} instead of #{val.length}"
+			else
+				i = val.findIndex((e) -> not isType(e, type[0]))
+				"#{apo}an array with element #{i} of type '#{getTypeName(type[0])}' instead of #{typeValue(val[i])}"
 		when val?.constructor is Object and type?.constructor is Object
 			[bp..., bv, bt] = badPath(val, type)
 			"#{apo}an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}' instead of #{typeValue(bv)}"
