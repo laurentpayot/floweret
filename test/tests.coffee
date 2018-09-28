@@ -1329,6 +1329,18 @@ describe "fn", ->
 				expect(-> f([1]))
 				.to.throw("Argument #1 should be of type 'empty array' instead of Array.")
 
+			it "should return an error with 'NaN'", ->
+				f = fn [Number], AnyType, ->
+				expect(-> f("a" * 2))
+				.to.throw("Argument #1 should be of type 'Number' instead of NaN.")
+
+			it "should return an error with 'RegExp'", ->
+				f = fn [/foo/], AnyType, ->
+				expect(-> f("bar"))
+				.to.throw("Argument #1 should be of type
+							'string matching regular expression /foo/' instead of String \"bar\".")
+
+
 		context "Union type argument", ->
 
 			it "should return an error with 'undefined or null'", ->

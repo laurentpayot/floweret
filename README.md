@@ -169,7 +169,17 @@ When the type is a regular expression, if the value is a string it will be teste
 
 * **:warning:** Regular expressions are slow so if you need to check a lot of data consider creating a custom type (see below) with a `validate` method using String prototype methods instead.
 
-*Documentation in progress…*
+```js
+const Email = /\S+@\S+\.\S+/ // simple email RegExp, do not use in production
+
+const showEmail = fn(
+  [Email, String, String], undefined,
+  (email, subject, content) => console.table({email, subject, content})
+)
+
+showEmail('laurent@example.com', "Hi", "Hello!") // no error
+showEmail('laurent.example.com', "Hi", "Hello!") // Argument #1 should be of type 'string matching regular expression /\S+@\S+\.\S+/' instead of String "laurent.example.com".
+```
 
 ### Typed Array
 
@@ -180,6 +190,7 @@ You can use the `Array` type for arrays with elements of any type, but most of t
 Simply use `Array(Number)` for an array of number.
 
 * **:warning:** If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`). Use `Array([Number, String])` to accept an array of elements that can be numbers or strings, such as `[1, "2", 3]`.
+
 If you forget the brackets you will get the union of types instead of the array of union of types, because in JavaScript `Array(Number, String)` is the same as `[Number, String]`.
 
 *Documentation in progress…*
@@ -420,11 +431,17 @@ typeOf(Promise.resolve(1)) // 'Promise'
 
 ## Features to come
 
-* `fn` as a decorator, [when JavaScript decorators reach stage 4 and are implemented in CoffeeScript](https://github.com/jashkenas/coffeescript/issues/4917#issuecomment-387220758).
+* `fn` as a decorator, when JavaScript decorators reach stage 4.
 
 ## Benchmark
 
-Run the benchmark with `npm run benchmark`.
+Run the benchmark with:
+
+```shell
+npm run benchmark
+```
+
+The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple functions](https://github.com/laurentpayot/floweret/tree/master/benchmark). Feel free to make your own benchmarks
 
 ```txt
 Bundling format: umd

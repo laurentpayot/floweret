@@ -59,10 +59,10 @@ badPath = (obj, typeObj) ->
 			return [k].concat(if obj[k]?.constructor is Object then badPath(obj[k], typeObj[k]) \
 								else [obj[k], typeObj[k]])
 
-# show the type of the value and the value itself if string or number or boolean
+# show the type of the value and eventually the value itself
 typeValue = (val) -> (t = typeOf(val)) + switch t
 	when 'String' then ' "' + val + '"'
-	when 'Number', 'Boolean' then ' ' + val
+	when 'Number', 'Boolean', 'RegExp' then ' ' + val
 	else ''
 
 # returns the type name for signature error messages (supposing type is always correct)
@@ -75,6 +75,7 @@ getTypeName = (type) -> switch type?.constructor
 	when Function
 		if type.rootClass is CustomType then type().getTypeName() else type.name
 	when Object then "object type"
+	when RegExp then "string matching regular expression " + type
 	else
 		if type instanceof CustomType
 			type.getTypeName()
