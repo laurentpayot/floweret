@@ -1,6 +1,6 @@
 {
   "name": "floweret",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A 2kb, fast, runtime type-checker with Flow-like features.",
   "author": "Laurent Payot",
   "license": "MIT",
