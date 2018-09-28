@@ -1,12 +1,6 @@
 # :blossom: Floweret
 
-Runtime type-checking for everyone.
-
-* **Easy**: Native JavaScript types. No need for Babel.
-* **Lightweight**: 2 kb minified and gzipped. No dependencies. Does not bloat your build with type-checking functions calls everywhere.
-* **Efficient**: Direct type comparison, no string to parse. [10 times faster](#benchmark) than [Flow-runtime](https://codemix.github.io/flow-runtime/).
-* **Powerfull**: Logical operators, tuples, regular expressions, rest parameters and more…
-* **Customizable**: Create your own types for your own needs.
+A [2kb, fast](#benchmark), runtime type-checker with Flow-*like* features.
 
 ## Contents
 
