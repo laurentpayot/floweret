@@ -100,11 +100,11 @@ All native JavaScript type constructors are allowed as type:
 
 ```js
 const f = fn(
-  [Number, String], Boolean,
-  (a, b) => a + b === '1a'
+  [Number, String], Array,
+  (a, b) => [a, b]
 )
 
-f(1, 'a') // true
+f(1, 'a') // [1, 'a']
 f(1, 5)   // TypeMismatch: Argument #2  should be of type 'String' instead of Number 5.
 ```
 
@@ -191,16 +191,16 @@ showEmail('laurent.example.com', "Hi", "Hello!")
 
 You can use the `Array` constructor type for arrays with elements of any type, but most of the time it is better to specify the type of the elements.
 
-Simply use `Array(Number)` for an array of number.
+If you want to specify the type of the elements of an array, use this type as the `Array` constructor argument. For instance simply use `Array(String)` for an array of strings:
 
 ```js
-const sum = fn(
-  [Array(Number)], Number,
-  (array) => array.reduce((acc, curr) => acc + curr)
+const dashJoin = fn(
+  [Array(String)], String,
+  (strings) => strings.join('-')
 )
 
-sum([1, 2, 3])   // 6
-sum([1, 2, '3']) // TypeMismatch: Argument #1 should be an array with element 2 of type 'Number' instead of String "3".
+dashJoin(["a", "b", "c"]) // a-b-c
+dashJoin(["a", "b", 3])   // Argument #1 should be an array with element 2 of type 'String' instead of Number 3.
 ```
 
 * **:warning:** If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`).
@@ -211,6 +211,10 @@ sum([1, 2, '3']) // TypeMismatch: Argument #1 should be an array with element 2 
 
 > Array(<length\>)
 
+If you want to specify the length of an array, use this length as the `Array` constructor argument.
+
+For instance use `Array(5)` for an array of five elements:
+
 ```js
 const pokerHand = fn(
   [Array(5)], String,
@@ -220,6 +224,8 @@ const pokerHand = fn(
 pokerHand([7, 9, "Q", "K", 1])     // 7-9-Q-K-1
 pokerHand([7, 9, 10, "Q", "K", 1]) // TypeMismatch: Argument #1 should be an array with a length of 5 instead of 6.
 ```
+
+Sized array type is useful when used in conjunction with a typed array type, thanks to the [`and` operator](#and).
 
 ### Object type
 
@@ -353,6 +359,13 @@ import or from 'floweret/or'
 
 ```js
 import and from 'floweret/and'
+
+const weeklyTotal = fn(
+  [and(Array(Number), Array(7))], Number,
+  (days) => days.reduce((acc, curr) => acc + curr)
+)
+
+weeklyTotal([1, 1, 2, 2, 5, 5, 1]) // 17
 ```
 
 * **:coffee:** `and` is a reserved CoffeeScript word. Use another identifier for imports:
