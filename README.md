@@ -8,8 +8,6 @@
 * **Powerfull**: Logical operators, tuples, regular expressions, rest parameters and more…
 * **Customizable**: Create your own types for your own needs.
 
----
-
 ## Contents
 
 * [Install](#install)
@@ -487,7 +485,7 @@ Run the benchmark with:
 npm run benchmark
 ```
 
-The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple functions](https://github.com/laurentpayot/floweret/tree/master/benchmark). Feel free to make your own benchmarks
+The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple functions](https://github.com/laurentpayot/floweret/tree/master/benchmark). Feel free to make your own benchmarks.
 
 ```txt
 floweret-benchmark.min.js.gz          2358 bytes
