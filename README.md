@@ -438,9 +438,9 @@ or
 As the types are simply JavaScript expressions, you can assign any type to a variable and use it to create new types.
 
 ```js
-phoneType = [Number, undefined]
-nameType = {first: String, last: String, middle: [String, undefined]}
-userType = {id: Number, name: nameType, phone: phoneType}
+Phone = [Number, undefined]
+Name = {first: String, last: String, middle: [String, undefined]}
+User = {id: Number, name: Name, phone: Phone}
 ```
 
 ## Custom types
