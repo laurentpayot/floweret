@@ -1,12 +1,11 @@
 CustomType = require './CustomType'
-{isType, isAnyType, getTypeName} = require '.'
+{isType, isAnyType, isLiteral, getTypeName} = require '.'
 
 class TypedSet extends CustomType
 	constructor: (@type) ->
 		super(arguments, 1, 1) # exactly 1 argument
+		@error "'#{@constructor.name}' argument can not be a literal of type '#{@type}'." if isLiteral(@type)
 		@warn "Use 'Set' type instead of a #{@constructor.name} with elements of any type." if isAnyType(@type)
-		@error "'#{@constructor.name}' argument can not be a literal
-				of type '#{@type}'." if @type?.constructor in [undefined, String, Number, Boolean]
 	validate: (val) ->
 		return false unless val?.constructor is Set
 		return true if isAnyType(@type)
