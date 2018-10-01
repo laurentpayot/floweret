@@ -1,6 +1,6 @@
 # :blossom: Floweret
 
- Runtime type-checking for everyone.
+Runtime signature type-checker.
 
 * **Easy**: Native JavaScript types. No need for Babel.
 * **Lightweight**: 2 kb minified and gzipped. No dependencies.

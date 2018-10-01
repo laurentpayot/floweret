@@ -1,7 +1,7 @@
 {
   "name": "floweret",
   "version": "0.1.6",
-  "description": "A 2kb, fast, runtime type-checker with Flow-like features.",
+  "description": "A 2kb, fast, runtime signature type-checker.",
   "author": "Laurent Payot",
   "license": "MIT",
   "homepage": "https://github.com/laurentpayot/floweret#readme",
@@ -19,6 +19,7 @@
     "runtime",
     "flow",
     "flow-runtime",
+    "runtypes",
     "javascript",
     "typescript",
     "coffeescript",
@@ -34,8 +35,8 @@
     "build-all": "npm run build && npm run minify && npm run build-tests",
     "test": "npm run build-all && mocha",
     "bundle": "cd benchmark && rollup -c && echo && cd bundles && stat -c '%n %s bytes' *.gz | sort -n -k 2 | column -t",
-    "benchmark": "npm run bundle && cd benchmark/bundles && node no-type-checking-benchmark.min.js && node floweret-benchmark.min.js && node flow-runtime-benchmark.min.js && echo",
-    "benchmark-unbundled": "cd benchmark && node no-type-checking.js && node floweret.js && node flow-runtime.js && echo",
+    "benchmark": "npm run bundle && cd benchmark/bundles && node no-type-checking-benchmark.min.js && node floweret-benchmark.min.js && node flow-runtime-benchmark.min.js && node runtypes.min.js && echo",
+    "benchmark-unbundled": "cd benchmark && node no-type-checking.js && node floweret.js && node flow-runtime.js && node runtypes.js && echo",
     "link": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm link",
     "publish": "npm run test && cp package.json dist && cp *.md dist && cd dist && rm floweret.min.js && rm *.js.map && npm publish"
   },
@@ -50,6 +51,7 @@
     "rollup-plugin-gzip": "^2.0.0",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-terser": "^3.0.0",
+    "runtypes": "^2.1.6",
     "sinon": "^6.3.4"
   }
 }

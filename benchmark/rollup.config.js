@@ -54,5 +54,14 @@ export default [
 			format
 		},
 		plugins
+	},
+	{
+		input: 'runtypes.js',
+		output: {
+			file: 'bundles/runtypes.min.js',
+			name: 'myBundle',
+			format
+		},
+		plugins
 	}
 ]
