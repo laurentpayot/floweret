@@ -13,19 +13,19 @@ class CustomType
 	error: -> CustomType.error(arguments...)
 	warn: -> CustomType.warn(arguments...)
 	constructor: (args, min, max) ->
-		CustomType.error "Abstract class 'CustomType' cannot be instantiated directly." if @constructor is CustomType
-		CustomType.error "Super needs child type arguments as its first argument." unless arguments.length
+		@error "Abstract class 'CustomType' cannot be instantiated directly." if @constructor is CustomType
+		@error "Super needs child type arguments as its first argument." unless arguments.length
 		l = args.length
 		name = @helperName or @constructor.name
 		switch
 			when max is undefined
-				if min and l < min then CustomType.error "'#{name}' must have at least #{min} argument#{s(min)}."
+				if min and l < min then @error "'#{name}' must have at least #{min} argument#{s(min)}."
 			when min is max
-				if min is 0 and l then CustomType.error "'#{name}' cannot have any arguments."
-				if l isnt min then CustomType.error "'#{name}' must have exactly #{min} argument#{s(min)}."
+				if min is 0 and l then @error "'#{name}' cannot have any arguments."
+				if l isnt min then @error "'#{name}' must have exactly #{min} argument#{s(min)}."
 			else
-				if l > max then CustomType.error "'#{name}' must have at most #{max} argument#{s(max)}."
-				if l < min then CustomType.error "'#{name}' must have at least #{min} argument#{s(min)}."
+				if l > max then @error "'#{name}' must have at most #{max} argument#{s(max)}."
+				if l < min then @error "'#{name}' must have at least #{min} argument#{s(min)}."
 	validate: -> false # false if child class validate() missing
 	getTypeName: -> @constructor.name
 
