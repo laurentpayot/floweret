@@ -17,7 +17,7 @@ typeOf = (val) ->
 	if val in [undefined, null, Infinity, -Infinity] or Number.isNaN(val) then '' + val else val.constructor.name
 
 # returns true if value is a literal
-isLiteral = (val) -> typeof val in ['undefined', 'null', 'string', 'number', 'boolean'] # NaN and ±Infinity are numbers
+isLiteral = (val) -> val?.constructor in [undefined, String, Number, Boolean] # NaN and ±Infinity are numbers
 
 # check that a value is of a given type or of any (undefined) type, e.g.: isType("foo", String)
 isType = (val, type) -> if Array.isArray(type) # NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
