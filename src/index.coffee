@@ -13,7 +13,11 @@ AnyType = AnyTypeHelper().constructor
 isAnyType = (o) -> Array.isArray(o) and o.length is 0 or o is AnyTypeHelper or o instanceof AnyType
 
 # typeOf([]) is 'Array', whereas typeof [] is 'object'. Same for null, NaN, Promise etc.
-typeOf = (val) -> if val in [undefined, null] or Number.isNaN(val) then '' + val else val.constructor.name
+typeOf = (val) ->
+	if val in [undefined, null, Infinity, -Infinity] or Number.isNaN(val) then '' + val else val.constructor.name
+
+# returns true if value is a literal
+isLiteral = (val) -> typeof val in ['undefined', 'null', 'string', 'number', 'boolean'] # NaN and ±Infinity are numbers
 
 # check that a value is of a given type or of any (undefined) type, e.g.: isType("foo", String)
 isType = (val, type) -> if Array.isArray(type) # NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
@@ -31,13 +35,13 @@ isType = (val, type) -> if Array.isArray(type) # NB: special Array case http://w
 			else
 				type.some((t) -> isType(val, t)) # union of types, e.g.: `[Object, null]`
 else switch type?.constructor
-	when undefined, String, Number, Boolean # literal type or undefined or null or NaN (NaN.constuctor is Number!)
+	when undefined, String, Number, Boolean # literal type (including ±Infinity and NaN) or undefined or null
 		if Number.isNaN(type) then Number.isNaN(val) else val is type
 	when Function
 		if type.rootClass is CustomType # type is a helper
 			type().validate(val) # using default helper arguments
-		else # constructors of native types (Number, String, Object, Array, Promise, Set, Map…) and custom classes
-			not Number.isNaN(val) and val?.constructor is type # NB: NaN.constuctor is Number
+		else # constructors of native types (String, Number (excluding ±Infinity), Object…) and custom classes
+			if type is Number then Number.isFinite(val) else val?.constructor is type
 	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
 		for k, v of type
@@ -140,4 +144,4 @@ fn = (argTypes, resType, f) ->
 			error "Result #{shouldBe(result, resType)}." unless isType(result, resType)
 			result
 
-module.exports = {fn, typeOf, isType, isAnyType, getTypeName}
+module.exports = {fn, typeOf, isType, isAnyType, isLiteral, getTypeName}
