@@ -4,7 +4,7 @@ CustomType = require './CustomType'
 class TypedSet extends CustomType
 	constructor: (@type) ->
 		super(arguments, 1, 1) # exactly 1 argument
-		@error "'#{@constructor.name}' argument can not be a literal of type '#{@type}'." if isLiteral(@type)
+		@error "You cannot have #{getTypeName(@type)} as '#{@constructor.name}' argument." if isLiteral(@type)
 		@warn "Use 'Set' type instead of a #{@constructor.name} with elements of any type." if isAnyType(@type)
 	validate: (val) ->
 		return false unless val?.constructor is Set

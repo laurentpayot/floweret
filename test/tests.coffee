@@ -611,6 +611,13 @@ describe "isType", ->
 
 		context "Typed set", ->
 
+			context "Literal type elements", ->
+
+				it "should throw an error when type is literal", ->
+					expect(-> TypedSet(1)).to.throw("You cannot have literal Number 1 as 'TypedSet' argument.")
+					expect(-> TypedSet(undefined)).to.throw("You cannot have undefined as 'TypedSet' argument.")
+					expect(-> TypedSet(null)).to.throw("You cannot have null as 'TypedSet' argument.")
+
 			context "Any type elements", ->
 
 				it "TypedSet() should throw an error", ->
@@ -718,6 +725,10 @@ describe "isType", ->
 					expect(-> TypedMap("foo", 1))
 					.to.throw("You cannot have both literal String \"foo\" as keys type
 								and literal Number 1 as values type in a TypedMap.")
+					expect(-> TypedMap(null, undefined))
+					.to.throw("You cannot have both null as keys type and undefined as values type in a TypedMap.")
+					expect(-> TypedMap(undefined, undefined))
+					.to.throw("You cannot have both undefined as keys type and undefined as values type in a TypedMap.")
 
 			context "Any type elements", ->
 
