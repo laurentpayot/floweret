@@ -9,12 +9,11 @@ class TypedMap extends CustomType
 	constructor: (t1, t2) ->
 		super(arguments, 1, 2) # 1 or 2 arguments
 		if arguments.length is 1
-			@error "Map values type cannot be #{getTypeName(t1)}" if isLiteral(t1)
 			@warn "Use 'Map' type instead of a #{@constructor.name} with values of any type." if isAnyType(t1)
 			@valuesType = t1
 		else
-			@error "Map keys type cannot be #{getTypeName(t1)}" if isLiteral(t1)
-			@error "Map values type cannot be #{getTypeName(t2)}" if isLiteral(t2)
+			@error "You cannot have both #{getTypeName(t1)} as keys type and #{getTypeName(t2)} as values type
+					in a #{@constructor.name}." if isLiteral(t1) and isLiteral(t2)
 			@warn "Use 'Map' type instead of a #{@constructor.name}
 					with keys and values of any type." if isAnyType(t1) and isAnyType(t2)
 			[@keysType, @valuesType] = [t1, t2]

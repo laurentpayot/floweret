@@ -712,6 +712,13 @@ describe "isType", ->
 
 		context "Typed map", ->
 
+			context "Literal type elements", ->
+
+				it "should throw an error when literals for both keys and values types", ->
+					expect(-> TypedMap("foo", 1))
+					.to.throw("You cannot have both literal String \"foo\" as keys type
+								and literal Number 1 as values type in a TypedMap.")
+
 			context "Any type elements", ->
 
 				it "TypedMap() should throw an error.", ->
