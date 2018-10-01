@@ -12,8 +12,7 @@ class Integer extends CustomType
 		else
 			@error "'#{@constructor.name}' max value cannot be less than min value." if n2 < n1
 			[@min, @max] = [n1, n2]
-	validate: (val) -> typeof val is 'number' and val % 1 is 0 \
-						and (@max is undefined or val <= max) and (@min is undefined or val >= min)
+	validate: (val) -> Number.isInteger(val) and (@max is undefined or val <= max) and (@min is undefined or val >= min)
 
 module.exports = CustomType.createHelper(Integer)
 
