@@ -10,6 +10,8 @@ class CustomType
 		h = -> new childClass(arguments...)
 		h.rootClass = CustomType
 		h
+	error: -> CustomType.error(arguments...)
+	warn: -> CustomType.warn(arguments...)
 	constructor: (args, min, max) ->
 		CustomType.error "Abstract class 'CustomType' cannot be instantiated directly." if @constructor is CustomType
 		CustomType.error "Super needs child type arguments as its first argument." unless arguments.length

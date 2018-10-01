@@ -488,21 +488,21 @@ npm run benchmark
 The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple functions](https://github.com/laurentpayot/floweret/tree/master/benchmark). Feel free to make your own benchmarks.
 
 ```txt
-floweret-benchmark.min.js.gz          2358 bytes
+floweret-benchmark.min.js.gz          2406 bytes
 flow-runtime-benchmark.min.js.gz      21133 bytes
 no-type-checking-benchmark.min.js.gz  287 bytes
 
 *** No type-checking ***
-100000 greets: 3.447ms
-100000 sums: 36.097ms
+100000 greets: 3.369ms
+100000 sums: 28.448ms
 
 *** Floweret ***
-100000 greets: 33.274ms
-100000 sums: 448.260ms
+100000 greets: 30.833ms
+100000 sums: 422.311ms
 
 *** Flow-runtime ***
-100000 greets: 1099.640ms
-100000 sums: 4623.753ms
+100000 greets: 1097.987ms
+100000 sums: 4799.710ms
 ```
 
 ## License
