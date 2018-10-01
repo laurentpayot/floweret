@@ -116,12 +116,12 @@ describe "typeOf", ->
 		expect(typeOf(->)).to.equal('Function')
 
 ###
-██╗███████╗██╗     ██╗████████╗███████╗██████╗  █████╗ ██╗
-██║██╔════╝██║     ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██║
-██║███████╗██║     ██║   ██║   █████╗  ██████╔╝███████║██║
-██║╚════██║██║     ██║   ██║   ██╔══╝  ██╔══██╗██╔══██║██║
-██║███████║███████╗██║   ██║   ███████╗██║  ██║██║  ██║███████╗
-╚═╝╚══════╝╚══════╝╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+	██╗███████╗██╗     ██╗████████╗███████╗██████╗  █████╗ ██╗
+	██║██╔════╝██║     ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██║
+	██║███████╗██║     ██║   ██║   █████╗  ██████╔╝███████║██║
+	██║╚════██║██║     ██║   ██║   ██╔══╝  ██╔══██╗██╔══██║██║
+	██║███████║███████╗██║   ██║   ███████╗██║  ██║██║  ██║███████╗
+	╚═╝╚══════╝╚══════╝╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 ###
 describe "isLiteral", ->
 
@@ -306,6 +306,18 @@ describe "isType", ->
 			expect(isType(NaN, Number)).to.be.false
 			expect(isType(1, NaN)).to.be.false
 			testTypes(NaN, NaN)
+
+		it "should return true for Infinity type, false for other types", ->
+			expect(isType(Infinity, Infinity)).to.be.true
+			expect(isType(Infinity, Number)).to.be.false
+			expect(isType(1, Infinity)).to.be.false
+			testTypes(Infinity, Infinity)
+
+		it "should return true for -Infinity type, false for other types", ->
+			expect(isType(-Infinity, -Infinity)).to.be.true
+			expect(isType(-Infinity, Number)).to.be.false
+			expect(isType(-1, -Infinity)).to.be.false
+			testTypes(-Infinity, -Infinity)
 
 		it "should return true for a number type, false for other types", ->
 			testTypes(1.1, Number)
