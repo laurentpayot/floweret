@@ -913,22 +913,23 @@ describe "isType", ->
 					"AnyType is not needed as 'and' argument number 2."
 				)).to.be.true
 
-			it "And with undefined value should return an And instance and log a warning.", ->
-				warnSpy.resetHistory()
-				t = And(undefined, Number)
-				expect(t.constructor.name).to.equal("And")
-				expect(t.types).to.eql([undefined, Number])
-				expect(warnSpy.calledOnceWithExactly(
-					"Literal undefined (undefined) not needed as 'and' argument number 1."
-				)).to.be.true
+			it "And with undefined value should throw an error.", ->
+				expect(-> And(Number, undefined)).to.throw("You cannot have undefined as 'and' argument number 2.")
+				expect(-> And(undefined, Number)).to.throw("You cannot have undefined as 'and' argument number 1.")
 
-			it "And with literal values should return an And instance and log warnings.", ->
-				warnSpy.resetHistory()
-				t = And(undefined, null, 1, "foo", true, NaN)
-				expect(t.constructor.name).to.equal("And")
-				expect(t.types).to.eql([undefined, null, 1, "foo", true, NaN])
-				expect(warnSpy.callCount).to.equal(6)
-				expect(warnSpy.alwaysCalledWithMatch("Literal")).to.be.true
+			it "And with null value should throw an error.", ->
+				expect(-> And(Number, null)).to.throw("You cannot have null as 'and' argument number 2.")
+				expect(-> And(null, Number)).to.throw("You cannot have null as 'and' argument number 1.")
+
+			it "And with literal value should throw an error.", ->
+				expect(-> And(Number, 1))
+				.to.throw("You cannot have literal Number 1 as 'and' argument number 2.")
+				expect(-> And("foo", Number))
+				.to.throw("You cannot have literal String \"foo\" as 'and' argument number 1.")
+
+			it "And with literal values should throw an error.", ->
+				expect(-> And(undefined, null, 1, "foo", true, NaN))
+				.to.throw("You cannot have undefined as 'and' argument number 1.")
 
 			it "isType with and() should return true only if value in intersection of array types", ->
 				t = And(Array(Number), Array(2))
