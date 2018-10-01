@@ -5,7 +5,7 @@ chai.use(chaiAsPromised)
 expect = chai.expect
 
 # testing the build, minified, not the source
-{typeOf, isType, isAnyType, fn} = require '../dist/floweret.min.js'
+{typeOf, isType, isAnyType, isLiteral, fn} = require '../dist/floweret.min.js'
 
 CustomType = require '../dist/CustomType'
 maybe = require '../dist/maybe'
@@ -24,14 +24,16 @@ Or = require '../dist/or'
 Not = require '../dist/not'
 
 
-NATIVE_TYPES = [undefined, null, NaN, Boolean, Number, String, Array, Date,
-				Object, Function, Promise, Int8Array, Set, Map, Symbol]
+NATIVE_TYPES = [undefined, null, NaN, Infinity, -Infinity,
+				Boolean, Number, String, Array, Date, Object, Function, Promise, Int8Array, Set, Map, Symbol]
 VALUES = [
 	undefined
 	null
 	NaN
 	1.1 # number
 	0 # number
+	Infinity # number
+	-Infinity # number
 	true # boolean
 	false # boolean
 	"" # string
@@ -39,6 +41,11 @@ VALUES = [
 	" " # string
 	"Énorme !" # string
 	[] #array
+	[1] #array
+	[undefined] #array
+	Array(1) #array
+	Array(2) #array
+	Array(3) #array
 	[1, 'a', null, undefined] #array
 	new Int8Array([1, 2]) # typed array
 	{} # object
@@ -107,6 +114,49 @@ describe "typeOf", ->
 	it "should return 'Function' for an Function value even after Function.name modification", ->
 		Function.name = "foo"
 		expect(typeOf(->)).to.equal('Function')
+
+###
+██╗███████╗██╗     ██╗████████╗███████╗██████╗  █████╗ ██╗
+██║██╔════╝██║     ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██║
+██║███████╗██║     ██║   ██║   █████╗  ██████╔╝███████║██║
+██║╚════██║██║     ██║   ██║   ██╔══╝  ██╔══██╗██╔══██║██║
+██║███████║███████╗██║   ██║   ███████╗██║  ██║██║  ██║███████╗
+╚═╝╚══════╝╚══════╝╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+###
+describe "isLiteral", ->
+
+	it "should return true for undefined", ->
+		expect(isLiteral(undefined)).to.be.true
+
+	it "should return true for null", ->
+		expect(isLiteral(null)).to.be.true
+
+	it "should return true for NaN", ->
+		expect(isLiteral(NaN)).to.be.true
+
+	it "should return true for Infinity", ->
+		expect(isLiteral(Infinity)).to.be.true
+
+	it "should return true for -Infinity", ->
+		expect(isLiteral(-Infinity)).to.be.true
+
+	it "should return true for 0", ->
+		expect(isLiteral(0)).to.be.true
+
+	it "should return true for a number", ->
+		expect(isLiteral(100)).to.be.true
+		expect(isLiteral(-100)).to.be.true
+		expect(isLiteral(100.1234)).to.be.true
+
+	it "should return true for empty string", ->
+		expect(isLiteral('')).to.be.true
+
+	it "should return true for strings", ->
+		expect(isLiteral(val)).to.be.true for val in VALUES when typeof val is 'string'
+
+	it "should return true for booleans", ->
+		expect(isLiteral(true)).to.be.true
+		expect(isLiteral(false)).to.be.true
 
 ###
 	██╗███████╗ █████╗ ███╗   ██╗██╗   ██╗████████╗██╗   ██╗██████╗ ███████╗
