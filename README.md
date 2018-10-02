@@ -489,25 +489,25 @@ The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple f
 
 ```txt
 no-type-checking-benchmark.min.js.gz  258 bytes
-floweret-benchmark.min.js.gz          2421 bytes
+floweret-benchmark.min.js.gz          2417 bytes
 runtypes.min.js.gz                    3117 bytes
 flow-runtime-benchmark.min.js.gz      21127 bytes
 
 *** No type-checking ***
-10000 greets: 1.307ms
-10000 sums: 17.513ms
+10000 greets: 1.211ms
+10000 sums: 17.809ms
 
 *** Floweret ***
-10000 greets: 14.518ms
-10000 sums: 77.201ms
+10000 greets: 13.540ms
+10000 sums: 77.682ms
 
 *** Runtypes ***
-10000 greets: 9.899ms
-10000 sums: 40.627ms
+10000 greets: 11.466ms
+10000 sums: 41.239ms
 
 *** Flow-runtime ***
-10000 greets: 178.811ms
-10000 sums: 545.419ms
+10000 greets: 173.045ms
+10000 sums: 542.843ms
 ```
 
 ## License
