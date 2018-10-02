@@ -22,6 +22,7 @@ TypedMap = require '../dist/TypedMap'
 And = require '../dist/and'
 Or = require '../dist/or'
 Not = require '../dist/not'
+type = require '../dist/type'
 
 
 NATIVE_TYPES = [undefined, null, NaN, Infinity, -Infinity,
@@ -1071,6 +1072,15 @@ describe "isType", ->
 			expect(isType(/foo/, /foo/)).to.be.false
 			expect(isType(1, /foo/)).to.be.false
 
+	context "Custom type", ->
+
+		it "should return true when validator function is truthy for the value", ->
+			Int = type((val) -> Number.isInteger(val))
+			expect(isType(100, Int)).to.be.true
+			expect(isType(-10, Int)).to.be.true
+			expect(isType(0, Int)).to.be.true
+			expect(isType(val, Int)).to.be.false for val in VALUES when not Number.isInteger(val)
+
 
 ###
 	███████╗███╗   ██╗
@@ -1688,6 +1698,10 @@ describe "fn", ->
 				expect(-> Natural(100, -100))
 				.to.throw("'Natural' max value cannot be less than min value.")
 
+		context "Custom type", ->
+
+			it "should return an error with ''type' argument must be a function.'", ->
+				expect(-> type(1)).to.throw("'type' argument must be a function.")
 
 		context "Result", ->
 
