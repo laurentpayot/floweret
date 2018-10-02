@@ -107,11 +107,9 @@ shouldBe = (val, type, promised=false) ->
 			"#{apo or 'of type '}'#{getTypeName(type)}' instead of #{typeValue(val)}"
 
 # wraps a function to check its arguments types and result type
-fn = (argTypes, resType, f) ->
-	error "@Array of arguments types is missing." unless Array.isArray(argTypes)
+fn = (argTypes..., resType, f) ->
 	error "@Result type is missing." if resType instanceof Function and not resType.name
 	error "@Function to wrap is missing." unless f instanceof Function and not f.name
-	error "@Too many arguments." if arguments.length > 3
 	(args...) -> # returns an unfortunately anonymous function
 		rest = false
 		for type, i in argTypes
