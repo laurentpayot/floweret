@@ -1,10 +1,10 @@
 # :blossom: Floweret
 
-Runtime signature type-checker.
+A runtime signature type-checker using native JavaScript types.
 
 * **Easy**: Native JavaScript types. No need for Babel.
 * **Lightweight**: 2 kb minified and gzipped. No dependencies.
-* **Fast**: Direct type comparison, no string to parse. [10 times faster](#benchmark) than [Flow-runtime](https://codemix.github.io/flow-runtime/).
+* **Fast**: Direct type comparison, no string to parse.
 * **Powerful**: Logical operators, tuples, regular expressions, rest parameters and more…
 * **Customizable**: Create your own types for your own needs.
 
@@ -488,21 +488,26 @@ npm run benchmark
 The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple functions](https://github.com/laurentpayot/floweret/tree/master/benchmark). Feel free to make your own benchmarks.
 
 ```txt
-no-type-checking-benchmark.min.js.gz  287 bytes
-floweret-benchmark.min.js.gz          2425 bytes
-flow-runtime-benchmark.min.js.gz      21133 bytes
+no-type-checking-benchmark.min.js.gz  258 bytes
+floweret-benchmark.min.js.gz          2421 bytes
+runtypes.min.js.gz                    3117 bytes
+flow-runtime-benchmark.min.js.gz      21127 bytes
 
 *** No type-checking ***
-100000 greets: 3.491ms
-100000 sums: 29.082ms
+10000 greets: 1.307ms
+10000 sums: 17.513ms
 
 *** Floweret ***
-100000 greets: 31.435ms
-100000 sums: 424.724ms
+10000 greets: 14.518ms
+10000 sums: 77.201ms
+
+*** Runtypes ***
+10000 greets: 9.899ms
+10000 sums: 40.627ms
 
 *** Flow-runtime ***
-100000 greets: 1108.225ms
-100000 sums: 4664.863ms
+10000 greets: 178.811ms
+10000 sums: 545.419ms
 ```
 
 ## License

@@ -1,5 +1,5 @@
 const t = require('flow-runtime')
-const TIMES = 100 * 1000
+const TIMES = 10 * 1000
 
 console.log("\n*** Flow-runtime ***")
 
@@ -27,10 +27,9 @@ function sum(a) {
 	return _returnType.assert(a.reduce((acc, curr) => acc + curr))
 }
 t.annotate(sum, t.function(t.param('a', t.array(t.number())), t.return(t.number())))
-const a = [...Array(100).keys()]
 
 console.time(TIMES + " sums")
 for (let i = 0; i < TIMES; i++) {
-	sum(a)
+	sum([...Array(100).keys()])
 }
 console.timeEnd(TIMES + " sums")

@@ -1,4 +1,4 @@
-const TIMES = 100 * 1000
+const TIMES = 10 * 1000
 
 console.log("\n*** No type-checking ***")
 
@@ -17,10 +17,9 @@ console.timeEnd(TIMES + " greets")
 function sum(a) {
 	return a.reduce((acc, curr) => acc + curr)
 }
-const a = [...Array(100).keys()]
 
 console.time(TIMES + " sums")
 for (let i = 0; i < TIMES; i++) {
-	sum(a)
+	sum([...Array(100).keys()])
 }
 console.timeEnd(TIMES + " sums")

@@ -1,6 +1,6 @@
 const {	Number,	String,	Array, Record, Contract } = require('runtypes')
 
-const TIMES = 100 * 1000
+const TIMES = 10 * 1000
 
 console.log("\n*** Runtypes ***")
 
@@ -32,10 +32,9 @@ const sum = Contract(
 		return a.reduce((acc, curr) => acc + curr)
 	}
 )
-const a = [...global.Array(100).keys()]
 
 console.time(TIMES + " sums")
 for (let i = 0; i < TIMES; i++) {
-	sum(a)
+	sum([...global.Array(100).keys()])
 }
 console.timeEnd(TIMES + " sums")
