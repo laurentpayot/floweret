@@ -15,6 +15,7 @@ A runtime signature type-checker using native JavaScript types.
   * [JavaScript](#javascript)
   * [CoffeeScript](#coffeescript)
 * [Type syntax](#type-syntax)
+  * [Absence of type](#absence-of-type)
   * [Native types](#native-types)
   * [Union of types](#union-of-types)
   * [Maybe type](#maybe-type)
@@ -54,10 +55,10 @@ $ yarn add floweret
 
 ## Usage
 
-> fn( [ <argument 1 type\>, <argument 2 type\>, …, <argument n type\> ], <result type\>, <function\> )
+> fn( <argument 1 type\>, <argument 2 type\>, …, <argument n type\>, <result type\>, <function\> )
 
 To add a signature to a function, wrap the function with the `fn` function.
-`fn` arguments are first the *array* of input types, followed by the result type, and finally the function itself:
+`fn` arguments are first the list of arguments types, followed by the result type, and finally the function itself:
 
 ### JavaScript
 
@@ -65,7 +66,7 @@ To add a signature to a function, wrap the function with the `fn` function.
 import { fn } from 'floweret'
 
 const add = fn(
-  [Number, Number], Number,
+  Number, Number, Number,
   function (a, b) {return a + b}
 )
 ```
@@ -76,10 +77,12 @@ or using the ES2015 arrow function syntax:
 import { fn } from 'floweret'
 
 const add = fn(
-  [Number, Number], Number,
+  Number, Number, Number,
   (a, b) => a + b
 )
 ```
+
+For readability, most examples below will use the ES2015 arrow function syntax.
 
 ### CoffeeScript
 
@@ -89,13 +92,36 @@ You can ommit the `fn` parentheses, resulting in a decorator-like syntax:
 # CoffeeScript
 import { fn } from 'floweret'
 
-add = fn [Number, Number], Number,
+add = fn Number, Number, Number,
   (a, b) -> a + b
 ```
 
 ## Type syntax
 
-For readability, all examples below will use the ES2015 arrow function syntax.
+### Absence of type
+
+Use `undefined` as the arguments types list when the functions takes no argument:
+
+```js
+const returnHi = fn(
+  undefined, String,
+  function() {return "Hello!"}
+)
+
+returnHi()  // Hello!
+returnHi(1) // InvalidSignature: Too many arguments
+```
+
+Use `undefined` as well as the result type when the function returns nothing (undefined):
+
+```js
+const logInfo = fn(
+  String, undefined
+  function(msg) {console.log("Info:", msg)}
+)
+
+logInfo("Boo.") // logs "Info: Boo." but returns undefined
+```
 
 ### Native types
 
@@ -106,7 +132,7 @@ All native JavaScript type constructors are allowed as type:
 
 ```js
 const f = fn(
-  [Number, String], Array,
+  Number, String, Array,
   (a, b) => [a, b]
 )
 
@@ -118,12 +144,12 @@ f(1, 5)   // TypeMismatch: Argument #2  should be of type 'String' instead of Nu
 
 > [ <type 1\>, <type 2\>, …, <type n\> ]
 
-You can create a type that is the union of several types. Simply put them in a list.
+You can create a type that is the union of several types. Simply put them between brackets.
 For instance the type `[Number, String]` will accept a number or a string.
 
 ```js
 const f = fn(
-  [Number, [Number, String]], String,
+  Number, [Number, String], String,
   (a, b) => '' + a + b
 )
 
@@ -143,7 +169,7 @@ import { fn } from 'floweret'
 import maybe from 'floweret/maybe'
 
 const f = fn(
-  [Number, maybe(Number)], Number,
+  Number, maybe(Number), Number,
   (a, b=0) => a + b
 )
 
@@ -160,7 +186,7 @@ A literal can only be a string, a number, a boolean or be equal to `undefined` o
 
 ```js
 const turn = fn(
-  [['left', 'right']], String,
+  ['left', 'right'], String,
   (direction) => "turning " + direction
 )
 
@@ -180,7 +206,7 @@ When the type is a regular expression, if the value is a string it will be teste
 const Email = /\S+@\S+\.\S+/ // simple email RegExp, do not use in production
 
 const showEmail = fn(
-  [Email, String, String], undefined,
+  Email, String, String, undefined,
   (email, subject, content) => console.table({ email, subject, content })
 )
 
@@ -201,7 +227,7 @@ If you want to specify the type of the elements of an array, use this type as th
 
 ```js
 const dashJoin = fn(
-  [Array(String)], String,
+  Array(String), String,
   (strings) => strings.join('-')
 )
 
@@ -223,7 +249,7 @@ For instance use `Array(5)` for an array of five elements:
 
 ```js
 const pokerHand = fn(
-  [Array(5)], String,
+  Array(5), String,
   (cards) => cards.join('-')
 )
 
@@ -250,7 +276,7 @@ userType = {
 }
 
 fullName = fn(
-  [userType], String,
+  userType, String,
   (user) => Object.keys(user.name).join(' ')
 )
 
@@ -273,7 +299,7 @@ fullName({id: 1234, name: {first: 1, last: "Smith"}})
 
 ```js
 f = fn(
-  [{x: Number, y: Number}], Number,
+  {x: Number, y: Number}, Number,
   (coords) => coords.x + 2 * coords.y
 )
 
@@ -367,7 +393,7 @@ import or from 'floweret/or'
 import and from 'floweret/and'
 
 const weeklyTotal = fn(
-  [and(Array(Number), Array(7))], Number,
+  and(Array(Number), Array(7)), Number,
   (days) => days.reduce((acc, curr) => acc + curr)
 )
 
@@ -489,25 +515,25 @@ The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple f
 
 ```txt
 no-type-checking-benchmark.min.js.gz  258 bytes
-floweret-benchmark.min.js.gz          2417 bytes
+floweret-benchmark.min.js.gz          2427 bytes
 runtypes.min.js.gz                    3117 bytes
 flow-runtime-benchmark.min.js.gz      21127 bytes
 
 *** No type-checking ***
-10000 greets: 1.211ms
-10000 sums: 17.809ms
+10000 greets: 1.474ms
+10000 sums: 17.791ms
 
 *** Floweret ***
-10000 greets: 13.540ms
-10000 sums: 77.682ms
+10000 greets: 14.061ms
+10000 sums: 77.077ms
 
 *** Runtypes ***
-10000 greets: 11.466ms
-10000 sums: 41.239ms
+10000 greets: 11.428ms
+10000 sums: 42.330ms
 
 *** Flow-runtime ***
-10000 greets: 173.045ms
-10000 sums: 542.843ms
+10000 greets: 186.944ms
+10000 sums: 520.277ms
 ```
 
 ## License

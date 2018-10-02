@@ -1094,6 +1094,10 @@ describe "fn", ->
 
 	context "Arguments of signature itself", ->
 
+		it "should throw an error if arguments types are missing", ->
+			expect(-> (fn Number, -> 1))
+			.to.throw("Arguments types are missing.")
+
 		it "should throw an error if signature result type is missing", ->
 			expect(-> (fn -> 1))
 			.to.throw("Result type is missing.")
@@ -1118,15 +1122,9 @@ describe "fn", ->
 			f = fn undefined, String,
 				-> "foo"
 			expect(f()).to.equal("foo")
-			f = fn String,
-				-> "foo"
-			expect(f()).to.equal("foo")
 
 		it "should throw an error if function returns a number", ->
 			f = fn undefined, String,
-				-> 1
-			expect(-> f()).to.throw("Result should be of type 'String' instead of Number 1.")
-			f = fn String,
 				-> 1
 			expect(-> f()).to.throw("Result should be of type 'String' instead of Number 1.")
 
@@ -1134,39 +1132,41 @@ describe "fn", ->
 			f = fn undefined, [String, Number],
 				->
 			expect(-> f()).to.throw("Result should be of type 'String or Number' instead of undefined.")
-			f = fn [String, Number],
+
+		it "should do nothing if function returns undefined", ->
+			f = fn undefined, undefined,
 				->
-			expect(-> f()).to.throw("Result should be of type 'String or Number' instead of undefined.")
+			expect(f()).to.equal(undefined)
 
 	context "Asynchronous functions", ->
 
 		it "should return a promise if function returns promise", ->
-			f = fn promised(Number),
+			f = fn undefined, promised(Number),
 				-> Promise.resolve(1)
 			expect(f()?.constructor).to.equal(Promise)
 
 		it "should do nothing if function returns a string promise", ->
-			f = fn promised(String),
+			f = fn undefined, promised(String),
 				-> Promise.resolve("foo")
 			expect(f()).to.eventually.equal("foo")
 
 		it "should throw an error if function returns a number promise", ->
-			f = fn promised(String),
+			f = fn undefined, promised(String),
 				-> Promise.resolve(1)
 			expect(f()).to.be.rejectedWith("Promise result should be of type 'String' instead of Number 1.")
 
 		it "should throw an error if function does not return a promise", ->
-			f = fn promised(String),
+			f = fn undefined, promised(String),
 				-> '1'
 			expect(f()).to.be.rejectedWith("Result should be a promise of 'String' instead of String \"1\".")
 
 		it "should throw an error if promised used without type", ->
-			expect(-> fn promised(),
+			expect(-> fn undefined, promised(),
 				-> Promise.resolve(1)
 			).to.throw("'promised' must have exactly 1 argument.")
 
 		it "should throw an error if promised used as a function", ->
-			f = fn promised,
+			f = fn undefined, promised,
 				-> Promise.resolve(1)
 			expect(-> f()).to.throw("'promised' must have exactly 1 argument.")
 

@@ -110,6 +110,7 @@ shouldBe = (val, type, promised=false) ->
 fn = (argTypes..., resType, f) ->
 	error "@Result type is missing." if resType instanceof Function and not resType.name
 	error "@Function to wrap is missing." unless f instanceof Function and not f.name
+	error "@Arguments types are missing." unless argTypes.length
 	(args...) -> # returns an unfortunately anonymous function
 		rest = false
 		for type, i in argTypes

@@ -6,7 +6,7 @@ console.log("\n*** Floweret ***")
 // example from https://codemix.github.io/flow-runtime/#/
 const Person = {name: String}
 const greet = fn(
-	[Person], String,
+	Person, String,
 	function (person) {
 		return 'Hello ' + person.name
 	}
@@ -20,7 +20,7 @@ console.timeEnd(TIMES + " greets")
 
 
 const sum = fn(
-	[Array(Number)], Number,
+	Array(Number), Number,
 	function (a) {
 		return a.reduce((acc, curr) => acc + curr)
 	}
