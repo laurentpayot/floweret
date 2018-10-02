@@ -1619,6 +1619,28 @@ describe "fn", ->
 					.to.throw("Argument #1 should be of type
 								'not 'Number or array of 'Number''' instead of Number 1.")
 
+		context.only "Integer", ->
+
+			it "should return an error with 'Integer'", ->
+				f = fn [Integer], AnyType, ->
+				expect(-> f(true)).to.throw("Argument #1 should be of type 'Integer' instead of Boolean true.")
+
+			it "should return an error with 'Integer smaller than 100'", ->
+				f = fn [Integer(100)], AnyType, ->
+				expect(-> f(true))
+				.to.throw("Argument #1 should be of type 'Integer smaller than 100' instead of Boolean true.")
+
+			it "should return an error with 'Integer bigger than 100'", ->
+				f = fn [Integer(100, undefined)], AnyType, ->
+				expect(-> f(true))
+				.to.throw("Argument #1 should be of type 'Integer bigger than 100' instead of Boolean true.")
+
+			it "should return an error with 'Integer bigger than 10 and smaller than 100 '", ->
+				f = fn [Integer(10, 100)], AnyType, ->
+				expect(-> f(true))
+				.to.throw("Argument #1 should be of type 'Integer bigger than 10
+							and smaller than 100' instead of Boolean true.")
+
 		context "Result", ->
 
 			it "should return a result error with ''Number' instead of NaN'", ->
