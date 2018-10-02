@@ -1,8 +1,11 @@
 CustomType = require './CustomType'
 
 class Etc extends CustomType
+	# up to 1 argument
+	argsMin: 0
+	argsMax: 1
 	constructor: (@type=[]) ->
-		super(arguments, 0, 1) # up to 1 argument
+		super(arguments...)
 	validate: -> @error "'#{@helperName}' cannot be used in types."
 	helperName: "etc"
 

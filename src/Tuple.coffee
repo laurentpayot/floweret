@@ -2,8 +2,10 @@ CustomType = require './CustomType'
 {isType, isAnyType, getTypeName} = require '.'
 
 class Tuple extends CustomType
+	# 2 or more arguments
+	argsMin: 2
 	constructor: (@types...) ->
-		super(arguments, 2) # 2 or more arguments
+		super(arguments...)
 		@warn "Use 'Array(#{@types.length})' type instead of a #{@constructor.name}
 				of #{@types.length} values of any type'." if @types.every((t) -> isAnyType(t))
 	validate: (val) ->

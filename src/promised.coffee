@@ -2,8 +2,11 @@ CustomType = require './CustomType'
 {isAnyType} = require '.'
 
 class Promised extends CustomType
+	# exactly 1 argument
+	argsMin: 1
+	argsMax: 1
 	constructor: (@type) ->
-		super(arguments, 1, 1) # exactly 1 argument
+		super(arguments...)
 		@warn "Use 'Promise' type instead of '#{@helperName}(AnyType)'." if isAnyType(@type)
 		# return needed to always return a promise instead of a new Promised instance
 		return Promise.resolve(@type)

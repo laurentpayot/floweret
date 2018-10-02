@@ -1,7 +1,10 @@
 CustomType = require './CustomType'
 
 class AnyType extends CustomType
-	constructor: -> super(arguments, 0, 0) # no arguments
+	# no arguments
+	argsMin: 0
+	argsMax: 0
+	constructor: -> super(arguments...)
 	validate: (val) -> true
 	getTypeName: -> "any type"
 

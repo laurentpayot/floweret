@@ -12,10 +12,13 @@ class CustomType
 		h
 	error: -> CustomType.error(arguments...)
 	warn: -> CustomType.warn(arguments...)
-	constructor: (args, min, max) ->
+	argsMin: undefined
+	argsMax: undefined
+	constructor: ->
 		@error "Abstract class 'CustomType' cannot be instantiated directly." if @constructor is CustomType
-		@error "Super needs child type arguments as its first argument." unless arguments.length
-		l = args.length
+		l = arguments.length
+		min = @argsMin
+		max = @argsMax
 		name = @helperName or @constructor.name
 		switch
 			when max is undefined

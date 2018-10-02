@@ -1,10 +1,13 @@
 CustomType = require './CustomType'
 
 class Integer extends CustomType
-	min = undefined
-	max = undefined
+	min: undefined
+	max: undefined
+	# up to 2 arguments
+	argsMin: 0
+	argsMax: 2
 	constructor: (n1, n2) ->
-		super(arguments, 0, 2) # up to 2 arguments
+		super(arguments...)
 		@error "'#{@constructor.name}' arguments must be numbers." \
 			unless typeof n1 in ['undefined', 'number'] and typeof n2 in ['undefined', 'number']
 		if arguments.length is 1

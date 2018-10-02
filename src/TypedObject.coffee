@@ -2,8 +2,11 @@ CustomType = require './CustomType'
 {isType, isAnyType, getTypeName} = require '.'
 
 class TypedObject extends CustomType
+	# exactly 1 argument
+	argsMin: 1
+	argsMax: 1
 	constructor: (@type) ->
-		super(arguments, 1, 1) # exactly 1 argument
+		super(arguments...)
 		@warn "Use 'Object' type instead of a #{@constructor.name} with values of any type." if isAnyType(@type)
 	validate: (val) ->
 		return false unless val?.constructor is Object

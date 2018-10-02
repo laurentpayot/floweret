@@ -2,8 +2,10 @@ CustomType = require './CustomType'
 {isType, isAnyType, typeOf, isLiteral, getTypeName} = require '.'
 
 class And extends CustomType
+	# 2 or more arguments
+	argsMin: 2
 	constructor: (@types...) ->
-		super(arguments, 2) # or more arguments
+		super(arguments...)
 		for t, i in @types
 			@error "You cannot have #{getTypeName(t)} as '#{@helperName}' argument number #{i+1}." if isLiteral(t)
 			@warn "AnyType is not needed as '#{@helperName}' argument number #{i+1}." if isAnyType(t)

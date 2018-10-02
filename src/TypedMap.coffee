@@ -6,8 +6,11 @@ notDefined = (t) -> t is undefined or isAnyType(t)
 class TypedMap extends CustomType
 	valuesType: undefined
 	keysType: undefined
+	# 1 or 2 arguments
+	argsMin: 1
+	argsMax: 2
 	constructor: (t1, t2) ->
-		super(arguments, 1, 2) # 1 or 2 arguments
+		super(arguments...)
 		if arguments.length is 1
 			@warn "Use 'Map' type instead of a #{@constructor.name} with values of any type." if isAnyType(t1)
 			@valuesType = t1
