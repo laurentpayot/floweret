@@ -2,9 +2,9 @@
 
 A runtime signature type-checker using native JavaScript types.
 
-* **Simple**: Native JavaScript types syntax. No need for Babel.
+* **Simple**: Native JavaScript types syntax.
 * **Lightweight**: 2 kb minified and gzipped. No dependencies.
-* **Fast**: Direct type comparison, no string to parse.
+* **Fast**: Direct type comparison. No string to parse.
 * **Powerful**: Logical operators, tuples, regular expressions, rest parameters and more…
 * **Customizable**: Create your own types for your own needs.
 
