@@ -1619,7 +1619,7 @@ describe "fn", ->
 					.to.throw("Argument #1 should be of type
 								'not 'Number or array of 'Number''' instead of Number 1.")
 
-		context.only "Integer", ->
+		context "Integer", ->
 
 			it "should return an error with 'Integer'", ->
 				f = fn [Integer], AnyType, ->
@@ -1635,11 +1635,59 @@ describe "fn", ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'Integer bigger than 100' instead of Boolean true.")
 
-			it "should return an error with 'Integer bigger than 10 and smaller than 100 '", ->
+			it "should return an error with 'Integer bigger than 10 and smaller than 100'", ->
 				f = fn [Integer(10, 100)], AnyType, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'Integer bigger than 10
 							and smaller than 100' instead of Boolean true.")
+
+			it "should return an error with 'Integer bigger than -100 and smaller than -10'", ->
+				f = fn [Integer(-100, -10)], AnyType, ->
+				expect(-> f(true))
+				.to.throw("Argument #1 should be of type 'Integer bigger than -100
+							and smaller than -10' instead of Boolean true.")
+
+			it "should return an error with 'Integer bigger than -100 and smaller than 10'", ->
+				f = fn [Integer(-100, 10)], AnyType, ->
+				expect(-> f(true))
+				.to.throw("Argument #1 should be of type 'Integer bigger than -100
+							and smaller than 10' instead of Boolean true.")
+
+			it "should return an error with ''Integer' max value cannot be less than min value", ->
+				expect(-> Integer(100, -100))
+				.to.throw("'Integer' max value cannot be less than min value.")
+
+
+		context "Natural", ->
+
+			it "should return an error with 'Natural'", ->
+				f = fn [Natural], AnyType, ->
+				expect(-> f(true)).to.throw("Argument #1 should be of type 'Natural' instead of Boolean true.")
+
+			it "should return an error with 'Natural smaller than 100'", ->
+				f = fn [Natural(100)], AnyType, ->
+				expect(-> f(true))
+				.to.throw("Argument #1 should be of type 'Natural smaller than 100' instead of Boolean true.")
+
+			it "should return an error with 'Natural bigger than 100'", ->
+				f = fn [Natural(100, undefined)], AnyType, ->
+				expect(-> f(true))
+				.to.throw("Argument #1 should be of type 'Natural bigger than 100' instead of Boolean true.")
+
+			it "should return an error with 'Natural bigger than 10 and smaller than 100'", ->
+				f = fn [Natural(10, 100)], AnyType, ->
+				expect(-> f(true))
+				.to.throw("Argument #1 should be of type 'Natural bigger than 10
+							and smaller than 100' instead of Boolean true.")
+
+			it "should return an error with ''Natural' arguments must be positive numbers.'", ->
+				expect(-> Natural(-100, -10)).to.throw("'Natural' arguments must be positive numbers.")
+				expect(-> Natural(-100, 10)).to.throw("'Natural' arguments must be positive numbers.")
+
+			it "should return an error with ''Natural' max value cannot be less than min value", ->
+				expect(-> Natural(100, -100))
+				.to.throw("'Natural' max value cannot be less than min value.")
+
 
 		context "Result", ->
 
