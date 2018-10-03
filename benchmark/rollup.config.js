@@ -7,8 +7,6 @@ import gzipPlugin from 'rollup-plugin-gzip'
 // const format = 'iife'
 const format = 'umd'
 
-console.log("Bundling format:", format.toUpperCase())
-
 const plugins = [
 	nodeResolve({
 		jsnext: true,
@@ -18,10 +16,12 @@ const plugins = [
 		sourceMap: false
 	}),
 	terser({
-		sourcemap: false
+		sourcemap: false,
 	}),
 	gzipPlugin()
 ]
+
+console.log("Bundling format:", format.toUpperCase())
 
 export default [
 	{

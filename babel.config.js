@@ -1,4 +1,3 @@
 module.exports = {
-	plugins: ["transform-es2015-modules-simple-commonjs"],
-	comments: true
+	plugins: ["transform-es2015-modules-simple-commonjs"]
 }
