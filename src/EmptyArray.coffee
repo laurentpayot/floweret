@@ -1,4 +1,4 @@
-CustomType = require './CustomType'
+import CustomType from './CustomType'
 
 class EmptyArray extends CustomType
 	# no argument
@@ -8,4 +8,4 @@ class EmptyArray extends CustomType
 	validate: (val) -> Array.isArray(val) and not val.length
 	getTypeName: -> "empty array"
 
-module.exports = CustomType.createHelper(EmptyArray)
+export default CustomType.createHelper(EmptyArray)

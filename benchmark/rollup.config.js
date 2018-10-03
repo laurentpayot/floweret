@@ -7,7 +7,7 @@ import gzipPlugin from 'rollup-plugin-gzip'
 // const format = 'iife'
 const format = 'umd'
 
-console.log("Bundling format:", format)
+console.log("Bundling format:", format.toUpperCase())
 
 const plugins = [
 	nodeResolve({
@@ -18,11 +18,7 @@ const plugins = [
 		sourceMap: false
 	}),
 	terser({
-		sourcemap: false,
-		compress: {
-			hoist_vars: true // needed for Floweret bundle
-		},
-		mangle: true
+		sourcemap: false
 	}),
 	gzipPlugin()
 ]

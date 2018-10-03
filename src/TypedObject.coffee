@@ -1,5 +1,5 @@
-CustomType = require './CustomType'
-{isType, isAnyType, getTypeName} = require '.'
+import CustomType from './CustomType'
+import {isType, isAnyType, getTypeName} from '.'
 
 class TypedObject extends CustomType
 	# exactly 1 argument
@@ -14,4 +14,4 @@ class TypedObject extends CustomType
 		Object.values(val).every((v) => isType(v, @type))
 	getTypeName: -> "object with values of type '#{getTypeName(@type)}'"
 
-module.exports = CustomType.createHelper(TypedObject)
+export default CustomType.createHelper(TypedObject)

@@ -1,5 +1,5 @@
-CustomType = require './CustomType'
-{isAnyType} = require '.'
+import CustomType from './CustomType'
+import {isAnyType} from '.'
 
 class Or extends CustomType
 	# 2 or more arguments
@@ -11,4 +11,4 @@ class Or extends CustomType
 		return @types
 	helperName: "or"
 
-module.exports = CustomType.createHelper(Or)
+export default CustomType.createHelper(Or)

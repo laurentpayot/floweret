@@ -1,5 +1,5 @@
-CustomType = require './CustomType'
-{isAnyType} = require '.'
+import CustomType from './CustomType'
+import {isAnyType} from '.'
 
 class Promised extends CustomType
 	# exactly 1 argument
@@ -12,4 +12,4 @@ class Promised extends CustomType
 		return Promise.resolve(@type)
 	helperName: "promised"
 
-module.exports = CustomType.createHelper(Promised)
+export default CustomType.createHelper(Promised)

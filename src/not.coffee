@@ -1,5 +1,5 @@
-CustomType = require './CustomType'
-{isType, isAnyType, getTypeName} = require '.'
+import CustomType from './CustomType'
+import {isType, isAnyType, getTypeName} from '.'
 
 class Not extends CustomType
 	# exacly 1 argument
@@ -12,4 +12,4 @@ class Not extends CustomType
 	getTypeName: -> "not '#{getTypeName(@type)}'"
 	helperName: "not"
 
-module.exports = CustomType.createHelper(Not)
+export default CustomType.createHelper(Not)

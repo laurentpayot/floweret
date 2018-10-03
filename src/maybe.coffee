@@ -1,5 +1,5 @@
-CustomType = require './CustomType'
-{isAnyType} = require '.'
+import CustomType from './CustomType'
+import {isAnyType} from '.'
 
 class Maybe extends CustomType
 	# exactly 1 argument
@@ -12,4 +12,4 @@ class Maybe extends CustomType
 		return [undefined, null, @type]
 	helperName: "maybe"
 
-module.exports = CustomType.createHelper(Maybe)
+export default CustomType.createHelper(Maybe)

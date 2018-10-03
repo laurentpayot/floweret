@@ -1,4 +1,4 @@
-CustomType = require './CustomType'
+import CustomType from './CustomType'
 
 class Integer extends CustomType
 	min: undefined
@@ -21,5 +21,5 @@ class Integer extends CustomType
 		min = if @min? then " bigger than #{@min}" else ''
 		"#{@constructor.name}#{min}#{if min and max then ' and' else ''}#{max}"
 
-module.exports = CustomType.createHelper(Integer)
+export default CustomType.createHelper(Integer)
 

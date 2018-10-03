@@ -1,5 +1,5 @@
-CustomType = require './CustomType'
-{isType, isAnyType, isLiteral, getTypeName} = require '.'
+import CustomType from './CustomType'
+import {isType, isAnyType, isLiteral, getTypeName} from '.'
 
 notDefined = (t) -> t is undefined or isAnyType(t)
 
@@ -34,4 +34,4 @@ class TypedMap extends CustomType
 		kt = if @keysType isnt undefined then "keys of type '#{getTypeName(@keysType)}' and " else ''
 		"map with #{kt}values of type '#{getTypeName(@valuesType)}'"
 
-module.exports = CustomType.createHelper(TypedMap)
+export default CustomType.createHelper(TypedMap)

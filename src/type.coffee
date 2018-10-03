@@ -1,5 +1,5 @@
-CustomType = require './CustomType'
-{isType, isAnyType, getTypeName} = require '.'
+import CustomType from './CustomType'
+import {isType, isAnyType, getTypeName} from '.'
 
 class Type extends CustomType
 	# exacly 1 argument
@@ -12,4 +12,4 @@ class Type extends CustomType
 	getTypeName: -> "custom type with validation function '#{@validator}'"
 	helperName: "type"
 
-module.exports = CustomType.createHelper(Type)
+export default CustomType.createHelper(Type)

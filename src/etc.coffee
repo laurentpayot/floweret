@@ -1,4 +1,4 @@
-import {CustomType} from './CustomType'
+import CustomType from './CustomType'
 
 class Etc extends CustomType
 	# up to 1 argument
@@ -9,5 +9,4 @@ class Etc extends CustomType
 	validate: -> @error "'#{@helperName}' cannot be used in types."
 	helperName: "etc"
 
-h = CustomType.createHelper(Etc)
-export {h as etc}
+export default CustomType.createHelper(Etc)

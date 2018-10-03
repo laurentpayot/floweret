@@ -1,5 +1,5 @@
-CustomType = require './CustomType'
-{isType, isAnyType, isLiteral, getTypeName} = require '.'
+import CustomType from './CustomType'
+import {isType, isAnyType, isLiteral, getTypeName} from '.'
 
 class TypedSet extends CustomType
 	# exactly 1 argument
@@ -15,4 +15,4 @@ class TypedSet extends CustomType
 		[val...].every((e) => isType(e, @type))
 	getTypeName: -> "set of '#{getTypeName(@type)}'"
 
-module.exports = CustomType.createHelper(TypedSet)
+export default CustomType.createHelper(TypedSet)

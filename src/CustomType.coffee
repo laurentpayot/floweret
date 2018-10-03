@@ -2,7 +2,7 @@ class InvalidType extends Error
 
 s = (n) -> if n is 1 then '' else 's'
 
-class CustomType
+export default class CustomType
 	# static methods
 	@error: (msg) -> throw new InvalidType msg
 	@warn: (msg) -> console.warn("Floweret type:", msg) unless process?.env.NODE_ENV is 'production'
@@ -31,5 +31,3 @@ class CustomType
 				if l < min then @error "'#{name}' must have at least #{min} argument#{s(min)}."
 	validate: -> false # false if child class validate() missing
 	getTypeName: -> @constructor.name
-
-export {CustomType}

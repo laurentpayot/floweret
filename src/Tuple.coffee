@@ -1,5 +1,5 @@
-CustomType = require './CustomType'
-{isType, isAnyType, getTypeName} = require '.'
+import CustomType from './CustomType'
+import {isType, isAnyType, getTypeName} from '.'
 
 class Tuple extends CustomType
 	# 2 or more arguments
@@ -13,4 +13,4 @@ class Tuple extends CustomType
 		val.every((e, i) => isType(e, @types[i]))
 	getTypeName: -> "tuple of #{@types.length} elements '#{(getTypeName(t) for t in @types).join(", ")}'"
 
-module.exports = CustomType.createHelper(Tuple)
+export default CustomType.createHelper(Tuple)
