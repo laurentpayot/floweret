@@ -1,4 +1,4 @@
-# import {CustomType, AnyType as AnyTypeHelper, etc as EtcHelper} from './types'
+#~ import {CustomType, AnyType as AnyTypeHelper, etc as EtcHelper} from './types'
 import CustomType from './CustomType'
 import AnyTypeHelper from './AnyType'
 import EtcHelper from './etc'

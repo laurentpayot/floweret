@@ -6,24 +6,9 @@ expect = chai.expect
 
 # testing the build, minified, not the source
 import {typeOf, isType, isAnyType, isLiteral, fn} from '../dist/floweret.min.js'
-
-import CustomType from '../dist/CustomType'
-import maybe from '../dist/maybe'
-import promised from '../dist/promised'
-import etc from '../dist/etc'
-import AnyType from '../dist/AnyType'
-import EmptyArray from '../dist/EmptyArray'
-import Integer from '../dist/Integer'
-import Natural from '../dist/Natural'
-import Tuple from '../dist/Tuple'
-import TypedObject from '../dist/TypedObject'
-import TypedSet from '../dist/TypedSet'
-import TypedMap from '../dist/TypedMap'
-import And from '../dist/and'
-import Or from '../dist/or'
-import Not from '../dist/not'
-import type from '../dist/type'
-
+import {CustomType, maybe, promised, etc, AnyType, EmptyArray,
+		Integer, Natural, Tuple, TypedObject, TypedSet, TypedMap, type,
+		and as And, or as Or, not as Not} from '../dist/types.js'
 
 NATIVE_TYPES = [undefined, null, NaN, Infinity, -Infinity,
 				Boolean, Number, String, Array, Date, Object, Function, Promise, Int8Array, Set, Map, Symbol]

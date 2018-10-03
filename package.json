@@ -30,7 +30,7 @@
   },
   "scripts": {
     "build": "rm -rf dist/ && coffee -ctmb -o dist/ src/",
-    "minify": "terser -cm --comments -o dist/floweret.min.js -- dist/index.js",
+    "minify": "terser -cm -o dist/floweret.min.js -- dist/index.js",
     "build-tests": "coffee -ctm test/tests.coffee",
     "build-all": "npm run build && npm run minify && npm run build-tests",
     "test": "npm run build-all && mocha",
