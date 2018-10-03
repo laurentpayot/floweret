@@ -1,9 +1,6 @@
 ###* Floweret @license MIT (c) 2018 Laurent Payot ###
 
-import {CustomType} from './CustomType'
-import {AnyType as AnyTypeHelper} from './AnyType'
-import {etc as EtcHelper} from './etc'
-# import {CustomType, AnyTypeHelper, EtcHelper} from './types'
+import {CustomType, AnyType as AnyTypeHelper, etc as EtcHelper} from './types'
 
 class InvalidSignature extends Error
 class TypeMismatch extends Error
