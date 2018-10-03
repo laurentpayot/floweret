@@ -1,8 +1,9 @@
 ###* Floweret @license MIT (c) 2018 Laurent Payot ###
 
-CustomType = require './CustomType'
-AnyTypeHelper = require './AnyType'
-EtcHelper = require './etc'
+import {CustomType} from './CustomType'
+import {AnyType as AnyTypeHelper} from './AnyType'
+import {etc as EtcHelper} from './etc'
+# import {CustomType, AnyTypeHelper, EtcHelper} from './types'
 
 class InvalidSignature extends Error
 class TypeMismatch extends Error
@@ -143,4 +144,4 @@ fn = (argTypes..., resType, f) ->
 			error "Result #{shouldBe(result, resType)}." unless isType(result, resType)
 			result
 
-module.exports = {fn, typeOf, isType, isAnyType, isLiteral, getTypeName}
+export {fn, typeOf, isType, isAnyType, isLiteral, getTypeName}

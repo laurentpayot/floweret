@@ -32,5 +32,4 @@ class CustomType
 	validate: -> false # false if child class validate() missing
 	getTypeName: -> @constructor.name
 
-
-module.exports = CustomType
+export {CustomType}

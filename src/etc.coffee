@@ -1,4 +1,4 @@
-CustomType = require './CustomType'
+import {CustomType} from './CustomType'
 
 class Etc extends CustomType
 	# up to 1 argument
@@ -9,4 +9,5 @@ class Etc extends CustomType
 	validate: -> @error "'#{@helperName}' cannot be used in types."
 	helperName: "etc"
 
-module.exports = CustomType.createHelper(Etc)
+h = CustomType.createHelper(Etc)
+export {h as etc}

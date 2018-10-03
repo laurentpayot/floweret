@@ -1,4 +1,4 @@
-CustomType = require './CustomType'
+import {CustomType} from './CustomType'
 
 class AnyType extends CustomType
 	# no arguments
@@ -8,4 +8,5 @@ class AnyType extends CustomType
 	validate: (val) -> true
 	getTypeName: -> "any type"
 
-module.exports = CustomType.createHelper(AnyType)
+h = CustomType.createHelper(AnyType)
+export {h as AnyType}
