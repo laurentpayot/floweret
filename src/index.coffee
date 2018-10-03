@@ -1,7 +1,7 @@
 #~ import {CustomType, AnyType as AnyTypeHelper, etc as EtcHelper} from './types'
-import CustomType from './CustomType'
-import AnyTypeHelper from './AnyType'
-import EtcHelper from './etc'
+import CustomType from './types/CustomType'
+import AnyTypeHelper from './types/AnyType'
+import EtcHelper from './types/etc'
 
 class InvalidSignature extends Error
 class TypeMismatch extends Error

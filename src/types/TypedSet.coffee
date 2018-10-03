@@ -1,5 +1,5 @@
 import CustomType from './CustomType'
-import {isType, isAnyType, isLiteral, getTypeName} from '.'
+import {isType, isAnyType, isLiteral, getTypeName} from '..'
 
 class TypedSet extends CustomType
 	# exactly 1 argument

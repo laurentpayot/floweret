@@ -8,7 +8,7 @@ expect = chai.expect
 import {typeOf, isType, isAnyType, isLiteral, fn} from '../dist/floweret.min.js'
 import {CustomType, maybe, promised, etc, AnyType, EmptyArray,
 		Integer, Natural, Tuple, TypedObject, TypedSet, TypedMap, type,
-		and as And, or as Or, not as Not} from '../dist/types.js'
+		and as And, or as Or, not as Not} from '../dist/types'
 
 NATIVE_TYPES = [undefined, null, NaN, Infinity, -Infinity,
 				Boolean, Number, String, Array, Date, Object, Function, Promise, Int8Array, Set, Map, Symbol]

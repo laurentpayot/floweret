@@ -1,5 +1,5 @@
 import CustomType from './CustomType'
-import {isType, isAnyType, getTypeName} from '.'
+import {isType, isAnyType, getTypeName} from '..'
 
 class Not extends CustomType
 	# exacly 1 argument

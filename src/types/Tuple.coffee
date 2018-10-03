@@ -1,5 +1,5 @@
 import CustomType from './CustomType'
-import {isType, isAnyType, getTypeName} from '.'
+import {isType, isAnyType, getTypeName} from '..'
 
 class Tuple extends CustomType
 	# 2 or more arguments

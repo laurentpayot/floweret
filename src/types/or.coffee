@@ -1,5 +1,5 @@
 import CustomType from './CustomType'
-import {isAnyType} from '.'
+import {isAnyType} from '..'
 
 class Or extends CustomType
 	# 2 or more arguments

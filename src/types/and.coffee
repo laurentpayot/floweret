@@ -1,5 +1,5 @@
-CustomType = require './CustomType'
-{isType, isAnyType, typeOf, isLiteral, getTypeName} = require '.'
+import CustomType from './CustomType'
+import {isType, isAnyType, typeOf, isLiteral, getTypeName} from '..'
 
 class And extends CustomType
 	# 2 or more arguments
@@ -13,4 +13,4 @@ class And extends CustomType
 	getTypeName: -> ("'#{getTypeName(t)}'" for t in @types).join(" and ")
 	helperName: "and"
 
-module.exports = CustomType.createHelper(And)
+export default CustomType.createHelper(And)
