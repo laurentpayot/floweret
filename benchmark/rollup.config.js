@@ -1,5 +1,5 @@
-import commonjs from 'rollup-plugin-commonjs'
 import nodeResolve from 'rollup-plugin-node-resolve'
+import commonjs from 'rollup-plugin-commonjs'
 import { terser } from "rollup-plugin-terser"
 import gzipPlugin from 'rollup-plugin-gzip'
 
@@ -16,7 +16,7 @@ const plugins = [
 		sourceMap: false
 	}),
 	terser({
-		sourcemap: false,
+		sourcemap: false
 	}),
 	gzipPlugin()
 ]

@@ -1,5 +1,5 @@
 import CustomType from './CustomType'
-import {isAnyType} from '..'
+import {isAnyType} from '../lib/tools'
 
 class Maybe extends CustomType
 	# exactly 1 argument

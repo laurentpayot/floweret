@@ -1,4 +1,6 @@
+// import { fn } from '../dist'
 const { fn } = require('../dist')
+
 const TIMES = 10 * 1000
 
 console.log("\n*** Floweret ***")

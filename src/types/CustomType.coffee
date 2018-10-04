@@ -1,4 +1,4 @@
-class InvalidType extends Error
+import {InvalidType} from '../errors'
 
 s = (n) -> if n is 1 then '' else 's'
 

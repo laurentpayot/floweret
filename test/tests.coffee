@@ -4,11 +4,13 @@ import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 expect = chai.expect
 
-# testing the build, minified, not the source
-import {typeOf, isType, isAnyType, isLiteral, fn} from '../dist/floweret.min.js'
-import {CustomType, maybe, promised, etc, AnyType, EmptyArray,
-		Integer, Natural, Tuple, TypedObject, TypedSet, TypedMap, type,
-		and as And, or as Or, not as Not} from '../dist/types'
+# testing the build, not the source
+import {
+	fn, isType, typeOf, isAnyType, isLiteral,
+	CustomType, maybe, promised, etc,  type, AnyType, EmptyArray,
+	Integer, Natural, Tuple, TypedObject, TypedSet, TypedMap,
+	and as And, or as Or, not as Not
+} from '../dist'
 
 NATIVE_TYPES = [undefined, null, NaN, Infinity, -Infinity,
 				Boolean, Number, String, Array, Date, Object, Function, Promise, Int8Array, Set, Map, Symbol]

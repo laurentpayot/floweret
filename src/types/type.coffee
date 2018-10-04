@@ -1,5 +1,4 @@
 import CustomType from './CustomType'
-import {isType, isAnyType, getTypeName} from '..'
 
 class Type extends CustomType
 	# exacly 1 argument
