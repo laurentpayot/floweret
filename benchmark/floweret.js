@@ -1,5 +1,4 @@
-// import { fn } from '../dist'
-const { fn } = require('../dist')
+import { fn } from '../dist'
 
 const TIMES = 10 * 1000
 

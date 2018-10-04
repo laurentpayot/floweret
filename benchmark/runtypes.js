@@ -1,5 +1,4 @@
-// import { Number, String, Array, Record, Contract } from 'runtypes'
-const { Number, String, Array, Record, Contract } = require('runtypes')
+import { Number, String, Array, Record, Contract } from 'runtypes'
 
 const TIMES = 10 * 1000
 

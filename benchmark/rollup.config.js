@@ -13,7 +13,13 @@ const plugins = [
 		main: true
 	}),
 	commonjs({
-		sourceMap: false
+		sourceMap: false,
+		namedExports: {
+			// left-hand side can be an absolute path, a path
+			// relative to the current directory, or the name
+			// of a module in node_modules
+			'runtypes/lib/index.js': ['Record', 'String', 'Contract', 'Array', 'Number']
+		}
 	}),
 	terser({
 		sourcemap: false

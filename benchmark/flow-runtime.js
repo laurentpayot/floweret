@@ -1,5 +1,4 @@
-// import t from 'flow-runtime'
-const t = require('flow-runtime')
+import t from 'flow-runtime'
 
 const TIMES = 10 * 1000
 
