@@ -38,7 +38,7 @@
     "benchmark": "npm run bundle && cd benchmark/bundles && node no-type-checking-benchmark.min.js && node floweret-benchmark.min.js && node runtypes.min.js && node flow-runtime-benchmark.min.js && echo",
     "link": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm link",
     "preversion": "npm test",
-    "postversion": "git push && git push --tags && cp package.json dist && cp *.md dist && cd dist && rm -rf *.js.map && npm publish"
+    "postversion": "git push && git push --tags && cp package.json dist && cp *.md dist && cd dist && rm -r **/*.map && npm publish"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
