@@ -1,6 +1,6 @@
 import CustomType from './CustomType'
-import isType from '../lib/isType'
-import {isAnyType, getTypeName} from '../lib/tools'
+import isType from '../isType'
+import {isAnyType, getTypeName} from '../tools'
 
 class TypedObject extends CustomType
 	# exactly 1 argument

@@ -1,7 +1,7 @@
-import {InvalidType} from '../errors'
+import {InvalidType} from './errors'
 import {isAnyType} from './tools'
 import typeOf from './typeOf'
-import CustomType from '../types/CustomType'
+import CustomType from './types/CustomType'
 
 # check that a value is of a given type or of any (undefined) type, e.g.: isType("foo", String)
 isType = (val, type) -> if Array.isArray(type) # NB: special Array case http://web.mit.edu/jwalden/www/isArray.html

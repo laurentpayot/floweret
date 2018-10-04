@@ -1,8 +1,8 @@
-import {InvalidSignature, TypeMismatch} from '../errors'
+import {InvalidSignature, TypeMismatch} from './errors'
 import {isAnyType, getTypeName, typeValue} from './tools'
 import isType from './isType'
-import CustomType from '../types/CustomType'
-import EtcHelper from '../types/etc'
+import CustomType from './types/CustomType'
+import EtcHelper from './types/etc'
 
 Etc = EtcHelper().constructor
 

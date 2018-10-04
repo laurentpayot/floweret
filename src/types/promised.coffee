@@ -1,5 +1,5 @@
 import CustomType from './CustomType'
-import {isAnyType} from '../lib/tools'
+import {isAnyType} from '../tools'
 
 class Promised extends CustomType
 	# exactly 1 argument

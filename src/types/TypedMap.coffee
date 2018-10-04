@@ -1,6 +1,6 @@
 import CustomType from './CustomType'
-import isType from '../lib/isType'
-import {isAnyType, isLiteral, getTypeName} from '../lib/tools'
+import isType from '../isType'
+import {isAnyType, isLiteral, getTypeName} from '../tools'
 
 notDefined = (t) -> t is undefined or isAnyType(t)
 

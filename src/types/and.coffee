@@ -1,6 +1,6 @@
 import CustomType from './CustomType'
-import isType from '../lib/isType'
-import {isAnyType, isLiteral, getTypeName} from '../lib/tools'
+import isType from '../isType'
+import {isAnyType, isLiteral, getTypeName} from '../tools'
 
 class And extends CustomType
 	# 2 or more arguments

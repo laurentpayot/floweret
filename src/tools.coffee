@@ -1,5 +1,5 @@
-import CustomType from '../types/CustomType'
-import AnyTypeHelper from '../types/AnyType'
+import CustomType from './types/CustomType'
+import AnyTypeHelper from './types/AnyType'
 import typeOf from './typeOf'
 
 AnyType = AnyTypeHelper().constructor

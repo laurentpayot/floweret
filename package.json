@@ -30,10 +30,11 @@
   },
   "scripts": {
     "build": "rm -rf dist/ && coffee -ctmb -o dist/ src/",
+    "build-ESM": "rm -rf dist/ && coffee -cmb -o dist/ src/",
     "build-tests": "coffee -ctm test/tests.coffee",
     "build-all": "npm run build && npm run build-tests",
     "test": "npm run build-all && mocha",
-    "bundle": "npm run build && cd benchmark && rollup -c && echo && cd bundles && stat -c '%n %s bytes' *.gz | sort -n -k 2 | column -t",
+    "bundle": "npm run build-ESM && cd benchmark && rollup -c && echo && cd bundles && stat -c '%n %s bytes' *.gz | sort -n -k 2 | column -t",
     "benchmark": "npm run bundle && cd benchmark/bundles && node no-type-checking-benchmark.min.js && node floweret-benchmark.min.js && node runtypes.min.js && node flow-runtime-benchmark.min.js && echo",
     "benchmark-unbundled": "npm run build && cd benchmark && node no-type-checking.js && node floweret.js && node runtypes.js && node flow-runtime.js && echo",
     "link": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm link",

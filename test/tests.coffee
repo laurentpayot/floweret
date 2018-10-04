@@ -6,11 +6,13 @@ expect = chai.expect
 
 # testing the build, not the source
 import {
-	fn, isType, typeOf, isAnyType, isLiteral,
+	fn, isType, typeOf,
 	CustomType, maybe, promised, etc,  type, AnyType, EmptyArray,
 	Integer, Natural, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
 } from '../dist'
+import {isAnyType, isLiteral} from '../dist/tools'
+
 
 NATIVE_TYPES = [undefined, null, NaN, Infinity, -Infinity,
 				Boolean, Number, String, Array, Date, Object, Function, Promise, Int8Array, Set, Map, Symbol]
