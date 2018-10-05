@@ -8,7 +8,7 @@
 			"type": "node",
 			"request": "launch",
 			"name": "Tests (full build)",
-			"preLaunchTask": "build-all",
+			"preLaunchTask": "build",
 			"program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
 			"args": [
 				"-u",

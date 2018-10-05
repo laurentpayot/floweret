@@ -5,8 +5,8 @@
     "tasks": [
         {
 			"type": "npm",
-			"label": "build-all",
-            "script": "build-all",
+			"label": "build",
+            "script": "build",
             "problemMatcher": []
         },
         {
