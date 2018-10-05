@@ -105,7 +105,7 @@ Use `undefined` as the arguments types list when the functions takes no argument
 ```js
 const returnHi = fn(
   undefined, String,
-  function() {return "Hello!"}
+  function () {return "Hello!"}
 )
 
 returnHi()  // Hello!
@@ -117,7 +117,7 @@ Use `undefined` as well as the result type when the function returns nothing (un
 ```js
 const logInfo = fn(
   String, undefined
-  function(msg) {console.log("Info:", msg)}
+  function (msg) {console.log("Info:", msg)}
 )
 
 logInfo("Boo.") // logs "Info: Boo." but returns undefined
