@@ -8,7 +8,7 @@ expect = chai.expect
 import {
 	fn, isType, typeOf,
 	CustomType, maybe, promised, etc,  type, AnyType, EmptyArray,
-	Integer, Natural, Tuple, TypedObject, TypedSet, TypedMap,
+	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
 } from 'floweret'
 import {isAnyType, isLiteral} from 'floweret/cjs/tools'
@@ -534,6 +534,32 @@ describe "isType", ->
 			it "should return true for zero", ->
 				expect(isType(0, Natural)).to.be.true
 				expect(isType(-0, Natural)).to.be.true
+
+		context "SizedString type", ->
+
+			it "should throw an error when SizedString is used as a function", ->
+				expect(-> isType("123", SizedString)).to.throw("'SizedString' must have at least 1 argument.")
+
+			it "should throw an error when SizedString is used without arguments", ->
+				expect(-> isType("123", SizedString())).to.throw("'SizedString' must have at least 1 argument.")
+
+			it "should throw an error when SizedString arguments are not numers", ->
+				expect(-> isType("123", SizedString('100')))
+				.to.throw("'SizedString' arguments must be positive integers.")
+
+			it "should throw an error when SizedString arguments are negative", ->
+				expect(-> isType("123", SizedString(-1)))
+				.to.throw("'SizedString' arguments must be positive integers.")
+
+			it "should throw an error when SizedString arguments are negative", ->
+				expect(-> isType("123", SizedString(-100, -10)))
+				.to.throw("'SizedString' arguments must be positive integers.")
+
+			it "should return false for a too long string", ->
+				expect(isType("123", SizedString(2))).to.be.false
+
+			it "should return false for a too short string", ->
+				expect(isType("123", SizedString(4, 10))).to.be.false
 
 		context "Tuple type", ->
 
@@ -1683,6 +1709,37 @@ describe "fn", ->
 			it "should return an error with ''Natural' max value cannot be less than min value", ->
 				expect(-> Natural(100, -100))
 				.to.throw("'Natural' max value cannot be less than min value.")
+
+		# TODO
+		context.skip "Sized string", ->
+
+			it "should return an error with 'SizedString'", ->
+				f = fn SizedString, AnyType, ->
+				expect(-> f(true)).to.throw("Argument #1 should be of type 'SizedString' instead of Boolean true.")
+
+			it "should return an error with 'SizedString smaller than 100'", ->
+				f = fn SizedString(100), AnyType, ->
+				expect(-> f(true))
+				.to.throw("Argument #1 should be of type 'SizedString smaller than 100' instead of Boolean true.")
+
+			it "should return an error with 'SizedString bigger than 100'", ->
+				f = fn SizedString(100, undefined), AnyType, ->
+				expect(-> f(true))
+				.to.throw("Argument #1 should be of type 'SizedString bigger than 100' instead of Boolean true.")
+
+			it "should return an error with 'SizedString bigger than 10 and smaller than 100'", ->
+				f = fn SizedString(10, 100), AnyType, ->
+				expect(-> f(true))
+				.to.throw("Argument #1 should be of type 'SizedString bigger than 10
+							and smaller than 100' instead of Boolean true.")
+
+			it "should return an error with ''SizedString' arguments must be positive numbers.'", ->
+				expect(-> SizedString(-100, -10)).to.throw("'SizedString' arguments must be positive numbers.")
+				expect(-> SizedString(-100, 10)).to.throw("'SizedString' arguments must be positive numbers.")
+
+			it "should return an error with ''SizedString' max value cannot be less than min value", ->
+				expect(-> SizedString(100, -100))
+				.to.throw("'SizedString' max value cannot be less than min value.")
 
 		context "Custom type", ->
 
