@@ -29,15 +29,15 @@
     "node": ">=7.6.0"
   },
   "scripts": {
-    "build": "npm run build-esm && npm run build-cjs",
-    "build-cjs": "rm -rf dist/cjs && coffee -ctmb -o dist/cjs src/",
+    "build": "npm run build-esm && npm run build-cjs && npm run size",
     "build-esm": "rm -rf dist/esm && coffee -cmb -o dist/esm src/",
+    "build-cjs": "rm -rf dist/cjs && coffee -ctmb -o dist/cjs src/",
     "build-tests": "coffee -ctm test/tests.coffee",
     "test": "npm run build && npm run build-tests && mocha",
-    "bundle": "npm run build && cd benchmark && rollup -c && echo && stat -c '%n %s bytes' bundles/*.gz | sort -n -k 2 | column -t",
+    "bundle": "npm run build && cd benchmark && rollup -c && echo && cd bundles && stat -c '%n %s bytes' *.gz | sort -n -k 2 | column -t",
     "benchmark": "npm run bundle && cd benchmark/bundles && node no-type-checking-benchmark.min.js && node floweret-benchmark.min.js && node runtypes.min.js && node flow-runtime-benchmark.min.js && echo",
     "link": "mkdir -p dist && ln -sf ../package.json dist && cd dist && npm link && rm -rf node_modules && rm package-lock.json && cd .. && npm link floweret",
-    "preversion": "npm test && npm run size",
+    "preversion": "npm test",
     "postversion": "git push && git push --tags && cp *.md dist && cd dist && find . -type f -name '*.map' -delete && npm publish",
     "size": "size-limit"
   },

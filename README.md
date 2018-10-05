@@ -3,7 +3,7 @@
 A runtime signature type-checker using native JavaScript types.
 
 * **Simple**: Native JavaScript types syntax.
-* **Lightweight**: 3 kb minified and gzipped. No dependencies.
+* **Lightweight**: 4 kb or less (tree shaking) minified and gzipped. No dependencies.
 * **Fast**: Direct type comparison. No string to parse.
 * **Powerful**: Logical operators, tuples, regular expressions, rest parameters and more…
 * **Customizable**: Create your own types for your own needs.
@@ -515,24 +515,24 @@ The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple f
 ```txt
 no-type-checking-benchmark.min.js.gz  258 bytes
 runtypes.min.js.gz                    3030 bytes
-floweret-benchmark.min.js.gz          3549 bytes
+floweret-benchmark.min.js.gz          3550 bytes
 flow-runtime-benchmark.min.js.gz      20233 bytes
 
 *** No type-checking ***
-10000 greets: 1.293ms
-10000 sums: 17.617ms
+10000 greets: 1.190ms
+10000 sums: 17.699ms
 
 *** Floweret ***
-10000 greets: 13.568ms
-10000 sums: 81.043ms
+10000 greets: 15.508ms
+10000 sums: 81.995ms
 
 *** Runtypes ***
-10000 greets: 13.737ms
-10000 sums: 42.348ms
+10000 greets: 18.197ms
+10000 sums: 43.585ms
 
 *** Flow-runtime ***
-10000 greets: 172.080ms
-10000 sums: 535.812ms
+10000 greets: 170.605ms
+10000 sums: 548.315ms
 ```
 
 ## License
