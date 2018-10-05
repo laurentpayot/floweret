@@ -1,4 +1,4 @@
-import { fn } from '../dist'
+import { fn } from 'floweret'
 
 const TIMES = 10 * 1000
 

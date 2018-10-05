@@ -29,22 +29,26 @@
     "node": ">=7.6.0"
   },
   "scripts": {
-    "build": "npm run build-ESM",
-    "build-CJS": "rm -rf dist/ && coffee -ctmb -o dist/ src/ && npm run size",
-    "build-ESM": "rm -rf dist/ && coffee -cmb -o dist/ src/ && npm run size",
+    "build": "npm run build-esm && npm run build-cjs",
+    "build-cjs": "rm -rf dist/cjs && coffee -ctmb -o dist/cjs src/",
+    "build-esm": "rm -rf dist/esm && coffee -cmb -o dist/esm src/",
     "build-tests": "coffee -ctm test/tests.coffee",
-    "test": "npm run build-CJS && npm run build-tests && mocha",
-    "bundle": "npm run build && cd benchmark && rollup -c && echo && cd bundles && stat -c '%n %s bytes' *.gz | sort -n -k 2 | column -t",
+    "test": "npm run build && npm run build-tests && mocha",
+    "bundle": "npm run build && cd benchmark && rollup -c && echo && stat -c '%n %s bytes' bundles/*.gz | sort -n -k 2 | column -t",
     "benchmark": "npm run bundle && cd benchmark/bundles && node no-type-checking-benchmark.min.js && node floweret-benchmark.min.js && node runtypes.min.js && node flow-runtime-benchmark.min.js && echo",
-    "link": "npm run test && cp package.json dist && cp *.md dist && cd dist && npm link",
-    "preversion": "npm test",
+    "link": "mkdir -p dist && ln -sf ../package.json dist && cd dist && npm link && rm -rf node_modules && rm package-lock.json && cd .. && npm link floweret",
+    "preversion": "npm test && npm run size",
     "postversion": "git push && git push --tags && cp package.json dist && cp *.md dist && cd dist && rm -r **/*.map && npm publish",
     "size": "size-limit"
   },
-  "size-limit": [{
-    "limit": "4 KB",
-    "path": "dist/index.js"
-  }],
+  "module": "esm/index.js",
+  "main": "cjs/index.js",
+  "size-limit": [
+    {
+      "limit": "4 KB",
+      "path": "dist/cjs/index.js"
+    }
+  ],
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
