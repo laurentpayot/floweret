@@ -38,7 +38,7 @@
     "benchmark": "npm run bundle && cd benchmark/bundles && node no-type-checking-benchmark.min.js && node floweret-benchmark.min.js && node runtypes.min.js && node flow-runtime-benchmark.min.js && echo",
     "link": "mkdir -p dist && ln -sf ../package.json dist && cd dist && npm link && rm -rf node_modules && rm package-lock.json && cd .. && npm link floweret",
     "preversion": "npm test && npm run size",
-    "postversion": "git push && git push --tags && cp *.md dist && cd dist && rm -r **/*.map && npm publish",
+    "postversion": "git push && git push --tags && cp *.md dist && cd dist && find . -type f -name '*.map' -delete && npm publish",
     "size": "size-limit"
   },
   "module": "esm/index.js",
