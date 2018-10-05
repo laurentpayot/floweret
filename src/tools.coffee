@@ -17,16 +17,16 @@ typeValue = (val) ->
 		else ''
 
 # returns the type name for signature error messages (supposing type is always correct)
-getTypeName = (type) -> switch type?.constructor
+getTypeName = (type) -> if Array.isArray(type) # NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
+	typedArray = not Object.values(type).length
+	switch type.length
+		when 0 then "any type"
+		when 1
+			if typedArray then "array of one element" else "array of '#{getTypeName(type[0])}'"
+		else
+			if typedArray then "array of #{type.length} elements" else (getTypeName(t) for t in type).join(" or ")
+else switch type?.constructor
 	when undefined then typeOf(type)
-	when Array
-		typedArray = not Object.values(type).length
-		switch type.length
-			when 0 then "any type"
-			when 1
-				if typedArray then "array of one element" else "array of '#{getTypeName(type[0])}'"
-			else
-				if typedArray then "array of #{type.length} elements" else (getTypeName(t) for t in type).join(" or ")
 	when Function
 		if type.rootClass is CustomType then type().getTypeName() else type.name
 	when Object then "object type"
