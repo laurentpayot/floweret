@@ -13,8 +13,8 @@ import {
 	CustomType, maybe, promised, etc,  type, AnyType, EmptyArray,
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
-} from 'floweret/cjs/types'
-import {isAnyType, isLiteral} from 'floweret/cjs/tools'
+} from 'floweret/types'
+import {isAnyType, isLiteral} from 'floweret/tools'
 
 
 NATIVE_TYPES = [undefined, null, NaN, Infinity, -Infinity,

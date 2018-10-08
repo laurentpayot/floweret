@@ -29,9 +29,7 @@
     "node": ">=7.6.0"
   },
   "scripts": {
-    "build": "npm run build-esm && npm run build-cjs",
-    "build-esm": "rm -rf dist/esm && coffee -cmb -o dist/esm src/",
-    "build-cjs": "rm -rf dist/cjs && coffee -ctmb -o dist/cjs src/",
+    "build": "rm -rf dist && coffee -ctmb -o dist src",
     "build-tests": "coffee -ctm test/tests.coffee",
     "test": "npm run build && npm run build-tests && mocha",
     "bundle": "npm run build && cd benchmark && rollup -c",
@@ -43,18 +41,10 @@
     "postversion": "git push && git push --tags && cp *.md dist && cd dist && find . -type f -name '*.map' -delete && npm publish",
     "size": "size-limit"
   },
-  "module": "esm/index.js",
-  "main": "cjs/index.js",
-  "size-limit": [
-    {
+  "size-limit": [{
       "limit": "5 KB",
-      "path": "dist/cjs/index.js"
-    },
-    {
-      "limit": "5 KB",
-      "path": "dist/esm/index.js"
-    }
-  ],
+      "path": "dist/index.js"
+    }],
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
