@@ -7,10 +7,11 @@ expect = chai.expect
 # testing the build, npm linked, not the source
 import {
 	fn, isValid, typeOf,
+	etc, Any # types used anyway
 } from 'floweret'
 
 import {
-	Type, maybe, promised, etc, constraint, Any, EmptyArray,
+	Type, maybe, promised, constraint, EmptyArray,
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
 } from 'floweret/types'
