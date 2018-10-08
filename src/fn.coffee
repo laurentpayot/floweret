@@ -1,5 +1,5 @@
 import {InvalidSignature, TypeMismatch} from './errors'
-import {isAnyType, getTypeName, typeValue} from './tools'
+import {isAny, getTypeName, typeValue} from './tools'
 import isValid from './isValid'
 import Type from './types/Type'
 import EtcHelper from './types/etc'
@@ -43,11 +43,11 @@ export default (argTypes..., resType, f) ->
 				throw new InvalidSignature "Rest type must be the last of the arguments types." if i+1 < argTypes.length
 				rest = true
 				t = (if type is EtcHelper then type() else type).type # using default helper parameters
-				unless isAnyType(t)
+				unless isAny(t)
 					for arg, j in args[i..]
 						error "Argument ##{i+j+1} #{shouldBe(arg, t)}." unless isValid(arg, t)
 			else
-				unless isAnyType(type)
+				unless isAny(type)
 					if args[i] is undefined
 						error "Missing required argument number #{i+1}." unless isValid(undefined, type)
 					else

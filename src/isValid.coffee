@@ -1,5 +1,5 @@
 import {InvalidType} from './errors'
-import {isAnyType} from './tools'
+import {isAny} from './tools'
 import typeOf from './typeOf'
 import Type from './types/Type'
 
@@ -9,7 +9,7 @@ isValid = (val, type) -> if Array.isArray(type) # NB: special Array case http://
 		when 0 then true # any type: `[]`
 		when 1 then switch
 			when not Array.isArray(val) then false
-			when isAnyType(type[0]) then true
+			when isAny(type[0]) then true
 			when not Object.values(type).length then val.length is 1 # array of one empty value: sized array `Array(1)`
 			else val.every((e) -> isValid(e, type[0])) # typed array type, e.g.: `Array(String)`
 		else

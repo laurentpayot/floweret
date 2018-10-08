@@ -1,5 +1,5 @@
 import Type from './Type'
-import {isAnyType} from '../tools'
+import {isAny} from '../tools'
 
 class Maybe extends Type
 	# exactly 1 argument
@@ -7,7 +7,7 @@ class Maybe extends Type
 	argsMax: 1
 	constructor: (@type) ->
 		super(arguments...)
-		@warn "AnyType is not needed as '#{@helperName}' argument." if isAnyType(@type)
+		@warn "Any is not needed as '#{@helperName}' argument." if isAny(@type)
 		# return needed to always return an array instead of a new Maybe instance
 		return [undefined, null, @type]
 	helperName: "maybe"

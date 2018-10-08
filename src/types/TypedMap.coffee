@@ -1,8 +1,8 @@
 import Type from './Type'
 import isValid from '../isValid'
-import {isAnyType, isLiteral, getTypeName} from '../tools'
+import {isAny, isLiteral, getTypeName} from '../tools'
 
-notDefined = (t) -> t is undefined or isAnyType(t)
+notDefined = (t) -> t is undefined or isAny(t)
 
 class TypedMap extends Type
 	valuesType: undefined
@@ -13,13 +13,13 @@ class TypedMap extends Type
 	constructor: (t1, t2) ->
 		super(arguments...)
 		if arguments.length is 1
-			@warn "Use 'Map' type instead of a #{@constructor.name} with values of any type." if isAnyType(t1)
+			@warn "Use 'Map' type instead of a #{@constructor.name} with values of any type." if isAny(t1)
 			@valuesType = t1
 		else
 			@error "You cannot have both #{getTypeName(t1)} as keys type and #{getTypeName(t2)} as values type
 					in a #{@constructor.name}." if isLiteral(t1) and isLiteral(t2)
 			@warn "Use 'Map' type instead of a #{@constructor.name}
-					with keys and values of any type." if isAnyType(t1) and isAnyType(t2)
+					with keys and values of any type." if isAny(t1) and isAny(t2)
 			# [@keysType, @valuesType] = [t1, t2] # problem with Rollup commonjs plugin
 			@keysType = t1
 			@valuesType = t2

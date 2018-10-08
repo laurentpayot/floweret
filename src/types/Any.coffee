@@ -1,6 +1,6 @@
 import Type from './Type'
 
-class AnyType extends Type
+class Any extends Type
 	# no arguments
 	argsMin: 0
 	argsMax: 0
@@ -8,4 +8,4 @@ class AnyType extends Type
 	validate: (val) -> true
 	getTypeName: -> "any type"
 
-export default Type.createHelper(AnyType)
+export default Type.createHelper(Any)

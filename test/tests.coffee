@@ -10,11 +10,11 @@ import {
 } from 'floweret'
 
 import {
-	Type, maybe, promised, etc, constraint, AnyType, EmptyArray,
+	Type, maybe, promised, etc, constraint, Any, EmptyArray,
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
 } from 'floweret/types'
-import {isAnyType, isLiteral} from 'floweret/tools'
+import {isAny, isLiteral} from 'floweret/tools'
 
 
 NATIVE_TYPES = [undefined, null, NaN, Infinity, -Infinity,
@@ -159,19 +159,19 @@ describe "isLiteral", ->
 	██║███████║██║  ██║██║ ╚████║   ██║      ██║      ██║   ██║     ███████╗
 	╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝      ╚═╝      ╚═╝   ╚═╝     ╚══════╝
 ###
-describe "isAnyType", ->
+describe "isAny", ->
 
 	it "should return false for native types", ->
-		expect(isAnyType(t)).to.be.false for t in NATIVE_TYPES
+		expect(isAny(t)).to.be.false for t in NATIVE_TYPES
 
 	it "should return true for empty array", ->
-		expect(isAnyType([])).to.be.true
+		expect(isAny([])).to.be.true
 
-	it "should return true for AnyType", ->
-		expect(isAnyType(AnyType)).to.be.true
+	it "should return true for Any", ->
+		expect(isAny(Any)).to.be.true
 
-	it "should return true for AnyType()", ->
-		expect(isAnyType(AnyType())).to.be.true
+	it "should return true for Any()", ->
+		expect(isAny(Any())).to.be.true
 
 ###
 	██╗███████╗████████╗██╗   ██╗██████╗ ███████╗
@@ -200,17 +200,17 @@ describe "isValid", ->
 			it "empty array type should return true for all values", ->
 				expect(isValid(val, [])).to.be.true for val in VALUES
 
-			it "AnyType type should return true for all values", ->
-				expect(isValid(val, AnyType)).to.be.true for val in VALUES
+			it "Any type should return true for all values", ->
+				expect(isValid(val, Any)).to.be.true for val in VALUES
 
-			it "AnyType() type should return true for all values", ->
-				expect(isValid(val, AnyType())).to.be.true for val in VALUES
+			it "Any() type should return true for all values", ->
+				expect(isValid(val, Any())).to.be.true for val in VALUES
 
-			it "AnyType(Number) type should throw an error", ->
-				expect(-> isValid(1, AnyType(Number))).to.throw("'AnyType' cannot have any arguments.")
+			it "Any(Number) type should throw an error", ->
+				expect(-> isValid(1, Any(Number))).to.throw("'Any' cannot have any arguments.")
 
-			it "AnyType([]) type should throw an error", ->
-				expect(-> isValid(1, AnyType([]))).to.throw("'AnyType' cannot have any arguments.")
+			it "Any([]) type should throw an error", ->
+				expect(-> isValid(1, Any([]))).to.throw("'Any' cannot have any arguments.")
 
 		context "Maybe type", ->
 
@@ -218,14 +218,14 @@ describe "isValid", ->
 				warnSpy.resetHistory()
 				expect(maybe([])).to.eql([undefined, null, []])
 				expect(warnSpy.calledOnceWithExactly(
-					"AnyType is not needed as 'maybe' argument."
+					"Any is not needed as 'maybe' argument."
 				)).to.be.true
 
-			it "maybe(AnyType) should return empty array.", ->
+			it "maybe(Any) should return empty array.", ->
 				warnSpy.resetHistory()
-				expect(maybe(AnyType)).to.eql([undefined, null, AnyType])
+				expect(maybe(Any)).to.eql([undefined, null, Any])
 				expect(warnSpy.calledOnceWithExactly(
-					"AnyType is not needed as 'maybe' argument."
+					"Any is not needed as 'maybe' argument."
 				)).to.be.true
 
 			it "maybe should throw an error when used as with more than 1 argument", ->
@@ -583,20 +583,20 @@ describe "isValid", ->
 						"Use 'Array(2)' type instead of a Tuple of 2 values of any type'."
 					)).to.be.true
 
-				it "Tuple of AnyType should return array of empty elements", ->
+				it "Tuple of Any should return array of empty elements", ->
 					warnSpy.resetHistory()
-					t = Tuple(AnyType, AnyType)
+					t = Tuple(Any, Any)
 					expect(t.constructor.name).to.equal("Tuple")
-					expect(t.types).to.eql([AnyType, AnyType])
+					expect(t.types).to.eql([Any, Any])
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Array(2)' type instead of a Tuple of 2 values of any type'."
 					)).to.be.true
 
-				it "Tuple of AnyType() should return array of empty elements", ->
+				it "Tuple of Any() should return array of empty elements", ->
 					warnSpy.resetHistory()
-					t = Tuple(AnyType(), AnyType())
+					t = Tuple(Any(), Any())
 					expect(t.constructor.name).to.equal("Tuple")
-					expect(t.types).to.eql([AnyType(), AnyType()])
+					expect(t.types).to.eql([Any(), Any()])
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Array(2)' type instead of a Tuple of 2 values of any type'."
 					)).to.be.true
@@ -716,20 +716,20 @@ describe "isValid", ->
 						"Use 'Set' type instead of a TypedSet with elements of any type."
 					)).to.be.true
 
-				it "TypedSet(AnyType) should return a TypedSet instance and log a warning.", ->
+				it "TypedSet(Any) should return a TypedSet instance and log a warning.", ->
 					warnSpy.resetHistory()
-					t = TypedSet(AnyType)
+					t = TypedSet(Any)
 					expect(t.constructor.name).to.equal("TypedSet")
-					expect(t.type).to.eql(AnyType)
+					expect(t.type).to.eql(Any)
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Set' type instead of a TypedSet with elements of any type."
 					)).to.be.true
 
-				it "TypedSet(AnyType()) should return a TypedSet instance and log a warning.", ->
+				it "TypedSet(Any()) should return a TypedSet instance and log a warning.", ->
 					warnSpy.resetHistory()
-					t = TypedSet(AnyType())
+					t = TypedSet(Any())
 					expect(t.constructor.name).to.equal("TypedSet")
-					expect(t.type).to.eql(AnyType())
+					expect(t.type).to.eql(Any())
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Set' type instead of a TypedSet with elements of any type."
 					)).to.be.true
@@ -837,38 +837,38 @@ describe "isValid", ->
 						"Use 'Map' type instead of a TypedMap with keys and values of any type."
 					)).to.be.true
 
-				it "TypedMap(AnyType) should return a TypedMap instance and log a warning.", ->
+				it "TypedMap(Any) should return a TypedMap instance and log a warning.", ->
 					warnSpy.resetHistory()
-					t = TypedMap(AnyType)
+					t = TypedMap(Any)
 					expect(t.constructor.name).to.equal("TypedMap")
-					expect(t.valuesType).to.eql(AnyType)
+					expect(t.valuesType).to.eql(Any)
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with values of any type."
 					)).to.be.true
 
-				it "TypedMap(AnyType, AnyType) should return a TypedMap instance and log a warning.", ->
+				it "TypedMap(Any, Any) should return a TypedMap instance and log a warning.", ->
 					warnSpy.resetHistory()
-					t = TypedMap(AnyType, AnyType)
+					t = TypedMap(Any, Any)
 					expect(t.constructor.name).to.equal("TypedMap")
-					expect([t.valuesType, t.keysType]).to.eql([AnyType, AnyType])
+					expect([t.valuesType, t.keysType]).to.eql([Any, Any])
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with keys and values of any type."
 					)).to.be.true
 
-				it "TypedMap(AnyType()) should return a TypedMap instance and log a warning.", ->
+				it "TypedMap(Any()) should return a TypedMap instance and log a warning.", ->
 					warnSpy.resetHistory()
-					t = TypedMap(AnyType())
+					t = TypedMap(Any())
 					expect(t.constructor.name).to.equal("TypedMap")
-					expect(t.valuesType).to.eql(AnyType())
+					expect(t.valuesType).to.eql(Any())
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with values of any type."
 					)).to.be.true
 
-				it "TypedMap(AnyType(), AnyType()) should return a TypedMap instance and log a warning.", ->
+				it "TypedMap(Any(), Any()) should return a TypedMap instance and log a warning.", ->
 					warnSpy.resetHistory()
-					t = TypedMap(AnyType(), AnyType())
+					t = TypedMap(Any(), Any())
 					expect(t.constructor.name).to.equal("TypedMap")
-					expect([t.valuesType, t.keysType]).to.eql([AnyType(), AnyType()])
+					expect([t.valuesType, t.keysType]).to.eql([Any(), Any()])
 					expect(warnSpy.calledOnceWithExactly(
 						"Use 'Map' type instead of a TypedMap with keys and values of any type."
 					)).to.be.true
@@ -1009,7 +1009,7 @@ describe "isValid", ->
 				expect(t.constructor.name).to.equal("And")
 				expect(t.types).to.eql([Number, []])
 				expect(warnSpy.calledOnceWithExactly(
-					"AnyType is not needed as 'and' argument number 2."
+					"Any is not needed as 'and' argument number 2."
 				)).to.be.true
 
 			it "And with undefined value should throw an error.", ->
@@ -1052,7 +1052,7 @@ describe "isValid", ->
 				t = Or(Number, [])
 				expect(t).to.eql([Number, []])
 				expect(warnSpy.calledOnceWithExactly(
-					"AnyType is inadequate as 'or' argument number 2."
+					"Any is inadequate as 'or' argument number 2."
 				)).to.be.true
 
 		context "Not", ->
@@ -1066,7 +1066,7 @@ describe "isValid", ->
 				expect(t.constructor.name).to.equal("Not")
 				expect(t.type).to.eql([])
 				expect(warnSpy.calledOnceWithExactly(
-					"AnyType is inadequate as 'not' argument."
+					"Any is inadequate as 'not' argument."
 				)).to.be.true
 
 			it "isValid with not() should return true only if value is not of the given type", ->
@@ -1370,103 +1370,103 @@ describe "fn", ->
 		context "Uncomposed type argument", ->
 
 			it "should return an error with 'undefined'", ->
-				f = fn undefined, AnyType, ->
+				f = fn undefined, Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'undefined' instead of Number 1.")
 
 			it "should return an error with 'null'", ->
-				f = fn null, AnyType, ->
+				f = fn null, Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'null' instead of Number 1.")
 
 			it "should return an error with 'String'", ->
-				f = fn String, AnyType, ->
+				f = fn String, Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'String' instead of Number 1.")
 
 			it "should return an error with
 				'Argument number 1 should be of type 'Number' instead of Array.'", ->
-				f = fn Number, AnyType, ->
+				f = fn Number, Any, ->
 				expect(-> f([1, 2]))
 				.to.throw("Argument #1 should be of type 'Number' instead of Array.")
 
 			it "should return an error with 'Array'", ->
-				f = fn Array, AnyType, ->
+				f = fn Array, Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'Array' instead of Number 1.")
 
 			it "should return an error with 'literal String 'foo'", ->
-				f = fn 'foo', AnyType, ->
+				f = fn 'foo', Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'literal String \"foo\"' instead of Number 1.")
 
 			it "should return an error with 'literal Number 1'", ->
-				f = fn 1, AnyType, ->
+				f = fn 1, Any, ->
 				expect(-> f('1'))
 				.to.throw("Argument #1 should be of type 'literal Number 1' instead of String \"1\".")
 
 			it "should return an error with 'literal Boolean 'true'", ->
-				f = fn true, AnyType, ->
+				f = fn true, Any, ->
 				expect(-> f(false))
 				.to.throw("Argument #1 should be of type 'literal Boolean true' instead of Boolean false.")
 
 			it "should return an error with
 				'Argument number 1 should be of type 'Number' instead of Object.'", ->
-				f = fn Number, AnyType, ->
+				f = fn Number, Any, ->
 				expect(-> f(a: {b: 1, c: 2}, d: 3))
 				.to.throw("Argument #1 should be of type 'Number' instead of Object.")
 
 			it "should return an error with
 				'Argument number 1 should be an object with key 'a.c' of type 'String' instead of Number 1.'", ->
-				f = fn {a: {b: Number, c: String}, d: Number}, AnyType, ->
+				f = fn {a: {b: Number, c: String}, d: Number}, Any, ->
 				expect(-> f(a: {b: 1, c: 2}, d: 3))
 				.to.throw("Argument #1 should be an object with key 'a.c' of type 'String' instead of Number 2.")
 
 			it "should return an error with 'MyClass", ->
 				class MyClass
-				f = fn MyClass, AnyType, ->
+				f = fn MyClass, Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'MyClass' instead of Number 1.")
 
 			it "should return an error with 'array of'", ->
-				f = fn Array(Number), AnyType, ->
+				f = fn Array(Number), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'array of 'Number'' instead of Number 1.")
 
 			it "should return an error with 'array with element 1 of type 'Number' instead of String \"2\"'", ->
-				f = fn Array(Number), AnyType, ->
+				f = fn Array(Number), Any, ->
 				expect(-> f([1, '2', 3]))
 				.to.throw("Argument #1 should be an array with element 1 of type 'Number' instead of String \"2\".")
 
 			it "should return an error with 'array with a length of 4 instead of 3", ->
-				f = fn Array(4), AnyType, ->
+				f = fn Array(4), Any, ->
 				expect(-> f([1, '2', 3]))
 				.to.throw("Argument #1 should be an array with a length of 4 instead of 3.")
 
 			it "should return an error with 'an array with a length of 2 instead of 3.", ->
-				f = fn Array(2), AnyType, ->
+				f = fn Array(2), Any, ->
 				expect(-> f([1, '2', 3]))
 				.to.throw("Argument #1 should be an array with a length of 2 instead of 3.")
 
 			it "should return an error with 'of type 'Number or String' instead of Array", ->
-				f = fn [Number, String], AnyType, ->
+				f = fn [Number, String], Any, ->
 				expect(-> f([1]))
 				.to.throw("Argument #1 should be of type 'Number or String' instead of Array.")
 
 			it "should return an error with 'empty array'", ->
-				f = fn EmptyArray, AnyType, ->
+				f = fn EmptyArray, Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'empty array' instead of Number 1.")
 				expect(-> f([1]))
 				.to.throw("Argument #1 should be of type 'empty array' instead of Array.")
 
 			it "should return an error with 'NaN'", ->
-				f = fn Number, AnyType, ->
+				f = fn Number, Any, ->
 				expect(-> f("a" * 2))
 				.to.throw("Argument #1 should be of type 'Number' instead of NaN.")
 
 			it "should return an error with 'RegExp'", ->
-				f = fn /foo/, AnyType, ->
+				f = fn /foo/, Any, ->
 				expect(-> f("bar"))
 				.to.throw("Argument #1 should be of type
 							'string matching regular expression /foo/' instead of String \"bar\".")
@@ -1474,35 +1474,35 @@ describe "fn", ->
 		context "Union type argument", ->
 
 			it "should return an error with 'undefined or null'", ->
-				f = fn [undefined, null], AnyType, ->
+				f = fn [undefined, null], Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'undefined or null' instead of Boolean true.")
 
 			it "should return an error with 'String or Number'", ->
-				f = fn [String, Number], AnyType, ->
+				f = fn [String, Number], Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'String or Number' instead of Boolean true.")
 
 			it "should return an error with 'literal 'foo' or literal 'bar''", ->
-				f = fn ['foo', 'bar'], AnyType, ->
+				f = fn ['foo', 'bar'], Any, ->
 				expect(-> f('a'))
 				.to.throw("Argument #1 should be of type
 							'literal String \"foo\" or literal String \"bar\"' instead of String \"a\".")
 
 			it "should return an error with 'literal Number 1 or literal Number 2'", ->
-				f = fn [1, 2], AnyType, ->
+				f = fn [1, 2], Any, ->
 				expect(-> f(3))
 				.to.throw("Argument #1 should be of type
 							'literal Number 1 or literal Number 2' instead of Number 3.")
 
 			it "should return an error with 'literal String \"1\" or literal Number '1'", ->
-				f = fn ['1', 1], AnyType, ->
+				f = fn ['1', 1], Any, ->
 				expect(-> f(3))
 				.to.throw("Argument #1 should be of type
 							'literal String \"1\" or literal Number 1' instead of Number 3.")
 
 			it "should return an error with 'literal Boolean true or literal Boolean false", ->
-				f = fn [true, false], AnyType, ->
+				f = fn [true, false], Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type
 							'literal Boolean true or literal Boolean false' instead of Number 1.")
@@ -1510,48 +1510,48 @@ describe "fn", ->
 		context "Typed Array type argument", ->
 
 			it "should return an error with 'array of 'Number''", ->
-				f = fn Array(Number), AnyType, ->
+				f = fn Array(Number), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'array of 'Number'' instead of Number 1.")
 
 			it "should return an error with 'array of 'Promise''", ->
-				f = fn Array(Promise), AnyType, ->
+				f = fn Array(Promise), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'array of 'Promise'' instead of Number 1.")
 
 			it "should return an error with 'array of 'String or Number''", ->
-				f = fn Array([String, Number]), AnyType, ->
+				f = fn Array([String, Number]), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'array of 'String or Number'' instead of Number 1.")
 
 			it "should return an error with 'array of 'object type object''", ->
-				f = fn Array({a: String, b: Number}), AnyType, ->
+				f = fn Array({a: String, b: Number}), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'array of 'object type'' instead of Number 1.")
 
 			it "Array([]) should return an error with 'array of 'any type''", ->
-				f = fn Array([]), AnyType, ->
+				f = fn Array([]), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'array of 'any type'' instead of Number 1.")
 
-			it "Array(AnyType)] should return an error with 'array of 'any type''", ->
-				f = fn Array(AnyType), AnyType, ->
+			it "Array(Any)] should return an error with 'array of 'any type''", ->
+				f = fn Array(Any), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'array of 'any type'' instead of Number 1.")
 
-			it "Array(AnyType()) should return an error with 'array of 'any type''", ->
-				f = fn Array(AnyType()), AnyType, ->
+			it "Array(Any()) should return an error with 'array of 'any type''", ->
+				f = fn Array(Any()), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'array of 'any type'' instead of Number 1.")
 
 			it "Array(Number) should return an error with 'array with element 2 of type 'Number' instead of String.'", ->
-				f = fn Array(Number), AnyType, ->
+				f = fn Array(Number), Any, ->
 				expect(-> f([1, 2, "three", 4]))
 				.to.throw("Argument #1 should be an array with element 2 of type 'Number' instead of String \"three\".")
 
 			it "Array(Number) should return an error with
 				'array with element 0 of type 'Number or String' instead of Boolean.'", ->
-				f = fn Array([Number, String]), AnyType, ->
+				f = fn Array([Number, String]), Any, ->
 				expect(-> f([true]))
 				.to.throw("Argument #1 should be an array with element 0 of type
 							'Number or String' instead of Boolean true.")
@@ -1559,13 +1559,13 @@ describe "fn", ->
 		context "Tuple type argument", ->
 
 			it "should return an error with 'tuple of 3 elements 'Number, Boolean, String''", ->
-				f = fn Tuple(Number, Boolean, String), AnyType, ->
+				f = fn Tuple(Number, Boolean, String), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'tuple of
 							3 elements 'Number, Boolean, String'' instead of Number 1.")
 
 			it "should return an error with 'tuple of 3 elements 'Number, Object or null, String''", ->
-				f = fn Tuple(Number, [Object, null], String), AnyType, ->
+				f = fn Tuple(Number, [Object, null], String), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'tuple of
 							3 elements 'Number, Object or null, String'' instead of Number 1.")
@@ -1573,48 +1573,48 @@ describe "fn", ->
 		context "Typed set type argument", ->
 
 			it "should return an error with 'set of 'Number''", ->
-				f = fn TypedSet(Number), AnyType, ->
+				f = fn TypedSet(Number), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'set of 'Number'' instead of Number 1.")
 
 			it "should return an error with 'set of 'String''", ->
-				f = fn TypedSet(String), AnyType, ->
+				f = fn TypedSet(String), Any, ->
 				expect(-> f(new Set(['a', 1])))
 				.to.throw("Argument #1 should be of type 'set of 'String'' instead of Set.")
 
 		context "Typed object type argument", ->
 
 			it "should return an error with 'object with values of type 'Number''", ->
-				f = fn TypedObject(Number), AnyType, ->
+				f = fn TypedObject(Number), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'object with values of type 'Number'' instead of Number 1.")
 
 			it "should return an error with 'set of 'String''", ->
-				f = fn TypedObject(String), AnyType, ->
+				f = fn TypedObject(String), Any, ->
 				expect(-> f({a: 'foo', b: 1}))
 				.to.throw("Argument #1 should be of type 'object with values of type 'String'' instead of Object.")
 
 		context "Typed map type argument", ->
 
 			it "should return an error with 'map with values of type 'Number''", ->
-				f = fn TypedMap(Number), AnyType, ->
+				f = fn TypedMap(Number), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'map with values of type 'Number'' instead of Number 1.")
 
 			it "should return an error with 'map with values of type 'String''", ->
-				f = fn TypedMap(String), AnyType, ->
+				f = fn TypedMap(String), Any, ->
 				expect(-> f(new Map([[1, 'foo'], [2, 2]])))
 				.to.throw("Argument #1 should be of type 'map with values of type 'String'' instead of Map.")
 
 			it "should return an error with 'map with keys of type 'Number' and values of type 'String''", ->
-				f = fn TypedMap(Number, String), AnyType, ->
+				f = fn TypedMap(Number, String), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type
 							'map with keys of type 'Number' and values of type 'String'' instead of Number 1.")
 
 			it "should return an error with
 						''map with keys of type 'Number' and values of type 'String'' instead of Map.'", ->
-				f = fn TypedMap(Number, String), AnyType, ->
+				f = fn TypedMap(Number, String), Any, ->
 				expect(-> f(new Map([[1, 'foo'], ['two', 'bar']])))
 				.to.throw("Argument #1 should be of type
 							'map with keys of type 'Number' and values of type 'String'' instead of Map.")
@@ -1626,7 +1626,7 @@ describe "fn", ->
 			context "And", ->
 
 				it "should return an error with ''array of 'Number'' and 'array of 3 elements''", ->
-					f = fn And(Array(Number), Array(3)), AnyType, ->
+					f = fn And(Array(Number), Array(3)), Any, ->
 					expect(-> f(1))
 					.to.throw("Argument #1 should be of type
 								''array of 'Number'' and 'array of 3 elements'' instead of Number 1.")
@@ -1634,12 +1634,12 @@ describe "fn", ->
 			context "Not", ->
 
 				it "should return an error with 'not 'Number''", ->
-					f = fn Not(Number), AnyType, ->
+					f = fn Not(Number), Any, ->
 					expect(-> f(1))
 					.to.throw("Argument #1 should be of type 'not 'Number'' instead of Number 1.")
 
 				it "should return an error with 'not 'Number or array of 'Number'''", ->
-					f = fn Not([Number, Array(Number)]), AnyType, ->
+					f = fn Not([Number, Array(Number)]), Any, ->
 					expect(-> f(1))
 					.to.throw("Argument #1 should be of type
 								'not 'Number or array of 'Number''' instead of Number 1.")
@@ -1647,33 +1647,33 @@ describe "fn", ->
 		context "Integer", ->
 
 			it "should return an error with 'Integer'", ->
-				f = fn Integer, AnyType, ->
+				f = fn Integer, Any, ->
 				expect(-> f(true)).to.throw("Argument #1 should be of type 'Integer' instead of Boolean true.")
 
 			it "should return an error with 'Integer smaller than 100'", ->
-				f = fn Integer(100), AnyType, ->
+				f = fn Integer(100), Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'Integer smaller than 100' instead of Boolean true.")
 
 			it "should return an error with 'Integer bigger than 100'", ->
-				f = fn Integer(100, undefined), AnyType, ->
+				f = fn Integer(100, undefined), Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'Integer bigger than 100' instead of Boolean true.")
 
 			it "should return an error with 'Integer bigger than 10 and smaller than 100'", ->
-				f = fn Integer(10, 100), AnyType, ->
+				f = fn Integer(10, 100), Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'Integer bigger than 10
 							and smaller than 100' instead of Boolean true.")
 
 			it "should return an error with 'Integer bigger than -100 and smaller than -10'", ->
-				f = fn Integer(-100, -10), AnyType, ->
+				f = fn Integer(-100, -10), Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'Integer bigger than -100
 							and smaller than -10' instead of Boolean true.")
 
 			it "should return an error with 'Integer bigger than -100 and smaller than 10'", ->
-				f = fn Integer(-100, 10), AnyType, ->
+				f = fn Integer(-100, 10), Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'Integer bigger than -100
 							and smaller than 10' instead of Boolean true.")
@@ -1686,21 +1686,21 @@ describe "fn", ->
 		context "Natural", ->
 
 			it "should return an error with 'Natural'", ->
-				f = fn Natural, AnyType, ->
+				f = fn Natural, Any, ->
 				expect(-> f(true)).to.throw("Argument #1 should be of type 'Natural' instead of Boolean true.")
 
 			it "should return an error with 'Natural smaller than 100'", ->
-				f = fn Natural(100), AnyType, ->
+				f = fn Natural(100), Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'Natural smaller than 100' instead of Boolean true.")
 
 			it "should return an error with 'Natural bigger than 100'", ->
-				f = fn Natural(100, undefined), AnyType, ->
+				f = fn Natural(100, undefined), Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'Natural bigger than 100' instead of Boolean true.")
 
 			it "should return an error with 'Natural bigger than 10 and smaller than 100'", ->
-				f = fn Natural(10, 100), AnyType, ->
+				f = fn Natural(10, 100), Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'Natural bigger than 10
 							and smaller than 100' instead of Boolean true.")
@@ -1716,20 +1716,20 @@ describe "fn", ->
 		context "Sized string", ->
 
 			it "should return an error with 'SizedString of at most 4 characters'", ->
-				f = fn SizedString(100), AnyType, ->
+				f = fn SizedString(100), Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type
 							'SizedString of at most 100 characters' instead of Boolean true.")
 
 			it "should return an error with 'SizedString of at least 100 characters'", ->
-				f = fn SizedString(10, undefined), AnyType, ->
+				f = fn SizedString(10, undefined), Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type
 							'SizedString of at least 10 characters' instead of Boolean true.")
 
 			it "should return an error with 'SizedString of at least 10 characters
 						and of at most 100 characters'", ->
-				f = fn SizedString(10, 100), AnyType, ->
+				f = fn SizedString(10, 100), Any, ->
 				expect(-> f(true))
 				.to.throw("Argument #1 should be of type 'SizedString of at least 10 characters
 							and of at most 100 characters' instead of Boolean true.")

@@ -1,9 +1,9 @@
 import Type from './types/Type'
-import AnyTypeHelper from './types/AnyType'
+import AnyHelper from './types/Any'
 import typeOf from './typeOf'
 
-AnyType = AnyTypeHelper().constructor
-isAnyType = (o) -> Array.isArray(o) and o.length is 0 or o is AnyTypeHelper or o instanceof AnyType
+Any = AnyHelper().constructor
+isAny = (o) -> Array.isArray(o) and o.length is 0 or o is AnyHelper or o instanceof Any
 
 # returns true if value is a literal
 isLiteral = (val) -> val?.constructor in [undefined, String, Number, Boolean] # NaN and ±Infinity are numbers
@@ -37,4 +37,4 @@ else switch type?.constructor
 		else
 			"literal #{typeValue(type)}"
 
-export {isAnyType, isLiteral, typeValue, getTypeName}
+export {isAny, isLiteral, typeValue, getTypeName}
