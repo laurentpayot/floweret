@@ -1,8 +1,8 @@
-import CustomType from './CustomType'
+import Type from './Type'
 import isType from '../isType'
 import {isAnyType, getTypeName} from '../tools'
 
-class Not extends CustomType
+class Not extends Type
 	# exacly 1 argument
 	argsMin: 1
 	argsMax: 1
@@ -13,4 +13,4 @@ class Not extends CustomType
 	getTypeName: -> "not '#{getTypeName(@type)}'"
 	helperName: "not"
 
-export default CustomType.createHelper(Not)
+export default Type.createHelper(Not)

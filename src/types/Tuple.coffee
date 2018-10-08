@@ -1,8 +1,8 @@
-import CustomType from './CustomType'
+import Type from './Type'
 import isType from '../isType'
 import {isAnyType, getTypeName} from '../tools'
 
-class Tuple extends CustomType
+class Tuple extends Type
 	# 2 or more arguments
 	argsMin: 2
 	constructor: (@types...) ->
@@ -14,4 +14,4 @@ class Tuple extends CustomType
 		val.every((e, i) => isType(e, @types[i]))
 	getTypeName: -> "tuple of #{@types.length} elements '#{(getTypeName(t) for t in @types).join(", ")}'"
 
-export default CustomType.createHelper(Tuple)
+export default Type.createHelper(Tuple)

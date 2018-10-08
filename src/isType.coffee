@@ -1,7 +1,7 @@
 import {InvalidType} from './errors'
 import {isAnyType} from './tools'
 import typeOf from './typeOf'
-import CustomType from './types/CustomType'
+import Type from './types/Type'
 
 # check that a value is of a given type or of any (undefined) type, e.g.: isType("foo", String)
 isType = (val, type) -> if Array.isArray(type) # NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
@@ -22,7 +22,7 @@ else switch type?.constructor
 	when undefined, String, Number, Boolean # literal type (including ±Infinity and NaN) or undefined or null
 		if Number.isNaN(type) then Number.isNaN(val) else val is type
 	when Function
-		if type.rootClass is CustomType # type is a helper
+		if type.rootClass is Type # type is a helper
 			type().validate(val) # using default helper arguments
 		else # constructors of native types (String, Number (excluding ±Infinity), Object…) and custom classes
 			if type is Number then Number.isFinite(val) else val?.constructor is type
@@ -33,7 +33,7 @@ else switch type?.constructor
 		true
 	when RegExp then val?.constructor is String and type.test(val)
 	else
-		if type instanceof CustomType
+		if type instanceof Type
 			type.validate(val)
 		else
 			prefix = if type.constructor in [Set, Map] then 'the provided Typed' else ''

@@ -1,6 +1,6 @@
-import CustomType from './CustomType'
+import Type from './Type'
 
-class AnyType extends CustomType
+class AnyType extends Type
 	# no arguments
 	argsMin: 0
 	argsMax: 0
@@ -8,4 +8,4 @@ class AnyType extends CustomType
 	validate: (val) -> true
 	getTypeName: -> "any type"
 
-export default CustomType.createHelper(AnyType)
+export default Type.createHelper(AnyType)

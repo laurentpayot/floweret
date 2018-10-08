@@ -1,6 +1,6 @@
-import CustomType from './CustomType'
+import Type from './Type'
 
-class Integer extends CustomType
+class Integer extends Type
 	min: undefined
 	max: undefined
 	# up to 2 arguments
@@ -23,5 +23,5 @@ class Integer extends CustomType
 		min = if @min? then " bigger than #{@min}" else ''
 		"#{@constructor.name}#{min}#{if min and max then ' and' else ''}#{max}"
 
-export default CustomType.createHelper(Integer)
+export default Type.createHelper(Integer)
 

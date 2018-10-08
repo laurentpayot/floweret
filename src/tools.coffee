@@ -1,4 +1,4 @@
-import CustomType from './types/CustomType'
+import Type from './types/Type'
 import AnyTypeHelper from './types/AnyType'
 import typeOf from './typeOf'
 
@@ -28,11 +28,11 @@ getTypeName = (type) -> if Array.isArray(type) # NB: special Array case http://w
 else switch type?.constructor
 	when undefined then typeOf(type)
 	when Function
-		if type.rootClass is CustomType then type().getTypeName() else type.name
+		if type.rootClass is Type then type().getTypeName() else type.name
 	when Object then "object type"
 	when RegExp then "string matching regular expression " + type
 	else
-		if type instanceof CustomType
+		if type instanceof Type
 			type.getTypeName()
 		else
 			"literal #{typeValue(type)}"

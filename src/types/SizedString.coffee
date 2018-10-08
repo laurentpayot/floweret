@@ -1,6 +1,6 @@
-import CustomType from './CustomType'
+import Type from './Type'
 
-class SizedString extends CustomType
+class SizedString extends Type
 	min: undefined
 	max: undefined
 	# 1 or 2 arguments
@@ -25,5 +25,5 @@ class SizedString extends CustomType
 		min = if @min? then " of at least #{@min} characters" else ''
 		"#{@constructor.name}#{min}#{if min and max then ' and' else ''}#{max}"
 
-export default CustomType.createHelper(SizedString)
+export default Type.createHelper(SizedString)
 

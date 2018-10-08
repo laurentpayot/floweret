@@ -1,8 +1,8 @@
-import CustomType from './CustomType'
+import Type from './Type'
 import isType from '../isType'
 import {isAnyType, isLiteral, getTypeName} from '../tools'
 
-class TypedSet extends CustomType
+class TypedSet extends Type
 	# exactly 1 argument
 	argsMin: 1
 	argsMax: 1
@@ -16,4 +16,4 @@ class TypedSet extends CustomType
 		[val...].every((e) => isType(e, @type))
 	getTypeName: -> "set of '#{getTypeName(@type)}'"
 
-export default CustomType.createHelper(TypedSet)
+export default Type.createHelper(TypedSet)

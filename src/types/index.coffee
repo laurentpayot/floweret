@@ -1,4 +1,4 @@
-export {default as CustomType} from './CustomType'
+export {default as Type} from './Type'
 export {default as etc} from './etc'
 export {default as maybe} from './maybe'
 export {default as promised} from './promised'

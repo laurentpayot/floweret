@@ -1,6 +1,6 @@
-import CustomType from './CustomType'
+import Type from './Type'
 
-class Constraint extends CustomType
+class Constraint extends Type
 	# exacly 1 argument
 	argsMin: 1
 	argsMax: 1
@@ -11,4 +11,4 @@ class Constraint extends CustomType
 	getTypeName: -> "constrained by '#{@validator}'"
 	helperName: "constraint"
 
-export default CustomType.createHelper(Constraint)
+export default Type.createHelper(Constraint)

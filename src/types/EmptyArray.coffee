@@ -1,6 +1,6 @@
-import CustomType from './CustomType'
+import Type from './Type'
 
-class EmptyArray extends CustomType
+class EmptyArray extends Type
 	# no argument
 	argsMin: 0
 	argsMax: 0
@@ -8,4 +8,4 @@ class EmptyArray extends CustomType
 	validate: (val) -> Array.isArray(val) and not val.length
 	getTypeName: -> "empty array"
 
-export default CustomType.createHelper(EmptyArray)
+export default Type.createHelper(EmptyArray)

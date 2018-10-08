@@ -1,10 +1,10 @@
-import CustomType from './CustomType'
+import Type from './Type'
 import isType from '../isType'
 import {isAnyType, isLiteral, getTypeName} from '../tools'
 
 notDefined = (t) -> t is undefined or isAnyType(t)
 
-class TypedMap extends CustomType
+class TypedMap extends Type
 	valuesType: undefined
 	keysType: undefined
 	# 1 or 2 arguments
@@ -37,4 +37,4 @@ class TypedMap extends CustomType
 		kt = if @keysType isnt undefined then "keys of type '#{getTypeName(@keysType)}' and " else ''
 		"map with #{kt}values of type '#{getTypeName(@valuesType)}'"
 
-export default CustomType.createHelper(TypedMap)
+export default Type.createHelper(TypedMap)

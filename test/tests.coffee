@@ -10,7 +10,7 @@ import {
 } from 'floweret'
 
 import {
-	CustomType, maybe, promised, etc, constraint, AnyType, EmptyArray,
+	Type, maybe, promised, etc, constraint, AnyType, EmptyArray,
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
 } from 'floweret/types'
@@ -60,7 +60,7 @@ testTypes = (val, type) ->
 	expect(isType(val, t)).to.be.false \
 		for t in NATIVE_TYPES when not(t is type or Number.isNaN val and Number.isNaN type)
 
-warnSpy = sinon.spy(CustomType, 'warn')
+warnSpy = sinon.spy(Type, 'warn')
 
 
 ###
@@ -485,8 +485,8 @@ describe "isType", ->
 
 	context "Custom types", ->
 
-		it "should throw an error when creating an instance of CustomType", ->
-			expect(-> new CustomType()).to.throw("Abstract class 'CustomType' cannot be instantiated directly.")
+		it "should throw an error when creating an instance of Type", ->
+			expect(-> new Type()).to.throw("Abstract class 'Type' cannot be instantiated directly.")
 
 		context "Integer type", ->
 

@@ -1,7 +1,7 @@
-import CustomType from './CustomType'
+import Type from './Type'
 import {isAnyType} from '../tools'
 
-class Promised extends CustomType
+class Promised extends Type
 	# exactly 1 argument
 	argsMin: 1
 	argsMax: 1
@@ -12,4 +12,4 @@ class Promised extends CustomType
 		return Promise.resolve(@type)
 	helperName: "promised"
 
-export default CustomType.createHelper(Promised)
+export default Type.createHelper(Promised)

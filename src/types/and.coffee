@@ -1,8 +1,8 @@
-import CustomType from './CustomType'
+import Type from './Type'
 import isType from '../isType'
 import {isAnyType, isLiteral, getTypeName} from '../tools'
 
-class And extends CustomType
+class And extends Type
 	# 2 or more arguments
 	argsMin: 2
 	constructor: (@types...) ->
@@ -14,4 +14,4 @@ class And extends CustomType
 	getTypeName: -> ("'#{getTypeName(t)}'" for t in @types).join(" and ")
 	helperName: "and"
 
-export default CustomType.createHelper(And)
+export default Type.createHelper(And)

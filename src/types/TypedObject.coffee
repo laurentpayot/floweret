@@ -1,8 +1,8 @@
-import CustomType from './CustomType'
+import Type from './Type'
 import isType from '../isType'
 import {isAnyType, getTypeName} from '../tools'
 
-class TypedObject extends CustomType
+class TypedObject extends Type
 	# exactly 1 argument
 	argsMin: 1
 	argsMax: 1
@@ -15,4 +15,4 @@ class TypedObject extends CustomType
 		Object.values(val).every((v) => isType(v, @type))
 	getTypeName: -> "object with values of type '#{getTypeName(@type)}'"
 
-export default CustomType.createHelper(TypedObject)
+export default Type.createHelper(TypedObject)

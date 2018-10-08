@@ -1,7 +1,7 @@
-import CustomType from './CustomType'
+import Type from './Type'
 import {isAnyType} from '../tools'
 
-class Or extends CustomType
+class Or extends Type
 	# 2 or more arguments
 	argsMin: 2
 	constructor: (@types...) ->
@@ -11,4 +11,4 @@ class Or extends CustomType
 		return @types
 	helperName: "or"
 
-export default CustomType.createHelper(Or)
+export default Type.createHelper(Or)

@@ -1,7 +1,7 @@
-import CustomType from './CustomType'
+import Type from './Type'
 import {isAnyType} from '../tools'
 
-class Maybe extends CustomType
+class Maybe extends Type
 	# exactly 1 argument
 	argsMin: 1
 	argsMax: 1
@@ -12,4 +12,4 @@ class Maybe extends CustomType
 		return [undefined, null, @type]
 	helperName: "maybe"
 
-export default CustomType.createHelper(Maybe)
+export default Type.createHelper(Maybe)

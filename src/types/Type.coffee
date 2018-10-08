@@ -2,20 +2,20 @@ import {InvalidType} from '../errors'
 
 s = (n) -> if n is 1 then '' else 's'
 
-export default class CustomType
+export default class Type
 	# static methods
 	@error: (msg) -> throw new InvalidType msg
 	@warn: (msg) -> console.warn("Floweret type:", msg) unless process?.env.NODE_ENV is 'production'
 	@createHelper: (childClass) ->
 		h = -> new childClass(arguments...)
-		h.rootClass = CustomType
+		h.rootClass = Type
 		h
-	error: -> CustomType.error(arguments...)
-	warn: -> CustomType.warn(arguments...)
+	error: -> Type.error(arguments...)
+	warn: -> Type.warn(arguments...)
 	argsMin: undefined
 	argsMax: undefined
 	constructor: ->
-		@error "Abstract class 'CustomType' cannot be instantiated directly." if @constructor is CustomType
+		@error "Abstract class 'Type' cannot be instantiated directly." if @constructor is Type
 		l = arguments.length
 		min = @argsMin
 		max = @argsMax
