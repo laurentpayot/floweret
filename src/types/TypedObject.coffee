@@ -1,5 +1,5 @@
 import Type from './Type'
-import isType from '../isType'
+import isValid from '../isValid'
 import {isAnyType, getTypeName} from '../tools'
 
 class TypedObject extends Type
@@ -12,7 +12,7 @@ class TypedObject extends Type
 	validate: (val) ->
 		return false unless val?.constructor is Object
 		return true if isAnyType(@type)
-		Object.values(val).every((v) => isType(v, @type))
+		Object.values(val).every((v) => isValid(v, @type))
 	getTypeName: -> "object with values of type '#{getTypeName(@type)}'"
 
 export default Type.createHelper(TypedObject)

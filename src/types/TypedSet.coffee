@@ -1,5 +1,5 @@
 import Type from './Type'
-import isType from '../isType'
+import isValid from '../isValid'
 import {isAnyType, isLiteral, getTypeName} from '../tools'
 
 class TypedSet extends Type
@@ -13,7 +13,7 @@ class TypedSet extends Type
 	validate: (val) ->
 		return false unless val?.constructor is Set
 		return true if isAnyType(@type)
-		[val...].every((e) => isType(e, @type))
+		[val...].every((e) => isValid(e, @type))
 	getTypeName: -> "set of '#{getTypeName(@type)}'"
 
 export default Type.createHelper(TypedSet)

@@ -1,6 +1,6 @@
 import {InvalidSignature, TypeMismatch} from './errors'
 import {isAnyType, getTypeName, typeValue} from './tools'
-import isType from './isType'
+import isValid from './isValid'
 import Type from './types/Type'
 import EtcHelper from './types/etc'
 
@@ -11,7 +11,7 @@ error = (msg) -> throw new TypeMismatch msg
 # returns a list of keys path to the mismatched type + value not maching + type not matching
 badPath = (obj, typeObj) ->
 	for k, t of typeObj
-		if not isType(obj[k], t)
+		if not isValid(obj[k], t)
 			return [k].concat(if obj[k]?.constructor is Object then badPath(obj[k], typeObj[k]) \
 								else [obj[k], typeObj[k]])
 
@@ -23,7 +23,7 @@ shouldBe = (val, type, promised=false) ->
 			if not Object.values(type).length # sized array
 				"#{apo}an array with a length of #{type.length} instead of #{val.length}"
 			else
-				i = val.findIndex((e) -> not isType(e, type[0]))
+				i = val.findIndex((e) -> not isValid(e, type[0]))
 				"#{apo}an array with element #{i} of type '#{getTypeName(type[0])}' instead of #{typeValue(val[i])}"
 		when val?.constructor is Object and type?.constructor is Object
 			[bp..., bv, bt] = badPath(val, type)
@@ -45,13 +45,13 @@ export default (argTypes..., resType, f) ->
 				t = (if type is EtcHelper then type() else type).type # using default helper parameters
 				unless isAnyType(t)
 					for arg, j in args[i..]
-						error "Argument ##{i+j+1} #{shouldBe(arg, t)}." unless isType(arg, t)
+						error "Argument ##{i+j+1} #{shouldBe(arg, t)}." unless isValid(arg, t)
 			else
 				unless isAnyType(type)
 					if args[i] is undefined
-						error "Missing required argument number #{i+1}." unless isType(undefined, type)
+						error "Missing required argument number #{i+1}." unless isValid(undefined, type)
 					else
-						error "Argument ##{i+1} #{shouldBe(args[i], type)}." unless isType(args[i], type)
+						error "Argument ##{i+1} #{shouldBe(args[i], type)}." unless isValid(args[i], type)
 		error "Too many arguments provided." if args.length > argTypes.length and not rest
 		if resType instanceof Promise
 			# NB: not using `await` because CS would transpile the returned function as an async one
@@ -59,11 +59,11 @@ export default (argTypes..., resType, f) ->
 				promise = f(args...)
 				error "Result #{shouldBe(promise, promiseType, true)}." unless promise instanceof Promise
 				promise.then((result) ->
-					error "Promise result #{shouldBe(result, promiseType)}." unless isType(result, promiseType)
+					error "Promise result #{shouldBe(result, promiseType)}." unless isValid(result, promiseType)
 					result
 				)
 			)
 		else
 			result = f(args...)
-			error "Result #{shouldBe(result, resType)}." unless isType(result, resType)
+			error "Result #{shouldBe(result, resType)}." unless isValid(result, resType)
 			result

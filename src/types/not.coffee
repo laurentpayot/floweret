@@ -1,5 +1,5 @@
 import Type from './Type'
-import isType from '../isType'
+import isValid from '../isValid'
 import {isAnyType, getTypeName} from '../tools'
 
 class Not extends Type
@@ -9,7 +9,7 @@ class Not extends Type
 	constructor: (@type) ->
 		super(arguments...)
 		@warn "AnyType is inadequate as '#{@helperName}' argument." if isAnyType(@type)
-	validate: (val) -> not isType(val, @type)
+	validate: (val) -> not isValid(val, @type)
 	getTypeName: -> "not '#{getTypeName(@type)}'"
 	helperName: "not"
 

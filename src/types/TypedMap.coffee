@@ -1,5 +1,5 @@
 import Type from './Type'
-import isType from '../isType'
+import isValid from '../isValid'
 import {isAnyType, isLiteral, getTypeName} from '../tools'
 
 notDefined = (t) -> t is undefined or isAnyType(t)
@@ -27,12 +27,12 @@ class TypedMap extends Type
 		return false unless val?.constructor is Map
 		switch
 			when notDefined(@keysType) and notDefined(@valuesType) then true
-			when notDefined(@keysType) then Array.from(val.values()).every((e) => isType(e, @valuesType))
-			when notDefined(@valuesType) then Array.from(val.keys()).every((e) => isType(e, @keysType))
+			when notDefined(@keysType) then Array.from(val.values()).every((e) => isValid(e, @valuesType))
+			when notDefined(@valuesType) then Array.from(val.keys()).every((e) => isValid(e, @keysType))
 			else
 				keys = Array.from(val.keys())
 				values = Array.from(val.values())
-				keys.every((e) => isType(e, @keysType)) and values.every((e) => isType(e, @valuesType))
+				keys.every((e) => isValid(e, @keysType)) and values.every((e) => isValid(e, @valuesType))
 	getTypeName: ->
 		kt = if @keysType isnt undefined then "keys of type '#{getTypeName(@keysType)}' and " else ''
 		"map with #{kt}values of type '#{getTypeName(@valuesType)}'"

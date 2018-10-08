@@ -1,5 +1,5 @@
 import Type from './Type'
-import isType from '../isType'
+import isValid from '../isValid'
 import {isAnyType, getTypeName} from '../tools'
 
 class Tuple extends Type
@@ -11,7 +11,7 @@ class Tuple extends Type
 				of #{@types.length} values of any type'." if @types.every((t) -> isAnyType(t))
 	validate: (val) ->
 		return false unless Array.isArray(val) and val.length is @types.length
-		val.every((e, i) => isType(e, @types[i]))
+		val.every((e, i) => isValid(e, @types[i]))
 	getTypeName: -> "tuple of #{@types.length} elements '#{(getTypeName(t) for t in @types).join(", ")}'"
 
 export default Type.createHelper(Tuple)

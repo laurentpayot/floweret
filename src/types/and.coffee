@@ -1,5 +1,5 @@
 import Type from './Type'
-import isType from '../isType'
+import isValid from '../isValid'
 import {isAnyType, isLiteral, getTypeName} from '../tools'
 
 class And extends Type
@@ -10,7 +10,7 @@ class And extends Type
 		for t, i in @types
 			@error "You cannot have #{getTypeName(t)} as '#{@helperName}' argument number #{i+1}." if isLiteral(t)
 			@warn "AnyType is not needed as '#{@helperName}' argument number #{i+1}." if isAnyType(t)
-	validate: (val) -> @types.every((t) -> isType(val, t))
+	validate: (val) -> @types.every((t) -> isValid(val, t))
 	getTypeName: -> ("'#{getTypeName(t)}'" for t in @types).join(" and ")
 	helperName: "and"
 

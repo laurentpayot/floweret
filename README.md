@@ -40,7 +40,7 @@ A runtime signature type-checker using native JavaScript types.
 * [Type composition](#type-composition)
 * [Custom types](#custom-types)
 * [Type tools](#type-tools)
-  * [isType](#istype)
+  * [isValid](#isvalid)
   * [typeOf](#typeof)
 * [Features to come](#features-to-come)
 * [Benchmark](#benchmark)
@@ -510,12 +510,12 @@ User = {id: Number, name: Name, phone: Phone}
 
 Some handy utilities exported by the package.
 
-### isType
+### isValid
 
-> isType(<value\>, <type\>)
+> isValid(<value\>, <type\>)
 
 ```js
-isType("abc", [Number, String]) // true
+isValid("abc", [Number, String]) // true
 ```
 
 ### typeOf
