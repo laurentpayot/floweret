@@ -9,12 +9,12 @@ import {
 	fn, isValid, typeOf,
 	etc, Any # types used anyway
 } from 'floweret'
-
+#! Rollup unable to tree-shake classes https://github.com/rollup/rollup/issues/1691
 import {
 	Type, maybe, promised, constraint, EmptyArray,
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
-} from 'floweret/types'
+} from 'floweret/types/_index'
 import {isAny, isLiteral} from 'floweret/tools'
 
 

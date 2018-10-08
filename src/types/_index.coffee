@@ -1,3 +1,5 @@
+# ! Rollup unable to tree-shake classes https://github.com/rollup/rollup/issues/1691
+
 export {default as Type} from './Type'
 export {default as etc} from './etc'
 export {default as maybe} from './maybe'
