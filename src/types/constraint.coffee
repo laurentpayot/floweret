@@ -1,6 +1,6 @@
 import CustomType from './CustomType'
 
-class Type extends CustomType
+class Constraint extends CustomType
 	# exacly 1 argument
 	argsMin: 1
 	argsMax: 1
@@ -8,7 +8,7 @@ class Type extends CustomType
 		super(arguments...)
 		@error "'#{@helperName}' argument must be a function." unless @validator?.constructor is Function
 	validate: (val) -> @validator(val)
-	getTypeName: -> "custom type with validation function '#{@validator}'"
-	helperName: "type"
+	getTypeName: -> "constrained by '#{@validator}'"
+	helperName: "constraint"
 
-export default CustomType.createHelper(Type)
+export default CustomType.createHelper(Constraint)

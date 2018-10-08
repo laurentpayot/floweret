@@ -28,6 +28,7 @@ A runtime signature type-checker using native JavaScript types.
   * [Promise type](#promise-type)
   * [Any type wildcard](#any-type-wildcard)
   * [Rest type](#rest-type)
+  * [Constraints](#constraints)
   * [Logical operators](#logical-operators)
     * [or](#or)
     * [and](#and)
@@ -360,6 +361,31 @@ or (untyped)
 ```js
 import { fn } from 'floweret'
 import etc from 'floweret/types/etc'
+```
+
+* **:warning:** Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
+* **:coffee:** CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in floweret.
+
+*Documentation in progress…*
+
+### Constraints
+
+> constaint(<function\>)
+
+
+```js
+import { fn } from 'floweret'
+import constraint from 'floweret/types/constraint'
+
+Int = constraint(val => Number.isInteger(val))
+
+f = fn(
+  Int, String,
+  (n) => n + "eggs needed for that recipe"
+)
+
+f(2)   // "2 eggs needed for that recipe"
+f(2.5) // TypeMismatch: Argument #1 should be of type 'constrained by 'val => Number.isInteger(val)'' instead of Number 2.5.
 ```
 
 * **:warning:** Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).

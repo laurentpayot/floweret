@@ -10,7 +10,7 @@ import {
 } from 'floweret'
 
 import {
-	CustomType, maybe, promised, etc,  type, AnyType, EmptyArray,
+	CustomType, maybe, promised, etc, constraint, AnyType, EmptyArray,
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
 } from 'floweret/types'
@@ -1090,10 +1090,10 @@ describe "isType", ->
 			expect(isType(/foo/, /foo/)).to.be.false
 			expect(isType(1, /foo/)).to.be.false
 
-	context "Custom type", ->
+	context "Constraint", ->
 
 		it "should return true when validator function is truthy for the value", ->
-			Int = type((val) -> Number.isInteger(val))
+			Int = constraint((val) -> Number.isInteger(val))
 			expect(isType(100, Int)).to.be.true
 			expect(isType(-10, Int)).to.be.true
 			expect(isType(0, Int)).to.be.true
@@ -1744,10 +1744,19 @@ describe "fn", ->
 				expect(-> SizedString(100, 10))
 				.to.throw("'SizedString' max value cannot be less than min value.")
 
-		context "Custom type", ->
+		context "Constraint", ->
 
-			it "should return an error with ''type' argument must be a function.'", ->
-				expect(-> type(1)).to.throw("'type' argument must be a function.")
+			it "should return an error with ''constraint' argument must be a function.'", ->
+				expect(-> constraint(1)).to.throw("'constraint' argument must be a function.")
+
+			it "should return an error with 'constraint 'val => Number.isInteger(val)''", ->
+				Int = constraint((val) -> Number.isInteger(val))
+				f = fn Int, Number,
+					(n) -> 1
+				expect(-> f(2.5))
+				.to.throw("Argument #1 should be of type
+							'constrained by 'function (val) {\n          return Number.isInteger(val);\n        }''
+							instead of Number 2.5.")
 
 		context "Result", ->
 
