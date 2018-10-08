@@ -1713,35 +1713,35 @@ describe "fn", ->
 				expect(-> Natural(100, -100))
 				.to.throw("'Natural' max value cannot be less than min value.")
 
-		# TODO
-		context.skip "Sized string", ->
+		context "Sized string", ->
 
-			it "should return an error with 'SizedString'", ->
-				f = fn SizedString, AnyType, ->
-				expect(-> f(true)).to.throw("Argument #1 should be of type 'SizedString' instead of Boolean true.")
-
-			it "should return an error with 'SizedString smaller than 100'", ->
+			it "should return an error with 'SizedString of at most 4 characters'", ->
 				f = fn SizedString(100), AnyType, ->
 				expect(-> f(true))
-				.to.throw("Argument #1 should be of type 'SizedString smaller than 100' instead of Boolean true.")
+				.to.throw("Argument #1 should be of type
+							'SizedString of at most 100 characters' instead of Boolean true.")
 
-			it "should return an error with 'SizedString bigger than 100'", ->
-				f = fn SizedString(100, undefined), AnyType, ->
+			it "should return an error with 'SizedString of at least 100 characters'", ->
+				f = fn SizedString(10, undefined), AnyType, ->
 				expect(-> f(true))
-				.to.throw("Argument #1 should be of type 'SizedString bigger than 100' instead of Boolean true.")
+				.to.throw("Argument #1 should be of type
+							'SizedString of at least 10 characters' instead of Boolean true.")
 
-			it "should return an error with 'SizedString bigger than 10 and smaller than 100'", ->
+			it "should return an error with 'SizedString of at least 10 characters
+						and of at most 100 characters'", ->
 				f = fn SizedString(10, 100), AnyType, ->
 				expect(-> f(true))
-				.to.throw("Argument #1 should be of type 'SizedString bigger than 10
-							and smaller than 100' instead of Boolean true.")
+				.to.throw("Argument #1 should be of type 'SizedString of at least 10 characters
+							and of at most 100 characters' instead of Boolean true.")
 
-			it "should return an error with ''SizedString' arguments must be positive numbers.'", ->
-				expect(-> SizedString(-100, -10)).to.throw("'SizedString' arguments must be positive numbers.")
-				expect(-> SizedString(-100, 10)).to.throw("'SizedString' arguments must be positive numbers.")
+			it "should return an error with ''SizedString' arguments must be positive integers.'", ->
+				expect(-> SizedString(-100, -10)).to.throw("'SizedString' arguments must be positive integers.")
+				expect(-> SizedString(-100, 10)).to.throw("'SizedString' arguments must be positive integers.")
+				expect(-> SizedString(undefined, -10)).to.throw("'SizedString' arguments must be positive integers.")
+				expect(-> SizedString(-10, undefined)).to.throw("'SizedString' arguments must be positive integers.")
 
 			it "should return an error with ''SizedString' max value cannot be less than min value", ->
-				expect(-> SizedString(100, -100))
+				expect(-> SizedString(100, 10))
 				.to.throw("'SizedString' max value cannot be less than min value.")
 
 		context "Custom type", ->

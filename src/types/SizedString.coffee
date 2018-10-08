@@ -21,8 +21,8 @@ class SizedString extends CustomType
 	validate: (val) ->
 		typeof val is 'string' and (@max is undefined or val.length <= @max) and (@min is undefined or val.length >= @min)
 	getTypeName: ->
-		max = if @max? then " smaller than #{@max} characters" else ''
-		min = if @min? then " bigger than #{@min} characters" else ''
+		max = if @max? then " of at most #{@max} characters" else ''
+		min = if @min? then " of at least #{@min} characters" else ''
 		"#{@constructor.name}#{min}#{if min and max then ' and' else ''}#{max}"
 
 export default CustomType.createHelper(SizedString)
