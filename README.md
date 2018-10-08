@@ -3,7 +3,7 @@
 A runtime signature type-checker using native JavaScript types.
 
 * **Simple**: Native JavaScript types syntax.
-* **Lightweight**: 4 kb or less (tree shaking) minified and gzipped. No dependencies.
+* **Lightweight**: 2 kb minified and gzipped. No dependencies.
 * **Fast**: Direct type comparison. No string to parse.
 * **Powerful**: Logical operators, tuples, regular expressions, rest parameters and more…
 * **Customizable**: Create your own types for your own needs.
@@ -165,7 +165,8 @@ f(1, true) // TypeMismatch: Argument #2 should be of type 'Number or String' ins
 This is simply a shortcut to the union `[undefined, null, <type>]`. Usefull for optional parameters of a function.
 
 ```js
-import { fn, maybe } from 'floweret'
+import { fn } from 'floweret'
+import maybe from 'floweret/types/maybe'
 
 const f = fn(
   Number, maybe(Number), Number,
@@ -327,7 +328,8 @@ You can use the `Promise` type for promises that resolve with a value of any typ
 For instance use `Promise.resolve([Object, null])` for a promise that will resolve with an object or the null value.
 
 ```js
-import { fn, promised } from 'floweret'
+import { fn } from 'floweret'
+import promised from 'floweret/types/promised'
 ```
 
 *Documentation in progress…*
@@ -341,7 +343,8 @@ or
 > AnyType
 
 ```js
-import { fn, AnyType } from 'floweret'
+import { fn } from 'floweret'
+import AnyType from 'floweret/types/AnyType'
 ```
 
 *Documentation in progress…*
@@ -355,7 +358,8 @@ or (untyped)
 > etc
 
 ```js
-import { fn, etc } from 'floweret'
+import { fn } from 'floweret'
+import etc from 'floweret/types/etc'
 ```
 
 * **:warning:** Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
@@ -372,14 +376,15 @@ import { fn, etc } from 'floweret'
 This is the same as putting types into brackets, but more explicit.
 
 ```js
-import { fn, or } from 'floweret'
+import { fn } from 'floweret'
+import or from 'floweret/types/or'
 ```
 
 * **:coffee:** `or` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
 
   ```coffee
   # CoffeeScript
-  import { fn, Or } from 'floweret'
+  import Or from 'floweret/types/or'
   ```
 
 *Documentation in progress…*
@@ -389,7 +394,8 @@ import { fn, or } from 'floweret'
 > and( <type 1\>, <type 2\>, …, <type n\> )
 
 ```js
-import { fn, and } from 'floweret'
+import { fn } from 'floweret'
+import and from 'floweret/types/and'
 
 const weeklyTotal = fn(
   and(Array(Number), Array(7)), Number,
@@ -404,7 +410,7 @@ weeklyTotal([1, 1, 2, 2, 5, 5]) // Argument #1 should be of type ''array of 'Num
 
   ```coffee
   # CoffeeScript
-  import { fn, And } from 'floweret'
+  import And from 'floweret/types/and'
   ```
 
 *Documentation in progress…*
@@ -414,14 +420,15 @@ weeklyTotal([1, 1, 2, 2, 5, 5]) // Argument #1 should be of type ''array of 'Num
 > not( <type\> )
 
 ```js
-import { fn, not } from 'floweret'
+import { fn } from 'floweret'
+import not from 'floweret/types/not'
 ```
 
 * **:coffee:** `not` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
 
   ```coffee
   # CoffeeScript
-  import { fn, Not } from 'floweret'
+  import Not from 'floweret/types/not'
   ```
 
 *Documentation in progress…*
@@ -431,7 +438,8 @@ import { fn, not } from 'floweret'
 > Tuple( <type 1\>, <type 2\>, …, <type n\> )
 
 ```js
-import { fn, Tuple } from 'floweret'
+import { fn } from 'floweret'
+import Tuple from 'floweret/types/Tuple'
 ```
 
 *Documentation in progress…*
@@ -514,25 +522,26 @@ The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple f
 
 ```txt
 no-type-checking-benchmark.min.js.gz  258 bytes
+floweret-benchmark.min.js.gz          2323 bytes
 runtypes.min.js.gz                    3030 bytes
-floweret-benchmark.min.js.gz          3550 bytes
 flow-runtime-benchmark.min.js.gz      20233 bytes
 
+
 *** No type-checking ***
-10000 greets: 1.190ms
-10000 sums: 17.699ms
+10000 greets: 1.423ms
+10000 sums: 17.827ms
 
 *** Floweret ***
-10000 greets: 15.508ms
-10000 sums: 81.995ms
+10000 greets: 14.278ms
+10000 sums: 77.677ms
 
 *** Runtypes ***
-10000 greets: 18.197ms
-10000 sums: 43.585ms
+10000 greets: 12.674ms
+10000 sums: 53.387ms
 
 *** Flow-runtime ***
-10000 greets: 170.605ms
-10000 sums: 548.315ms
+10000 greets: 174.898ms
+10000 sums: 557.707ms
 ```
 
 ## License

@@ -7,10 +7,13 @@ expect = chai.expect
 # testing the build, npm linked, not the source
 import {
 	fn, isType, typeOf,
+} from 'floweret'
+
+import {
 	CustomType, maybe, promised, etc,  type, AnyType, EmptyArray,
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
-} from 'floweret'
+} from 'floweret/cjs/types'
 import {isAnyType, isLiteral} from 'floweret/cjs/tools'
 
 

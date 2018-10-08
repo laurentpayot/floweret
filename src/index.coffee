@@ -1,4 +1,6 @@
 export {default as fn} from './fn'
 export {default as isType} from './isType'
 export {default as typeOf} from './typeOf'
-export * from './types'
+
+# Rollup unable to tree-shake classes https://github.com/rollup/rollup/issues/1691
+# export * from './types'

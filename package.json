@@ -29,7 +29,7 @@
     "node": ">=7.6.0"
   },
   "scripts": {
-    "build": "npm run build-esm && npm run build-cjs && npm run size",
+    "build": "npm run build-esm && npm run build-cjs",
     "build-esm": "rm -rf dist/esm && coffee -cmb -o dist/esm src/",
     "build-cjs": "rm -rf dist/cjs && coffee -ctmb -o dist/cjs src/",
     "build-tests": "coffee -ctm test/tests.coffee",
@@ -37,7 +37,7 @@
     "bundle": "npm run build && cd benchmark && rollup -c",
     "sizes-webpack": "cd benchmark && echo 'No type Checking:' && size-limit no-type-checking.js && echo 'Floweret:' && size-limit floweret.js && echo 'Runtypes:' && size-limit runtypes.js && echo 'Flow-runtime:' && size-limit flow-runtime.js",
     "sizes-rollup": "cd benchmark/bundles && stat -c '%n %s bytes' *.gz | sort -n -k 2 | column -t && echo",
-    "benchmark": "npm run bundle && npm run sizes-webpack && cd benchmark/bundles && node no-type-checking-benchmark.min.js && node floweret-benchmark.min.js && node runtypes.min.js && node flow-runtime-benchmark.min.js && echo",
+    "benchmark": "npm run bundle && npm run sizes-rollup && cd benchmark/bundles && node no-type-checking-benchmark.min.js && node floweret-benchmark.min.js && node runtypes.min.js && node flow-runtime-benchmark.min.js && echo",
     "link": "mkdir -p dist && ln -sf ../package.json dist && cd dist && npm link && rm -rf node_modules && rm package-lock.json && cd .. && npm link floweret",
     "preversion": "npm test",
     "postversion": "git push && git push --tags && cp *.md dist && cd dist && find . -type f -name '*.map' -delete && npm publish",
