@@ -1,6 +1,6 @@
 {
   "name": "floweret",
-  "version": "0.5.6",
+  "version": "0.6.0",
   "description": "A runtime signature type-checker using native JavaScript types.",
   "author": "Laurent Payot",
   "license": "MIT",
@@ -41,10 +41,12 @@
     "postversion": "git push && git push --tags && cp *.md dist && cd dist && find . -type f -name '*.map' -delete && npm publish",
     "size": "size-limit"
   },
-  "size-limit": [{
+  "size-limit": [
+    {
       "limit": "5 KB",
       "path": "dist/index.js"
-    }],
+    }
+  ],
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
