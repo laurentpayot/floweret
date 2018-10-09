@@ -26,7 +26,7 @@ A runtime signature type-checker using native JavaScript types.
   * [Object type](#object-type)
   * [Class type](#class-type)
   * [Promise type](#promise-type)
-  * [Any type wildcard](#any-type-wildcard)
+  * [Any type](#any-type)
   * [Rest type](#rest-type)
   * [Constraints](#constraints)
   * [Logical operators](#logical-operators)
@@ -166,8 +166,7 @@ f(1, true) // TypeMismatch: Argument #2 should be of type 'Number or String' ins
 This is simply a shortcut to the union `[undefined, null, <type>]`. Usefull for optional parameters of a function.
 
 ```js
-import { fn } from 'floweret'
-import maybe from 'floweret/types/maybe'
+import { fn, maybe } from 'floweret'
 
 const f = fn(
   Number, maybe(Number), Number,
@@ -296,7 +295,7 @@ fullName(Bob)
 fullName({id: 1234, name: {first: 1, last: "Smith"}})
 ```
 
-* **:warning:** If values of an object argument match all the keys types of the object type, **the argument will be accepted even if it has more keys than the object type**:
+* **:warning:** If values of an object argument match all the keys types of the object type, **the argument will be accepted even if it has more keys than the object type** (except if type is the empty object `{}`):
 
 ```js
 f = fn(
@@ -335,17 +334,12 @@ import promised from 'floweret/types/promised'
 
 *Documentation in progress…*
 
-### Any type wildcard
-
-> []
-
-or
+### Any type
 
 > Any
 
 ```js
-import { fn } from 'floweret'
-import Any from 'floweret/types/Any'
+import { fn, Any } from 'floweret'
 ```
 
 *Documentation in progress…*
@@ -359,8 +353,7 @@ or (untyped)
 > etc
 
 ```js
-import { fn } from 'floweret'
-import etc from 'floweret/types/etc'
+import { fn, etc } from 'floweret'
 ```
 
 * **:warning:** Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
@@ -548,7 +541,7 @@ The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple f
 
 ```txt
 no-type-checking-benchmark.min.js.gz  258 bytes
-floweret-benchmark.min.js.gz          2549 bytes
+floweret-benchmark.min.js.gz          2611 bytes
 runtypes.min.js.gz                    3030 bytes
 flow-runtime-benchmark.min.js.gz      20233 bytes
 

@@ -17,19 +17,25 @@ badPath = (obj, typeObj) ->
 
 # type error message comparison part helper
 shouldBe = (val, type, promised=false) ->
-	apo = if promised then "a promise of " else ''
-	"should be " + switch
+	io = " instead of "
+	"should be #{if promised then "a promise of " else ''}" + switch
 		when Array.isArray(val) and Array.isArray(type) and (type.length is 1 or not Object.values(type).length)
-			if not Object.values(type).length # sized array
-				"#{apo}an array with a length of #{type.length} instead of #{val.length}"
+			if type.length
+				if not Object.values(type).length # sized array
+					"an array with a length of #{type.length}#{io}#{val.length}"
+				else
+					i = val.findIndex((e) -> not isValid(e, type[0]))
+					"an array with element #{i} of type '#{getTypeName(type[0])}'#{io}#{typeValue(val[i])}"
 			else
-				i = val.findIndex((e) -> not isValid(e, type[0]))
-				"#{apo}an array with element #{i} of type '#{getTypeName(type[0])}' instead of #{typeValue(val[i])}"
+				"an empty array#{io}a non-empty array"
 		when val?.constructor is Object and type?.constructor is Object
-			[bp..., bv, bt] = badPath(val, type)
-			"#{apo}an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}' instead of #{typeValue(bv)}"
+			if Object.keys(type).length
+				[bp..., bv, bt] = badPath(val, type)
+				"an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}'#{io}#{typeValue(bv)}"
+			else
+				"an empty object#{io}a non-empty object"
 		else
-			"#{apo or 'of type '}'#{getTypeName(type)}' instead of #{typeValue(val)}"
+			"#{if promised then '' else "of "}type '#{getTypeName(type)}'#{io}#{typeValue(val)}"
 
 # wraps a function to check its arguments types and result type
 export default (argTypes..., resType, f) ->

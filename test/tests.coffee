@@ -12,7 +12,7 @@ import {
 } from 'floweret'
 #! Rollup unable to tree-shake classes https://github.com/rollup/rollup/issues/1691
 import {
-	Type, promised, constraint, EmptyArray,
+	Type, promised, constraint,
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
 } from 'floweret/types/_index'
@@ -166,9 +166,6 @@ describe "isAny", ->
 	it "should return false for native types", ->
 		expect(isAny(t)).to.be.false for t in NATIVE_TYPES
 
-	it "should return true for empty array", ->
-		expect(isAny([])).to.be.true
-
 	it "should return true for Any", ->
 		expect(isAny(Any)).to.be.true
 
@@ -187,20 +184,20 @@ describe "isValid", ->
 
 	context "Special Types", ->
 
-		context "EmptyArray type", ->
+		context "Empty array", ->
 
-			it "EmptyArray type should return true for empty array only", ->
-				expect(isValid([], EmptyArray)).to.be.true
-				expect(isValid(v, EmptyArray)).to.be.false for v in VALUES when not (Array.isArray(v) and not v.length)
+			it "should return true for empty array only", ->
+				expect(isValid([], [])).to.be.true
+				expect(isValid(v, [])).to.be.false for v in VALUES when not (Array.isArray(v) and not v.length)
 
-			it "EmptyArray() type should return true for empty array only", ->
-				expect(isValid([], EmptyArray())).to.be.true
-				expect(isValid(v, EmptyArray())).to.be.false for v in VALUES when not (Array.isArray(v) and not v.length)
+		context "Empty object", ->
+
+			it "should return true for empty object only", ->
+				expect(isValid({}, {})).to.be.true
+				expect(isValid(v, {})).to.be.false for v in VALUES \
+					when not (v?.constructor is Object and not Object.keys(v).length)
 
 		context "Any type", ->
-
-			it "empty array type should return true for all values", ->
-				expect(isValid(val, [])).to.be.true for val in VALUES
 
 			it "Any type should return true for all values", ->
 				expect(isValid(val, Any)).to.be.true for val in VALUES
@@ -216,16 +213,16 @@ describe "isValid", ->
 
 		context "Maybe type", ->
 
-			it "maybe([]) should return an array and a warning.", ->
+			it "maybe(Any) should not return Any type.", ->
 				warnSpy.resetHistory()
-				expect(maybe([])).to.eql([undefined, null, []])
+				expect(maybe(Any)).to.eql([undefined, null, Any])
 				expect(warnSpy.calledOnceWithExactly(
 					"Any is not needed as 'maybe' argument."
 				)).to.be.true
 
-			it "maybe(Any) should return empty array.", ->
+			it "maybe(Any()) should not return Any type.", ->
 				warnSpy.resetHistory()
-				expect(maybe(Any)).to.eql([undefined, null, Any])
+				expect(maybe(Any())).to.eql([undefined, null, Any()])
 				expect(warnSpy.calledOnceWithExactly(
 					"Any is not needed as 'maybe' argument."
 				)).to.be.true
@@ -357,8 +354,8 @@ describe "isValid", ->
 		it "should return true if both value and type are empty object.", ->
 			expect(isValid({}, {})).to.be.true
 
-		it "should return true if type is empty object but value unempty object.", ->
-			expect(isValid({a: 1}, {})).to.be.true
+		it "should return false if type is empty object but value unempty object.", ->
+			expect(isValid({a: 1}, {})).to.be.false
 
 		it "should return false if value is empty object but type unempty object.", ->
 			expect(isValid({}, {a: Number})).to.be.false
@@ -576,15 +573,6 @@ describe "isValid", ->
 
 			context "Any type elements", ->
 
-				it "Tuple of [] should return a Tuple instance and log a warning.", ->
-					warnSpy.resetHistory()
-					t = Tuple([], [])
-					expect(t.constructor.name).to.equal("Tuple")
-					expect(t.types).to.eql([[], []])
-					expect(warnSpy.calledOnceWithExactly(
-						"Use 'Array(2)' type instead of a Tuple of 2 values of any type'."
-					)).to.be.true
-
 				it "Tuple of Any should return array of empty elements", ->
 					warnSpy.resetHistory()
 					t = Tuple(Any, Any)
@@ -709,15 +697,6 @@ describe "isValid", ->
 				it "TypedSet used as a function should throw an error.", ->
 					expect(-> isValid(1, TypedSet)).to.throw("'TypedSet' must have exactly 1 argument.")
 
-				it "TypedSet([]) should return a TypedSet instance and log a warning.", ->
-					warnSpy.resetHistory()
-					t = TypedSet([])
-					expect(t.constructor.name).to.equal("TypedSet")
-					expect(t.type).to.eql([])
-					expect(warnSpy.calledOnceWithExactly(
-						"Use 'Set' type instead of a TypedSet with elements of any type."
-					)).to.be.true
-
 				it "TypedSet(Any) should return a TypedSet instance and log a warning.", ->
 					warnSpy.resetHistory()
 					t = TypedSet(Any)
@@ -820,24 +799,6 @@ describe "isValid", ->
 
 				it "TypedMap used as a function should throw an error.", ->
 					expect(-> isValid(1, TypedMap)).to.throw("'TypedMap' must have at least 1 argument.")
-
-				it "TypedMap([]) should return a TypedMap instance and log a warning.", ->
-					warnSpy.resetHistory()
-					t = TypedMap([])
-					expect(t.constructor.name).to.equal("TypedMap")
-					expect(t.valuesType).to.eql([])
-					expect(warnSpy.calledOnceWithExactly(
-						"Use 'Map' type instead of a TypedMap with values of any type."
-					)).to.be.true
-
-				it "TypedMap([], []) should return a TypedMap instance and log a warning.", ->
-					warnSpy.resetHistory()
-					t = TypedMap([], [])
-					expect(t.constructor.name).to.equal("TypedMap")
-					expect([t.valuesType, t.keysType]).to.eql([[], []])
-					expect(warnSpy.calledOnceWithExactly(
-						"Use 'Map' type instead of a TypedMap with keys and values of any type."
-					)).to.be.true
 
 				it "TypedMap(Any) should return a TypedMap instance and log a warning.", ->
 					warnSpy.resetHistory()
@@ -1005,11 +966,11 @@ describe "isValid", ->
 			it "And with a single value should throw an error", ->
 				expect(-> And(1)).to.throw("'and' must have at least 2 arguments.")
 
-			it "And with [] values should return an And instance and log a warning.", ->
+			it "And with Any values should return an And instance and log a warning.", ->
 				warnSpy.resetHistory()
-				t = And(Number, [])
+				t = And(Number, Any)
 				expect(t.constructor.name).to.equal("And")
-				expect(t.types).to.eql([Number, []])
+				expect(t.types).to.eql([Number, Any])
 				expect(warnSpy.calledOnceWithExactly(
 					"Any is not needed as 'and' argument number 2."
 				)).to.be.true
@@ -1049,10 +1010,10 @@ describe "isValid", ->
 			it "Or with a single value should throw an error", ->
 				expect(-> Or(1)).to.throw("'or' must have at least 2 arguments.")
 
-			it "Or with [] values should return an array and log a warning.", ->
+			it "Or with Any values should return an array and log a warning.", ->
 				warnSpy.resetHistory()
-				t = Or(Number, [])
-				expect(t).to.eql([Number, []])
+				t = Or(Number, Any)
+				expect(t).to.eql([Number, Any])
 				expect(warnSpy.calledOnceWithExactly(
 					"Any is inadequate as 'or' argument number 2."
 				)).to.be.true
@@ -1062,11 +1023,11 @@ describe "isValid", ->
 			it "Not with more than a single value should throw an error", ->
 				expect(-> Not(1, 2)).to.throw("'not' must have exactly 1 argument.")
 
-			it "Not with [] value should return a Not instance and log a warning.", ->
+			it "Not with Any value should return a Not instance and log a warning.", ->
 				warnSpy.resetHistory()
-				t = Not([])
+				t = Not(Any)
 				expect(t.constructor.name).to.equal("Not")
-				expect(t.type).to.eql([])
+				expect(t.type).to.eql(Any)
 				expect(warnSpy.calledOnceWithExactly(
 					"Any is inadequate as 'not' argument."
 				)).to.be.true
@@ -1178,7 +1139,7 @@ describe "fn", ->
 		it "should throw an error if function does not return a promise", ->
 			f = fn undefined, promised(String),
 				-> '1'
-			expect(f()).to.be.rejectedWith("Result should be a promise of 'String' instead of String \"1\".")
+			expect(f()).to.be.rejectedWith("Result should be a promise of type 'String' instead of String \"1\".")
 
 		it "should throw an error if promised used without type", ->
 			expect(-> fn undefined, promised(),
@@ -1193,67 +1154,67 @@ describe "fn", ->
 	context "Arguments number", ->
 
 		it "should do nothing if function has the right number of arguments", ->
-			f = fn Number, [Number, String], [],
+			f = fn Number, [Number, String], Any,
 				(n1, n2=0) -> n1 + n2
 			expect(f(1, 2)).to.equal(3)
 
 		it "should raise an error if function has too many arguments", ->
-			f = fn Number, [Number, String], [],
+			f = fn Number, [Number, String], Any,
 				(n1, n2=0) -> n1 + n2
 			expect(-> f(1, 2, 3)).to.throw("Too many arguments provided.")
 
 		it "should raise an error if function has too few arguments", ->
-			f = fn Number, [Number, String], [],
+			f = fn Number, [Number, String], Any,
 				(n1, n2=0) -> n1 + n2
 			expect(-> f(1)).to.throw("Missing required argument number 2.")
 
 		it "should do nothing if all unfilled arguments are optional", ->
-			f = fn Number, [Number, String, undefined], [],
+			f = fn Number, [Number, String, undefined], Any,
 				(n1, n2=0) -> n1 + n2
 			expect(f(1)).to.equal(1)
 			expect(f(1, undefined)).to.equal(1)
-			f = fn Number, [Number, String, undefined], Number, [],
+			f = fn Number, [Number, String, undefined], Number, Any,
 				(n1, n2=0, n3) -> n1 + n2 + n3
 			expect(f(1, undefined, 3)).to.equal(4)
 
 		it "should do nothing if all unfilled arguments type is any type", ->
-			f = fn Number, [], [],
+			f = fn Number, Any, Any,
 				(n1, n2=0) -> n1 + n2
 			expect(f(1)).to.equal(1)
 			expect(f(1, undefined)).to.equal(1)
-			f = fn Number, [], Number, [],
+			f = fn Number, Any, Number, Any,
 				(n1, n2=0, n3) -> n1 + n2 + n3
 			expect(f(1, undefined, 3)).to.equal(4)
 
 		it "should raise an error if some unfilled arguments are not optional", ->
-			f = fn Number, [Number, String, undefined], Number, [],
+			f = fn Number, [Number, String, undefined], Number, Any,
 				(n1, n2=0, n3) -> n1 + n2 + n3
 			expect(-> f(1)).to.throw("Missing required argument number 3.")
 			expect(-> f(1, 2)).to.throw("Missing required argument number 3.")
 
 		it "should raise an error when an optional argument is filled with null", ->
-			f = fn Number, [Number, undefined], [],
+			f = fn Number, [Number, undefined], Any,
 				(n1, n2=0) -> n1 + n2
 			expect(-> f(1, null))
 			.to.throw("Argument #2 should be of type 'Number or undefined' instead of null.")
 
 		it "should raise an error when only an optional argument and value is null", ->
-			f = fn undefined, [],
+			f = fn undefined, Any,
 				(n1=0) -> n1
 			expect(-> f(null)).to.throw("Argument #1 should be of type 'undefined' instead of null.")
 
 		it "should raise an error when only an optional argument and value isnt undefined", ->
-			f = fn undefined, [],
+			f = fn undefined, Any,
 				(n1=0) -> n1
 			expect(-> f(1)).to.throw("Argument #1 should be of type 'undefined' instead of Number 1.")
 
 		it "should do nothing if only an optional argument and value is undefined", ->
-			f = fn undefined, [],
+			f = fn undefined, Any,
 				(n1=0) -> n1
 			expect(f(undefined)).to.equal(0)
 
 		it "should do nothing if only an optional argument and value is not filled", ->
-			f = fn undefined, [],
+			f = fn undefined, Any,
 				(n1=0) -> n1
 			expect(f()).to.equal(0)
 
@@ -1344,14 +1305,14 @@ describe "fn", ->
 			.to.throw("Rest type must be the last of the arguments types.")
 
 		it "should return the concatenation of all the arguments of any type", ->
-			f = fn etc([]), String,
+			f = fn etc(Any), String,
 				(str...) -> str.join('')
 			expect(f('a', 5, 'def')).to.equal('a5def')
-			f = fn Number, etc([]), String,
+			f = fn Number, etc(Any), String,
 				(n, str...) -> n + str.join('')
 			expect(f(1, 'a', 5, 'def')).to.equal('1a5def')
 
-		it "should behave like etc([]) when type is ommited", ->
+		it "should behave like etc(Any) when type is ommited", ->
 			f = fn etc(), String,
 				(str...) -> str.join('')
 			expect(f('a', 5, 'def')).to.equal('a5def')
@@ -1359,7 +1320,7 @@ describe "fn", ->
 				(n, str...) -> n + str.join('')
 			expect(f(1, 'a', 5, 'def')).to.equal('1a5def')
 
-		it "should behave like etc([]) when used as a function", ->
+		it "should behave like etc(Any) when used as a function", ->
 			f = fn etc, String,
 				(str...) -> str.join('')
 			expect(f('a', 5, 'def')).to.equal('a5def')
@@ -1455,12 +1416,25 @@ describe "fn", ->
 				expect(-> f([1]))
 				.to.throw("Argument #1 should be of type 'Number or String' instead of Array.")
 
-			it "should return an error with 'empty array'", ->
-				f = fn EmptyArray, Any, ->
+			it "should return an error with ''empty array' instead of Number 1.'", ->
+				f = fn [], Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'empty array' instead of Number 1.")
+
+			it "should return an error with 'empty array instead of a non-empty array'", ->
+				f = fn [], Any, ->
 				expect(-> f([1]))
-				.to.throw("Argument #1 should be of type 'empty array' instead of Array.")
+				.to.throw("Argument #1 should be an empty array instead of a non-empty array.")
+
+			it "should return an error with ''empty object' instead of Number 1.'", ->
+				f = fn {}, Any, ->
+				expect(-> f(1))
+				.to.throw("Argument #1 should be of type 'empty object' instead of Number 1.")
+
+			it "should return an error with 'empty object instead of a non-empty object.'", ->
+				f = fn {}, Any, ->
+				expect(-> f({foo: "bar"}))
+				.to.throw("Argument #1 should be an empty object instead of a non-empty object.")
 
 			it "should return an error with 'NaN'", ->
 				f = fn Number, Any, ->
@@ -1531,8 +1505,8 @@ describe "fn", ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'array of 'object type'' instead of Number 1.")
 
-			it "Array([]) should return an error with 'array of 'any type''", ->
-				f = fn Array([]), Any, ->
+			it "Array(Any) should return an error with 'array of 'any type''", ->
+				f = fn Array(Any), Any, ->
 				expect(-> f(1))
 				.to.throw("Argument #1 should be of type 'array of 'any type'' instead of Number 1.")
 

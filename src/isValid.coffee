@@ -6,7 +6,7 @@ import Type from './types/Type'
 # check that a value is of a given type or of any (undefined) type, e.g.: isValid("foo", String)
 isValid = (val, type) -> if Array.isArray(type) # NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
 	switch type.length
-		when 0 then true # any type: `[]`
+		when 0 then Array.isArray(val) and not val.length # empty array: `[]`
 		when 1 then switch
 			when not Array.isArray(val) then false
 			when isAny(type[0]) then true
@@ -28,9 +28,12 @@ else switch type?.constructor
 			if type is Number then Number.isFinite(val) else val?.constructor is type
 	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
-		for k, v of type
-			return false unless isValid(val[k], v)
-		true
+		if Object.keys(type).length
+			for k, v of type
+				return false unless isValid(val[k], v)
+			true
+		else # empty object
+			not Object.keys(val).length
 	when RegExp then val?.constructor is String and type.test(val)
 	else
 		if type instanceof Type
