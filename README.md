@@ -118,7 +118,7 @@ f(1, 5)   // TypeMismatch: Argument #2  should be of type 'String' instead of Nu
 
 ### Absence of type
 
-When the functions takes no argument, only the result type is needed:
+When the function takes no argument, only the result type is needed:
 
 ```js
 const returnHi = fn(
