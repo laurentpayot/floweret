@@ -1075,9 +1075,9 @@ describe "fn", ->
 
 	context "Arguments of signature itself", ->
 
-		it "should throw an error if arguments types are missing", ->
-			expect(-> (fn Number, -> 1))
-			.to.throw("Arguments types are missing.")
+		it "should not throw an error if no arguments types", ->
+			f = fn Number, -> 1
+			expect(f()).to.equal(1)
 
 		it "should throw an error if signature result type is missing", ->
 			expect(-> (fn -> 1))
@@ -1157,6 +1157,11 @@ describe "fn", ->
 			f = fn Number, [Number, String], Any,
 				(n1, n2=0) -> n1 + n2
 			expect(f(1, 2)).to.equal(3)
+
+		it "should raise an error if function that takes no argument has an argument", ->
+			f = fn Any,
+				-> 1
+			expect(-> f(1)).to.throw("Too many arguments provided.")
 
 		it "should raise an error if function has too many arguments", ->
 			f = fn Number, [Number, String], Any,

@@ -41,7 +41,6 @@ shouldBe = (val, type, promised=false) ->
 export default (argTypes..., resType, f) ->
 	throw new InvalidSignature "Result type is missing." if resType instanceof Function and not resType.name
 	throw new InvalidSignature "Function to wrap is missing." unless f instanceof Function and not f.name
-	throw new InvalidSignature "Arguments types are missing." unless argTypes.length
 	(args...) -> # returns an unfortunately anonymous function
 		rest = false
 		for type, i in argTypes

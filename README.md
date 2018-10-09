@@ -3,7 +3,7 @@
 A runtime signature type-checker using native JavaScript types.
 
 * **Simple**: Native JavaScript types syntax.
-* **Lightweight**: 2 kb minified and gzipped. No dependencies.
+* **Lightweight**: 2.3 kb minified and gzipped. No dependencies.
 * **Fast**: Direct type comparison. No string to parse.
 * **Powerful**: Logical operators, tuples, regular expressions, rest parameters and more…
 * **Customizable**: Create your own types for your own needs.
@@ -15,8 +15,8 @@ A runtime signature type-checker using native JavaScript types.
   * [JavaScript](#javascript)
   * [CoffeeScript](#coffeescript)
 * [Type syntax](#type-syntax)
-  * [Absence of type](#absence-of-type)
   * [Native types](#native-types)
+  * [Absence of type](#absence-of-type)
   * [Union of types](#union-of-types)
   * [Maybe type](#maybe-type)
   * [Literal type](#literal-type)
@@ -99,31 +99,6 @@ add = fn Number, Number, Number,
 
 ## Type syntax
 
-### Absence of type
-
-Use `undefined` as the arguments types list when the functions takes no argument:
-
-```js
-const returnHi = fn(
-  undefined, String,
-  function () {return "Hello!"}
-)
-
-returnHi()  // Hello!
-returnHi(1) // InvalidSignature: Too many arguments
-```
-
-Use `undefined` as well as the result type when the function returns nothing (undefined):
-
-```js
-const logInfo = fn(
-  String, undefined
-  function (msg) {console.log("Info:", msg)}
-)
-
-logInfo("Boo.") // logs "Info: Boo." but returns undefined
-```
-
 ### Native types
 
 > <native type\>
@@ -139,6 +114,38 @@ const f = fn(
 
 f(1, 'a') // [1, 'a']
 f(1, 5)   // TypeMismatch: Argument #2  should be of type 'String' instead of Number 5.
+```
+
+### Absence of type
+
+When the functions takes no argument, only the result type is needed:
+
+```js
+const returnHi = fn(
+  String,
+  function () {return "Hi"}
+)
+
+returnHi()  // Hi
+returnHi(1) // TypeMismatch: Too many arguments provided.
+```
+
+Use `undefined` as the result type when the function returns nothing (undefined):
+
+```js
+const logInfo = fn(
+  String, undefined
+  function (msg) {console.log("Info:", msg)}
+)
+
+logInfo("Boo.") // logs "Info: Boo.", returns undefined
+
+const logHi = fn(
+  undefined
+  function () {console.log("Hi")}
+)
+
+logHi() // logs "Hi", returns undefined
 ```
 
 ### Union of types
@@ -541,7 +548,7 @@ The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple f
 
 ```txt
 no-type-checking-benchmark.min.js.gz  258 bytes
-floweret-benchmark.min.js.gz          2614 bytes
+floweret-benchmark.min.js.gz          2600 bytes
 runtypes.min.js.gz                    3030 bytes
 flow-runtime-benchmark.min.js.gz      20233 bytes
 
