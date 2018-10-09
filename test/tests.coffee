@@ -7,11 +7,12 @@ expect = chai.expect
 # testing the build, npm linked, not the source
 import {
 	fn, isValid, typeOf,
-	etc, Any # types used anyway
+	etc, Any, # types used anyway
+	maybe # exported because generally always used
 } from 'floweret'
 #! Rollup unable to tree-shake classes https://github.com/rollup/rollup/issues/1691
 import {
-	Type, maybe, promised, constraint, EmptyArray,
+	Type, promised, constraint, EmptyArray,
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
 } from 'floweret/types/_index'
