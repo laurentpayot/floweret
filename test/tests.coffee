@@ -61,7 +61,8 @@ testTypes = (val, type) ->
 		for t in NATIVE_TYPES when not(t is type or Number.isNaN val and Number.isNaN type)
 
 warnSpy = sinon.spy(Type, 'warn')
-warnStub = sinon.stub(console, "warn") # silencing console warnings
+consoleWarnSilencer = sinon.stub(console, "warn")
+
 
 ###
 	████████╗██╗   ██╗██████╗ ███████╗ ██████╗ ███████╗
