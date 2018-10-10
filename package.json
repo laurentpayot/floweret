@@ -29,7 +29,7 @@
     "node": ">=7.6.0"
   },
   "scripts": {
-    "build": "rm -rf dist && coffee -ctmb -o dist src",
+    "build": "rm -rf dist && coffee -ctb -o dist src",
     "test": "nyc --extension .coffee mocha --require @babel/register --require ./coffeescript.config.js \"test/**/*.{js,coffee}\"",
     "test-watch": "mocha --reporter min --require @babel/register --require ./coffeescript.config.js --watch --watch-extensions js,coffee,json \"test/**/*.{js,coffee}\"",
     "bundle": "npm run build && cd benchmark && rollup -c",
@@ -38,7 +38,7 @@
     "benchmark": "npm run bundle && npm run sizes-rollup && cd benchmark/bundles && node no-type-checking-benchmark.min.js && node floweret-benchmark.min.js && node runtypes.min.js && node flow-runtime-benchmark.min.js && echo",
     "link": "mkdir -p dist && cp package.json dist && cd dist && npm link && rm -rf node_modules && rm package-lock.json && cd .. && npm link floweret",
     "preversion": "npm test && npm run build",
-    "postversion": "git push && git push --tags && cp package.json dist && cp *.md dist && cd dist && find . -type f -name '*.map' -delete && npm publish",
+    "postversion": "git push && git push --tags && cp package.json dist && cp *.md dist && npm publish",
     "size": "size-limit"
   },
   "dependencies": {},
