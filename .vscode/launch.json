@@ -7,32 +7,21 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "Tests (full build)",
+			"name": "Tests",
 			"preLaunchTask": "build",
 			"program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
 			"args": [
+				// https://mochajs.org/#usage
 				"-u",
-				"tdd",
+				"bdd",
 				"--timeout",
 				"999999",
 				"--colors",
-				"${workspaceFolder}/test"
-			],
-			"internalConsoleOptions": "openOnSessionStart"
-		},
-		{
-			"type": "node",
-			"request": "launch",
-			"name": "Tests (Mocha only)",
-			"preLaunchTask": "build-tests",
-			"program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-			"args": [
-				"-u",
-				"tdd",
-				"--timeout",
-				"999999",
-				"--colors",
-				"${workspaceFolder}/test"
+				"--require",
+				"${workspaceFolder}/node_modules/@babel/register",
+				"--require",
+				"${workspaceFolder}/coffeescript.config.js",
+				"\"${workspaceFolder}/test/**/*.{js,coffee}\""
 			],
 			"internalConsoleOptions": "openOnSessionStart"
 		}

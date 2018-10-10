@@ -4,19 +4,17 @@ import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 expect = chai.expect
 
-# testing the build, npm linked, not the source
 import {
 	fn, isValid, typeOf,
 	etc, Any, # types used anyway
 	maybe # exported because generally always used
-} from 'floweret'
-#! Rollup unable to tree-shake classes https://github.com/rollup/rollup/issues/1691
+} from '../src'
 import {
 	Type, promised, constraint,
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
-} from 'floweret/types/_index'
-import {isAny, isLiteral} from 'floweret/tools'
+} from '../src/types/_index'
+import {isAny, isLiteral} from '../src/tools'
 
 
 NATIVE_TYPES = [undefined, null, NaN, Infinity, -Infinity,

@@ -8,12 +8,6 @@
 			"label": "build",
             "script": "build",
             "problemMatcher": []
-        },
-        {
-			"type": "npm",
-			"label": "build-tests",
-            "script": "build-tests",
-            "problemMatcher": []
         }
     ]
 }

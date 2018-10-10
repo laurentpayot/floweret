@@ -18,7 +18,10 @@ npm-error.log*
 yarn-debug.log*
 yarn-error.log*
 
-# ignoring generated JS files
+# Istanbul output
+.nyc_output
+
+# Ignoring generated JS files
 dist
 test/tests.js
 *.js.map
