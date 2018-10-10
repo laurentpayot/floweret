@@ -8,7 +8,6 @@
 			"type": "node",
 			"request": "launch",
 			"name": "Tests",
-			"preLaunchTask": "build",
 			"program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
 			"args": [
 				// https://mochajs.org/#usage
@@ -21,7 +20,7 @@
 				"${workspaceFolder}/node_modules/@babel/register",
 				"--require",
 				"${workspaceFolder}/coffeescript.config.js",
-				"\"${workspaceFolder}/test/**/*.{js,coffee}\""
+				"${workspaceFolder}/test/**/*.{js,coffee}"
 			],
 			"internalConsoleOptions": "openOnSessionStart"
 		}

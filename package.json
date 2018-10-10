@@ -31,7 +31,7 @@
   "scripts": {
     "build": "rm -rf dist && coffee -ctmb -o dist src",
     "test": "nyc --extension .coffee mocha --require @babel/register --require ./coffeescript.config.js \"test/**/*.{js,coffee}\"",
-    "test-watch": "mocha --reporter min --require @babel/register --require ./coffeescript.config.js --watch --watch-extensions js,coffee \"test/**/*.{js,coffee}\"",
+    "test-watch": "mocha --reporter min --require @babel/register --require ./coffeescript.config.js --watch --watch-extensions js,coffee,json \"test/**/*.{js,coffee}\"",
     "bundle": "npm run build && cd benchmark && rollup -c",
     "sizes-webpack": "cd benchmark && echo 'No type Checking:' && size-limit no-type-checking.js && echo 'Floweret:' && size-limit floweret.js && echo 'Runtypes:' && size-limit runtypes.js && echo 'Flow-runtime:' && size-limit flow-runtime.js",
     "sizes-rollup": "cd benchmark/bundles && stat -c '%n %s bytes' *.gz | sort -n -k 2 | column -t && echo",
