@@ -1,7 +1,6 @@
 import {InvalidSignature, TypeMismatch} from './errors'
 import {isAny, getTypeName, typeValue} from './tools'
 import isValid from './isValid'
-import Type from './types/Type'
 import EtcHelper from './types/etc'
 
 Etc = EtcHelper().constructor
