@@ -33,6 +33,7 @@
     "build": "rm -rf dist && coffee -ctb -o dist src",
     "test": "nyc --extension .coffee mocha --require @babel/register --require ./coffeescript.config.js \"test/**/*.{js,coffee}\"",
     "test-watch": "mocha --reporter min --require @babel/register --require ./coffeescript.config.js --watch --watch-extensions js,coffee,json \"test/**/*.{js,coffee}\"",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "bundle": "npm run build && cd benchmark && rollup -c",
     "sizes-webpack": "cd benchmark && echo 'No type Checking:' && size-limit no-type-checking.js && echo 'Floweret:' && size-limit floweret.js && echo 'Runtypes:' && size-limit runtypes.js && echo 'Flow-runtime:' && size-limit flow-runtime.js",
     "sizes-rollup": "cd benchmark/bundles && stat -c '%n %s bytes' *.gz | sort -n -k 2 | column -t && echo",
@@ -50,6 +51,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "coffeescript": "^2.3.2",
+    "coveralls": "^3.0.2",
     "flow-runtime": "^0.17.0",
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
@@ -62,10 +64,12 @@
     "sinon": "^6.3.5",
     "size-limit": "^0.20.1"
   },
-  "size-limit": [{
-    "limit": "5 KB",
-    "path": "dist/index.js"
-  }],
+  "size-limit": [
+    {
+      "limit": "5 KB",
+      "path": "dist/index.js"
+    }
+  ],
   "nyc": {
     "exclude": [
       "babel.config.js",
