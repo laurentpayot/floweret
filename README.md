@@ -321,7 +321,29 @@ f({x: 1, y: 2, foo: "bar"}) // 5 (no error)
 
 > <class\>
 
-*Documentation in progress…*
+Simply use the class itself as the type:
+
+```js
+class Rectangle {
+  constructor(height, width) {
+    this.height = height;
+    this.width = width;
+  }
+}
+
+// Of course it would be better to have superficy() as a Rectangle method,
+// but that is not the point…
+let superficy = fn(
+  Rectangle, Number,
+  (rect) => rect.height * rect.width
+)
+
+let myRect = new Rectangle(10, 5)
+
+superficy(myRect) // 50
+superficy("foo") // TypeMismatch: Argument #1 should be of type 'Rectangle' instead of String "foo".
+superficy({height: 10, width: 5}) // TypeMismatch: Argument #1 should be of type 'Rectangle' instead of Object.
+```
 
 ### Promise type
 
