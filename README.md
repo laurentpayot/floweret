@@ -349,22 +349,43 @@ superficy({height: 10, width: 5}) // TypeMismatch: Argument #1 should be of type
 
 > Promise.resolve(<type\>)
 
-or
+or with the `promised` shortcut:
 
+> import promised from 'floweret/types/promised'
+>
 > promised(<type\>)
 
 Promised types are used for the *result type* of the function signature.
 
 You can use the `Promise` type for promises that resolve with a value of any type, but most of the time it is better to specify the type of the resolved value.
 
-For instance use `Promise.resolve([Object, null])` for a promise that will resolve with an object or the null value.
+For instance use the `Promise.resolve([Object, null])` type for a promise that will resolve with an object or the null value:
 
 ```js
 import { fn } from 'floweret'
 import promised from 'floweret/types/promised'
+
+const getUserById = fn(
+  Number, Promise.resolve([Object, null]),
+  function (id) {
+    return new Promise(resolve => {
+      // simulating slow database/network access
+      setTimeout(() => {
+        if (id === 0) {
+          resolve("anonymous") // erroneous line
+        } else {
+          resolve({id, name: "Bob"})
+        }
+      }, 1000)
+    })
+  }
+)
+
+await getUserById(1234) // {id: 1234, name: "Bob"}
+await getUserById(0) // TypeMismatch: Result should be a promise of type 'Object or null' instead of String "anonymous".
 ```
 
-*Documentation in progress…*
+
 
 ### Any type
 
