@@ -1,14 +1,14 @@
+# :blossom: Floweret
+
 [![Build Status](https://travis-ci.org/laurentpayot/floweret.svg?branch=master)](https://travis-ci.org/laurentpayot/floweret)
 [![Coverage Status](https://coveralls.io/repos/github/laurentpayot/floweret/badge.svg?branch=master)](https://coveralls.io/github/laurentpayot/floweret?branch=master)
 
-# :blossom: Floweret
-
-Runtime type checker using native JavaScript types.
+Floweret is a JavasScrit *runtime* signature type checker that is:
 
 * **Simple**: Native JavaScript types syntax.
 * **Lightweight**: 2.3 kb minified and gzipped. No dependencies.
 * **Fast**: Direct type comparison. No string to parse.
-* **Powerful**: Logical operators, tuples, regular expressions, rest parameters and more…
+* **Powerful**: Type composition, promises, rest parameters, logical operators and more…
 * **Customizable**: Create your own types for your own needs.
 
 ## Contents
