@@ -1,6 +1,6 @@
 # :blossom: Floweret
 
-A runtime signature type-checker using native JavaScript types.
+Runtime type checker using native JavaScript types.
 
 * **Simple**: Native JavaScript types syntax.
 * **Lightweight**: 2.3 kb minified and gzipped. No dependencies.
