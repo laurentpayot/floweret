@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/laurentpayot/floweret.svg?branch=master)](https://travis-ci.org/laurentpayot/floweret)
+[![Coverage Status](https://coveralls.io/repos/github/laurentpayot/floweret/badge.svg?branch=master)](https://coveralls.io/github/laurentpayot/floweret?branch=master)
+
 # :blossom: Floweret
 
 Runtime type checker using native JavaScript types.
