@@ -1,7 +1,7 @@
 {
   "name": "floweret",
   "version": "0.7.2",
-  "description": "Dynamic type checker using native JavaScript types.",
+  "description": "Runtime type checker using native JavaScript types.",
   "author": "Laurent Payot",
   "license": "MIT",
   "homepage": "https://github.com/laurentpayot/floweret#readme",
@@ -17,6 +17,7 @@
     "typed",
     "signature",
     "runtime",
+    "dynamic",
     "flow",
     "flow-runtime",
     "runtypes",
