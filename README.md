@@ -629,7 +629,7 @@ Run the benchmark with:
 npm run benchmark
 ```
 
-For now we are benchmarking the folowing runtime type-checking systems:
+The benchmark currently includes the folowing runtime type-checking systems:
 
 * **no type-checking**: the reference results.
 * [**Floweret**](https://github.com/laurentpayot/floweret): you might know it if you are reading this.
@@ -638,7 +638,7 @@ For now we are benchmarking the folowing runtime type-checking systems:
 
 The [sub-benchmarks](https://github.com/laurentpayot/floweret/tree/master/benchmark) are run from minified [Rollup](https://rollupjs.org) bundles (UMD) and call two simple functions several thousand times.
 
-Here are some results from a machine that scores around 21000 to the [Octane 2.0 JavaScript benchmark](https://chromium.github.io/octane/):
+Here are some results from a machine that scores around 21000 to the [Octane 2.0](https://chromium.github.io/octane/) JavaScript benchmark:
 
 ```txt
 no-type-checking-benchmark.min.js.gz  258 bytes
