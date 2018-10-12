@@ -268,6 +268,7 @@ pokerHand([7, 9, 10, "Q", "K", 1]) // TypeMismatch: Argument #1 should be an arr
 ```
 
 Sized array type is useful when used in conjunction with a typed array type, thanks to the [`and` operator](#and).
+Note that you can use the empty array `[]` for an array of size 0 type, if you ever need it.
 
 ### Object type
 
@@ -315,6 +316,7 @@ f = fn(
 
 f({a: 1, b: 2})             // 3
 f({a: 1, b: 2, foo: "bar"}) // 3 (no error)
+f({a: 1, foo: "bar"})       // TypeMismatch: Argument #1 should be an object with key 'b' of type 'Number' instead of undefined.
 ```
 
 ### Class type
