@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/laurentpayot/floweret.svg?branch=master)](https://travis-ci.org/laurentpayot/floweret)
 [![Coverage Status](https://coveralls.io/repos/github/laurentpayot/floweret/badge.svg?branch=master)](https://coveralls.io/github/laurentpayot/floweret?branch=master)
+[![npm version](https://badge.fury.io/js/floweret.svg)](https://badge.fury.io/js/floweret)
 
 Floweret is a JavasScrit *runtime* signature type checker that is:
 
