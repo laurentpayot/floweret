@@ -310,7 +310,7 @@ fullName({id: 1234, name: {first: 1, last: "Smith"}})
 
 ```js
 f = fn(
-  {a: Boolean, b: {x: Number, y: Number}, Number,
+  {a: Boolean, b: {x: Number, y: Number}}, Number,
   (obj) => obj.b.x + obj.b.y
 )
 
