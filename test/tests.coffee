@@ -636,6 +636,8 @@ describe "isValid", ->
 					expect(isValid([1, val, 3], Array(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
 					expect(isValid([val], Array(Number))).to.be.false for val in VALUES when typeof val isnt 'number'
 
+				# TODO: test typed array optimizations
+
 				it "should return false when an element of the array is not a string", ->
 					expect(isValid(["foo", val, "bar"], Array(String))).to.be.false \
 						for val in VALUES when typeof val isnt 'string'
