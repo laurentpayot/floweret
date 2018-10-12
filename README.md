@@ -23,23 +23,27 @@ Floweret is a JavasScrit *runtime* signature type checker that is:
   * [Union of types](#union-of-types)
   * [Maybe type](#maybe-type)
   * [Literal type](#literal-type)
-  * [Regular Expressions](#regular-expressions)
-  * [Typed Array](#typed-array)
-  * [Sized Array](#sized-array)
+  * [Regular expression type](#regular-expression-type)
+  * [Typed array type](#typed-array-type)
+  * [Sized array type](#sized-array-type)
   * [Object type](#object-type)
   * [Class type](#class-type)
   * [Promised type](#promised-type)
   * [Any type](#any-type)
-  * [Rest type](#rest-type)
-  * [Constraints](#constraints)
+  * [Rest arguments type](#rest-arguments-type)
   * [Logical operators](#logical-operators)
-    * [or](#or)
-    * [and](#and)
-    * [not](#not)
-  * [Tuple types](#tuple-types)
-  * [Typed Object](#typed-object)
-  * [Typed Set](#typed-set)
-  * [Typed Map](#typed-map)
+    * [Or](#or)
+    * [And](#and)
+    * [Not](#not)
+  * [Constraint type](#constraint-type)
+  * [Included types](#included-types)
+    * [Tuple](#tuple)
+    * [Typed Object](#typed-object)
+    * [Typed Set](#typed-set)
+    * [Typed Map](#typed-map)
+    * [Integer](#integer)
+    * [Natural](#natural)
+    * [Sized string](#sized-string)
 * [Type composition](#type-composition)
 * [Custom types](#custom-types)
 * [Type tools](#type-tools)
@@ -204,7 +208,7 @@ turn('left')  // "turning left"
 turn('light') // TypeMismatch: Argument #1 should be of type 'literal String "left" or literal String "right"' instead of String "light".
 ```
 
-### Regular Expressions
+### Regular Expression type
 
 > <regular expression\>
 
@@ -227,7 +231,7 @@ showEmail('laurent@example.com', "Hi", "Hello!")
 showEmail('laurent.example.com', "Hi", "Hello!")
 ```
 
-### Typed Array
+### Typed array type
 
 > Array(<type\>)
 
@@ -249,7 +253,7 @@ dashJoin(["a", "b", 3])   // Argument #1 should be an array with element 2 of ty
   * Use `Array([Number, String])` to accept an array of elements that can be numbers or strings, such as `[1, "2", 3]`.
   * If you forget the brackets you will get the union of types instead of the array of union of types, because in JavaScript `Array(Number, String)` is the same as `[Number, String]`.
 
-### Sized Array
+### Sized array type
 
 > Array(<length\>)
 
@@ -397,7 +401,7 @@ log("foo") // logs "foo"
 log({a: 1, b: 2}) // logs Object {a: 1, b: 2}
 ```
 
-### Rest type
+### Rest arguments type
 
 > etc(<type\>)
 
@@ -422,34 +426,9 @@ average(2, true, 4) // TypeMismatch: Argument #2 should be of type 'Number' inst
 * **:warning:** Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
 * **:coffee:** CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented (yet) in floweret.
 
-### Constraints
-
-> constaint(<function\>)
-
-
-```js
-import { fn } from 'floweret'
-import constraint from 'floweret/types/constraint'
-
-Int = constraint(val => Number.isInteger(val))
-
-f = fn(
-  Int, String,
-  (n) => n + "eggs needed for that recipe"
-)
-
-f(2)   // "2 eggs needed for that recipe"
-f(2.5) // TypeMismatch: Argument #1 should be of type 'constrained by 'val => Number.isInteger(val)'' instead of Number 2.5.
-```
-
-* **:warning:** Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
-* **:coffee:** CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in floweret.
-
-*Documentation in progress…*
-
 ### Logical operators
 
-#### or
+#### Or
 
 > or( <type 1\>, <type 2\>, …, <type n\> )
 
@@ -469,7 +448,7 @@ import or from 'floweret/types/or'
 
 *Documentation in progress…*
 
-#### and
+#### And
 
 > and( <type 1\>, <type 2\>, …, <type n\> )
 
@@ -493,9 +472,7 @@ weeklyTotal([1, 1, 2, 2, 5, 5]) // Argument #1 should be of type ''array of 'Num
   import And from 'floweret/types/and'
   ```
 
-*Documentation in progress…*
-
-#### not
+#### Not
 
 > not( <type\> )
 
@@ -513,7 +490,32 @@ import not from 'floweret/types/not'
 
 *Documentation in progress…*
 
-### Tuple types
+### Constraint type
+
+> constraint(<function\>)
+
+You can quickly create new types using the `constraint` type, that takes a validation function as argument:
+
+```js
+import { fn } from 'floweret'
+import constraint from 'floweret/types/constraint'
+
+Int = constraint(value => Number.isInteger(value))
+
+f = fn(
+  Int, String,
+  (n) => n + "eggs needed for that recipe"
+)
+
+f(2)   // "2 eggs needed for that recipe"
+f(2.5) // TypeMismatch: Argument #1 should be of type 'constrained by 'val => Number.isInteger(val)'' instead of Number 2.5.
+```
+
+If you need more complex types have a look in the [Floweret-included types](#included-types) or create you own [custom types](#custom-types).
+
+### Included types
+
+#### Tuple
 
 > Tuple( <type 1\>, <type 2\>, …, <type n\> )
 
@@ -524,19 +526,19 @@ import Tuple from 'floweret/types/Tuple'
 
 *Documentation in progress…*
 
-### Typed Object
+#### Typed Object
 
 > TypedObject(<values type\>)
 
 *Documentation in progress…*
 
-### Typed Set
+#### Typed Set
 
 > TypedSet(<elements type\>)
 
 *Documentation in progress…*
 
-### Typed Map
+#### Typed Map
 
 > TypedMap(<values type\>)
 
@@ -545,6 +547,34 @@ or
 > TypedMap(<keys type\>, <values type\>)
 
 *Documentation in progress…*
+
+#### Integer
+
+> Integer(<maximum value\>)
+
+or
+
+> Integer(<minimum value\>, <maximum value\>)
+
+#### Natural
+
+
+> Natural(<maximum value\>)
+
+or
+
+> Natural(<minimum value\>, <maximum value\>)
+
+
+#### Sized string
+
+
+> SizedString(<maximum length\>)
+
+or
+
+> SizedString(<minimum length\>, <maximum length\>)
+
 
 ## Type composition
 
