@@ -6,7 +6,7 @@
 Floweret is a JavasScrit *runtime* signature type checker that is:
 
 * **Simple**: Native JavaScript types syntax.
-* **Lightweight**: 2.3 kb minified and gzipped. No dependencies.
+* **Lightweight**: 2.4 kb minified and gzipped. No dependencies.
 * **Fast**: Direct type comparison. No string to parse.
 * **Powerful**: Type composition, promises, rest parameters, logical operators and more…
 * **Customizable**: Create your own types for your own needs.
@@ -632,26 +632,26 @@ The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple f
 
 ```txt
 no-type-checking-benchmark.min.js.gz  258 bytes
-floweret-benchmark.min.js.gz          2669 bytes
+floweret-benchmark.min.js.gz          2756 bytes
 runtypes.min.js.gz                    3030 bytes
 flow-runtime-benchmark.min.js.gz      20233 bytes
 
 
 *** No type-checking ***
-10000 greets: 1.448ms
-10000 sums: 18.473ms
+10000 greets: 1.407ms
+10000 sums: 17.517ms
 
 *** Floweret ***
-10000 greets: 14.923ms
-10000 sums: 79.364ms
+10000 greets: 16.409ms
+10000 sums: 58.616ms
 
 *** Runtypes ***
-10000 greets: 14.299ms
-10000 sums: 42.691ms
+10000 greets: 12.065ms
+10000 sums: 40.742ms
 
 *** Flow-runtime ***
-10000 greets: 170.124ms
-10000 sums: 541.458ms
+10000 greets: 169.581ms
+10000 sums: 540.729ms
 ```
 
 ## License
