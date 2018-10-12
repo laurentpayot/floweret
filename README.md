@@ -629,14 +629,14 @@ Run the benchmark with:
 npm run benchmark
 ```
 
-The [sub-benchmarks](https://github.com/laurentpayot/floweret/tree/master/benchmark) are run from minified [Rollup](https://rollupjs.org) bundles (UMD) and call two simple functions several thousand times.
+For now we are benchmarking the folowing runtime type-checking systems:
 
-For now we have the following sub-benchmarks:
-
-* **no type-checking**: the reference result.
+* **no type-checking**: the reference results.
 * [**Floweret**](https://github.com/laurentpayot/floweret): you might know it if you are reading this.
 * [**Runtypes**](https://github.com/pelotom/runtypes): "Runtime validation for static types" (TypeScript-oriented)
 * [**Flow-runtime**](https://codemix.github.io/flow-runtime): "Flow-compatible runtime type system for JavaScript."
+
+The [sub-benchmarks](https://github.com/laurentpayot/floweret/tree/master/benchmark) are run from minified [Rollup](https://rollupjs.org) bundles (UMD) and call two simple functions several thousand times.
 
 Here are some results from a machine that scores around 21000 to the [Octane 2.0 JavaScript benchmark](https://chromium.github.io/octane/):
 
