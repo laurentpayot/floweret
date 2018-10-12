@@ -28,7 +28,7 @@ Floweret is a JavasScrit *runtime* signature type checker that is:
   * [Sized Array](#sized-array)
   * [Object type](#object-type)
   * [Class type](#class-type)
-  * [Promise type](#promise-type)
+  * [Promised type](#promised-type)
   * [Any type](#any-type)
   * [Rest type](#rest-type)
   * [Constraints](#constraints)
@@ -309,12 +309,12 @@ fullName({id: 1234, name: {first: 1, last: "Smith"}})
 
 ```js
 f = fn(
-  {x: Number, y: Number}, Number,
-  (coords) => coords.x + 2 * coords.y
+  {a: Number, b: Number}, Number,
+  (obj) => obj.a + obj.b
 )
 
-f({x: 1, y: 2})             // 5
-f({x: 1, y: 2, foo: "bar"}) // 5 (no error)
+f({a: 1, b: 2})             // 3
+f({a: 1, b: 2, foo: "bar"}) // 3 (no error)
 ```
 
 ### Class type
@@ -345,7 +345,7 @@ superficy("foo") // TypeMismatch: Argument #1 should be of type 'Rectangle' inst
 superficy({height: 10, width: 5}) // TypeMismatch: Argument #1 should be of type 'Rectangle' instead of Object.
 ```
 
-### Promise type
+### Promised type
 
 > Promise.resolve(<type\>)
 
@@ -355,28 +355,19 @@ or with the `promised` shortcut:
 >
 > promised(<type\>)
 
-Promised types are used for the *result type* of the function signature.
+Promised types are used for the *result* type of the function signature.
 
-You can use the `Promise` type for promises that resolve with a value of any type, but most of the time it is better to specify the type of the resolved value.
+You can use the `Promise` result type when a function returns a promise that can be of any type, but most of the time it is better to specify the type of the resolved value.
 
 For instance use the `Promise.resolve([Object, null])` type for a promise that will resolve with an object or the null value:
 
 ```js
-import { fn } from 'floweret'
-import promised from 'floweret/types/promised'
-
 const getUserById = fn(
   Number, Promise.resolve([Object, null]),
   function (id) {
     return new Promise(resolve => {
       // simulating slow database/network access
-      setTimeout(() => {
-        if (id === 0) {
-          resolve("anonymous") // erroneous line
-        } else {
-          resolve({id, name: "Bob"})
-        }
-      }, 1000)
+      setTimeout(() => id ? resolve({id, name: "Bob"}) : resolve("anonymous"), 1000)
     })
   }
 )
@@ -385,17 +376,23 @@ await getUserById(1234) // {id: 1234, name: "Bob"}
 await getUserById(0) // TypeMismatch: Result should be a promise of type 'Object or null' instead of String "anonymous".
 ```
 
-
-
 ### Any type
 
 > Any
 
+Use the `Any` type when a parameter or a result can be of any type:
+
 ```js
 import { fn, Any } from 'floweret'
-```
 
-*Documentation in progress…*
+const log = fn(
+  Any, undefined,
+  (x) => console.log(x)
+)
+
+log("foo") // logs "foo"
+log({a: 1, b: 2}) // logs Object {a: 1, b: 2}
+```
 
 ### Rest type
 
@@ -407,12 +404,20 @@ or (untyped)
 
 ```js
 import { fn, etc } from 'floweret'
+
+const average = fn(
+  etc(Number), [Number, NaN], // for Floweret NaN is NOT a Number (unlike JavaScript)
+  (...numbers) => numbers.reduce((acc, curr) => acc + curr, 0) / numbers.length
+)
+
+average()           // NaN (0/0)
+average(2, 6, 4)    // 4
+average([2, 6, 4])  // TypeMismatch: Argument #1 should be of type 'Number' instead of Array.
+average(2, true, 4) // TypeMismatch: Argument #2 should be of type 'Number' instead of Boolean true.
 ```
 
 * **:warning:** Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
-* **:coffee:** CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented in floweret.
-
-*Documentation in progress…*
+* **:coffee:** CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented (yet) in floweret.
 
 ### Constraints
 
