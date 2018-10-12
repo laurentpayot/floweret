@@ -310,13 +310,14 @@ fullName({id: 1234, name: {first: 1, last: "Smith"}})
 
 ```js
 f = fn(
-  {a: Number, b: Number}, Number,
-  (obj) => obj.a + obj.b
+  {a: Boolean, b: {x: Number, y: Number}, Number,
+  (obj) => obj.b.x + obj.b.y
 )
 
-f({a: 1, b: 2})             // 3
-f({a: 1, b: 2, foo: "bar"}) // 3 (no error)
-f({a: 1, foo: "bar"})       // TypeMismatch: Argument #1 should be an object with key 'b' of type 'Number' instead of undefined.
+f({a: true, b: {x: 1, y: 2}}) // 3
+f({a: true, b: {x: 1, y: 2}, foo: "bar"}) // 3 (no error)
+f({a: true, b: {x: 1, z: 2}}) // TypeMismatch: Argument #1 should be an object with key 'b.y' of type 'Number' instead of missing key 'y'.
+f({a: true, b: {x: 1, y: undefined}}) // TypeMismatch: Argument #1 should be an object with key 'b.y' of type 'Number' instead of undefined.
 ```
 
 ### Class type
@@ -601,26 +602,26 @@ The sub-benchmarks are run from minified Rollup bundles (UMD) with [two simple f
 
 ```txt
 no-type-checking-benchmark.min.js.gz  258 bytes
-floweret-benchmark.min.js.gz          2600 bytes
+floweret-benchmark.min.js.gz          2669 bytes
 runtypes.min.js.gz                    3030 bytes
 flow-runtime-benchmark.min.js.gz      20233 bytes
 
 
 *** No type-checking ***
-10000 greets: 1.423ms
-10000 sums: 17.827ms
+10000 greets: 1.448ms
+10000 sums: 18.473ms
 
 *** Floweret ***
-10000 greets: 14.278ms
-10000 sums: 77.677ms
+10000 greets: 14.923ms
+10000 sums: 79.364ms
 
 *** Runtypes ***
-10000 greets: 12.674ms
-10000 sums: 53.387ms
+10000 greets: 14.299ms
+10000 sums: 42.691ms
 
 *** Flow-runtime ***
-10000 greets: 174.898ms
-10000 sums: 557.707ms
+10000 greets: 170.124ms
+10000 sums: 541.458ms
 ```
 
 ## License

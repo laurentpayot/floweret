@@ -61,7 +61,8 @@ testTypes = (val, type) ->
 		for t in NATIVE_TYPES when not(t is type or Number.isNaN val and Number.isNaN type)
 
 warnSpy = sinon.spy(Type, 'warn')
-consoleWarnSilencer = sinon.stub(console, "warn")
+# Silencing console.warn by stubing it. Not restubing if testing with --watch option and tests are run again.
+sinon.stub(console, "warn") unless console.warn.restore # "duck typing" stub detection
 
 
 ###
@@ -1384,10 +1385,28 @@ describe "fn", ->
 				.to.throw("Argument #1 should be of type 'Number' instead of Object.")
 
 			it "should return an error with
-				'Argument number 1 should be an object with key 'a.c' of type 'String' instead of Number 1.'", ->
+				'Argument number 1 should be an object with key 'a.c' of type 'String' instead of Number 2.'", ->
 				f = fn {a: {b: Number, c: String}, d: Number}, Any, ->
 				expect(-> f(a: {b: 1, c: 2}, d: 3))
 				.to.throw("Argument #1 should be an object with key 'a.c' of type 'String' instead of Number 2.")
+
+			it "should return an error with
+				'Argument number 1 should be an object with key 'a.c' of type 'String' instead of missing key 'c'.'", ->
+				f = fn {a: {b: Number, c: String}, d: Number}, Any, ->
+				expect(-> f(a: {b: 1, x: 4}, d: 3))
+				.to.throw("Argument #1 should be an object with key 'a.c' of type 'String' instead of missing key 'c'.")
+
+			it "should return an error with
+				'Argument number 1 should be an object with key 'a.c' of type 'String' instead of undefined.'", ->
+				f = fn {a: {b: Number, c: String}, d: Number}, Any, ->
+				expect(-> f(a: {b: 1, c: undefined, x: 4}, d: 3))
+				.to.throw("Argument #1 should be an object with key 'a.c' of type 'String' instead of undefined.")
+
+			it "should return an error with
+				'Argument number 1 should be an object with key 'a.c' of type 'String' instead of Number 5.'", ->
+				f = fn {a: {b: Number, c: String}, d: Number}, Any, ->
+				expect(-> f(a: {b: 1, c: 5, x: 4}, d: 3))
+				.to.throw("Argument #1 should be an object with key 'a.c' of type 'String' instead of Number 5.")
 
 			it "should return an error with 'MyClass", ->
 				class MyClass

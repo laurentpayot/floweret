@@ -30,7 +30,10 @@ shouldBe = (val, type, promised=false) ->
 		when val?.constructor is Object and type?.constructor is Object
 			if Object.keys(type).length
 				[bp..., bv, bt] = badPath(val, type)
-				"an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}'#{io}#{typeValue(bv)}"
+				"an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}'#{io}#{\
+					if bv is undefined and (bk = bp[bp.length - 1]) not in \
+						Object.keys(bp[...-1].reduce(((acc, curr) -> acc[curr]), val))\
+					then "missing key '" + bk + "'" else typeValue(bv)}"
 			else
 				"an empty object#{io}a non-empty object"
 		else
