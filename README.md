@@ -433,11 +433,20 @@ average(2, true, 4) // TypeMismatch: Argument #2 should be of type 'Number' inst
 
 > or( <type 1\>, <type 2\>, …, <type n\> )
 
-This is the same as putting types into brackets, but more explicit.
+This is the same as the [union of types](#union-of-types) brackets notation, but more explicit.
 
 ```js
 import { fn } from 'floweret'
 import or from 'floweret/types/or'
+
+const size = fn(
+  or(String, Array), Number,
+  (x) => x.length
+)
+
+size("ab")       // 2
+size(['a', 'b']) // 2
+size({a: 'b'})   // TypeMismatch: Argument #1 should be of type 'String or Array' instead of Object.
 ```
 
 * **:coffee:** `or` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
@@ -446,8 +455,6 @@ import or from 'floweret/types/or'
   # CoffeeScript
   import Or from 'floweret/types/or'
   ```
-
-*Documentation in progress…*
 
 #### And
 
