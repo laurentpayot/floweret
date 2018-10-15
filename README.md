@@ -112,7 +112,7 @@ add = fn Number, Number, Number,
 > <native type\>
 
 All native JavaScript type constructors are allowed as type:
-`Number`, `String`, `Array`, `Object`, `Boolean`, `RegExp`, `undefined`, `null`, `Promise`, `Set`, `Map`, `WeakMap`, `WeakSet`, etc.
+`Number`, `String`, `Array`, `Object`, `Boolean`, `RegExp`, `undefined`, `null`, `Promise`, `Function`, `Set`, `Map`, `WeakMap`, `WeakSet`, etc.
 
 ```js
 const f = fn(
@@ -433,7 +433,7 @@ average(2, true, 4) // TypeMismatch: Argument #2 should be of type 'Number' inst
 
 > or( <type 1\>, <type 2\>, …, <type n\> )
 
-This is the same as the [union of types](#union-of-types) brackets notation, but more explicit.
+`or` is the same as the [union of types](#union-of-types) brackets notation, but more explicit.
 
 ```js
 import { fn } from 'floweret'
@@ -460,6 +460,8 @@ size({a: 'b'})   // TypeMismatch: Argument #1 should be of type 'String or Array
 
 > and( <type 1\>, <type 2\>, …, <type n\> )
 
+`and` is for intersection of types. It is useful with constraints or to specify typed arrays of a given length:
+
 ```js
 import { fn } from 'floweret'
 import and from 'floweret/types/and'
@@ -484,9 +486,19 @@ weeklyTotal([1, 1, 2, 2, 5, 5]) // Argument #1 should be of type ''array of 'Num
 
 > not( <type\> )
 
+'not' is the the complement type, i. e. for items not matching the type:
+
 ```js
 import { fn } from 'floweret'
 import not from 'floweret/types/not'
+
+const getConstructor = fn(
+  not([undefined, null]), Function,
+  (x) => x.constructor
+)
+
+getConstructor(1)    // function Number()
+getConstructor(null) // TypeMismatch: Argument #1 should be of type 'not 'undefined or null'' instead of null.
 ```
 
 * **:coffee:** `not` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
@@ -495,8 +507,6 @@ import not from 'floweret/types/not'
   # CoffeeScript
   import Not from 'floweret/types/not'
   ```
-
-*Documentation in progress…*
 
 ### Constraint type
 
