@@ -486,7 +486,7 @@ weeklyTotal([1, 1, 2, 2, 5, 5]) // Argument #1 should be of type ''array of 'Num
 
 > not( <type\> )
 
-'not' is the the complement type, i. e. for items not matching the type:
+`not` is the the complement type, i. e. for items not matching the type:
 
 ```js
 import { fn } from 'floweret'
