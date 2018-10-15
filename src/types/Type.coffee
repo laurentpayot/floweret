@@ -3,15 +3,13 @@ import {InvalidType} from '../errors'
 argsNb = (n) -> " #{n} argument#{if n is 1 then '' else 's'}."
 
 export default class Type
-	# static methods
-	@error: (msg) -> throw new InvalidType msg
-	@warn: (msg) -> console.warn("Floweret type:", msg) unless process?.env.NODE_ENV is 'production'
+	# static  method
 	@createHelper: (childClass) ->
 		h = -> new childClass(arguments...)
 		h.rootClass = Type
 		h
-	error: -> Type.error(arguments...)
-	warn: -> Type.warn(arguments...)
+	error: (msg) -> throw new InvalidType msg
+	warn: (msg) -> console.warn("Floweret type:", msg) unless process?.env.NODE_ENV is 'production'
 	argsMin: undefined
 	argsMax: undefined
 	constructor: ->

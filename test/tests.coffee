@@ -60,7 +60,7 @@ testTypes = (val, type) ->
 	expect(isValid(val, t)).to.be.false \
 		for t in NATIVE_TYPES when not(t is type or Number.isNaN val and Number.isNaN type)
 
-warnSpy = sinon.spy(Type, 'warn')
+warnSpy = sinon.spy(Type.prototype, 'warn')
 # Silencing console.warn by stubing it. Not restubing if testing with --watch option and tests are run again.
 sinon.stub(console, "warn") unless console.warn.restore # "duck typing" stub detection
 
