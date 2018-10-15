@@ -679,26 +679,26 @@ Here are some results from a machine that scores around 21000 to the [Octane 2.0
 
 ```txt
 no-type-checking-benchmark.min.js.gz  258 bytes
-floweret-benchmark.min.js.gz          2756 bytes
+floweret-benchmark.min.js.gz          2736 bytes
 runtypes.min.js.gz                    3030 bytes
 flow-runtime-benchmark.min.js.gz      20233 bytes
 
 
 *** No type-checking ***
-10000 greets: 1.407ms
-10000 sums: 17.517ms
+10000 greets: 1.442ms
+10000 sums: 17.552ms
 
 *** Floweret ***
-10000 greets: 16.409ms
-10000 sums: 58.616ms
+10000 greets: 16.193ms
+10000 sums: 56.540ms
 
 *** Runtypes ***
-10000 greets: 12.065ms
-10000 sums: 40.742ms
+10000 greets: 12.570ms
+10000 sums: 41.465ms
 
 *** Flow-runtime ***
-10000 greets: 169.581ms
-10000 sums: 540.729ms
+10000 greets: 167.345ms
+10000 sums: 544.452ms
 ```
 
 Feel free to make your own benchmarks and share the results.
