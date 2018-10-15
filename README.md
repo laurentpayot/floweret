@@ -540,9 +540,19 @@ If you need more complex types have a look in the [Floweret-included types](#inc
 ```js
 import { fn } from 'floweret'
 import Tuple from 'floweret/types/Tuple'
-```
 
-*Documentation in progress…*
+Coords = Tuple(Number, Number, Number) // latitude, longitude, altitude
+
+getLongitude = fn(
+  Coords, Number,
+  (c) => c[1]
+)
+
+getLongitude([10, 20, 5])   // 20
+getLongitude([10, 5])       // TypeMismatch: Argument #1 should be of type 'tuple of 3 elements 'Number, Number, Number'' instead of Array.
+getLongitude([10, 20, '5']) // TypeMismatch: Argument #1 should be of type 'tuple of 3 elements 'Number, Number, Number'' instead of Array.
+
+```
 
 #### Typed Object
 
@@ -576,23 +586,19 @@ or
 
 #### Natural
 
-
 > Natural(<maximum value\>)
 
 or
 
 > Natural(<minimum value\>, <maximum value\>)
 
-
 #### Sized string
-
 
 > SizedString(<maximum length\>)
 
 or
 
 > SizedString(<minimum length\>, <maximum length\>)
-
 
 ## Type composition
 
