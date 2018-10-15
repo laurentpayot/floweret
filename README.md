@@ -584,6 +584,8 @@ or
 
 > Integer(<minimum value\>, <maximum value\>)
 
+*Documentation in progress…*
+
 #### Natural
 
 > Natural(<maximum value\>)
@@ -591,6 +593,8 @@ or
 or
 
 > Natural(<minimum value\>, <maximum value\>)
+
+*Documentation in progress…*
 
 #### Sized string
 
@@ -622,7 +626,11 @@ Some handy utilities exported by the package.
 
 > isValid(<value\>, <type\>)
 
+`isValid` can tell if a value if of a given type. Useful for user input validation.
+
 ```js
+import { isValid } from 'floweret'
+
 isValid("abc", [Number, String]) // true
 ```
 
@@ -630,14 +638,20 @@ isValid("abc", [Number, String]) // true
 
 > typeOf(<value\>)
 
+The `typeOf` function is a replacement of the standard JavaScript `typeof` operator:
+
 ```js
-// standard JavaScript `typeof` keyword
+import { typeOf } from 'floweret'
+
+// standard JavaScript `typeof` operator
 typeof [1, 2] // 'object'
 typeof Promise.resolve(1) // 'object'
+typeof NaN // 'number'
 
 // more usefull results
 typeOf([1, 2]) // 'Array'
 typeOf(Promise.resolve(1)) // 'Promise'
+typeOf(NaN) // 'NaN'
 ```
 
 ## Features to come
