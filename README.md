@@ -518,11 +518,11 @@ You can quickly create new types using the `constraint` type, that takes a valid
 import { fn } from 'floweret'
 import constraint from 'floweret/types/constraint'
 
-Int = constraint(value => Number.isInteger(value))
+Int = constraint(val => Number.isInteger(val))
 
 f = fn(
   Int, String,
-  (n) => n + "eggs needed for that recipe"
+  n => n + "eggs needed for that recipe"
 )
 
 f(2)   // "2 eggs needed for that recipe"
@@ -606,12 +606,12 @@ or
 
 ## Type composition
 
-As the types are simply JavaScript expressions, you can assign any type to a variable and use it to create new types.
+As types are simply JavaScript expressions, you can assign any type to a variable and use it to create new types:
 
 ```js
-Phone = [Number, undefined]
-Name = {first: String, last: String, middle: [String, undefined]}
-User = {id: Number, name: Name, phone: Phone}
+const Phone = [Number, undefined]
+const Name = {first: String, last: String, middle: [String, undefined]}
+const User = {id: Number, name: Name, phone: Phone}
 ```
 
 ## Custom types
