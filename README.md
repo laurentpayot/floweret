@@ -626,7 +626,7 @@ Some handy utilities exported by the package.
 
 > isValid(<value\>, <type\>)
 
-`isValid` can tell if a value if of a given type. Useful for user input validation.
+`isValid` can tell if a value is of a given type. Useful for user input validation:
 
 ```js
 import { isValid } from 'floweret'
