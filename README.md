@@ -105,6 +105,34 @@ add = fn Number, Number, Number,
   (a, b) -> a + b
 ```
 
+The following [CoffeeScript's type annotations example](https://coffeescript.org/#type-annotations) (that needs Flow in the background)
+
+```coffee
+# @flow
+
+###::
+type Obj = {
+  num: number,
+};
+###
+
+f = (str ###: string ###, obj ###: Obj ###) ###: string ### ->
+  str + obj.num
+```
+
+can be rewritten with less "noise":
+
+```coffee
+import { fn } from 'floweret'
+
+Obj =
+  num: Number
+
+f = fn String, Obj, String,
+  (str, obj) ->
+    str + obj.num
+```
+
 ## Type syntax
 
 ### Native types
