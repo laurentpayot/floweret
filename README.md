@@ -579,14 +579,35 @@ getLongitude = fn(
 getLongitude([10, 20, 5])   // 20
 getLongitude([10, 5])       // TypeMismatch: Argument #1 should be of type 'tuple of 3 elements 'Number, Number, Number'' instead of Array.
 getLongitude([10, 20, '5']) // TypeMismatch: Argument #1 should be of type 'tuple of 3 elements 'Number, Number, Number'' instead of Array.
-
 ```
 
 #### Typed Object
 
 > TypedObject(<values type\>)
 
-*Documentation in progress…*
+```js
+import { fn } from 'floweret'
+import Tuple from 'floweret/types/Tuple'
+
+Grades = TypedObject(Number)
+
+maxGrade = fn(
+  Grades, Number,
+  (grades) => Math.max(...Object.values(grades))
+)
+
+maxGrade({
+    Alice: 8,
+    Larry: 8,
+    Bob: 9
+}) // 9
+
+maxGrade({
+    Alice: 8,
+    Larry: "B",
+    Bob: 9
+}) // TypeMismatch: Argument #1 should be of type 'object with values of type 'Number'' instead of Object.
+```
 
 #### Typed Set
 
