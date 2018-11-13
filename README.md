@@ -494,13 +494,13 @@ size({a: 'b'})   // TypeMismatch: Argument #1 should be of type 'String or Array
 import { fn } from 'floweret'
 import and from 'floweret/types/and'
 
-const weeklyTotal = fn(
+const weeklyMax = fn(
   and(Array(Number), Array(7)), Number,
-  (days) => days.reduce((acc, curr) => acc + curr)
+  (days) => Math.max(...days)
 )
 
-weeklyTotal([1, 1, 2, 2, 5, 5, 1]) // 17
-weeklyTotal([1, 1, 2, 2, 5, 5]) // Argument #1 should be of type ''array of 'Number'' and 'array of 7 elements'' instead of Array.
+weeklyMax([1, 1, 2, 2, 5, 5, 1]) // 5
+weeklyMax([1, 1, 2, 2, 5, 5]) // Argument #1 should be of type ''array of 'Number'' and 'array of 7 elements'' instead of Array.
 ```
 
 * **:coffee:** `and` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
@@ -546,9 +546,9 @@ You can quickly create new types using the `constraint` type, that takes a valid
 import { fn } from 'floweret'
 import constraint from 'floweret/types/constraint'
 
-Int = constraint(val => Number.isInteger(val))
+const Int = constraint(val => Number.isInteger(val))
 
-f = fn(
+const f = fn(
   Int, String,
   n => n + "eggs needed for that recipe"
 )
@@ -569,9 +569,9 @@ If you need more complex types have a look in the [Floweret-included types](#inc
 import { fn } from 'floweret'
 import Tuple from 'floweret/types/Tuple'
 
-Coords = Tuple(Number, Number, Number) // latitude, longitude, altitude
+const Coords = Tuple(Number, Number, Number) // latitude, longitude, altitude
 
-getLongitude = fn(
+const getLongitude = fn(
   Coords, Number,
   (c) => c[1]
 )
@@ -585,13 +585,16 @@ getLongitude([10, 20, '5']) // TypeMismatch: Argument #1 should be of type 'tupl
 
 > TypedObject(<values type\>)
 
+Typed object types are useful for object types with values of a given type.
+Key type is always `String`, just like normal objects.
+
 ```js
 import { fn } from 'floweret'
-import Tuple from 'floweret/types/Tuple'
+import TypedObject from 'floweret/types/TypedObject'
 
-Grades = TypedObject(Number)
+const Grades = TypedObject(Number)
 
-maxGrade = fn(
+const maxGrade = fn(
   Grades, Number,
   (grades) => Math.max(...Object.values(grades))
 )
@@ -612,6 +615,19 @@ maxGrade({
 #### Typed Set
 
 > TypedSet(<elements type\>)
+
+```js
+import { fn } from 'floweret'
+import TypedSet from 'floweret/types/TypedSet'
+
+var tags = new Set([1, 2])
+
+
+const maxGrade = fn(
+  TypedSet, Number,
+  (grades) => Math.max(...grades)
+)
+```
 
 *Documentation in progress…*
 
