@@ -620,16 +620,14 @@ maxGrade({
 import { fn } from 'floweret'
 import TypedSet from 'floweret/types/TypedSet'
 
-var tags = new Set([1, 2])
-
-
-const maxGrade = fn(
-  TypedSet, Number,
-  (grades) => Math.max(...grades)
+const isSalty = fn(
+  TypedSet(String), Boolean,
+    (ingredients) => [...ingredients].includes('salt')
 )
-```
 
-*Documentation in progress…*
+isSalty(new Set(["chocolate", "salt", "banana"])) // true
+isSalty(new Set(["chocolate", "salt", 100])) // Error: Argument #1 should be of type 'set of 'String'' instead of Set.
+```
 
 #### Typed Map
 
