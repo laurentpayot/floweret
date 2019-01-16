@@ -58,11 +58,11 @@
     "rollup": "^1.1.0",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-gzip": "^2.2.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-terser": "^3.0.0",
-    "runtypes": "^2.2.0",
-    "sinon": "^6.3.5",
-    "size-limit": "^0.20.1"
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-terser": "^4.0.2",
+    "runtypes": "^3.1.2",
+    "sinon": "^7.2.2",
+    "size-limit": "^0.21.1"
   },
   "size-limit": [
     {
