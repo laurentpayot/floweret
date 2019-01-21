@@ -10,7 +10,7 @@ import {
 	maybe # exported because generally always used
 } from '../src'
 import {
-	Type, promised, constraint,
+	Type, promised, constraint, foreign,
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
 } from '../src/types/_index'
@@ -931,6 +931,19 @@ describe "isValid", ->
 					expect(isValid(new Map([[1, val]]), TypedMap([String, Number]))).to.be.false \
 						for val in VALUES when typeof val isnt 'string' and typeof val isnt 'number'
 
+	context "Foreign Type", ->
+
+		it "should return true when value is an instance of the foreign constructor", ->
+			class Foo extends String
+			foo = new Foo('foo')
+			expect(isValid(foo, foreign('Foo'))).to.be.true
+
+		it "should return false when value is not an instance of the foreign constructor", ->
+			class Foo extends String
+			foo = new Foo('foo')
+			expect(isValid(foo, foreign('Bar'))).to.be.false
+			expect(isValid('baz', foreign('Foo'))).to.be.false
+
 	context "Promised type", ->
 
 		it "should throw an error for a promised number.", ->
@@ -1758,6 +1771,12 @@ describe "fn", ->
 				.to.throw("Argument #1 should be of type
 							'constrained by 'function (val) {\n          return Number.isInteger(val);\n        }''
 							instead of Number 2.5.")
+
+		context "Foreign", ->
+
+			it "should return an error with 'foreign'", ->
+				f = fn foreign('Foo'), Any, ->
+				expect(-> f(true)).to.throw("Argument #1 should be of type 'foreign type Foo' instead of Boolean true.")
 
 		context "Result", ->
 

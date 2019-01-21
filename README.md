@@ -45,6 +45,7 @@ Floweret is a JavasScrit *runtime* signature type checker that is:
     * [Integer](#integer)
     * [Natural](#natural)
     * [Sized string](#sized-string)
+  * [Foreign types](#foreign-types)
 * [Type composition](#type-composition)
 * [Custom types](#custom-types)
 * [Type tools](#type-tools)
@@ -622,7 +623,7 @@ import TypedSet from 'floweret/types/TypedSet'
 
 const isSalty = fn(
   TypedSet(String), Boolean,
-    (ingredients) => [...ingredients].includes('salt')
+  (ingredients) => [...ingredients].includes('salt')
 )
 
 isSalty(new Set(["chocolate", "salt", "banana"])) // true
@@ -666,6 +667,28 @@ or
 or
 
 > SizedString(<minimum length\>, <maximum length\>)
+
+### Foreign types
+
+> foreign(<foreign type name\>)
+
+Sometimes when you use external libraries you have to handle instances whithout having access to their classes definitions. You can use the `foreign` operator to check that the instance constructor is of the expected type.
+
+Here is a Firebase example where we wrap the [createUser](https://firebase.google.com/docs/reference/admin/node/admin.auth.Auth#createUser)
+function that returns a promise of a *Firebase-defined* `UserRecord` instance:
+
+```js
+import { fn } from 'floweret'
+import foreign from 'floweret/types/foreign'
+
+import * as admin from 'firebase-admin'
+admin.initializeApp(/* your Firebase config */)
+
+export createUser = fn(
+  Object, Promise.resolve(foreign('UserRecord')),
+  (data) => admin.auth().createUser(data).catch((err) => console.error("User Creation:", err.message))
+)
+```
 
 ## Type composition
 
