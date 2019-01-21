@@ -771,20 +771,20 @@ flow-runtime-benchmark.min.js.gz      20208 bytes
 
 
 *** No type-checking ***
-10000 greets: 1.435ms
-10000 sums: 17.821ms
+10000 greets: 1.413ms
+10000 sums: 17.761ms
 
 *** Floweret ***
-10000 greets: 16.930ms
-10000 sums: 61.166ms
+10000 greets: 15.092ms
+10000 sums: 56.467ms
 
 *** Runtypes ***
-10000 greets: 12.346ms
-10000 sums: 41.291ms
+10000 greets: 13.030ms
+10000 sums: 41.928ms
 
 *** Flow-runtime ***
-10000 greets: 194.436ms
-10000 sums: 560.798ms
+10000 greets: 190.597ms
+10000 sums: 551.520ms
 ```
 
 Feel free to make your own benchmarks and share the results.
