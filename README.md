@@ -6,11 +6,11 @@
 
 Floweret is a JavasScrit *runtime* signature type checker that is:
 
-* **Simple**: Native JavaScript types syntax.
-* **Lightweight**: 2.4 kb minified and gzipped. No dependencies.
-* **Fast**: Direct type comparison. No string to parse.
+* **Intuitive**: Native JavaScript types syntax.
 * **Powerful**: Type composition, promises, rest parameters, logical operators and more…
 * **Customizable**: Create your own types for your own needs.
+* **Lightweight**: 2.4 kb minified and gzipped. No dependencies.
+* **Fast**: Direct type comparison. No string to parse.
 
 ## Contents
 
