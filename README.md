@@ -106,7 +106,7 @@ add = fn Number, Number, Number,
   (a, b) -> a + b
 ```
 
-The following [CoffeeScript's type annotations example](https://coffeescript.org/#type-annotations) (that needs Flow in the background)
+The following [CoffeeScript's type annotations example](https://coffeescript.org/#type-annotations) (that needs [Flow](https://flow.org/) in the background)
 
 ```coffee
 # @flow
@@ -207,7 +207,9 @@ f(1, true) // TypeMismatch: Argument #2 should be of type 'Number or String' ins
 
 > maybe( <type\> )
 
-This is simply a shortcut to the union `[undefined, null, <type>]`. Usefull for optional parameters of a function.
+Usefull for optional parameters of a function. This is simply a shortcut to the union `[undefined, <type>]`.
+
+* **:warning:** Unlike [Flow's maybe types](https://flow.org/en/docs/types/maybe/), a `null` value will generate an error, as it should.
 
 ```js
 import { fn, maybe } from 'floweret'
@@ -217,9 +219,10 @@ const f = fn(
   (a, b=0) => a + b
 )
 
-f(5)      // 5
-f(5, 1)   // 6
-f(5, '1') // TypeMismatch: Argument #2  should be of type 'undefined or null or Number' instead of String "1".
+f(5)       // 5
+f(5, 1)    // 6
+f(5, '1')  // TypeMismatch: Argument #2  should be of type 'undefined or Number' instead of String "1".
+f(5, null) // TypeMismatch: Argument #2 should be of type 'undefined or Number' instead of null.
 ```
 
 ### Literal type
@@ -765,7 +768,7 @@ Here are some results from a machine that scores around 21000 to the [Octane 2.0
 
 ```txt
 no-type-checking-benchmark.min.js.gz  229 bytes
-floweret-benchmark.min.js.gz          2719 bytes
+floweret-benchmark.min.js.gz          2733 bytes
 runtypes.min.js.gz                    5916 bytes
 flow-runtime-benchmark.min.js.gz      20208 bytes
 

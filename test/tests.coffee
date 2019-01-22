@@ -23,36 +23,36 @@ VALUES = [
 	undefined
 	null
 	NaN
-	1.1 # number
-	0 # number
-	Infinity # number
-	-Infinity # number
-	true # boolean
-	false # boolean
-	"" # string
-	"a" # string
-	" " # string
-	"Énorme !" # string
-	[] #array
-	[1] #array
-	[undefined] #array
-	Array(1) #array
-	Array(2) #array
-	Array(3) #array
-	[1, 'a', null, undefined] #array
-	new Int8Array([1, 2]) # typed array
-	{} # object
-	{foo: 'bar'} # object
-	{name: 'Number'} # tricky object
-	{a: 1, b: {a: 2, b: null, c: '3'}} # object
+	1.1
+	0
+	Infinity
+	-Infinity
+	true
+	false
+	""
+	"a"
+	" "
+	"Énorme !"
+	[]
+	[1]
+	[undefined]
+	Array(1)
+	Array(2)
+	Array(3)
+	[1, 'a', null, undefined]
+	new Int8Array([1, 2])
+	{}
+	{foo: 'bar'}
+	{name: 'Number'}
+	{a: 1, b: {a: 2, b: null, c: '3'}}
 	new Date()
-	(->) # function
-	new Promise(->) # promise
-	new Set([]) # set
+	(->)
+	new Promise(->)
+	new Set([])
 	new Set([1, 2])
-	new Map([]) # map
+	new Map([])
 	new Map([[ 1, 'one' ], [ 2, 'two' ]])
-	Symbol('foo') # symbol
+	Symbol('foo')
 ]
 
 testTypes = (val, type) ->
@@ -215,40 +215,45 @@ describe "isValid", ->
 
 			it "maybe(Any) should not return Any type.", ->
 				warnSpy.resetHistory()
-				expect(maybe(Any)).to.eql([undefined, null, Any])
+				expect(maybe(Any)).to.eql([undefined, Any])
 				expect(warnSpy.calledOnceWithExactly(
 					"Any is not needed as 'maybe' argument."
 				)).to.be.true
 
 			it "maybe(Any()) should not return Any type.", ->
 				warnSpy.resetHistory()
-				expect(maybe(Any())).to.eql([undefined, null, Any()])
+				expect(maybe(Any())).to.eql([undefined, Any()])
 				expect(warnSpy.calledOnceWithExactly(
 					"Any is not needed as 'maybe' argument."
 				)).to.be.true
 
 			it "maybe should throw an error when used as with more than 1 argument", ->
 				expect(-> isValid(1, maybe(Number, String)))
-				.to.throw("'maybe' must have exactly 1 argument")
+				.to.throw("'maybe' must have exactly 1 argument.")
 
-			it "should return true when value is undefined or null.", ->
-				for t in NATIVE_TYPES
-					expect(isValid(undefined, maybe(t))).to.be.true
-					expect(isValid(null, maybe(t))).to.be.true
+			it "maybe(undefined) should throw an error", ->
+				expect(-> isValid(1, maybe(undefined)))
+				.to.throw("'maybe' argument cannot be undefined.")
+
+			it "should return true when value is undefined.", ->
+				expect(isValid(undefined, maybe(t))).to.be.true for t in NATIVE_TYPES when t isnt undefined
+
+			it "should return true for a null type, false for other types.", ->
+				expect(isValid(null, maybe(null))).to.be.true
+				expect(isValid(null, maybe(t))).to.be.false for t in NATIVE_TYPES when t isnt undefined and t isnt null
 
 			it "should return true for a number type, false for other types.", ->
 				expect(isValid(1.1, maybe(Number))).to.be.true
-				expect(isValid(1.1, maybe(t))).to.be.false for t in NATIVE_TYPES when t and t isnt Number
+				expect(isValid(1.1, maybe(t))).to.be.false for t in NATIVE_TYPES when t isnt undefined and t isnt Number
 
 			it "should return true for a string type, false for other types.", ->
 				expect(isValid("Énorme !", maybe(String))).to.be.true
-				expect(isValid("Énorme !", maybe(t))).to.be.false for t in NATIVE_TYPES when t and t isnt String
+				expect(isValid("Énorme !", maybe(t))).to.be.false for t in NATIVE_TYPES when t isnt undefined and t isnt String
 
-			it "should return true for a Number or a String or undefined or null, when union is used", ->
+			it "should return true for a Number or a String or undefined, when union is used", ->
 				expect(isValid(1, maybe([Number, String]))).to.be.true
 				expect(isValid('1', maybe([Number, String]))).to.be.true
 				expect(isValid(undefined, maybe([Number, String]))).to.be.true
-				expect(isValid(null, maybe([Number, String]))).to.be.true
 
 			it "maybe() should throw an error when type is ommited", ->
 				expect(-> isValid(1, maybe()))
