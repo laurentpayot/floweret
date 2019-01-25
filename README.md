@@ -171,14 +171,14 @@ Use `undefined` as the result type when the function returns nothing (undefined)
 
 ```js
 const logInfo = fn(
-  String, undefined
+  String, undefined,
   function (msg) {console.log("Info:", msg)}
 )
 
 logInfo("Boo.") // logs "Info: Boo.", returns undefined
 
 const logHi = fn(
-  undefined
+  undefined,
   function () {console.log("Hi")}
 )
 
