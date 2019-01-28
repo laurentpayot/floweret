@@ -59,7 +59,7 @@
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-gzip": "^2.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
-    "rollup-plugin-terser": "^4.0.2",
+    "rollup-plugin-terser": "^4.0.3",
     "runtypes": "^3.1.2",
     "sinon": "^7.2.3",
     "size-limit": "^0.21.1"
