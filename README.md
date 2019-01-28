@@ -630,7 +630,7 @@ const isSalty = fn(
 )
 
 isSalty(new Set(["chocolate", "salt", "banana"])) // true
-isSalty(new Set(["chocolate", "salt", 100])) // Error: Argument #1 should be of type 'set of 'String'' instead of Set.
+isSalty(new Set(["chocolate", "salt", 100])) // TypeMismatch: Argument #1 should be of type 'set of 'String'' instead of Set.
 ```
 
 #### Typed Map
