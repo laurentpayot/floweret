@@ -279,7 +279,7 @@ const dashJoin = fn(
 )
 
 dashJoin(["a", "b", "c"]) // a-b-c
-dashJoin(["a", "b", 3])   // Argument #1 should be an array with element 2 of type 'String' instead of Number 3.
+dashJoin(["a", "b", 3])   // TypeMismatch: Argument #1 should be an array with element 2 of type 'String' instead of Number 3.
 ```
 
 * **:warning:** If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`).
@@ -504,7 +504,7 @@ const weeklyMax = fn(
 )
 
 weeklyMax([1, 1, 2, 2, 5, 5, 1]) // 5
-weeklyMax([1, 1, 2, 2, 5, 5]) // Argument #1 should be of type ''array of 'Number'' and 'array of 7 elements'' instead of Array.
+weeklyMax([1, 1, 2, 2, 5, 5]) // TypeMismatch: Argument #1 should be of type ''array of 'Number'' and 'array of 7 elements'' instead of Array.
 ```
 
 * **:coffee:** `and` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
