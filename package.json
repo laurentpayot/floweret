@@ -1,6 +1,6 @@
 {
   "name": "floweret",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Fully featured runtime signature type checker using native JavaScript types.",
   "author": "Laurent Payot",
   "license": "MIT",
