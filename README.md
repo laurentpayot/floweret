@@ -262,7 +262,7 @@ showEmail('laurent@example.com', "Hi", "Hello!")
 showEmail('laurent.example.com', "Hi", "Hello!")
 ```
 
-* **:warning:** Regular expressions are slow so if you need to check a lot of data consider creating a custom type (see below) with a `validate` method using String prototype methods instead.
+* **:warning:** Regular expressions are slow so if you need to check a lot of data consider using a [constraint type](#constraint-type) with String prototype methods instead.
 
 ### Typed array type
 
