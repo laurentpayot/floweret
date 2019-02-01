@@ -247,8 +247,6 @@ turn('light') // TypeMismatch: Argument #1 should be of type 'literal String "le
 
 When the type is a regular expression, if the value is a string it will be tested to see if it matches the regular expression.
 
-* **:warning:** Regular expressions are slow so if you need to check a lot of data consider creating a custom type (see below) with a `validate` method using String prototype methods instead.
-
 ```js
 const Email = /\S+@\S+\.\S+/ // simple email RegExp, do not use in production
 
@@ -263,6 +261,8 @@ showEmail('laurent@example.com', "Hi", "Hello!")
 // TypeMismatch: Argument #1 should be of type 'string matching regular expression /\S+@\S+\.\S+/' instead of String "laurent.example.com".
 showEmail('laurent.example.com', "Hi", "Hello!")
 ```
+
+* **:warning:** Regular expressions are slow so if you need to check a lot of data consider creating a custom type (see below) with a `validate` method using String prototype methods instead.
 
 ### Typed array type
 
