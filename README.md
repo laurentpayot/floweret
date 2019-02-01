@@ -314,7 +314,7 @@ Note that you can use the empty array `[]` for an array of size 0 type, if you e
 You can specify the types of an object values, at any depth.
 
 ```js
-userType = {
+const userType = {
   id: Number,
   name: {
     first: String,
@@ -323,12 +323,12 @@ userType = {
   }
 }
 
-fullName = fn(
+const fullName = fn(
   userType, String,
   (user) => Object.keys(user.name).join(' ')
 )
 
-Bob = {
+let Bob = {
   id: 1234,
   name: {
     first: "Robert",
@@ -346,7 +346,7 @@ fullName({id: 1234, name: {first: 1, last: "Smith"}})
 * **:warning:** If values of an object argument match all the keys types of the object type, **the argument will be accepted even if it has more keys than the object type** (except if type is the empty object `{}`):
 
 ```js
-f = fn(
+const f = fn(
   {a: Boolean, b: {x: Number, y: Number}}, Number,
   (obj) => obj.b.x + obj.b.y
 )
@@ -373,7 +373,7 @@ class Rectangle {
 
 // Of course it would be better to have superficy() as a Rectangle method,
 // but that is not the point…
-let superficy = fn(
+const superficy = fn(
   Rectangle, Number,
   (rect) => rect.height * rect.width
 )
