@@ -693,21 +693,25 @@ admin.initializeApp(/* your Firebase config */)
 
 export createUser = fn(
   Object, Promise.resolve(foreign('UserRecord')),
-  (data) => admin.auth().createUser(data).catch((err) => console.error("User Creation:", err.message))
+  (data) => admin.auth().createUser(data)
+            .catch((err) => console.error("User Creation:", err.message))
 )
 ```
 
-Sometimes you cannot use the foreign class name because it has been mangled by a minifier and is subject to change. In such a case you can use the `foreign` operator with an [Object type](#object-type) argument to do some *duck typing*.
-The above example could be:
+Sometimes you cannot use the foreign class name because it has been mangled by a minifier and is subject to change. In such a case you can use the `foreign` operator with an [Object type](#object-type) argument to do some *duck typing* with some (not necessarily all) properties of the foreign type instance.
+The above example could end with:
 
 ```js
-export createUser = fn(
-  Object, Promise.resolve(foreign({
+const UserRecord = foreign({
     uid: String,
     emailVerified: Boolean,
     disabled: Boolean
-  })),
-  (data) => admin.auth().createUser(data).catch((err) => console.error("User Creation:", err.message))
+  })
+
+export createUser = fn(
+  Object, Promise.resolve(UserRecord),
+  (data) => admin.auth().createUser(data)
+            .catch((err) => console.error("User Creation:", err.message))
 )
 ```
 
