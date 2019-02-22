@@ -954,7 +954,9 @@ describe "isValid", ->
 				bar: true
 				baz: 0
 			foo = new Foo('foo')
+			expect(isValid(foo, foreign({bar: Boolean}))).to.be.true
 			expect(isValid(foo, foreign({bar: Boolean, baz: Number}))).to.be.true
+			expect(isValid(foo, foreign({bar: Boolean, baz: Number, boo: undefined}))).to.be.true
 
 		it "should return false when value has not the same property types", ->
 			class Foo extends String
@@ -962,6 +964,8 @@ describe "isValid", ->
 				baz: 0
 			foo = new Foo('foo')
 			expect(isValid(foo, foreign({bar: Boolean, baz: String}))).to.be.false
+			expect(isValid(foo, foreign({bar: Boolean, baz: Number, boo: String}))).to.be.false
+			expect(isValid(foo, foreign({bar: Boolean, baz: Number, boo: String}))).to.be.false
 
 	context "Promised type", ->
 
