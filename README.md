@@ -675,6 +675,10 @@ or
 
 > foreign(<foreign type name\>)
 
+or
+
+> foreign(<object type\>)
+
 Sometimes when you use external libraries you have to handle instances whithout having access to their classes definitions. You can use the `foreign` operator to check that the instance constructor is of the expected type.
 
 Here is a Firebase example where we wrap the [createUser](https://firebase.google.com/docs/reference/admin/node/admin.auth.Auth#createUser)
@@ -689,6 +693,20 @@ admin.initializeApp(/* your Firebase config */)
 
 export createUser = fn(
   Object, Promise.resolve(foreign('UserRecord')),
+  (data) => admin.auth().createUser(data).catch((err) => console.error("User Creation:", err.message))
+)
+```
+
+Sometimes you cannot use the foreign class name because it has been mangled by a minifier and is subject to change. In such a case you can use the `foreign` operator with an [Object type](#object-type) argument to do some *duck typing*.
+The above example could be:
+
+```js
+export createUser = fn(
+  Object, Promise.resolve(foreign({
+    uid: String,
+    emailVerified: Boolean,
+    disabled: Boolean
+  })),
   (data) => admin.auth().createUser(data).catch((err) => console.error("User Creation:", err.message))
 )
 ```

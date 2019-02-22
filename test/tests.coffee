@@ -949,6 +949,20 @@ describe "isValid", ->
 			expect(isValid(foo, foreign('Bar'))).to.be.false
 			expect(isValid('baz', foreign('Foo'))).to.be.false
 
+		it "should return true when value has the same property types", ->
+			class Foo extends String
+				bar: true
+				baz: 0
+			foo = new Foo('foo')
+			expect(isValid(foo, foreign({bar: Boolean, baz: Number}))).to.be.true
+
+		it "should return false when value has not the same property types", ->
+			class Foo extends String
+				bar: true
+				baz: 0
+			foo = new Foo('foo')
+			expect(isValid(foo, foreign({bar: Boolean, baz: String}))).to.be.false
+
 	context "Promised type", ->
 
 		it "should throw an error for a promised number.", ->
@@ -1779,9 +1793,13 @@ describe "fn", ->
 
 		context "Foreign", ->
 
-			it "should return an error with 'foreign'", ->
+			it "should return an error with 'foreign type'", ->
 				f = fn foreign('Foo'), Any, ->
 				expect(-> f(true)).to.throw("Argument #1 should be of type 'foreign type Foo' instead of Boolean true.")
+
+			it "should return an error with 'foreign type with typed properties'", ->
+				f = fn foreign({a: Number}), Any, ->
+				expect(-> f(true)).to.throw("Argument #1 should be of type 'foreign type with typed properties' instead of Boolean true.")
 
 		context "Result", ->
 
