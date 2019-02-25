@@ -150,7 +150,7 @@ const f = fn(
 )
 
 f(1, 'a') // [1, 'a']
-f(1, 5)   // TypeMismatch: Argument #2  should be of type 'String' instead of Number 5.
+f(1, 5)   // TypeError: Argument #2 should be of type 'String' instead of Number 5.
 ```
 
 ### Absence of type
@@ -164,7 +164,7 @@ const returnHi = fn(
 )
 
 returnHi()  // Hi
-returnHi(1) // TypeMismatch: Too many arguments provided.
+returnHi(1) // TypeError: Too many arguments provided.
 ```
 
 Use `undefined` as the result type when the function returns nothing (undefined):
@@ -200,7 +200,7 @@ const f = fn(
 
 f(1, 2)    // '12'
 f(1, '2')  // '12'
-f(1, true) // TypeMismatch: Argument #2 should be of type 'Number or String' instead of Boolean true.
+f(1, true) // TypeError: Argument #2 should be of type 'Number or String' instead of Boolean true.
 ```
 
 ### Maybe type
@@ -221,8 +221,8 @@ const f = fn(
 
 f(5)       // 5
 f(5, 1)    // 6
-f(5, '1')  // TypeMismatch: Argument #2  should be of type 'undefined or Number' instead of String "1".
-f(5, null) // TypeMismatch: Argument #2 should be of type 'undefined or Number' instead of null.
+f(5, '1')  // TypeError: Argument #2  should be of type 'undefined or Number' instead of String "1".
+f(5, null) // TypeError: Argument #2 should be of type 'undefined or Number' instead of null.
 ```
 
 ### Literal type
@@ -238,7 +238,7 @@ const turn = fn(
 )
 
 turn('left')  // "turning left"
-turn('light') // TypeMismatch: Argument #1 should be of type 'literal String "left" or literal String "right"' instead of String "light".
+turn('light') // TypeError: Argument #1 should be of type 'literal String "left" or literal String "right"' instead of String "light".
 ```
 
 ### Regular Expression type
@@ -258,7 +258,7 @@ const showEmail = fn(
 // nice email display
 showEmail('laurent@example.com', "Hi", "Hello!")
 
-// TypeMismatch: Argument #1 should be of type 'string matching regular expression /\S+@\S+\.\S+/' instead of String "laurent.example.com".
+// TypeError: Argument #1 should be of type 'string matching regular expression /\S+@\S+\.\S+/' instead of String "laurent.example.com".
 showEmail('laurent.example.com', "Hi", "Hello!")
 ```
 
@@ -279,7 +279,7 @@ const dashJoin = fn(
 )
 
 dashJoin(["a", "b", "c"]) // a-b-c
-dashJoin(["a", "b", 3])   // TypeMismatch: Argument #1 should be an array with element 2 of type 'String' instead of Number 3.
+dashJoin(["a", "b", 3])   // TypeError: Argument #1 should be an array with element 2 of type 'String' instead of Number 3.
 ```
 
 * **:warning:** If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`).
@@ -301,7 +301,7 @@ const pokerHand = fn(
 )
 
 pokerHand([7, 9, "Q", "K", 1])     // 7-9-Q-K-1
-pokerHand([7, 9, 10, "Q", "K", 1]) // TypeMismatch: Argument #1 should be an array with a length of 5 instead of 6.
+pokerHand([7, 9, 10, "Q", "K", 1]) // TypeError: Argument #1 should be an array with a length of 5 instead of 6.
 ```
 
 Sized array type is useful when used in conjunction with a typed array type, thanks to the [`and` operator](#and).
@@ -339,7 +339,7 @@ let Bob = {
 // "Robert Smith"
 fullName(Bob)
 
-// TypeMismatch: Argument #1 should be an object with key 'name.first' of type 'String' instead of Number 1.
+// TypeError: Argument #1 should be an object with key 'name.first' of type 'String' instead of Number 1.
 fullName({id: 1234, name: {first: 1, last: "Smith"}})
 ```
 
@@ -353,8 +353,8 @@ const f = fn(
 
 f({a: true, b: {x: 1, y: 2}}) // 3
 f({a: true, b: {x: 1, y: 2}, foo: "bar"}) // 3 (no error)
-f({a: true, b: {x: 1, z: 2}}) // TypeMismatch: Argument #1 should be an object with key 'b.y' of type 'Number' instead of missing key 'y'.
-f({a: true, b: {x: 1, y: undefined}}) // TypeMismatch: Argument #1 should be an object with key 'b.y' of type 'Number' instead of undefined.
+f({a: true, b: {x: 1, z: 2}}) // TypeError: Argument #1 should be an object with key 'b.y' of type 'Number' instead of missing key 'y'.
+f({a: true, b: {x: 1, y: undefined}}) // TypeError: Argument #1 should be an object with key 'b.y' of type 'Number' instead of undefined.
 ```
 
 ### Class type
@@ -381,8 +381,8 @@ const superficy = fn(
 let myRect = new Rectangle(10, 5)
 
 superficy(myRect) // 50
-superficy("foo") // TypeMismatch: Argument #1 should be of type 'Rectangle' instead of String "foo".
-superficy({height: 10, width: 5}) // TypeMismatch: Argument #1 should be of type 'Rectangle' instead of Object.
+superficy("foo") // TypeError: Argument #1 should be of type 'Rectangle' instead of String "foo".
+superficy({height: 10, width: 5}) // TypeError: Argument #1 should be of type 'Rectangle' instead of Object.
 ```
 
 ### Promised type
@@ -413,7 +413,7 @@ const getUserById = fn(
 )
 
 await getUserById(1234) // {id: 1234, name: "Bob"}
-await getUserById(0) // TypeMismatch: Result should be a promise of type 'Object or null' instead of String "anonymous".
+await getUserById(0) // TypeError: Result should be a promise of type 'Object or null' instead of String "anonymous".
 ```
 
 ### Any type
@@ -452,8 +452,8 @@ const average = fn(
 
 average()           // NaN (0/0)
 average(2, 6, 4)    // 4
-average([2, 6, 4])  // TypeMismatch: Argument #1 should be of type 'Number' instead of Array.
-average(2, true, 4) // TypeMismatch: Argument #2 should be of type 'Number' instead of Boolean true.
+average([2, 6, 4])  // TypeError: Argument #1 should be of type 'Number' instead of Array.
+average(2, true, 4) // TypeError: Argument #2 should be of type 'Number' instead of Boolean true.
 ```
 
 * **:warning:** Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
@@ -478,7 +478,7 @@ const size = fn(
 
 size("ab")       // 2
 size(['a', 'b']) // 2
-size({a: 'b'})   // TypeMismatch: Argument #1 should be of type 'String or Array' instead of Object.
+size({a: 'b'})   // TypeError: Argument #1 should be of type 'String or Array' instead of Object.
 ```
 
 * **:coffee:** `or` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
@@ -504,7 +504,7 @@ const weeklyMax = fn(
 )
 
 weeklyMax([1, 1, 2, 2, 5, 5, 1]) // 5
-weeklyMax([1, 1, 2, 2, 5, 5]) // TypeMismatch: Argument #1 should be of type ''array of 'Number'' and 'array of 7 elements'' instead of Array.
+weeklyMax([1, 1, 2, 2, 5, 5]) // TypeError: Argument #1 should be of type ''array of 'Number'' and 'array of 7 elements'' instead of Array.
 ```
 
 * **:coffee:** `and` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
@@ -530,7 +530,7 @@ const getConstructor = fn(
 )
 
 getConstructor(1)    // function Number()
-getConstructor(null) // TypeMismatch: Argument #1 should be of type 'not 'undefined or null'' instead of null.
+getConstructor(null) // TypeError: Argument #1 should be of type 'not 'undefined or null'' instead of null.
 ```
 
 * **:coffee:** `not` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
@@ -558,7 +558,7 @@ const f = fn(
 )
 
 f(2)   // "2 eggs needed for that recipe"
-f(2.5) // TypeMismatch: Argument #1 should be of type 'constrained by 'val => Number.isInteger(val)'' instead of Number 2.5.
+f(2.5) // TypeError: Argument #1 should be of type 'constrained by 'val => Number.isInteger(val)'' instead of Number 2.5.
 ```
 
 If you need more complex types have a look in the [Floweret-included types](#included-types) or create you own [custom types](#custom-types).
@@ -581,8 +581,8 @@ const getLongitude = fn(
 )
 
 getLongitude([10, 20, 5])   // 20
-getLongitude([10, 5])       // TypeMismatch: Argument #1 should be of type 'tuple of 3 elements 'Number, Number, Number'' instead of Array.
-getLongitude([10, 20, '5']) // TypeMismatch: Argument #1 should be of type 'tuple of 3 elements 'Number, Number, Number'' instead of Array.
+getLongitude([10, 5])       // TypeError: Argument #1 should be of type 'tuple of 3 elements 'Number, Number, Number'' instead of Array.
+getLongitude([10, 20, '5']) // TypeError: Argument #1 should be of type 'tuple of 3 elements 'Number, Number, Number'' instead of Array.
 ```
 
 #### Typed Object
@@ -613,7 +613,7 @@ maxGrade({
     Alice: 8,
     Larry: "B",
     Bob: 9
-}) // TypeMismatch: Argument #1 should be of type 'object with values of type 'Number'' instead of Object.
+}) // TypeError: Argument #1 should be of type 'object with values of type 'Number'' instead of Object.
 ```
 
 #### Typed Set
@@ -630,7 +630,7 @@ const isSalty = fn(
 )
 
 isSalty(new Set(["chocolate", "salt", "banana"])) // true
-isSalty(new Set(["chocolate", "salt", 100])) // TypeMismatch: Argument #1 should be of type 'set of 'String'' instead of Set.
+isSalty(new Set(["chocolate", "salt", 100])) // TypeError: Argument #1 should be of type 'set of 'String'' instead of Set.
 ```
 
 #### Typed Map
@@ -790,7 +790,7 @@ Here are some results from a machine that scores around 21000 to the [Octane 2.0
 
 ```txt
 no-type-checking-benchmark.min.js.gz  229 bytes
-floweret-benchmark.min.js.gz          2752 bytes
+floweret-benchmark.min.js.gz          2735 bytes
 runtypes.min.js.gz                    5916 bytes
 flow-runtime-benchmark.min.js.gz      20208 bytes
 

@@ -1,11 +1,11 @@
-import {InvalidSignature, TypeMismatch} from './errors'
+import {InvalidSignature} from './errors'
 import {isAny, getTypeName, typeValue} from './tools'
 import isValid from './isValid'
 import EtcHelper from './types/etc'
 
 Etc = EtcHelper().constructor
 
-error = (msg) -> throw new TypeMismatch msg
+error = (msg) -> throw new TypeError msg
 
 # returns a list of keys path to the mismatched type + value not maching + type not matching
 badPath = (obj, typeObj) ->
