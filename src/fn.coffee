@@ -1,43 +1,12 @@
 import {InvalidSignature} from './errors'
-import {isAny, getTypeName, typeValue} from './tools'
+import shouldBe from './shouldBe'
+import {isAny} from './tools'
 import isValid from './isValid'
 import EtcHelper from './types/etc'
 
 Etc = EtcHelper().constructor
 
 error = (msg) -> throw new TypeError msg
-
-# returns a list of keys path to the mismatched type + value not maching + type not matching
-badPath = (obj, typeObj) ->
-	for k, t of typeObj
-		if not isValid(obj[k], t)
-			return [k].concat(if obj[k]?.constructor is Object then badPath(obj[k], typeObj[k]) \
-								else [obj[k], typeObj[k]])
-
-# type error message comparison part helper
-shouldBe = (val, type, promised=false) ->
-	io = " instead of "
-	"should be #{if promised then "a promise of " else ''}" + switch
-		when Array.isArray(val) and Array.isArray(type) and (type.length is 1 or not Object.values(type).length)
-			if type.length
-				if not Object.values(type).length # sized array
-					"an array with a length of #{type.length}#{io}#{val.length}"
-				else
-					i = val.findIndex((e) -> not isValid(e, type[0]))
-					"an array with element #{i} of type '#{getTypeName(type[0])}'#{io}#{typeValue(val[i])}"
-			else
-				"an empty array#{io}a non-empty array"
-		when val?.constructor is Object and type?.constructor is Object
-			if Object.keys(type).length
-				[bp..., bv, bt] = badPath(val, type)
-				"an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}'#{io}#{\
-					if bv is undefined and (bk = bp[bp.length - 1]) not in \
-						Object.keys(bp[...-1].reduce(((acc, curr) -> acc[curr]), val))\
-					then "missing key '" + bk + "'" else typeValue(bv)}"
-			else
-				"an empty object#{io}a non-empty object"
-		else
-			"#{if promised then '' else "of "}type '#{getTypeName(type)}'#{io}#{typeValue(val)}"
 
 # wraps a function to check its arguments types and result type
 export default (argTypes..., resType, f) ->
