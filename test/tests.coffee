@@ -1845,9 +1845,9 @@ describe.only "obj", ->
 	it "should trow an error for a shallow type mismatch", ->
 		o = obj {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
 		expect(-> o.a = true)
-		.to.throw("Object property should be of type 'Number' instead of Boolean true.")
+		.to.throw("Object instance should be an object with key 'a' of type 'Number' instead of Boolean true.")
 
 	it "should trow an error for a deep type mismatch", ->
 		o = obj {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
 		expect(-> o.b.c = true)
-		.to.throw("Object property should be of type 'Number' instead of Boolean true.")
+		.to.throw("Object instance should be an object with key 'b.c' of type 'Number' instead of Boolean true.")
