@@ -5,20 +5,19 @@ import {InvalidType} from '../errors'
 proxy = (type, obj, path) ->
 	(obj[key] = proxy(val, obj[key], [key, path...])) for key, val of type when val?.constructor is Object
 	error = (k, v, deletion) ->
-		pathObject = {"#{k}": v}
+		pathObject = if deletion then {} else {"#{k}": v}
 		typeObject = {"#{k}": type[k]}
 		for p in path
 			pathObject = {"#{p}": pathObject}
 			typeObject = {"#{p}": typeObject}
-		sb = shouldBe(pathObject, typeObject)
-		sb = sb.replace(" instead of undefined", "") if deletion
-		throw new TypeError "Object instance #{sb}."
+		throw new TypeError "Object instance #{shouldBe(pathObject, typeObject)}."
 	new Proxy(obj,
 		set: (o, k, v) ->
 			error(k, v) unless isValid(v, type[k])
 			o[k] = v
 			true # indicate success
-		deleteProperty: (t, k) -> error(k, undefined, true)
+		deleteProperty: (o, k) ->
+			error(k, 0, true)
 	)
 
 export default (type, obj) ->

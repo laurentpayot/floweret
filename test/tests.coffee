@@ -1859,8 +1859,13 @@ describe "object", ->
 	it "should trow an error when deleting key and leave object unmodified", ->
 		o = object {a: Number, b: {c: {d: Number}, e: Number}}, {a: 1, b: {c: {d: 2}, e: 3}}
 		expect(-> delete o.b.c)
-		.to.throw("Object instance should be an object with key 'b.c' of type 'object type'.")
+		.to.throw("Object instance should be an object with key 'b.c' of type 'object type' instead of missing key 'c'.")
 		expect(o).to.deep.equal({a: 1, b: {c: {d: 2}, e: 3}})
+
+	it.skip "should trow an error when deleting undefined key and leave object unmodified", ->
+		o = object {a: Number, b: {c: undefined}}, {a: 1, b: {c: undefined}}
+		expect(-> delete o.b.c)
+		.to.throw("Object instance should be an object with key 'b.c' of type undefined instead of missing key 'c'.")
 
 describe "array", ->
 
