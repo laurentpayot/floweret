@@ -1838,20 +1838,29 @@ describe "object", ->
 		expect(-> o = object {a: Number, b: {c: Number}}, "foo")
 		.to.throw("'object' argument #2 should be of type 'object type' instead of String \"foo\"")
 
-	it "should trow an error for a shallow type mismatch", ->
+	it "should trow an error for a shallow type mismatch and leave object unmodified", ->
 		o = object {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
 		expect(-> o.a = true)
 		.to.throw("Object instance should be an object with key 'a' of type 'Number' instead of Boolean true.")
+		expect(o).to.deep.equal({a: 1, b: {c: 2}})
 
-	it "should trow an error for a deep type mismatch", ->
+	it "should trow an error for a deep type mismatch and leave object unmodified", ->
 		o = object {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
 		expect(-> o.b.c = true)
 		.to.throw("Object instance should be an object with key 'b.c' of type 'Number' instead of Boolean true.")
+		expect(o).to.deep.equal({a: 1, b: {c: 2}})
 
-	it "should trow an error for a deep-deep type mismatch", ->
+	it "should trow an error for a deep-deep type mismatch and leave object unmodified", ->
 		o = object {a: Number, b: {c: {d: Number}, e: Number}}, {a: 1, b: {c: {d: 2}, e: 3}}
 		expect(-> o.b.c.d = true)
 		.to.throw("Object instance should be an object with key 'b.c.d' of type 'Number' instead of Boolean true.")
+		expect(o).to.deep.equal({a: 1, b: {c: {d: 2}, e: 3}})
+
+	it "should trow an error when deleting key and leave object unmodified", ->
+		o = object {a: Number, b: {c: {d: Number}, e: Number}}, {a: 1, b: {c: {d: 2}, e: 3}}
+		expect(-> delete o.b.c)
+		.to.throw("Object instance should be an object with key 'b.c' of type 'object type'.")
+		expect(o).to.deep.equal({a: 1, b: {c: {d: 2}, e: 3}})
 
 describe "array", ->
 
