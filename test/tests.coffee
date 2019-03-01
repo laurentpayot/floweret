@@ -14,7 +14,7 @@ import {
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
 } from '../src/types/_index'
-import obj from '../src/obj'
+import object from '../src/object'
 import {isAny, isLiteral} from '../src/tools'
 
 
@@ -1814,41 +1814,41 @@ describe "fn", ->
 				expect(-> f(1))
 				.to.throw("Result should be of type 'Number' instead of NaN.")
 
-describe "obj", ->
+describe "object", ->
 
 	it "should init", ->
-		o = obj {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
+		o = object {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
 		expect(o).to.deep.equal({a: 1, b: {c: 2}})
 
 	it "should shallow set", ->
-		o = obj {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
+		o = object {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
 		o.a = 3
 		expect(o).to.deep.equal({a: 3, b: {c: 2}})
 
 	it "should deep set", ->
-		o = obj {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
+		o = object {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
 		o.b.c = 3
 		expect(o).to.deep.equal({a: 1, b: {c: 3}})
 
 	it "should trow an error with a non-object type", ->
-		expect(-> o = obj Number, {a: 1, b: {c: 2}})
-		.to.throw("'obj' first argument must be an object type.")
+		expect(-> o = object Number, {a: 1, b: {c: 2}})
+		.to.throw("'object' first argument must be an Object type.")
 
 	it "should trow an error with a non-object object", ->
-		expect(-> o = obj {a: Number, b: {c: Number}}, "foo")
-		.to.throw("'obj' second argument should be of type 'object type' instead of String \"foo\"")
+		expect(-> o = object {a: Number, b: {c: Number}}, "foo")
+		.to.throw("'object' second argument should be of type 'object type' instead of String \"foo\"")
 
 	it "should trow an error for a shallow type mismatch", ->
-		o = obj {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
+		o = object {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
 		expect(-> o.a = true)
 		.to.throw("Object instance should be an object with key 'a' of type 'Number' instead of Boolean true.")
 
 	it "should trow an error for a deep type mismatch", ->
-		o = obj {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
+		o = object {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
 		expect(-> o.b.c = true)
 		.to.throw("Object instance should be an object with key 'b.c' of type 'Number' instead of Boolean true.")
 
 	it "should trow an error for a deep-deep type mismatch", ->
-		o = obj {a: Number, b: {c: {d: Number}, e: Number}}, {a: 1, b: {c: {d: 2}, e: 3}}
+		o = object {a: Number, b: {c: {d: Number}, e: Number}}, {a: 1, b: {c: {d: 2}, e: 3}}
 		expect(-> o.b.c.d = true)
 		.to.throw("Object instance should be an object with key 'b.c.d' of type 'Number' instead of Boolean true.")

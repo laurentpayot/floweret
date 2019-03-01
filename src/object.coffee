@@ -2,9 +2,9 @@ import isValid from './isValid'
 import shouldBe from './shouldBe'
 import {InvalidType} from './errors'
 
-proxy = (type, object, path) ->
-	(object[key] = proxy(val, object[key], [key, path...])) for key, val of type when val?.constructor is Object
-	new Proxy(object,
+proxy = (type, obj, path) ->
+	(obj[key] = proxy(val, obj[key], [key, path...])) for key, val of type when val?.constructor is Object
+	new Proxy(obj,
 		set: (o, k, v) ->
 			unless isValid(v, type[k])
 				pathObject = {"#{k}": v}
@@ -17,7 +17,7 @@ proxy = (type, object, path) ->
 			true # indicate success
 	)
 
-export default (type, object) ->
-	throw new InvalidType "'obj' first argument must be an object type." unless isValid(type, Object)
-	throw new InvalidType "'obj' second argument #{shouldBe(object, type)}." unless isValid(object, Object)
-	proxy(type, object, [])
+export default (type, obj) ->
+	throw new InvalidType "'object' first argument must be an Object type." unless isValid(type, Object)
+	throw new InvalidType "'object' second argument #{shouldBe(obj, type)}." unless isValid(obj, Object)
+	proxy(type, obj, [])
