@@ -1814,15 +1814,11 @@ describe "fn", ->
 				expect(-> f(1))
 				.to.throw("Result should be of type 'Number' instead of NaN.")
 
-describe.only "obj", ->
+describe "obj", ->
 
 	it "should init", ->
 		o = obj {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
 		expect(o).to.deep.equal({a: 1, b: {c: 2}})
-
-	it.skip "should init with empty object", ->
-		o = obj {a: [Number, undefined], b: {c: [Number, undefined]}}
-		expect(o).to.deep.equal({a: undefined, b: {c: undefined}})
 
 	it "should shallow set", ->
 		o = obj {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
