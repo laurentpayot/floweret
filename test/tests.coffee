@@ -7,14 +7,14 @@ expect = chai.expect
 import {
 	fn, isValid, typeOf,
 	etc, Any, # types used anyway
-	maybe # exported because generally always used
+	maybe, # exported because generally always used,
+	object, array
 } from '../src'
 import {
 	Type, promised, constraint, foreign,
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
 } from '../src/types/_index'
-import object from '../src/object'
 import {isAny, isLiteral} from '../src/tools'
 
 
@@ -1832,11 +1832,11 @@ describe "object", ->
 
 	it "should trow an error with a non-object type", ->
 		expect(-> o = object Number, {a: 1, b: {c: 2}})
-		.to.throw("'object' first argument must be an Object type.")
+		.to.throw("'object' argument #1 must be an Object type.")
 
 	it "should trow an error with a non-object object", ->
 		expect(-> o = object {a: Number, b: {c: Number}}, "foo")
-		.to.throw("'object' second argument should be of type 'object type' instead of String \"foo\"")
+		.to.throw("'object' argument #2 should be of type 'object type' instead of String \"foo\"")
 
 	it "should trow an error for a shallow type mismatch", ->
 		o = object {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
@@ -1852,3 +1852,28 @@ describe "object", ->
 		o = object {a: Number, b: {c: {d: Number}, e: Number}}, {a: 1, b: {c: {d: 2}, e: 3}}
 		expect(-> o.b.c.d = true)
 		.to.throw("Object instance should be an object with key 'b.c.d' of type 'Number' instead of Boolean true.")
+
+describe.only "array", ->
+
+	it "should init", ->
+		a = array Number, [1, 2, 3]
+		expect(a).to.eql([1, 2, 3])
+
+	it "should set", ->
+		a = array Number, [1, 2, 3]
+		a.push(4)
+		expect(a).to.eql([1, 2, 3, 4])
+
+	it "should trow an error with a non-array type", ->
+		expect(-> a = array Number, 1)
+		.to.throw("'array' argument #2 should be of type 'array of 'Number'' instead of Number 1.")
+
+	it "should trow an error for a push type mismatch", ->
+		a = array Number, [1, 2, 3]
+		expect(-> a.push(true))
+		.to.throw("Array instance element 3 should be of type 'Number' instead of Boolean true.")
+
+	it "should trow an error for a set type mismatch", ->
+		a = array Number, [1, 2, 3]
+		expect(-> a[1] = true)
+		.to.throw("Array instance element 1 should be of type 'Number' instead of Boolean true.")

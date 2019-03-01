@@ -18,6 +18,6 @@ proxy = (type, obj, path) ->
 	)
 
 export default (type, obj) ->
-	throw new InvalidType "'object' first argument must be an Object type." unless isValid(type, Object)
-	throw new InvalidType "'object' second argument #{shouldBe(obj, type)}." unless isValid(obj, Object)
+	throw new InvalidType "'object' argument #1 must be an Object type." unless isValid(type, Object)
+	throw new InvalidType "'object' argument #2 #{shouldBe(obj, type)}." unless isValid(obj, Object)
 	proxy(type, obj, [])
