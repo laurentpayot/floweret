@@ -1,6 +1,6 @@
-import isValid from './isValid'
-import shouldBe from './shouldBe'
-import {InvalidType} from './errors'
+import isValid from '../isValid'
+import shouldBe from '../shouldBe'
+import {InvalidType} from '../errors'
 
 proxy = (type, arr) ->
 	new Proxy(arr,

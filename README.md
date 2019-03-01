@@ -790,7 +790,7 @@ Here are some results from a machine that scores around 21000 to the [Octane 2.0
 
 ```txt
 no-type-checking-benchmark.min.js.gz  229 bytes
-floweret-benchmark.min.js.gz          2735 bytes
+floweret-benchmark.min.js.gz          2745 bytes
 runtypes.min.js.gz                    5916 bytes
 flow-runtime-benchmark.min.js.gz      20208 bytes
 

@@ -1,6 +1,6 @@
-import isValid from './isValid'
-import shouldBe from './shouldBe'
-import {InvalidType} from './errors'
+import isValid from '../isValid'
+import shouldBe from '../shouldBe'
+import {InvalidType} from '../errors'
 
 proxy = (type, obj, path) ->
 	(obj[key] = proxy(val, obj[key], [key, path...])) for key, val of type when val?.constructor is Object

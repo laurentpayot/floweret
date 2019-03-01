@@ -1853,7 +1853,7 @@ describe "object", ->
 		expect(-> o.b.c.d = true)
 		.to.throw("Object instance should be an object with key 'b.c.d' of type 'Number' instead of Boolean true.")
 
-describe.only "array", ->
+describe "array", ->
 
 	it "should init", ->
 		a = array Number, [1, 2, 3]
