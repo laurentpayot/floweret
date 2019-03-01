@@ -1891,3 +1891,7 @@ describe "array", ->
 		a = array Number, [1, 2, 3]
 		expect(-> a[1] = true)
 		.to.throw("Array instance element 1 should be of type 'Number' instead of Boolean true.")
+
+describe "tuple", ->
+
+	it.skip "TODO!!!", ->

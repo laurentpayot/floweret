@@ -6,6 +6,7 @@ export {default as typeOf} from './typeOf'
 # export * from './instances'
 export {default as object} from './instances/object'
 export {default as array} from './instances/array'
+export {default as tuple} from './instances/tuple'
 
 # ! Rollup unable to tree-shake classes https://github.com/rollup/rollup/issues/1691
 # export * from './types'
