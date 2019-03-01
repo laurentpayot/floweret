@@ -2,12 +2,12 @@ export {default as fn} from './fn'
 export {default as isValid} from './isValid'
 export {default as typeOf} from './typeOf'
 
-#! Rollup unable to tree-shake `export * from …`
+# ! Rollup unable to tree-shake `export * from …`
 # export * from './instances'
 export {default as object} from './instances/object'
 export {default as array} from './instances/array'
 
-#! Rollup unable to tree-shake classes https://github.com/rollup/rollup/issues/1691
+# ! Rollup unable to tree-shake classes https://github.com/rollup/rollup/issues/1691
 # export * from './types'
 
 # exporting types already used by fn
