@@ -8,7 +8,7 @@ import {
 	fn, isValid, typeOf,
 	etc, Any, # types used anyway
 	maybe, # exported because generally always used,
-	object, array
+	object, array, tuple
 } from '../src'
 import {
 	Type, promised, constraint, foreign,
@@ -1882,6 +1882,11 @@ describe "array", ->
 		expect(-> a = array Number, 1)
 		.to.throw("'array' argument #2 should be of type 'array of 'Number'' instead of Number 1.")
 
+	it "should trow an error with a mismatched array type", ->
+		expect(-> a = array Number, [1, true, 3])
+		.to.throw("'array' argument #2 should be an array with element 1 of type 'Number'
+					instead of Boolean true.")
+
 	it "should trow an error for a push type mismatch", ->
 		a = array Number, [1, 2, 3]
 		expect(-> a.push(true))
@@ -1894,4 +1899,35 @@ describe "array", ->
 
 describe "tuple", ->
 
-	it.skip "TODO!!!", ->
+	it "should init", ->
+		t = tuple Number, Number, Number, [1, 2, 3]
+		expect(t).to.eql([1, 2, 3])
+
+	it "should set", ->
+		t = tuple Number, Number, Number, [1, 2, 3]
+		t[2] = 4
+		expect(t).to.eql([1, 2, 4])
+
+	it "should trow an error with a non-tuple type", ->
+		expect(-> t = tuple Number, Number, Number, 1)
+		.to.throw("'tuple' last argument should be of type 'tuple of 3 elements 'Number, Number, Number''
+					instead of Number 1.")
+
+	it "should trow an error with a mismatched tuple type", ->
+		expect(-> t = tuple Number, Number, Number, [1, true, 3])
+		.to.throw("Tuple instance element 1 should be of type 'Number' instead of Boolean true.")
+
+	it "should trow an error for a push", ->
+		t = tuple Number, Number, Number, [1, 2, 3]
+		expect(-> t.push(4))
+		.to.throw("Tuple instance must have a length of 3.")
+
+	it "should trow an error for a delete", ->
+		t = tuple Number, Number, Number, [1, 2, 3]
+		expect(-> delete t[0])
+		.to.throw("Tuple instance must have a length of 3.")
+
+	it "should trow an error for a set type mismatch", ->
+		t = tuple Number, Number, Number, [1, 2, 3]
+		expect(-> t[1] = true)
+		.to.throw("Tuple instance element 1 should be of type 'Number' instead of Boolean true.")
