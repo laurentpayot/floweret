@@ -1910,7 +1910,7 @@ describe "tuple", ->
 
 	it "should trow an error with a non-tuple type", ->
 		expect(-> t = tuple Number, Number, Number, 1)
-		.to.throw("'tuple' last argument should be of type 'tuple of 3 elements 'Number, Number, Number''
+		.to.throw("'tuple' argument #2 should be of type 'tuple of 3 elements 'Number, Number, Number''
 					instead of Number 1.")
 
 	it "should trow an error with a mismatched tuple type", ->
