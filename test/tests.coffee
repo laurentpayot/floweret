@@ -1917,6 +1917,10 @@ describe "tuple", ->
 		expect(-> t = tuple Number, Number, Number, [1, true, 3])
 		.to.throw("Tuple instance element 1 should be of type 'Number' instead of Boolean true.")
 
+	it "should trow an error with a too long tuple type", ->
+		expect(-> t = tuple Number, Number, Number, [1, 2, 3, 4])
+		.to.throw("Tuple instance must have a length of 3.")
+
 	it "should trow an error for a push", ->
 		t = tuple Number, Number, Number, [1, 2, 3]
 		expect(-> t.push(4))
