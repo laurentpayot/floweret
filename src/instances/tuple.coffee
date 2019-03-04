@@ -4,7 +4,7 @@ import {InvalidType} from '../errors'
 import Tuple from '../types/Tuple'
 
 export default (types..., tup) ->
-	# simply checking for array type to let pre-prox validation find a better error message
+	# simply checking for array type to let pre-proxy validation find a better error message
 	throw new InvalidType "'tuple' argument #2 #{shouldBe(tup, Tuple(types...))}." unless isValid(tup, Array)
 	sizeErrorMessage = "Tuple instance must have a length of #{types.length}."
 	validator = (t, i, v) ->
