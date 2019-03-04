@@ -2,6 +2,8 @@ import Type from './types/Type'
 import AnyHelper from './types/Any'
 import typeOf from './typeOf'
 
+isEmptyObject = (obj) -> not Object.keys(obj).length
+
 Any = AnyHelper().constructor
 isAny = (o) -> o is AnyHelper or o instanceof Any
 
@@ -30,7 +32,7 @@ else switch type?.constructor
 	when Function
 		if type.rootClass is Type then type().getTypeName() else type.name
 	when Object
-		if Object.keys(type).length then "object type" else "empty object"
+		if not isEmptyObject(type) then "object type" else "empty object"
 	when RegExp then "string matching regular expression " + type
 	else
 		if type instanceof Type
@@ -38,4 +40,4 @@ else switch type?.constructor
 		else
 			"literal #{typeValue(type)}"
 
-export {isAny, isLiteral, typeValue, getTypeName}
+export {isEmptyObject, isAny, isLiteral, typeValue, getTypeName}

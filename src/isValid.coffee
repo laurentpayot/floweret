@@ -1,5 +1,5 @@
 import {InvalidType} from './errors'
-import {isAny} from './tools'
+import {isAny, isEmptyObject} from './tools'
 import typeOf from './typeOf'
 import Type from './types/Type'
 
@@ -36,12 +36,11 @@ else switch type?.constructor
 		else val?.constructor is type
 	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 		return false unless val?.constructor is Object
-		if Object.keys(type).length
+		if not isEmptyObject(type)
 			for k, v of type
 				return false unless isValid(val[k], v)
 			true
-		else # empty object
-			not Object.keys(val).length
+		else isEmptyObject(val)
 	when RegExp then val?.constructor is String and type.test(val)
 	else
 		if type instanceof Type

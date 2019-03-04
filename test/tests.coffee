@@ -15,7 +15,7 @@ import {
 	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
 	and as And, or as Or, not as Not
 } from '../src/types/_index'
-import {isAny, isLiteral} from '../src/tools'
+import {isAny, isLiteral, isEmptyObject} from '../src/tools'
 
 
 NATIVE_TYPES = [undefined, null, NaN, Infinity, -Infinity,
@@ -196,7 +196,7 @@ describe "isValid", ->
 			it "should return true for empty object only", ->
 				expect(isValid({}, {})).to.be.true
 				expect(isValid(v, {})).to.be.false for v in VALUES \
-					when not (v?.constructor is Object and not Object.keys(v).length)
+					when not (v?.constructor is Object and isEmptyObject(v))
 
 		context "Any type", ->
 
@@ -1862,10 +1862,10 @@ describe "object", ->
 		.to.throw("Object instance should be an object with key 'b.c' of type 'object type' instead of missing key 'c'.")
 		expect(o).to.deep.equal({a: 1, b: {c: {d: 2}, e: 3}})
 
-	it.skip "should trow an error when deleting undefined key and leave object unmodified", ->
+	it "should trow an error when deleting undefined key and leave object unmodified", ->
 		o = object {a: Number, b: {c: undefined}}, {a: 1, b: {c: undefined}}
 		expect(-> delete o.b.c)
-		.to.throw("Object instance should be an object with key 'b.c' of type undefined instead of missing key 'c'.")
+		.to.throw("Object instance should be an object with key 'b.c' of type 'undefined' instead of missing key 'c'.")
 
 describe "array", ->
 

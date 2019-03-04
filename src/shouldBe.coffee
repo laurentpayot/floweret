@@ -1,10 +1,12 @@
-import {getTypeName, typeValue} from './tools'
+import {getTypeName, typeValue, isEmptyObject} from './tools'
 import isValid from './isValid'
 
 # returns a list of keys path to the mismatched type + value not maching + type not matching
 badPath = (obj, typeObj) ->
 	for k, t of typeObj
-		if not isValid(obj[k], t)
+		return [k, obj, typeObj[k]] if isEmptyObject(obj)
+		# second or clause in case key not in obj and type is undefined
+		if not isValid(obj[k], t) or isEmptyObject(obj[k]) and t?.constructor is Object
 			return [k].concat(if obj[k]?.constructor is Object then badPath(obj[k], typeObj[k]) \
 								else [obj[k], typeObj[k]])
 
@@ -22,11 +24,12 @@ export default (val, type, promised=false) ->
 			else
 				"an empty array#{io}a non-empty array"
 		when val?.constructor is Object and type?.constructor is Object
-			if Object.keys(type).length
+			if not isEmptyObject(type)
 				[bp..., bv, bt] = badPath(val, type)
+				bk = bp[bp.length - 1]
 				"an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}'#{io}#{\
-					if bv is undefined and (bk = bp[bp.length - 1]) not in \
-						Object.keys(bp[...-1].reduce(((acc, curr) -> acc[curr]), val))\
+					if bv is undefined and bk not in Object.keys(bp[...-1].reduce(((acc, curr) -> acc[curr]), val))\
+						or bv?.constructor is Object and isEmptyObject(bv)\
 					then "missing key '" + bk + "'" else typeValue(bv)}"
 			else
 				"an empty object#{io}a non-empty object"
