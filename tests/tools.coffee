@@ -1,5 +1,6 @@
-import {VALUES} from './fixtures'
-import {isLiteral} from '../src/tools'
+import {VALUES, NATIVE_TYPES} from './fixtures'
+import {isLiteral, isAny, isEmptyObject} from '../src/tools'
+import {Any} from '../src'
 
 describe "isLiteral", ->
 
@@ -36,3 +37,27 @@ describe "isLiteral", ->
 	test "return true for booleans", ->
 		expect(isLiteral(true)).toBe(true)
 		expect(isLiteral(false)).toBe(true)
+
+describe "isAny", ->
+
+	test "return false for native types", ->
+		expect(isAny(t)).toBe(false) for t in NATIVE_TYPES
+		return
+
+	test "return true for Any", ->
+		expect(isAny(Any)).toBe(true)
+
+	test "return true for Any()", ->
+		expect(isAny(Any())).toBe(true)
+
+describe "isEmptyObject", ->
+
+	test "return true for empty object", ->
+		expect(isEmptyObject({})).toBe(true)
+
+	test "return false for non-empty object values", ->
+		expect(isEmptyObject({a: 1})).toBe(false)
+		expect(isEmptyObject({a: {}})).toBe(false)
+		expect(isEmptyObject({a: 1, b: 2})).toBe(false)
+		expect(isEmptyObject({a: {}, b: {}})).toBe(false)
+
