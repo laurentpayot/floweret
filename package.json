@@ -31,8 +31,8 @@
   },
   "scripts": {
     "build": "rm -rf dist && coffee -ctb -o dist src",
-    "test": "nyc --extension .coffee mocha --require @babel/register --require ./coffeescript.config.js \"test/**/*.{js,coffee}\"",
-    "test-watch": "mocha --reporter min --require @babel/register --require ./coffeescript.config.js --watch --watch-extensions js,coffee,json \"test/**/*.{js,coffee}\"",
+    "test:watch": "jest --watch",
+    "test": "jest --collectCoverage",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "bundle": "npm run build && cd benchmark && rollup -c",
     "sizes-webpack": "cd benchmark && echo 'No type Checking:' && size-limit no-type-checking.js && echo 'Floweret:' && size-limit floweret.js && echo 'Runtypes:' && size-limit runtypes.js && echo 'Flow-runtime:' && size-limit flow-runtime.js",
@@ -46,22 +46,19 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.2.2",
-    "@babel/register": "^7.0.0",
+    "babel-jest": "^24.1.0",
     "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
     "coffeescript": "^2.3.2",
     "coveralls": "^3.0.2",
     "flow-runtime": "^0.17.0",
-    "mocha": "^5.2.0",
-    "nyc": "^13.2.0",
+    "jest": "^24.1.0",
+    "jest-preset-coffeescript": "^1.0.0",
     "rollup": "^1.1.2",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-gzip": "^2.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-terser": "^4.0.4",
     "runtypes": "^3.1.2",
-    "sinon": "^7.2.3",
     "size-limit": "^0.21.1"
   },
   "size-limit": [
@@ -69,12 +66,5 @@
       "limit": "4 KB",
       "path": "dist/index.js"
     }
-  ],
-  "nyc": {
-    "exclude": [
-      "babel.config.js",
-      "coffeescript.config.js",
-      "test/**/*"
-    ]
-  }
+  ]
 }
