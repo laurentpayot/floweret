@@ -85,3 +85,8 @@ describe "Maybe type", ->
 
 	test "maybe should throw an error when used as a function", ->
 		expect(-> isValid(1, maybe)).toThrow("'maybe' must have exactly 1 argument")
+
+describe "Type type", ->
+
+	test "throw an error when creating an instance of Type", ->
+		expect(-> new Type()).toThrow("Abstract class 'Type' cannot be instantiated directly.")

@@ -322,9 +322,6 @@ describe "Union Types", ->
 
 describe "Custom types", ->
 
-	test "throw an error when creating an instance of Type", ->
-		expect(-> new Type()).toThrow("Abstract class 'Type' cannot be instantiated directly.")
-
 	describe "Integer type", ->
 
 		test "throw an error when Integer arguments are not numers", ->
