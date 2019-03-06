@@ -1,10 +1,6 @@
 import {NATIVE_TYPES, VALUES} from '../fixtures'
 import {isValid, Any, maybe} from '../../src'
-import {
-	Type, promised, constraint, foreign,
-	Integer, Natural, SizedString, Tuple, TypedObject, TypedSet, TypedMap,
-	and as And, or as Or, not as Not
-} from '../../src/types/_index'
+import {Type} from '../../src/types/_index'
 
 
 describe "Empty array", ->
@@ -38,19 +34,21 @@ describe "Any type", ->
 
 describe "Maybe type", ->
 
-	test.skip "maybe(Any) should not return Any type.", ->
-		warnSpy.resetHistory()
-		expect(maybe(Any)).to.eql([undefined, Any])
-		expect(warnSpy.calledOnceWithExactly(
-			"Any is not needed as 'maybe' argument."
-		)).toBe(true)
+	test "maybe(Any) should not return Any type.", ->
+		warn = jest.spyOn(Type.prototype, 'warn')
+		.mockImplementation(->) # silencing warn()
+		expect(maybe(Any)).toEqual([undefined, Any])
+		jest.restoreAllMocks()
+		expect(warn).toHaveBeenCalledTimes(1)
+		expect(warn).toHaveBeenCalledWith("Any is not needed as 'maybe' argument.")
 
-	test.skip "maybe(Any()) should not return Any type.", ->
-		warnSpy.resetHistory()
-		expect(maybe(Any())).to.eql([undefined, Any()])
-		expect(warnSpy.calledOnceWithExactly(
-			"Any is not needed as 'maybe' argument."
-		)).toBe(true)
+	test "maybe(Any()) should not return Any type.", ->
+		warn = jest.spyOn(Type.prototype, 'warn')
+		.mockImplementation(->) # silencing warn()
+		expect(maybe(Any())).toEqual([undefined, Any()])
+		jest.restoreAllMocks()
+		expect(warn).toHaveBeenCalledTimes(1)
+		expect(warn).toHaveBeenCalledWith("Any is not needed as 'maybe' argument.")
 
 	test "maybe should throw an error when used as with more than 1 argument", ->
 		expect(-> isValid(1, maybe(Number, String)))
