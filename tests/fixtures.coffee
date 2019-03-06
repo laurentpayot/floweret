@@ -1,3 +1,5 @@
+import {isValid} from '../src'
+
 export NATIVE_TYPES = [
 	undefined, null, NaN, Infinity, -Infinity,
 	Boolean, Number, String, Array, Date, Object, Function, Promise, Int8Array, Set, Map, Symbol
@@ -40,6 +42,6 @@ export VALUES = [
 ]
 
 export testTypes = (val, type) ->
-	expect(isValid(val, type)).to.be.true
-	expect(isValid(val, t)).to.be.false \
+	expect(isValid(val, t)).toBe(false) \
 		for t in NATIVE_TYPES when not(t is type or Number.isNaN val and Number.isNaN type)
+	expect(isValid(val, type)).toBe(true)
