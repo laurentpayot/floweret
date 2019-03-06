@@ -38,3 +38,8 @@ export VALUES = [
 	new Map([[ 1, 'one' ], [ 2, 'two' ]])
 	Symbol('foo')
 ]
+
+export testTypes = (val, type) ->
+	expect(isValid(val, type)).to.be.true
+	expect(isValid(val, t)).to.be.false \
+		for t in NATIVE_TYPES when not(t is type or Number.isNaN val and Number.isNaN type)
