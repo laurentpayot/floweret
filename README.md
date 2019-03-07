@@ -1,15 +1,17 @@
 # :blossom: Floweret
 
-[![Build Status](https://travis-ci.org/laurentpayot/floweret.svg?branch=master)](https://travis-ci.org/laurentpayot/floweret)
-[![Coverage Status](https://coveralls.io/repos/github/laurentpayot/floweret/badge.svg?branch=master)](https://coveralls.io/github/laurentpayot/floweret?branch=master)
-[![npm version](https://img.shields.io/npm/v/floweret.svg)](https://www.npmjs.com/package/floweret)
+[![Build Status](https://badgen.net/travis/laurentpayot/floweret)](https://travis-ci.org/laurentpayot/floweret)
+[![Coverage Status](https://badgen.net/coveralls/c/github/laurentpayot/floweret)](https://coveralls.io/github/laurentpayot/floweret?branch=master)
+[![npm dependencies](https://badgen.net/david/dep/laurentpayot/floweret)](https://david-dm.org/laurentpayot/floweret)
+[![npm bundle size](https://badgen.net/bundlephobia/minzip/floweret)](https://bundlephobia.com/result?p=floweret)
+[![npm version](https://badgen.net/npm/v/floweret)](https://www.npmjs.com/package/floweret)
 
 Floweret is a JavasScrit *runtime* signature type checker that is:
 
 * **Intuitive**: Native JavaScript types syntax.
 * **Powerful**: Type composition, promises, rest parameters, logical operators and more…
 * **Customizable**: Create your own types for your own needs.
-* **Lightweight**: 2.4 kb minified and gzipped. No dependencies.
+* **Lightweight**: 2.6 kb minified and gzipped. No dependencies.
 * **Fast**: Direct type comparison. No string to parse.
 
 ## Contents
