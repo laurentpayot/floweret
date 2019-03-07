@@ -6,12 +6,12 @@
 [![npm bundle size](https://badgen.net/bundlephobia/minzip/floweret)](https://bundlephobia.com/result?p=floweret)
 [![npm version](https://badgen.net/npm/v/floweret)](https://www.npmjs.com/package/floweret)
 
-Floweret is a JavasScrit *runtime* signature type checker that is:
+Floweret is a JavasScript *runtime* signature type checker that is:
 
 * **Intuitive**: Native JavaScript types syntax.
 * **Powerful**: Type composition, promises, rest parameters, logical operators and more…
 * **Customizable**: Create your own types for your own needs.
-* **Lightweight**: 2.6 kb minified and gzipped. No dependencies.
+* **Lightweight**: 2.6 kB minified and gzipped. No dependencies.
 * **Fast**: Direct type comparison. No string to parse.
 
 ## Contents
