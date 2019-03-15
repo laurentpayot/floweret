@@ -1,4 +1,3 @@
-import {VALUES} from '../fixtures'
 import {isValid} from '../../src'
 
 test "return true if the value is one of the given strings, false otherwise", ->

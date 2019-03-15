@@ -1,4 +1,3 @@
-import {VALUES} from '../fixtures'
 import {isValid} from '../../src'
 
 test "return false for empty array", ->
