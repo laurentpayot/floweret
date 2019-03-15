@@ -1,6 +1,6 @@
 import {NATIVE_TYPES, VALUES} from '../fixtures'
 import {isValid, Any, maybe} from '../../src'
-import {Type} from '../../src/types/_index'
+import Type from '../../src/types/Type'
 
 
 describe "Empty array", ->
