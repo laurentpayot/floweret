@@ -23,4 +23,3 @@ dist
 *.js.map
 benchmark/bundles
 coverage
-

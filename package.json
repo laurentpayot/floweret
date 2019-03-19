@@ -33,7 +33,7 @@
     "build": "rm -rf dist && coffee -ctb -o dist src",
     "test:watch": "jest --watch",
     "test": "jest --coverage",
-    "test:ci": "jest --coverage --coverageReporters=text-lcov && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "test:ci": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "bundle": "npm run build && cd benchmark && rollup -c",
     "sizes-webpack": "cd benchmark && echo 'No type Checking:' && size-limit no-type-checking.js && echo 'Floweret:' && size-limit floweret.js && echo 'Runtypes:' && size-limit runtypes.js && echo 'Flow-runtime:' && size-limit flow-runtime.js",
     "sizes-rollup": "cd benchmark/bundles && stat -c '%n %s bytes' *.gz | sort -n -k 2 | column -t && echo",
