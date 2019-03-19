@@ -2,6 +2,7 @@ import {NATIVE_TYPES, VALUES, testTypes} from '../fixtures'
 import {isValid, Any, maybe, etc} from '../../src'
 import Type from '../../src/types/Type'
 import promised from '../../src/types/promised'
+import constraint from '../../src/types/constraint'
 
 
 describe "Empty array", ->
@@ -118,3 +119,12 @@ describe "Unmanaged Types", ->
 		nor a string or number or boolean literal.", ->
 		expect(-> isValid(val, Symbol("foo")))
 		.toThrow("Type can not be an instance of Symbol. Use Symbol as type instead.") for val in VALUES
+
+describe "Constraint", ->
+
+	test "return true when validator function is truthy for the value", ->
+		Int = constraint((val) -> Number.isInteger(val))
+		expect(isValid(100, Int)).toBe(true)
+		expect(isValid(-10, Int)).toBe(true)
+		expect(isValid(0, Int)).toBe(true)
+		expect(isValid(val, Int)).toBe(false) for val in VALUES when not Number.isInteger(val)
