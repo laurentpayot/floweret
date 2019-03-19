@@ -16,20 +16,20 @@ describe "Any type elements", ->
 		.mockImplementation(->) # silencing warn()
 		t = Tuple(Any, Any)
 		jest.restoreAllMocks()
-		expect(warn).toHaveBeenCalledTimes(1)
-		expect(warn).toHaveBeenCalledWith("Use 'Array(2)' type instead of a Tuple of 2 values of any type'.")
 		expect(t.constructor.name).toBe("Tuple")
 		expect(t.types).toEqual([Any, Any])
+		expect(warn).toHaveBeenCalledTimes(1)
+		expect(warn).toHaveBeenCalledWith("Use 'Array(2)' type instead of a Tuple of 2 values of any type'.")
 
 	test "Tuple of Any() should return array of empty elements", ->
 		warn = jest.spyOn(Type.prototype, 'warn')
 		.mockImplementation(->) # silencing warn()
 		t = Tuple(Any(), Any())
 		jest.restoreAllMocks()
-		expect(warn).toHaveBeenCalledTimes(1)
-		expect(warn).toHaveBeenCalledWith("Use 'Array(2)' type instead of a Tuple of 2 values of any type'.")
 		expect(t.constructor.name).toBe("Tuple")
 		expect(t.types).toEqual([Any(), Any()])
+		expect(warn).toHaveBeenCalledTimes(1)
+		expect(warn).toHaveBeenCalledWith("Use 'Array(2)' type instead of a Tuple of 2 values of any type'.")
 
 describe "Native type elements", ->
 
