@@ -1,6 +1,7 @@
 import {NATIVE_TYPES, VALUES} from '../fixtures'
 import {isValid, Any, maybe} from '../../src'
 import Type from '../../src/types/Type'
+import promised from '../../src/types/promised'
 
 
 describe "Empty array", ->
@@ -87,3 +88,11 @@ describe "Type type", ->
 
 	test "throw an error when creating an instance of Type", ->
 		expect(-> new Type()).toThrow("Abstract class 'Type' cannot be instantiated directly.")
+
+describe "Promised type", ->
+
+	test "throw an error for a promised number.", ->
+		expect(-> isValid(Promise.resolve(1), Promise.resolve(Number)))
+		.toThrow("Type can not be an instance of Promise. Use Promise as type instead.")
+		expect(-> isValid(Promise.resolve(1), promised(Number)))
+		.toThrow("Type can not be an instance of Promise. Use Promise as type instead.")
