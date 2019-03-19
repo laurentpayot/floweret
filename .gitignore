@@ -18,11 +18,9 @@ npm-error.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Istanbul output
-.nyc_output
-
 # Ignoring generated JS files
 dist
 *.js.map
 benchmark/bundles
+coverage
 
