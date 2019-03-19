@@ -1,5 +1,5 @@
 import {NATIVE_TYPES, VALUES, testTypes} from '../fixtures'
-import {isValid, Any, maybe} from '../../src'
+import {isValid, Any, maybe, etc} from '../../src'
 import Type from '../../src/types/Type'
 import promised from '../../src/types/promised'
 
@@ -103,3 +103,18 @@ describe "Custom type (class)", ->
 		class MyClass
 		mc = new MyClass
 		testTypes(mc, MyClass)
+
+describe "Unmanaged Types", ->
+
+	test "throw an error when etc is used as a function", ->
+		expect(-> isValid(1, etc))
+		.toThrow("'etc' cannot be used in types.")
+
+	test "throw an error when etc is used without parameter", ->
+		expect(-> isValid(1, etc()))
+		.toThrow("'etc' cannot be used in types.")
+
+	test "throw an error when type is not a native type nor an object nor an array of types
+		nor a string or number or boolean literal.", ->
+		expect(-> isValid(val, Symbol("foo")))
+		.toThrow("Type can not be an instance of Symbol. Use Symbol as type instead.") for val in VALUES
