@@ -10,10 +10,10 @@ class TypedSet extends Type
 		super(arguments...)
 		@error "You cannot have #{getTypeName(@type)} as '#{@constructor.name}' argument." if isLiteral(@type)
 		@warn "Use 'Set' type instead of a #{@constructor.name} with elements of any type." if isAny(@type)
-	validate: (val) ->
-		return false unless val?.constructor is Set
-		return true if isAny(@type)
-		[val...].every((e) => isValid(e, @type))
+	validate: (val) -> switch
+		when val?.constructor isnt Set then false
+		when isAny(@type) then true
+		else [val...].every((e) => isValid(e, @type))
 	getTypeName: -> "set of '#{getTypeName(@type)}'"
 
 export default Type.createHelper(TypedSet)

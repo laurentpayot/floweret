@@ -9,10 +9,10 @@ class TypedObject extends Type
 	constructor: (@type) ->
 		super(arguments...)
 		@warn "Use 'Object' type instead of a #{@constructor.name} with values of any type." if isAny(@type)
-	validate: (val) ->
-		return false unless val?.constructor is Object
-		return true if isAny(@type)
-		Object.values(val).every((v) => isValid(v, @type))
+	validate: (val) -> switch
+		when val?.constructor isnt Object then false
+		when isAny(@type) then true
+		else Object.values(val).every((v) => isValid(v, @type))
 	getTypeName: -> "object with values of type '#{getTypeName(@type)}'"
 
 export default Type.createHelper(TypedObject)

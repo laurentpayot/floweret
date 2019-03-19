@@ -23,16 +23,15 @@ class TypedMap extends Type
 			# [@keysType, @valuesType] = [t1, t2] # problem with Rollup commonjs plugin
 			@keysType = t1
 			@valuesType = t2
-	validate: (val) ->
-		return false unless val?.constructor is Map
-		switch
-			when notDefined(@keysType) and notDefined(@valuesType) then true
-			when notDefined(@keysType) then Array.from(val.values()).every((e) => isValid(e, @valuesType))
-			when notDefined(@valuesType) then Array.from(val.keys()).every((e) => isValid(e, @keysType))
-			else
-				keys = Array.from(val.keys())
-				values = Array.from(val.values())
-				keys.every((e) => isValid(e, @keysType)) and values.every((e) => isValid(e, @valuesType))
+	validate: (val) -> switch
+		when val?.constructor isnt Map then false
+		when notDefined(@keysType) and notDefined(@valuesType) then true
+		when notDefined(@keysType) then Array.from(val.values()).every((e) => isValid(e, @valuesType))
+		when notDefined(@valuesType) then Array.from(val.keys()).every((e) => isValid(e, @keysType))
+		else
+			keys = Array.from(val.keys())
+			values = Array.from(val.values())
+			keys.every((e) => isValid(e, @keysType)) and values.every((e) => isValid(e, @valuesType))
 	getTypeName: ->
 		kt = if @keysType isnt undefined then "keys of type '#{getTypeName(@keysType)}' and " else ''
 		"map with #{kt}values of type '#{getTypeName(@valuesType)}'"
