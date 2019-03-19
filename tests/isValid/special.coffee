@@ -6,25 +6,23 @@ import Type from '../../src/types/Type'
 describe "Empty array", ->
 
 	test "return true for empty array only", ->
-		expect(isValid(v, [])).toBe(false) for v in VALUES when not (Array.isArray(v) and not v.length)
 		expect(isValid([], [])).toBe(true)
+		expect(isValid(v, [])).toBe(false) for v in VALUES when not (Array.isArray(v) and not v.length)
 
 describe "Empty object", ->
 
 	test "return true for empty object only", ->
+		expect(isValid({}, {})).toBe(true)
 		expect(isValid(v, {})).toBe(false) for v in VALUES \
 			when not (v?.constructor is Object and not Object.keys(v).length)
-		expect(isValid({}, {})).toBe(true)
 
 describe "Any type", ->
 
 	test "Any type should return true for all values", ->
 		expect(isValid(val, Any)).toBe(true) for val in VALUES
-		return
 
 	test "Any() type should return true for all values", ->
 		expect(isValid(val, Any())).toBe(true) for val in VALUES
-		return
 
 	test "Any(Number) type should throw an error", ->
 		expect(-> isValid(1, Any(Number))).toThrow("'Any' cannot have any arguments.")
@@ -60,19 +58,18 @@ describe "Maybe type", ->
 
 	test "return true when value is undefined.", ->
 		expect(isValid(undefined, maybe(t))).toBe(true) for t in NATIVE_TYPES when t isnt undefined
-		return
 
 	test "return true for a null type, false for other types.", ->
-		expect(isValid(null, maybe(t))).toBe(false) for t in NATIVE_TYPES when t isnt undefined and t isnt null
 		expect(isValid(null, maybe(null))).toBe(true)
+		expect(isValid(null, maybe(t))).toBe(false) for t in NATIVE_TYPES when t isnt undefined and t isnt null
 
 	test "return true for a number type, false for other types.", ->
-		expect(isValid(1.1, maybe(t))).toBe(false) for t in NATIVE_TYPES when t isnt undefined and t isnt Number
 		expect(isValid(1.1, maybe(Number))).toBe(true)
+		expect(isValid(1.1, maybe(t))).toBe(false) for t in NATIVE_TYPES when t isnt undefined and t isnt Number
 
 	test "return true for a string type, false for other types.", ->
-		expect(isValid("Énorme !", maybe(t))).toBe(false) for t in NATIVE_TYPES when t isnt undefined and t isnt String
 		expect(isValid("Énorme !", maybe(String))).toBe(true)
+		expect(isValid("Énorme !", maybe(t))).toBe(false) for t in NATIVE_TYPES when t isnt undefined and t isnt String
 
 	test "return true for a Number or a String or undefined, when union is used", ->
 		expect(isValid(1, maybe([Number, String]))).toBe(true)

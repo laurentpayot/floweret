@@ -20,10 +20,10 @@ test "return false for an object type and non object values", ->
 	UserType =
 		id: Number
 		name: String
-	expect(isValid(val, UserType)).toBe(false) \
-		for val in VALUES when val isnt undefined and val isnt null and val.constructor isnt Object
 	expect(isValid(undefined, UserType)).toBe(false)
 	expect(isValid(null, UserType)).toBe(false)
+	expect(isValid(val, UserType)).toBe(false) \
+		for val in VALUES when val isnt undefined and val isnt null and val.constructor isnt Object
 
 test "return true for a shallow object type, false otherwise", ->
 	UserType =
