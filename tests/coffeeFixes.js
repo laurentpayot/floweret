@@ -4,7 +4,7 @@
 const describeJS = global.describe
 global.describe = Object.assign((name, f) => describeJS(name, function () { f() }), describeJS)
 
-// tests with CS for loops last statement ≠ `it` and `test` must return either a Promise or undefined.
+// tests with CS `for` loops last statement ≠ `it` and `test` must return either a Promise or undefined.
 const testJS = global.test
 global.test = Object.assign((name, f) => testJS(name, function () {
 	let result = f()
