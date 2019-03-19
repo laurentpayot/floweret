@@ -1,4 +1,4 @@
-import {NATIVE_TYPES, VALUES} from '../fixtures'
+import {NATIVE_TYPES, VALUES, testTypes} from '../fixtures'
 import {isValid, Any, maybe} from '../../src'
 import Type from '../../src/types/Type'
 import promised from '../../src/types/promised'
@@ -96,3 +96,10 @@ describe "Promised type", ->
 		.toThrow("Type can not be an instance of Promise. Use Promise as type instead.")
 		expect(-> isValid(Promise.resolve(1), promised(Number)))
 		.toThrow("Type can not be an instance of Promise. Use Promise as type instead.")
+
+describe "Custom type (class)", ->
+
+	test "return true when type is MyClass, false for other types", ->
+		class MyClass
+		mc = new MyClass
+		testTypes(mc, MyClass)
