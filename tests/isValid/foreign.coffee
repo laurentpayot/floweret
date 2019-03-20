@@ -1,5 +1,5 @@
-import {isValid} from '../../src'
-import foreign from '../../src/types/foreign'
+import {isValid} from '../../dist'
+import foreign from '../../dist/types/foreign'
 
 test "return true when value is an instance of the foreign constructor", ->
 	class Foo extends String

@@ -1,6 +1,6 @@
-import {fn, Any} from '../../src'
-import And from '../../src/types/and'
-import Not from '../../src/types/not'
+import {fn, Any} from '../../dist'
+import And from '../../dist/types/and'
+import Not from '../../dist/types/not'
 
 # NB: Or() returns an array, not an Or instance, see array tests
 

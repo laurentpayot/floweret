@@ -1,5 +1,5 @@
-import {fn, Any} from '../../src'
-import TypedSet from '../../src/types/TypedSet'
+import {fn, Any} from '../../dist'
+import TypedSet from '../../dist/types/TypedSet'
 
 test "return an error with 'set of 'Number''", ->
 	f = fn TypedSet(Number), Any, ->

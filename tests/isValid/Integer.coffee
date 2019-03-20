@@ -1,5 +1,5 @@
-import {isValid} from '../../src'
-import Integer from '../../src/types/Integer'
+import {isValid} from '../../dist'
+import Integer from '../../dist/types/Integer'
 
 test "throw an error when Integer arguments are not numers", ->
 	expect(-> isValid(1, Integer('100'))).toThrow("'Integer' arguments must be numbers.")

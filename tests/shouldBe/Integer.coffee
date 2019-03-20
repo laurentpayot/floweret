@@ -1,5 +1,5 @@
-import {fn, Any} from '../../src'
-import Integer from '../../src/types/Integer'
+import {fn, Any} from '../../dist'
+import Integer from '../../dist/types/Integer'
 
 test "return an error with 'Integer'", ->
 	f = fn Integer, Any, ->

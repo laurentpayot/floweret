@@ -1,5 +1,5 @@
-import {fn, Any} from '../../src'
-import foreign from '../../src/types/foreign'
+import {fn, Any} from '../../dist'
+import foreign from '../../dist/types/foreign'
 
 
 test "return an error with 'foreign type'", ->

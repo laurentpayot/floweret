@@ -1,4 +1,4 @@
-import {isValid} from '../../src'
+import {isValid} from '../../dist'
 
 test "return false for empty array", ->
 	expect(isValid([], Array(1))).toBe(false)

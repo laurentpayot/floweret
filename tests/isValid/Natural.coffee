@@ -1,5 +1,5 @@
-import {isValid} from '../../src'
-import Natural from '../../src/types/Natural'
+import {isValid} from '../../dist'
+import Natural from '../../dist/types/Natural'
 
 test "throw an error when Natural arguments are not numers", ->
 	expect(-> isValid(1, Natural('100')))

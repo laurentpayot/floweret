@@ -1,4 +1,4 @@
-import {isValid} from '../../src'
+import {isValid} from '../../dist'
 
 test "return true if the value is one of the given strings, false otherwise", ->
 	expect(isValid("foo", ["foo", "bar"])).toBe(true)

@@ -1,7 +1,7 @@
-import {isValid, Any} from '../../src'
+import {isValid, Any} from '../../dist'
 import {VALUES} from '../fixtures'
-import TypedMap from '../../src/types/TypedMap'
-import Type from '../../src/types/Type'
+import TypedMap from '../../dist/types/TypedMap'
+import Type from '../../dist/types/Type'
 
 describe "Literal type elements", ->
 

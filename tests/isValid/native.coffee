@@ -1,5 +1,5 @@
 import {testTypes} from '../fixtures'
-import {isValid} from '../../src'
+import {isValid} from '../../dist'
 
 
 test "return true for an undefined type, false for other types", ->

@@ -1,4 +1,4 @@
-import {tuple} from '../../src'
+import {tuple} from '../../dist'
 
 test "init", ->
 	t = tuple Number, Number, Number, [1, 2, 3]

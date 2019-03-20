@@ -1,4 +1,4 @@
-import {isValid} from '../../src'
+import {isValid} from '../../dist'
 
 test "return true only for a regular expression value when type is RegExp", ->
 	expect(isValid(/foo/, RegExp)).toBe(true)

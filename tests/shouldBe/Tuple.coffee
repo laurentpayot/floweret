@@ -1,5 +1,5 @@
-import {fn, Any} from '../../src'
-import Tuple from '../../src/types/Tuple'
+import {fn, Any} from '../../dist'
+import Tuple from '../../dist/types/Tuple'
 
 test "return an error with 'tuple of 3 elements 'Number, Boolean, String''", ->
 	f = fn Tuple(Number, Boolean, String), Any, ->

@@ -1,5 +1,5 @@
-import {fn, Any} from '../../src'
-import Natural from '../../src/types/Natural'
+import {fn, Any} from '../../dist'
+import Natural from '../../dist/types/Natural'
 
 test "return an error with 'Natural'", ->
 	f = fn Natural, Any, ->

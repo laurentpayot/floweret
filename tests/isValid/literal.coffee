@@ -1,4 +1,4 @@
-import {isValid} from '../../src'
+import {isValid} from '../../dist'
 
 
 test "return true when value is the same string as the type literal, false if different", ->

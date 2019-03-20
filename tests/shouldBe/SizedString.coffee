@@ -1,5 +1,5 @@
-import {fn, Any} from '../../src'
-import SizedString from '../../src/types/SizedString'
+import {fn, Any} from '../../dist'
+import SizedString from '../../dist/types/SizedString'
 
 test "return an error with 'SizedString of at most 4 characters'", ->
 	f = fn SizedString(100), Any, ->

@@ -1,7 +1,7 @@
-import {isValid, Any} from '../../src'
+import {isValid, Any} from '../../dist'
 import {VALUES} from '../fixtures'
-import TypedSet from '../../src/types/TypedSet'
-import Type from '../../src/types/Type'
+import TypedSet from '../../dist/types/TypedSet'
+import Type from '../../dist/types/Type'
 
 describe "Literal type elements", ->
 

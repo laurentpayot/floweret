@@ -1,4 +1,4 @@
-import {isValid} from '../../src'
+import {isValid} from '../../dist'
 import {VALUES} from '../fixtures'
 
 describe "Native type elements", ->

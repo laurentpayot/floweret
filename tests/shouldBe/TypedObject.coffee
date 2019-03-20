@@ -1,5 +1,5 @@
-import {fn, Any} from '../../src'
-import TypedObject from '../../src/types/TypedObject'
+import {fn, Any} from '../../dist'
+import TypedObject from '../../dist/types/TypedObject'
 
 test "return an error with 'object with values of type 'Number''", ->
 	f = fn TypedObject(Number), Any, ->

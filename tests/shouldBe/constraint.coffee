@@ -1,5 +1,5 @@
-import {fn, Any} from '../../src'
-import constraint from '../../src/types/constraint'
+import {fn, Any} from '../../dist'
+import constraint from '../../dist/types/constraint'
 
 test "return an error with ''constraint' argument must be a function.'", ->
 	expect(-> constraint(1)).toThrow("'constraint' argument must be a function.")

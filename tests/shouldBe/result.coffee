@@ -1,4 +1,4 @@
-import {fn, Any} from '../../src'
+import {fn, Any} from '../../dist'
 
 test "return a result error with ''Number' instead of NaN'", ->
 	f = fn Number, [undefined, Number], Number,

@@ -1,4 +1,4 @@
-import {isValid} from '../src'
+import {isValid} from '../dist'
 
 export NATIVE_TYPES = [
 	undefined, null, NaN, Infinity, -Infinity,

@@ -1,5 +1,5 @@
-import {fn, Any, etc} from '../src'
-import promised from '../src/types/promised'
+import {fn, Any, etc} from '../dist'
+import promised from '../dist/types/promised'
 
 describe "Arguments of signature itself", ->
 

@@ -1,4 +1,4 @@
-import {array} from '../../src'
+import {array} from '../../dist'
 
 test "init", ->
 	a = array Number, [1, 2, 3]

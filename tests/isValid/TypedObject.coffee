@@ -1,5 +1,5 @@
-import {isValid} from '../../src'
-import TypedObject from '../../src/types/TypedObject'
+import {isValid} from '../../dist'
+import TypedObject from '../../dist/types/TypedObject'
 
 test "throw an error when TypedObject is used as a function", ->
 	expect(-> isValid(1, TypedObject)).toThrow("'TypedObject' must have exactly 1 argument.")

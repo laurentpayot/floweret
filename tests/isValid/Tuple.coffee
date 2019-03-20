@@ -1,7 +1,7 @@
-import {isValid} from '../../src'
-import Tuple from '../../src/types/Tuple'
-import Type from '../../src/types/Type'
-import Any from '../../src/types/Any'
+import {isValid} from '../../dist'
+import Tuple from '../../dist/types/Tuple'
+import Type from '../../dist/types/Type'
+import Any from '../../dist/types/Any'
 
 test "throw an error when Tuple is used as a function", ->
 	expect(-> isValid(1, Tuple)).toThrow("'Tuple' must have at least 2 arguments.")

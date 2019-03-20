@@ -1,5 +1,5 @@
-import {fn, Any} from '../../src'
-import TypedMap from '../../src/types/TypedMap'
+import {fn, Any} from '../../dist'
+import TypedMap from '../../dist/types/TypedMap'
 
 test "return an error with 'map with values of type 'Number''", ->
 	f = fn TypedMap(Number), Any, ->

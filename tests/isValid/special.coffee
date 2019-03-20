@@ -1,8 +1,8 @@
 import {NATIVE_TYPES, VALUES, testTypes} from '../fixtures'
-import {isValid, Any, maybe, etc} from '../../src'
-import Type from '../../src/types/Type'
-import promised from '../../src/types/promised'
-import constraint from '../../src/types/constraint'
+import {isValid, Any, maybe, etc} from '../../dist'
+import Type from '../../dist/types/Type'
+import promised from '../../dist/types/promised'
+import constraint from '../../dist/types/constraint'
 
 
 describe "Empty array", ->

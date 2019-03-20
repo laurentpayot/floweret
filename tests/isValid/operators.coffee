@@ -1,9 +1,9 @@
-import {isValid, Any} from '../../src'
+import {isValid, Any} from '../../dist'
 import {VALUES} from '../fixtures'
-import Type from '../../src/types/Type'
-import And from '../../src/types/and'
-import Or from '../../src/types/or'
-import Not from '../../src/types/not'
+import Type from '../../dist/types/Type'
+import And from '../../dist/types/and'
+import Or from '../../dist/types/or'
+import Not from '../../dist/types/not'
 
 describe "And", ->
 

@@ -1,4 +1,4 @@
-import {typeOf} from '../src'
+import {typeOf} from '../dist'
 
 describe "typeOf", ->
 

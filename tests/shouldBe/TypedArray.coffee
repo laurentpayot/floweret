@@ -1,4 +1,4 @@
-import {fn, Any} from '../../src'
+import {fn, Any} from '../../dist'
 
 test "return an error with 'array of 'Number''", ->
 	f = fn Array(Number), Any, ->

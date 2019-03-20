@@ -1,6 +1,6 @@
 import {VALUES, NATIVE_TYPES} from './fixtures'
-import {isLiteral, isAny, isEmptyObject} from '../src/tools'
-import {Any} from '../src'
+import {isLiteral, isAny, isEmptyObject} from '../dist/tools'
+import {Any} from '../dist'
 
 describe "isLiteral", ->
 

@@ -1,5 +1,5 @@
-import {isValid} from '../../src'
-import SizedString from '../../src/types/SizedString'
+import {isValid} from '../../dist'
+import SizedString from '../../dist/types/SizedString'
 
 test "throw an error when SizedString is used as a function", ->
 	expect(-> isValid("123", SizedString)).toThrow("'SizedString' must have at least 1 argument.")

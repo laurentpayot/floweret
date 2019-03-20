@@ -1,5 +1,5 @@
 import {VALUES} from '../fixtures'
-import {isValid} from '../../src'
+import {isValid} from '../../dist'
 
 test "return true if both value and type are empty object.", ->
 	expect(isValid({}, {})).toBe(true)
