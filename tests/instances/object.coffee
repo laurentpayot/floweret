@@ -1,4 +1,4 @@
-import {object} from '../src'
+import {object} from '../../src'
 
 test "init", ->
 	o = object {a: Number, b: {c: Number}}, {a: 1, b: {c: 2}}
