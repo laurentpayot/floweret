@@ -39,7 +39,7 @@
     "sizes:rollup": "cd benchmark/bundles && stat -c '%n %s bytes' *.gz | sort -n -k 2 | column -t && echo",
     "benchmark": "npm run bundle && npm run sizes:rollup && cd benchmark/bundles && node no-type-checking-benchmark.min.js && node floweret-benchmark.min.js && node runtypes.min.js && node flow-runtime-benchmark.min.js && echo",
     "link": "mkdir -p dist && cp package.json dist && cd dist && npm link && rm -rf node_modules && rm package-lock.json && cd .. && npm link floweret",
-    "preversion": "npm test && npm run build && npm run size",
+    "preversion": "npm test && npm run size",
     "postversion": "git push && git push --tags && cp package.json dist && cp *.md dist && cd dist && npm publish",
     "size": "size-limit"
   },
