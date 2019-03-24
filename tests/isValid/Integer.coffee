@@ -25,3 +25,21 @@ test "return false for an decimal number", ->
 	expect(isValid(-0.1, Integer)).toBe(false)
 	expect(isValid(-1.1, Integer)).toBe(false)
 
+test "max value", ->
+	expect(isValid(9, Integer(10))).toBe(true)
+	expect(isValid(10, Integer(10))).toBe(true)
+	expect(isValid(11, Integer(10))).toBe(false)
+	expect(-> isValid(-11,  Integer(-10)))
+	.toThrow("'Integer' max value used alone cannot be negative.")
+
+test "range values", ->
+	expect(isValid(9, Integer(2, 10))).toBe(true)
+	expect(isValid(9, Integer(-2, 10))).toBe(true)
+	expect(isValid(-9, Integer(-2, 10))).toBe(false)
+	expect(isValid(10, Integer(2, 10))).toBe(true)
+	expect(isValid(2, Integer(2, 10))).toBe(true)
+	expect(isValid(11, Integer(2, 10))).toBe(false)
+	expect(isValid(-3, Integer(-2, 10))).toBe(false)
+	expect(isValid(-11, Integer(-20, -10))).toBe(true)
+	expect(isValid(-21, Integer(-20, -10))).toBe(false)
+	expect(isValid(-9, Integer(-20, -10))).toBe(false)

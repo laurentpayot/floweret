@@ -45,7 +45,6 @@ Floweret is a JavasScript *runtime* signature type checker that is:
     * [Typed Set](#typed-set)
     * [Typed Map](#typed-map)
     * [Integer](#integer)
-    * [Natural](#natural)
     * [Sized string](#sized-string)
   * [Foreign types](#foreign-types)
 * [Type composition](#type-composition)
@@ -598,23 +597,23 @@ Key type is always `String`, just like normal objects.
 import { fn } from 'floweret'
 import TypedObject from 'floweret/types/TypedObject'
 
-const Grades = TypedObject(Number)
+const Results = TypedObject(Number)
 
 const maxGrade = fn(
-  Grades, Number,
-  (grades) => Math.max(...Object.values(grades))
+  Results, Number,
+  (results) => Math.max(...Object.values(results))
 )
 
 maxGrade({
-    Alice: 8,
+    Alice: 8.5,
     Larry: 8,
-    Bob: 9
-}) // 9
+    Bob: 9.1
+}) // 9.1
 
 maxGrade({
-    Alice: 8,
+    Alice: 8.5,
     Larry: "B",
-    Bob: 9
+    Bob: 9.1
 }) // TypeError: Argument #1 should be of type 'object with values of type 'Number'' instead of Object.
 ```
 
@@ -647,23 +646,36 @@ or
 
 #### Integer
 
+> Integer
+
+or
+
 > Integer(<maximum value\>)
 
 or
 
 > Integer(<minimum value\>, <maximum value\>)
 
-*Documentation in progress…*
+* Use `Integer` with two arguments to specify values range for an integer number.
+* If only one argument is provided, it is considered as the maximum value, the minimum value being 0. Thus use `Integer(Number.MAX_SAFE_INTEGER)` for positive integers including 0.
+* Used without argument, `Integer` simply specify an integer number, positive or negative.
 
-#### Natural
+```js
+import { fn } from 'floweret'
+import Integer from 'floweret/types/Integer'
 
-> Natural(<maximum value\>)
+const Temperature = Integer(-70, 70)
 
-or
+const maxTemperature = fn(
+  Array(Temperature), Temperature,
+  (temperatures) => Math.max(...temperatures)
+)
 
-> Natural(<minimum value\>, <maximum value\>)
-
-*Documentation in progress…*
+maxTemperature([5, -2, 20, 17]) // 20
+// TypeError: Argument #1 should be an array with element 3 of type 'Integer
+// bigger than or equal to -70 and smaller than or equal to 70' instead of Number 170.
+maxTemperature([5, -2, 20, 170])
+```
 
 #### Sized string
 
@@ -672,6 +684,8 @@ or
 or
 
 > SizedString(<minimum length\>, <maximum length\>)
+
+*Documentation in progress…*
 
 ### Foreign types
 
@@ -792,7 +806,7 @@ Here are some results from a machine that scores around 21000 to the [Octane 2.0
 
 ```txt
 no-type-checking-benchmark.min.js.gz  229 bytes
-floweret-benchmark.min.js.gz          2745 bytes
+floweret-benchmark.min.js.gz          2990 bytes
 runtypes.min.js.gz                    5916 bytes
 flow-runtime-benchmark.min.js.gz      20208 bytes
 
