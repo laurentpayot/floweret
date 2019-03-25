@@ -4,8 +4,9 @@ import typeOf from './typeOf'
 import Type from './types/Type'
 
 # check that a value is of a given type or of any (undefined) type, e.g.: isValid("foo", String)
-isValid = (val, type) -> if Array.isArray(type) # NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
-	switch type.length
+isValid = (val, type) ->
+	# NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
+	if Array.isArray(type) then switch type.length
 		when 0 then Array.isArray(val) and not val.length # empty array: `[]`
 		when 1 then switch
 			when not Array.isArray(val) then false
@@ -25,29 +26,29 @@ isValid = (val, type) -> if Array.isArray(type) # NB: special Array case http://
 				Array.isArray(val) and val.length is type.length
 			else # union of types, e.g.: `[Object, null]`
 				type.some((t) -> isValid(val, t))
-else switch type?.constructor
-	when undefined, String, Number, Boolean # literal type (including ±Infinity and NaN) or undefined or null
-		if Number.isNaN(type) then Number.isNaN(val) else val is type
-	# custom type helpers, constructors of native types (String, Number (excluding ±Infinity), Object…), custom classes
-	when Function then switch
-		when type.rootClass is Type then type().validate(val) # type is a helper, using its default arguments
-		when type is Array then Array.isArray(val)
-		when type is Number then Number.isFinite(val)
-		else val?.constructor is type
-	when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
-		return false unless val?.constructor is Object
-		if not isEmptyObject(type)
-			for k, v of type
-				return false unless isValid(val[k], v)
-			true
-		else isEmptyObject(val)
-	when RegExp then val?.constructor is String and type.test(val)
-	else
-		if type instanceof Type
-			type.validate(val)
+	else switch type?.constructor
+		when undefined, String, Number, Boolean # literal type (including ±Infinity and NaN) or undefined or null
+			if Number.isNaN(type) then Number.isNaN(val) else val is type
+		# custom type helpers, constructors of native types (String, Number (excluding ±Infinity), Object…), custom classes
+		when Function then switch
+			when type.rootClass is Type then type().validate(val) # type is a helper, using its default arguments
+			when type is Array then Array.isArray(val)
+			when type is Number then Number.isFinite(val)
+			else val?.constructor is type
+		when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
+			return false unless val?.constructor is Object
+			if not isEmptyObject(type)
+				for k, v of type
+					return false unless isValid(val[k], v)
+				true
+			else isEmptyObject(val)
+		when RegExp then val?.constructor is String and type.test(val)
 		else
-			prefix = if type.constructor in [Set, Map] then 'the provided Typed' else ''
-			throw new InvalidType "Type can not be an instance of #{typeOf(type)}.
-									Use #{prefix}#{typeOf(type)} as type instead."
+			if type instanceof Type
+				type.validate(val)
+			else
+				prefix = if type.constructor in [Set, Map] then 'the provided Typed' else ''
+				throw new InvalidType "Type can not be an instance of #{typeOf(type)}.
+										Use #{prefix}#{typeOf(type)} as type instead."
 
 export default isValid

@@ -1,4 +1,4 @@
-import { fn, object } from '../dist'
+import { fn, instance } from '../dist'
 
 const TIMES = 10 * 1000
 
@@ -15,7 +15,7 @@ const greet = fn(
 
 console.time(TIMES + " greets")
 for (let i = 0; i < TIMES; i++) {
-	const alice = object(Person, { name: 'alice' })
+	const alice = instance(Person, { name: 'alice' })
 	alice.name = 'Alice'
 	greet(alice)
 }

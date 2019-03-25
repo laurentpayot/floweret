@@ -29,3 +29,4 @@ export default class Type
 				if l < min then @error "'#{name}' must have at least#{argsNb(min)}"
 	validate: -> false # false if child class validate() missing
 	getTypeName: -> @constructor.name
+	proxy: (val) -> val
