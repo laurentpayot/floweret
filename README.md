@@ -11,7 +11,7 @@ Floweret is a JavasScript *runtime* signature type checker that is:
 * **Intuitive**: Native JavaScript types syntax.
 * **Powerful**: Type composition, promises, rest parameters, logical operators and more…
 * **Customizable**: Create your own types for your own needs.
-* **Lightweight**: 2.6 kB minified and gzipped. No dependencies.
+* **Lightweight**: No dependencies. Typically [around 3 kB](#benchmark) minified and gzipped. Less if you use tree shaking.
 * **Fast**: Direct type comparison. No string to parse.
 
 ## Contents
@@ -798,6 +798,7 @@ The benchmark currently includes the folowing runtime type-checking systems:
 * **no type-checking**: the reference results.
 * [**Floweret**](https://github.com/laurentpayot/floweret): you might know it if you are reading this.
 * [**Runtypes**](https://github.com/pelotom/runtypes): "Runtime validation for static types" (TypeScript-oriented)
+* [**Object Model**](https://github.com/sylvainpolletvillard/ObjectModel): "Strong Dynamically Typed Object Modeling for JavaScript."
 * [**Flow-runtime**](https://codemix.github.io/flow-runtime): "Flow-compatible runtime type system for JavaScript."
 
 The [sub-benchmarks](https://github.com/laurentpayot/floweret/tree/master/benchmark) are run from minified [Rollup](https://rollupjs.org) bundles (UMD) and call two simple functions several thousand times.
