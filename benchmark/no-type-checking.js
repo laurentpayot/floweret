@@ -9,7 +9,9 @@ function greet(person) {
 
 console.time(TIMES + " greets")
 for (let i = 0; i < TIMES; i++) {
-	greet({ name: 'Alice' })
+	const alice = { name: 'Alice' }
+	alice.name = 'Alice'
+	greet(alice)
 }
 console.timeEnd(TIMES + " greets")
 

@@ -805,27 +805,32 @@ The [sub-benchmarks](https://github.com/laurentpayot/floweret/tree/master/benchm
 Here are some results from a machine that scores around 21000 to the [Octane 2.0](https://chromium.github.io/octane/) JavaScript benchmark:
 
 ```txt
-no-type-checking-benchmark.min.js.gz  229 bytes
-floweret-benchmark.min.js.gz          2990 bytes
-runtypes.min.js.gz                    5916 bytes
-flow-runtime-benchmark.min.js.gz      20208 bytes
+no-type-checking-benchmark.min.js.gz  238 bytes
+floweret-benchmark.min.js.gz          3251 bytes
+objectmodel.min.js.gz                 4117 bytes
+runtypes.min.js.gz                    5939 bytes
+flow-runtime-benchmark.min.js.gz      20225 bytes
 
 
 *** No type-checking ***
-10000 greets: 1.413ms
-10000 sums: 17.761ms
+10000 greets: 2.082ms
+10000 sums: 18.398ms
 
 *** Floweret ***
-10000 greets: 15.092ms
-10000 sums: 56.467ms
+10000 greets: 27.820ms
+10000 sums: 57.345ms
 
 *** Runtypes ***
-10000 greets: 13.030ms
-10000 sums: 41.928ms
+10000 greets: 12.070ms
+10000 sums: 45.254ms
+
+*** Object Model ***
+10000 greets: 136.349ms
+10000 sums: 889.417ms
 
 *** Flow-runtime ***
-10000 greets: 190.597ms
-10000 sums: 551.520ms
+10000 greets: 308.719ms
+10000 sums: 494.665ms
 ```
 
 Feel free to make your own benchmarks and share the results.

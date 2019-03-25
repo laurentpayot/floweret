@@ -16,7 +16,11 @@ t.annotate(greet, t.function(t.param('person', Person), t.return(t.string())))
 
 console.time(TIMES + " greets")
 for (let i = 0; i < TIMES; i++) {
-	greet({ name: 'Alice' })
+	let alice = { name: 'alice' }
+	Person.assert(alice)
+	alice.name = 'Alice'
+	Person.assert(alice)
+	greet(alice)
 }
 console.timeEnd(TIMES + " greets")
 

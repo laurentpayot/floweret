@@ -19,7 +19,9 @@ const greet = Contract(
 
 console.time(TIMES + " greets")
 for (let i = 0; i < TIMES; i++) {
-	greet({ name: 'Alice' })
+	let alice = Person.check({ name: 'alice' })
+	alice.name = 'Alice'
+	greet(alice)
 }
 console.timeEnd(TIMES + " greets")
 

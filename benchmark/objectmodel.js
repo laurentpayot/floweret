@@ -1,13 +1,12 @@
-import { fn, object } from '../dist'
+import { FunctionModel, ObjectModel, ArrayModel } from "objectmodel"
 
 const TIMES = 10 * 1000
 
-console.log("\n*** Floweret ***")
+console.log("\n*** Object Model ***")
 
 // example from https://codemix.github.io/flow-runtime/#/
-const Person = {name: String}
-const greet = fn(
-	Person, String,
+const Person = new ObjectModel({name: String})
+const greet = FunctionModel(Person).return(String)(
 	function (person) {
 		return 'Hello ' + person.name
 	}
@@ -15,15 +14,13 @@ const greet = fn(
 
 console.time(TIMES + " greets")
 for (let i = 0; i < TIMES; i++) {
-	const alice = object(Person, { name: 'alice' })
+	let alice = new Person({ name: 'alice' })
 	alice.name = 'Alice'
 	greet(alice)
 }
 console.timeEnd(TIMES + " greets")
 
-
-const sum = fn(
-	Array(Number), Number,
+const sum = FunctionModel(ArrayModel(Number)).return(Number)(
 	function (a) {
 		return a.reduce((acc, curr) => acc + curr)
 	}

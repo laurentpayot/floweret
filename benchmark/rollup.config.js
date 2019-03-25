@@ -65,5 +65,14 @@ export default [
 			format
 		},
 		plugins
+	},
+	{
+		input: 'objectmodel.js',
+		output: {
+			file: 'bundles/objectmodel.min.js',
+			name: 'myBundle',
+			format
+		},
+		plugins
 	}
 ]
