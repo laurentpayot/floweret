@@ -8,7 +8,7 @@ class TypedObject extends Type
 	argsMax: 1
 	constructor: (@type) ->
 		super(arguments...)
-		@warn "Use 'Object' type instead of a #{@constructor.name} with values of any type." if isAny(@type)
+		Type.warn "Use 'Object' type instead of a #{@constructor.name} with values of any type." if isAny(@type)
 	validate: (val) -> switch
 		when val?.constructor isnt Object then false
 		when isAny(@type) then true

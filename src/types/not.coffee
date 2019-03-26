@@ -8,7 +8,7 @@ class Not extends Type
 	argsMax: 1
 	constructor: (@type) ->
 		super(arguments...)
-		@warn "Any is inadequate as '#{@helperName}' argument." if isAny(@type)
+		Type.warn "Any is inadequate as '#{@helperName}' argument." if isAny(@type)
 	validate: (val) -> not isValid(val, @type)
 	getTypeName: -> "not '#{getTypeName(@type)}'"
 	helperName: "not"

@@ -23,7 +23,7 @@ describe "Any type elements", ->
 		expect(-> isValid(1, TypedMap)).toThrow("'TypedMap' must have at least 1 argument.")
 
 	test "TypedMap(Any) should return a TypedMap instance and log a warning.", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		t = TypedMap(Any)
 		jest.restoreAllMocks()
@@ -33,7 +33,7 @@ describe "Any type elements", ->
 		expect(warn).toHaveBeenCalledWith("Use 'Map' type instead of a TypedMap with values of any type.")
 
 	test "TypedMap(Any, Any) should return a TypedMap instance and log a warning.", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		t = TypedMap(Any, Any)
 		jest.restoreAllMocks()
@@ -43,7 +43,7 @@ describe "Any type elements", ->
 		expect(warn).toHaveBeenCalledWith("Use 'Map' type instead of a TypedMap with keys and values of any type.")
 
 	test "TypedMap(Any()) should return a TypedMap instance and log a warning.", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		t = TypedMap(Any())
 		jest.restoreAllMocks()
@@ -53,7 +53,7 @@ describe "Any type elements", ->
 		expect(warn).toHaveBeenCalledWith("Use 'Map' type instead of a TypedMap with values of any type.")
 
 	test "TypedMap(Any(), Any()) should return a TypedMap instance and log a warning.", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		t = TypedMap(Any(), Any())
 		jest.restoreAllMocks()

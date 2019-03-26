@@ -13,25 +13,24 @@ export default class Type
 		h.rootClass = Type
 		h
 	@invalid: (msg) -> throw new InvalidType msg
-	invalid: Type.invalid
-	warn: (msg) -> console.warn("Floweret type:", msg) unless process?.env.NODE_ENV is 'production'
+	@warn: (msg) -> console.warn("Floweret:", msg) unless process?.env.NODE_ENV is 'production'
 	argsMin: undefined
 	argsMax: undefined
 	constructor: ->
-		@invalid "Abstract class 'Type' cannot be instantiated directly." if @constructor is Type
+		Type.invalid "Abstract class 'Type' cannot be instantiated directly." if @constructor is Type
 		l = arguments.length
 		min = @argsMin
 		max = @argsMax
 		name = @helperName or @constructor.name
 		switch
 			when max is undefined
-				if min and l < min then @invalid "'#{name}' must have at least#{argsNb(min)}"
+				if min and l < min then Type.invalid "'#{name}' must have at least#{argsNb(min)}"
 			when min is max
-				if min is 0 and l then @invalid "'#{name}' cannot have any arguments."
-				if l isnt min then @invalid "'#{name}' must have exactly#{argsNb(min)}"
+				if min is 0 and l then Type.invalid "'#{name}' cannot have any arguments."
+				if l isnt min then Type.invalid "'#{name}' must have exactly#{argsNb(min)}"
 			else
-				if l > max then @invalid "'#{name}' must have at most#{argsNb(max)}"
-				if l < min then @invalid "'#{name}' must have at least#{argsNb(min)}"
+				if l > max then Type.invalid "'#{name}' must have at most#{argsNb(max)}"
+				if l < min then Type.invalid "'#{name}' must have at least#{argsNb(min)}"
 	validate: -> false # false if child class validate() missing
 	getTypeName: -> @constructor.name
 	# NB: to avoid circular dependencies, error static method is added to Type class in `typeError` file

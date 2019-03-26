@@ -6,7 +6,7 @@ class Constraint extends Type
 	argsMax: 1
 	constructor: (@validator) ->
 		super(arguments...)
-		@invalid "'#{@helperName}' argument must be a function." unless @validator?.constructor is Function
+		Type.invalid "'#{@helperName}' argument must be a function." unless @validator?.constructor is Function
 	validate: (val) -> @validator(val)
 	getTypeName: -> "constrained by '#{@validator}'"
 	helperName: "constraint"

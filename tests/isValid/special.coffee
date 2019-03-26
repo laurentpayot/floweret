@@ -35,7 +35,7 @@ describe "Any type", ->
 describe "Maybe type", ->
 
 	test "maybe(Any) should not return Any type.", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		expect(maybe(Any)).toEqual([undefined, Any])
 		jest.restoreAllMocks()
@@ -43,7 +43,7 @@ describe "Maybe type", ->
 		expect(warn).toHaveBeenCalledWith("Any is not needed as 'maybe' argument.")
 
 	test "maybe(Any()) should not return Any type.", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		expect(maybe(Any())).toEqual([undefined, Any()])
 		jest.restoreAllMocks()

@@ -12,7 +12,7 @@ test "throw an error when Tuple is used without arguments", ->
 describe "Any type elements", ->
 
 	test "Tuple of Any should return array of empty elements", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		t = Tuple(Any, Any)
 		jest.restoreAllMocks()
@@ -22,7 +22,7 @@ describe "Any type elements", ->
 		expect(warn).toHaveBeenCalledWith("Use 'Array(2)' type instead of a Tuple of 2 values of any type'.")
 
 	test "Tuple of Any() should return array of empty elements", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		t = Tuple(Any(), Any())
 		jest.restoreAllMocks()

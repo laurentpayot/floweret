@@ -8,8 +8,8 @@ class Maybe extends Type
 	constructor: (@type) ->
 		super(arguments...)
 		# throwing error to avoid returning [undefined, undefined], same as sized array Array(2)
-		@invalid "'#{@helperName}' argument cannot be undefined." if @type is undefined
-		@warn "Any is not needed as '#{@helperName}' argument." if isAny(@type)
+		Type.invalid "'#{@helperName}' argument cannot be undefined." if @type is undefined
+		Type.warn "Any is not needed as '#{@helperName}' argument." if isAny(@type)
 		# return needed to always return an array instead of a new Maybe instance
 		return [undefined, @type]
 	helperName: "maybe"

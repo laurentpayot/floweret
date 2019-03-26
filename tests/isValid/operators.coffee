@@ -11,7 +11,7 @@ describe "And", ->
 		expect(-> And(1)).toThrow("'and' must have at least 2 arguments.")
 
 	test "And with Any values should return an And instance and log a warning.", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		t = And(Number, Any)
 		jest.restoreAllMocks()
@@ -56,7 +56,7 @@ describe "Or", ->
 		expect(-> Or(1)).toThrow("'or' must have at least 2 arguments.")
 
 	test "Or with Any values should return an array and log a warning.", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		t = Or(Number, Any)
 		jest.restoreAllMocks()
@@ -70,7 +70,7 @@ describe "Not", ->
 		expect(-> Not(1, 2)).toThrow("'not' must have exactly 1 argument.")
 
 	test "Not with Any value should return a Not instance and log a warning.", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		t = Not(Any)
 		jest.restoreAllMocks()

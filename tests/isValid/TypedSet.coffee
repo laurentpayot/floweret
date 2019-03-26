@@ -19,7 +19,7 @@ describe "Any type elements", ->
 		expect(-> isValid(1, TypedSet)).toThrow("'TypedSet' must have exactly 1 argument.")
 
 	test "TypedSet(Any) should return a TypedSet instance and log a warning.", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		t = TypedSet(Any)
 		jest.restoreAllMocks()
@@ -29,7 +29,7 @@ describe "Any type elements", ->
 		expect(warn).toHaveBeenCalledWith("Use 'Set' type instead of a TypedSet with elements of any type.")
 
 	test "TypedSet(Any()) should return a TypedSet instance and log a warning.", ->
-		warn = jest.spyOn(Type.prototype, 'warn')
+		warn = jest.spyOn(Type, 'warn')
 		.mockImplementation(->) # silencing warn()
 		t = TypedSet(Any())
 		jest.restoreAllMocks()

@@ -8,8 +8,8 @@ class And extends Type
 	constructor: (@types...) ->
 		super(arguments...)
 		for t, i in @types
-			@invalid "You cannot have #{getTypeName(t)} as '#{@helperName}' argument number #{i+1}." if isLiteral(t)
-			@warn "Any is not needed as '#{@helperName}' argument number #{i+1}." if isAny(t)
+			Type.invalid "You cannot have #{getTypeName(t)} as '#{@helperName}' argument number #{i+1}." if isLiteral(t)
+			Type.warn "Any is not needed as '#{@helperName}' argument number #{i+1}." if isAny(t)
 	validate: (val) -> @types.every((t) -> isValid(val, t))
 	getTypeName: -> ("'#{getTypeName(t)}'" for t in @types).join(" and ")
 	helperName: "and"
