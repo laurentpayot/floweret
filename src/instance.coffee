@@ -1,5 +1,5 @@
 import isValid from './isValid'
-import shouldBe from './shouldBe'
+import typeError from './typeError'
 import Type from './types/Type'
 
 objectProxy = (type, obj, path=[]) ->
@@ -10,7 +10,7 @@ objectProxy = (type, obj, path=[]) ->
 		for p in path
 			pathObject = {"#{p}": pathObject}
 			typeObject = {"#{p}": typeObject}
-		throw new TypeError "Instance #{shouldBe(pathObject, typeObject)}."
+		typeError("Instance", pathObject, typeObject)
 	new Proxy(obj,
 		set: (o, k, v) ->
 			error(k, v) unless isValid(v, type[k])
@@ -23,7 +23,7 @@ objectProxy = (type, obj, path=[]) ->
 arrayProxy = (type, arr) ->
 	new Proxy(arr,
 		set: (a, k, v) ->
-			throw new TypeError "Array instance element #{k} #{shouldBe(v, type)}." unless isValid(v, type)
+			typeError("Array instance element #{k}", v, type) unless isValid(v, type)
 			a[k] = v
 			true # indicate success
 	)
@@ -31,7 +31,7 @@ arrayProxy = (type, arr) ->
 export default (type, val) ->
 	# custom types first for customized instantiation validity check
 	return type.proxy(val) if type instanceof Type
-	throw new TypeError "Instance #{shouldBe(val, type)}." unless isValid(val, type)
+	typeError("Instance", val, type) unless isValid(val, type)
 	switch
 		when Array.isArray(type) and type.length is 1 then arrayProxy(type[0], val)
 		when type?.constructor is Object then objectProxy(type, val)

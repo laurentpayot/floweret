@@ -1,5 +1,6 @@
 import {getTypeName, typeValue, isEmptyObject} from './tools'
 import isValid from './isValid'
+import Type from './types/Type'
 
 # returns a list of keys path to the mismatched type + value not maching + type not matching
 badPath = (obj, typeObj) ->
@@ -11,7 +12,7 @@ badPath = (obj, typeObj) ->
 								else [obj[k], typeObj[k]])
 
 # type error message comparison part helper
-export default (val, type, promised=false) ->
+shouldBe = (val, type, promised=false) ->
 	io = " instead of "
 	"should be #{if promised then "a promise of " else ''}" + switch
 		when Array.isArray(val) and Array.isArray(type) and (type.length is 1 or not Object.values(type).length)
@@ -35,3 +36,11 @@ export default (val, type, promised=false) ->
 				"an empty object#{io}a non-empty object"
 		else
 			"#{if promised then '' else "of "}type '#{getTypeName(type)}'#{io}#{typeValue(val)}"
+
+typeError = (prefix='', val, type, promised) ->
+	throw new TypeError prefix + if arguments.length > 1 then  ' ' + shouldBe(val, type, promised) + '.' else ''
+
+# NB: to avoid cyclic dependencies, error static method is added to Type class here instead of `Type` file
+Type.error = typeError
+
+export default typeError

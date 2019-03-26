@@ -1,4 +1,3 @@
-import {InvalidType} from './errors'
 import {isAny, isEmptyObject} from './tools'
 import typeOf from './typeOf'
 import Type from './types/Type'
@@ -48,7 +47,7 @@ isValid = (val, type) ->
 				type.validate(val)
 			else
 				prefix = if type.constructor in [Set, Map] then 'the provided Typed' else ''
-				throw new InvalidType "Type can not be an instance of #{typeOf(type)}.
-										Use #{prefix}#{typeOf(type)} as type instead."
+				Type.invalid "Type can not be an instance of #{typeOf(type)}.
+								Use #{prefix}#{typeOf(type)} as type instead."
 
 export default isValid

@@ -7,7 +7,7 @@ class Etc extends Type
 	argsMax: 1
 	constructor: (@type=Any) ->
 		super(arguments...)
-	validate: -> @error "'#{@helperName}' cannot be used in types."
+	validate: -> @invalid "'#{@helperName}' cannot be used in types."
 	helperName: "etc"
 
 export default Type.createHelper(Etc)

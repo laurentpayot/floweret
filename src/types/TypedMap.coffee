@@ -16,7 +16,7 @@ class TypedMap extends Type
 			@warn "Use 'Map' type instead of a #{@constructor.name} with values of any type." if isAny(t1)
 			@valuesType = t1
 		else
-			@error "You cannot have both #{getTypeName(t1)} as keys type and #{getTypeName(t2)} as values type
+			@invalid "You cannot have both #{getTypeName(t1)} as keys type and #{getTypeName(t2)} as values type
 					in a #{@constructor.name}." if isLiteral(t1) and isLiteral(t2)
 			@warn "Use 'Map' type instead of a #{@constructor.name}
 					with keys and values of any type." if isAny(t1) and isAny(t2)

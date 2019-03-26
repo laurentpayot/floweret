@@ -8,14 +8,14 @@ class Integer extends Type
 	argsMax: 2
 	constructor: (n1, n2) ->
 		super(arguments...)
-		@error "'#{@constructor.name}' arguments must be numbers." \
+		@invalid "'#{@constructor.name}' arguments must be numbers." \
 			unless typeof n1 in ['undefined', 'number'] and typeof n2 in ['undefined', 'number']
 		if arguments.length is 1
-			@error "'#{@constructor.name}' max value used alone cannot be negative." if n1 < 0
+			@invalid "'#{@constructor.name}' max value used alone cannot be negative." if n1 < 0
 			@min = 0
 			@max = n1
 		else
-			@error "'#{@constructor.name}' max value cannot be less than min value." if n2 < n1
+			@invalid "'#{@constructor.name}' max value cannot be less than min value." if n2 < n1
 			# [@min, @max] = [n1, n2] # problem with Rollup commonjs plugin
 			@min = n1
 			@max = n2

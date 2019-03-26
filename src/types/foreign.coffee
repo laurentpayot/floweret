@@ -9,7 +9,7 @@ class Foreign extends Type
 	constructor: (@type) ->
 		super(arguments...)
 		unless typeof @type is 'string' or @type?.constructor is Object and not isEmptyObject(@type)
-			@error "'#{@helperName}' argument must be a string or a non-empty object."
+			@invalid "'#{@helperName}' argument must be a string or a non-empty object."
 	validate: (val) -> val?.constructor?.name is @type or Object.keys(@type).every((k) => isValid(val[k], @type[k]))
 	getTypeName: -> "foreign type #{if typeof @type is 'string' then @type else 'with typed properties'}"
 	helperName: "foreign"

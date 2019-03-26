@@ -8,7 +8,7 @@ class TypedSet extends Type
 	argsMax: 1
 	constructor: (@type) ->
 		super(arguments...)
-		@error "You cannot have #{getTypeName(@type)} as '#{@constructor.name}' argument." if isLiteral(@type)
+		@invalid "You cannot have #{getTypeName(@type)} as '#{@constructor.name}' argument." if isLiteral(@type)
 		@warn "Use 'Set' type instead of a #{@constructor.name} with elements of any type." if isAny(@type)
 	validate: (val) -> switch
 		when val?.constructor isnt Set then false
