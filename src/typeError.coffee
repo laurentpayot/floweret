@@ -40,7 +40,7 @@ shouldBe = (val, type, promised=false) ->
 typeError = (prefix='', val, type, promised) ->
 	throw new TypeError prefix + if arguments.length > 1 then  ' ' + shouldBe(val, type, promised) + '.' else ''
 
-# NB: to avoid cyclic dependencies, error static method is added to Type class here instead of `Type` file
+# NB: to avoid circular dependencies, error static method is added to Type class here instead of `Type` file
 Type.error = typeError
 
 export default typeError

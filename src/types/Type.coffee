@@ -1,4 +1,4 @@
-# NB: to avoid cyclic dependencies, error static method is added to Type class in `isValid` file
+# NB: to avoid circular dependencies, error static method is added to Type class in `typeError` file
 # import typeError from '../typeError'
 
 class InvalidType extends Error
@@ -34,5 +34,5 @@ export default class Type
 				if l < min then @invalid "'#{name}' must have at least#{argsNb(min)}"
 	validate: -> false # false if child class validate() missing
 	getTypeName: -> @constructor.name
-	# NB: to avoid cyclic dependencies, error static method is added to Type class in `isValid` file
+	# NB: to avoid circular dependencies, error static method is added to Type class in `typeError` file
 	proxy: (val) -> if @validate(val) then val else Type.error("Instance", val, @)
