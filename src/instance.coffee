@@ -22,10 +22,20 @@ objectProxy = (type, obj, path=[]) ->
 
 arrayProxy = (type, arr) ->
 	new Proxy(arr,
-		set: (a, k, v) ->
-			typeError("Array instance element #{k}", v, type) unless isValid(v, type)
-			a[k] = v
+		set: (a, i, v) ->
+			typeError("Array instance element #{i}", v, type) unless isValid(v, type)
+			a[i] = v
 			true # indicate success
+	)
+
+sizedArrayProxy = (arr) ->
+	sizeErrorMessage = "Sized array instance must have a length of #{arr.length}."
+	new Proxy(arr,
+		set: (a, i, v) ->
+			Type.error(sizeErrorMessage) unless i < a.length
+			a[i] = v
+			true # indicate success
+		deleteProperty: (a, i) -> Type.error(sizeErrorMessage)
 	)
 
 export default (type, val) ->
@@ -33,7 +43,13 @@ export default (type, val) ->
 	return type.proxy(val) if type instanceof Type
 	typeError("Instance", val, type) unless isValid(val, type)
 	switch
-		when Array.isArray(type) and type.length is 1 then arrayProxy(type[0], val)
+		when Array.isArray(type)
+			switch type.length
+				when 1 then arrayProxy(type[0], val)
+				else
+					# NB: checking two first values instead of `Object.values(type).length` for performance reasons
+					if type[0] is undefined and type[1] is undefined # array of empty values: sized array, e.g.: `Array(1000)`)
+						sizedArrayProxy(val)
 		when type?.constructor is Object then objectProxy(type, val)
 		else val # no proxy
 
