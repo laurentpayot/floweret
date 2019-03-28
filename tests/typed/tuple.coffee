@@ -20,28 +20,28 @@ test "trow an error with a non-tuple type", ->
 test "trow an error with a mismatched tuple type", ->
 	Trio = Tuple(Number, Number, Number)
 	expect(-> t = typed Trio, [1, true, 3])
-	.toThrow("Tuple instance element 1 should be of type 'Number' instead of Boolean true.")
+	.toThrow("Tuple element 1 should be of type 'Number' instead of Boolean true.")
 
 test "trow an error with a too long tuple type", ->
 	Trio = Tuple(Number, Number, Number)
 	expect(-> t = typed Trio, [1, 2, 3, 4])
-	.toThrow("Tuple instance must have a length of 3.")
+	.toThrow("Tuple must have a length of 3.")
 
 test "trow an error for a push", ->
 	Trio = Tuple(Number, Number, Number)
 	t = typed Trio, [1, 2, 3]
 	expect(-> t.push(4))
-	.toThrow("Tuple instance must have a length of 3.")
+	.toThrow("Tuple must have a length of 3.")
 
 test "trow an error for a delete", ->
 	Trio = Tuple(Number, Number, Number)
 	t = typed Trio, [1, 2, 3]
 	expect(-> delete t[0])
-	.toThrow("Tuple instance must have a length of 3.")
+	.toThrow("Tuple must have a length of 3.")
 
 test "trow an error for a set type mismatch", ->
 	Trio = Tuple(Number, Number, Number)
 	t = typed Trio, [1, 2, 3]
 	expect(-> t[1] = true)
-	.toThrow("Tuple instance element 1 should be of type 'Number' instead of Boolean true.")
+	.toThrow("Tuple element 1 should be of type 'Number' instead of Boolean true.")
 

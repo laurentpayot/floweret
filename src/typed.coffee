@@ -23,13 +23,13 @@ objectProxy = (type, obj, path=[]) ->
 arrayProxy = (type, arr) ->
 	new Proxy(arr,
 		set: (a, i, v) ->
-			typeError("Array instance element #{i}", v, type) unless isValid(v, type)
+			typeError("Array element #{i}", v, type) unless isValid(v, type)
 			a[i] = v
 			true # indicate success
 	)
 
 sizedArrayProxy = (arr) ->
-	sizeErrorMessage = "Sized array instance must have a length of #{arr.length}."
+	sizeErrorMessage = "Sized array must have a length of #{arr.length}."
 	new Proxy(arr,
 		set: (a, i, v) ->
 			Type.error(sizeErrorMessage) unless i < a.length

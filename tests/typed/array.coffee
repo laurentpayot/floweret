@@ -25,10 +25,10 @@ test "trow an error for a push type mismatch", ->
 	Numbers = Array(Number)
 	a = typed Numbers, [1, 2, 3]
 	expect(-> a.push(true))
-	.toThrow("Array instance element 3 should be of type 'Number' instead of Boolean true.")
+	.toThrow("Array element 3 should be of type 'Number' instead of Boolean true.")
 
 test "trow an error for a set type mismatch", ->
 	Numbers = Array(Number)
 	a = typed Numbers, [1, 2, 3]
 	expect(-> a[1] = true)
-	.toThrow("Array instance element 1 should be of type 'Number' instead of Boolean true.")
+	.toThrow("Array element 1 should be of type 'Number' instead of Boolean true.")

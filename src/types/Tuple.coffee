@@ -17,10 +17,10 @@ class Tuple extends Type
 		# NB: skipping parent class validation to let pre-proxy validation find a better error message
 		# super(tup)
 		Type.error("Instance", tup, @) unless Array.isArray(tup)
-		sizeErrorMessage = "Tuple instance must have a length of #{@types.length}."
+		sizeErrorMessage = "Tuple must have a length of #{@types.length}."
 		validator = (t, i, v) =>
 			Type.error(sizeErrorMessage) unless i < @types.length
-			Type.error("Tuple instance element #{i}", v, @types[i]) unless isValid(v, @types[i])
+			Type.error("Tuple element #{i}", v, @types[i]) unless isValid(v, @types[i])
 			t[i] = v
 			true # indicate success
 		# pre-proxy validation

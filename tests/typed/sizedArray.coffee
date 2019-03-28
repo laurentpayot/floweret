@@ -30,13 +30,13 @@ test "trow an error after a push", ->
 	Trio = Array(3)
 	a = typed Trio, [1, true, 'three']
 	expect(-> a.push(4))
-	.toThrow("Sized array instance must have a length of 3.")
+	.toThrow("Sized array must have a length of 3.")
 
 test "trow an error after a pop", ->
 	Trio = Array(3)
 	a = typed Trio, [1, true, 'three']
 	expect(-> a.pop())
-	.toThrow("Sized array instance must have a length of 3.")
+	.toThrow("Sized array must have a length of 3.")
 
 describe.skip "Size 1", ->
 
@@ -70,10 +70,10 @@ describe.skip "Size 1", ->
 		Mono = Array(1)
 		a = typed Mono, [1]
 		expect(-> a.push(2))
-		.toThrow("Sized array instance must have a length of 1.")
+		.toThrow("Sized array must have a length of 1.")
 
 	test "trow an error after a pop", ->
 		Mono = Array(1)
 		a = typed Mono, [1]
 		expect(-> a.pop())
-		.toThrow("Sized array instance must have a length of 1.")
+		.toThrow("Sized array must have a length of 1.")
