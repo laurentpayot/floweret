@@ -21,25 +21,25 @@ export default (argTypes..., resType, f) ->
 				t = (if type is EtcHelper then type() else type).type # using default helper parameters
 				unless isAny(t)
 					for arg, j in args[i..]
-						typeError("Argument ##{i+j+1}", arg, t) unless isValid(arg, t)
+						typeError("argument ##{i+j+1}", arg, t) unless isValid(arg, t)
 			else
 				unless isAny(type)
 					if args[i] is undefined
 						typeError("Missing required argument number #{i+1}.") unless isValid(undefined, type)
 					else
-						typeError("Argument ##{i+1}", args[i], type) unless isValid(args[i], type)
+						typeError("argument ##{i+1}", args[i], type) unless isValid(args[i], type)
 		typeError("Too many arguments provided.") if args.length > argTypes.length and not rest
 		if resType instanceof Promise
 			# NB: not using `await` because CS would transpile the returned function as an async one
 			resType.then((promiseType) ->
 				promise = f(args...)
-				typeError("Result", promise, promiseType, true) unless promise instanceof Promise
+				typeError("result", promise, promiseType, true) unless promise instanceof Promise
 				promise.then((result) ->
-					typeError("Promise result", result, promiseType) unless isValid(result, promiseType)
+					typeError("promise result", result, promiseType) unless isValid(result, promiseType)
 					result
 				)
 			)
 		else
 			result = f(args...)
-			typeError("Result", result, resType) unless isValid(result, resType)
+			typeError("result", result, resType) unless isValid(result, resType)
 			result

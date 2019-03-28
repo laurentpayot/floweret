@@ -10,7 +10,7 @@ objectProxy = (type, obj, path=[]) ->
 		for p in path
 			pathObject = {"#{p}": pathObject}
 			typeObject = {"#{p}": typeObject}
-		typeError("Instance", pathObject, typeObject)
+		typeError("", pathObject, typeObject)
 	new Proxy(obj,
 		set: (o, k, v) ->
 			error(k, v) unless isValid(v, type[k])
@@ -23,25 +23,34 @@ objectProxy = (type, obj, path=[]) ->
 arrayProxy = (type, arr) ->
 	new Proxy(arr,
 		set: (a, i, v) ->
-			typeError("Array element #{i}", v, type) unless isValid(v, type)
+			unless isValid(v, type)
+				badArray = [a...]
+				badArray[i] = v
+				typeError("", badArray, [type])
 			a[i] = v
 			true # indicate success
 	)
 
 sizedArrayProxy = (arr) ->
-	sizeErrorMessage = "Sized array must have a length of #{arr.length}."
+	sizeErrorMessage = "Expected an array with a length of #{arr.length}."
 	new Proxy(arr,
 		set: (a, i, v) ->
-			Type.error(sizeErrorMessage) unless i < a.length
+			unless i < a.length
+				badArray = [a...]
+				badArray[i] = v
+				Type.error("", badArray, Array(arr.length))
 			a[i] = v
 			true # indicate success
-		deleteProperty: (a, i) -> Type.error(sizeErrorMessage)
+		deleteProperty: (a, i) ->
+			badArray = [a...]
+			badArray.splice(i, 1)
+			Type.error("", badArray, Array(arr.length))
 	)
 
 export default (type, val) ->
 	# custom types first for customized instantiation validity check
 	return type.proxy(val) if type instanceof Type
-	typeError("Instance", val, type) unless isValid(val, type)
+	typeError("", val, type) unless isValid(val, type)
 	switch
 		when Array.isArray(type)
 			switch type.length

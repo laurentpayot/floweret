@@ -11,34 +11,34 @@ badPath = (obj, typeObj) ->
 			return [k].concat(if obj[k]?.constructor is Object then badPath(obj[k], typeObj[k]) \
 								else [obj[k], typeObj[k]])
 
-# type error message comparison part helper
-shouldBe = (val, type, promised=false) ->
-	io = " instead of "
-	"should be #{if promised then "a promise of " else ''}" + switch
-		when Array.isArray(val) and Array.isArray(type) and (type.length is 1 or not Object.values(type).length)
-			if type.length
-				if not Object.values(type).length # sized array
-					"an array with a length of #{type.length}#{io}#{val.length}"
+typeError = (prefix, val, type, promised=false) -> throw new TypeError(
+	if arguments.length < 2
+		prefix
+	else
+		suffix = switch
+			when Array.isArray(val) and Array.isArray(type) and (type.length is 1 or not Object.values(type).length)
+				if type.length
+					if not Object.values(type).length # sized array
+						"an array with a length of #{type.length} instead of #{val.length}"
+					else
+						i = val.findIndex((e) -> not isValid(e, type[0]))
+						"an array with element #{i} of type '#{getTypeName(type[0])}' instead of #{typeValue(val[i])}"
 				else
-					i = val.findIndex((e) -> not isValid(e, type[0]))
-					"an array with element #{i} of type '#{getTypeName(type[0])}'#{io}#{typeValue(val[i])}"
+					"an empty array, got a non-empty array"
+			when val?.constructor is Object and type?.constructor is Object
+				if not isEmptyObject(type)
+					[bp..., bv, bt] = badPath(val, type)
+					bk = bp[bp.length - 1]
+					"an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}' instead of #{\
+						if bv is undefined and bk not in Object.keys(bp[...-1].reduce(((acc, curr) -> acc[curr]), val))\
+							or bv?.constructor is Object and isEmptyObject(bv)\
+						then "missing key '" + bk + "'" else typeValue(bv)}"
+				else
+					"an empty object, got a non-empty object"
 			else
-				"an empty array#{io}a non-empty array"
-		when val?.constructor is Object and type?.constructor is Object
-			if not isEmptyObject(type)
-				[bp..., bv, bt] = badPath(val, type)
-				bk = bp[bp.length - 1]
-				"an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}'#{io}#{\
-					if bv is undefined and bk not in Object.keys(bp[...-1].reduce(((acc, curr) -> acc[curr]), val))\
-						or bv?.constructor is Object and isEmptyObject(bv)\
-					then "missing key '" + bk + "'" else typeValue(bv)}"
-			else
-				"an empty object#{io}a non-empty object"
-		else
-			"#{if promised then '' else "of "}type '#{getTypeName(type)}'#{io}#{typeValue(val)}"
-
-typeError = (prefix='', val, type, promised) ->
-	throw new TypeError prefix + if arguments.length > 1 then  ' ' + shouldBe(val, type, promised) + '.' else ''
+				"'#{getTypeName(type)}', got #{typeValue(val)}"
+		"Expected #{if prefix then prefix + ' to be ' else ''}#{if promised then 'a promise of ' else ''}#{suffix}."
+)
 
 # NB: to avoid circular dependencies, error static method is added to Type class here instead of `Type` file
 Type.error = typeError

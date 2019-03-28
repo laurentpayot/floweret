@@ -14,21 +14,21 @@ test "set", ->
 test "trow an error with a non-array type", ->
 	Numbers = Array(Number)
 	expect(-> a = typed Numbers, 1)
-	.toThrow("Instance should be of type 'array of 'Number'' instead of Number 1.")
+	.toThrow("Expected 'array of 'Number'', got Number 1.")
 
 test "trow an error with a mismatched array type", ->
 	Numbers = Array(Number)
 	expect(-> a = typed Numbers, [1, true, 3])
-	.toThrow("Instance should be an array with element 1 of type 'Number' instead of Boolean true.")
+	.toThrow("Expected an array with element 1 of type 'Number' instead of Boolean true.")
 
 test "trow an error for a push type mismatch", ->
 	Numbers = Array(Number)
 	a = typed Numbers, [1, 2, 3]
 	expect(-> a.push(true))
-	.toThrow("Array element 3 should be of type 'Number' instead of Boolean true.")
+	.toThrow("Expected an array with element 3 of type 'Number' instead of Boolean true.")
 
 test "trow an error for a set type mismatch", ->
 	Numbers = Array(Number)
 	a = typed Numbers, [1, 2, 3]
 	expect(-> a[1] = true)
-	.toThrow("Array element 1 should be of type 'Number' instead of Boolean true.")
+	.toThrow("Expected an array with element 1 of type 'Number' instead of Boolean true.")
