@@ -47,7 +47,7 @@ sizedArrayProxy = (arr) ->
 			Type.error("", badArray, Array(arr.length))
 	)
 
-export default (type, val) ->
+typed = (type, val) ->
 	# custom types first for customized instantiation validity check
 	return type.proxy(val) if type instanceof Type
 	typeError("", val, type) unless isValid(val, type)
@@ -56,9 +56,13 @@ export default (type, val) ->
 			switch type.length
 				when 1 then arrayProxy(type[0], val)
 				else
-					# NB: checking two first values instead of `Object.values(type).length` for performance reasons
+					# checking two first values instead of `Object.values(type).length` for performance reasons
 					if type[0] is undefined and type[1] is undefined # array of empty values: sized array, e.g.: `Array(1000)`)
 						sizedArrayProxy(val)
+					else # union of types: typing with the first valid type
+						i = type.find((t) -> isValid(val, t))
+						typed(type[i], val)
 		when type?.constructor is Object then objectProxy(type, val)
 		else val # no proxy
 
+export default typed
