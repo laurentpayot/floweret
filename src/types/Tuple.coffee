@@ -8,31 +8,26 @@ class Tuple extends Type
 	constructor: (@types...) ->
 		super(arguments...)
 		Type.warn "Use 'Array(#{@types.length})' type instead of a #{@constructor.name}
-				of #{@types.length} values of any type'." if @types.every((t) -> isAny(t))
+				of #{@types.length} values of any type'." if @types.every((a) -> isAny(a))
 	validate: (val) ->
 		return false unless Array.isArray(val) and val.length is @types.length
 		val.every((e, i) => isValid(e, @types[i]))
 	getTypeName: -> "tuple of #{@types.length} elements '#{(getTypeName(t) for t in @types).join(", ")}'"
 	proxy: (arr) ->
-		super(arr) # validating instanciation
+		# NB: skipping parent class validation to let pre-proxy validation find a better error message
+		# super(arr)
+		Type.error("", arr, @) unless Array.isArray(arr)
+		sizeErrorMessage = "Tuple must have a length of #{@types.length}."
+		validator = (a, i, v) =>
+			Type.error(sizeErrorMessage) unless i < @types.length
+			Type.error("tuple element #{i}", v, @types[i]) unless isValid(v, @types[i])
+			a[i] = v
+			true # indicate success
+		# pre-proxy validation
+		validator(arr, index, val) for val, index in arr
 		new Proxy(arr,
-			set: (a, i, v) =>
-				unless i < @types.length
-					badArray = [a...]
-					badArray[i] = v
-					Type.error("", badArray, helper(@types...))
-				unless isValid(v, @types[i])
-					badArray = [a...]
-					badArray[i] = v
-					Type.error("", badArray, helper(@types...))
-				t[i] = v
-				true # indicate success
-			deleteProperty: (a, i) =>
-				badArray = [a...]
-				badArray.splice(i, 1)
-				Type.error("", badArray, helper(@types...))
+			set: validator
+			deleteProperty: (a, i) -> Type.error(sizeErrorMessage)
 		)
 
-helper = Type.createHelper(Tuple)
-
-export default helper
+export default Type.createHelper(Tuple)

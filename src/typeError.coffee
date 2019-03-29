@@ -37,7 +37,7 @@ typeError = (prefix, val, type, promised=false) -> throw new TypeError(
 					"an empty object, got a non-empty object"
 			else
 				"'#{getTypeName(type)}', got #{valueType(val)}"
-		"Expected #{if prefix then prefix + ' to be ' else ''}#{if promised then 'a promise of ' else ''}#{suffix}."
+		"Expected #{if prefix then prefix + ' to be ' else ''}#{if promised then 'a promise of type ' else ''}#{suffix}."
 )
 
 # NB: to avoid circular dependencies, error static method is added to Type class here instead of `Type` file

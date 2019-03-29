@@ -16,10 +16,10 @@ test "return an error with 'String'", ->
 	.toThrow("Expected argument #1 to be 'String', got Number 1.")
 
 test "return an error with
-	'Argument number 1 should be of type 'Number', got Array.'", ->
+	'Argument number 1 should be of type 'Number', got Array of 2 elements.'", ->
 	f = fn Number, Any, ->
 	expect(-> f([1, 2]))
-	.toThrow("Expected argument #1 to be 'Number', got Array.")
+	.toThrow("Expected argument #1 to be 'Number', got Array of 2 elements.")
 
 test "return an error with 'Array'", ->
 	f = fn Array, Any, ->
@@ -97,10 +97,10 @@ test "return an error with 'an array with a length of 2 instead of 3.", ->
 	expect(-> f([1, '2', 3]))
 	.toThrow("Expected argument #1 to be an array with a length of 2 instead of 3.")
 
-test "return an error with 'of type 'Number or String', got Array", ->
+test "return an error with 'of type 'Number or String', got Array of 1 elements", ->
 	f = fn [Number, String], Any, ->
 	expect(-> f([1]))
-	.toThrow("Expected argument #1 to be 'Number or String', got Array.")
+	.toThrow("Expected argument #1 to be 'Number or String', got Array of 1 elements.")
 
 test "return an error with ''empty array', got Number 1.'", ->
 	f = fn [], Any, ->

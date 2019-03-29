@@ -15,12 +15,12 @@ test "set", ->
 test "trow an error with a non-tuple type", ->
 	Trio = Tuple(Number, Number, Number)
 	expect(-> t = typed Trio, 1)
-	.toThrow("Expected of type 'tuple of 3 elements 'Number, Number, Number'', got Number 1.")
+	.toThrow("Expected 'tuple of 3 elements 'Number, Number, Number'', got Number 1.")
 
 test "trow an error with a mismatched tuple type", ->
 	Trio = Tuple(Number, Number, Number)
 	expect(-> t = typed Trio, [1, true, 3])
-	.toThrow("Tuple element 1 should be of type 'Number', got Boolean true.")
+	.toThrow("Expected tuple element 1 to be 'Number', got Boolean true.")
 
 test "trow an error with a too long tuple type", ->
 	Trio = Tuple(Number, Number, Number)
@@ -43,5 +43,5 @@ test "trow an error for a set type mismatch", ->
 	Trio = Tuple(Number, Number, Number)
 	t = typed Trio, [1, 2, 3]
 	expect(-> t[1] = true)
-	.toThrow("Tuple element 1 should be of type 'Number', got Boolean true.")
+	.toThrow("Expected tuple element 1 to be 'Number', got Boolean true.")
 
