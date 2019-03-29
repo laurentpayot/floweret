@@ -11,9 +11,10 @@ isAny = (o) -> o is AnyHelper or o instanceof Any
 isLiteral = (val) -> val?.constructor in [undefined, String, Number, Boolean] # NaN and ±Infinity are numbers
 
 # show the type of the value and eventually the value itself
-typeValue = (val) ->
+valueType = (val) ->
 	t = typeOf(val)
 	t + switch t
+		when 'Array' then " of #{val.length} elements"
 		when 'String' then ' "' + val + '"'
 		when 'Number', 'Boolean', 'RegExp' then ' ' + val
 		else ''
@@ -38,6 +39,6 @@ else switch type?.constructor
 		if type instanceof Type
 			type.getTypeName()
 		else
-			"literal #{typeValue(type)}"
+			"literal #{valueType(type)}"
 
-export {isEmptyObject, isAny, isLiteral, typeValue, getTypeName}
+export {isEmptyObject, isAny, isLiteral, valueType, getTypeName}

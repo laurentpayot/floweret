@@ -1,4 +1,4 @@
-import {getTypeName, typeValue, isEmptyObject} from './tools'
+import {getTypeName, valueType, isEmptyObject} from './tools'
 import isValid from './isValid'
 import Type from './types/Type'
 
@@ -22,7 +22,7 @@ typeError = (prefix, val, type, promised=false) -> throw new TypeError(
 						"an array with a length of #{type.length} instead of #{val.length}"
 					else
 						i = val.findIndex((e) -> not isValid(e, type[0]))
-						"an array with element #{i} of type '#{getTypeName(type[0])}' instead of #{typeValue(val[i])}"
+						"an array with element #{i} of type '#{getTypeName(type[0])}' instead of #{valueType(val[i])}"
 				else
 					"an empty array, got a non-empty array"
 			when val?.constructor is Object and type?.constructor is Object
@@ -32,11 +32,11 @@ typeError = (prefix, val, type, promised=false) -> throw new TypeError(
 					"an object with key '#{bp.join('.')}' of type '#{getTypeName(bt)}' instead of #{\
 						if bv is undefined and bk not in Object.keys(bp[...-1].reduce(((acc, curr) -> acc[curr]), val))\
 							or bv?.constructor is Object and isEmptyObject(bv)\
-						then "missing key '" + bk + "'" else typeValue(bv)}"
+						then "missing key '" + bk + "'" else valueType(bv)}"
 				else
 					"an empty object, got a non-empty object"
 			else
-				"'#{getTypeName(type)}', got #{typeValue(val)}"
+				"'#{getTypeName(type)}', got #{valueType(val)}"
 		"Expected #{if prefix then prefix + ' to be ' else ''}#{if promised then 'a promise of ' else ''}#{suffix}."
 )
 
