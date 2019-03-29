@@ -5,6 +5,11 @@ test "init", ->
 	a = typed Numbers, [1, 2, 3]
 	expect(a).toEqual([1, 2, 3])
 
+test "init empty array", ->
+	Numbers = Array(Number)
+	a = typed Numbers, []
+	expect(a).toEqual([])
+
 test "set", ->
 	Numbers = Array(Number)
 	a = typed Numbers, [1, 2, 3]

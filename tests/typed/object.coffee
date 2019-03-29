@@ -5,6 +5,11 @@ test "init", ->
 	o = typed Obj, {a: 1, b: {c: 2}}
 	expect(o).toEqual({a: 1, b: {c: 2}})
 
+test "init empty object", ->
+	Obj = {a: Number, b: {c: Number}}
+	expect(-> o = typed Obj, {})
+	.toThrow("Expected an object with key 'a' of type 'Number' instead of missing key 'a'.")
+
 test "shallow set", ->
 	Obj = {a: Number, b: {c: Number}}
 	o = typed Obj, {a: 1, b: {c: 2}}
