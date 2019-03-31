@@ -35,12 +35,12 @@ describe "Synchronous functions", ->
 	test "throw an error if function returns a number", ->
 		f = fn undefined, String,
 			-> 1
-		expect(-> f()).toThrow("Expected result to be 'String', got Number 1.")
+		expect(-> f()).toThrow("Expected result to be String, got Number 1.")
 
 	test "throw an error if function returns undefined", ->
 		f = fn undefined, [String, Number],
 			->
-		expect(-> f()).toThrow("Expected result to be 'String or Number', got undefined.")
+		expect(-> f()).toThrow("Expected result to be String or Number, got undefined.")
 
 	test "do nothing if function returns undefined", ->
 		f = fn undefined, undefined,
@@ -62,12 +62,12 @@ describe "Asynchronous functions", ->
 	test "throw an error if function returns a number promise", ->
 		f = fn undefined, promised(String),
 			-> Promise.resolve(1)
-		expect(f()).rejects.toThrow("Expected promise result to be 'String', got Number 1.")
+		expect(f()).rejects.toThrow("Expected promise result to be String, got Number 1.")
 
 	test "throw an error if function does not return a promise", ->
 		f = fn undefined, promised(String),
 			-> '1'
-		expect(f()).rejects.toThrow("Expected result to be a promise of type 'String', got String \"1\".")
+		expect(f()).rejects.toThrow("Expected result to be a promise of type String, got String \"1\".")
 
 	test "throw an error if promised used without type", ->
 		expect(-> fn undefined, promised(),
@@ -129,17 +129,17 @@ describe "Arguments number", ->
 		f = fn Number, [Number, undefined], Any,
 			(n1, n2=0) -> n1 + n2
 		expect(-> f(1, null))
-		.toThrow("Expected argument #2 to be 'Number or undefined', got null.")
+		.toThrow("Expected argument #2 to be Number or undefined, got null.")
 
 	test "raise an error when only an optional argument and value is null", ->
 		f = fn undefined, Any,
 			(n1=0) -> n1
-		expect(-> f(null)).toThrow("Expected argument #1 to be 'undefined', got null.")
+		expect(-> f(null)).toThrow("Expected argument #1 to be undefined, got null.")
 
 	test "raise an error when only an optional argument and value isnt undefined", ->
 		f = fn undefined, Any,
 			(n1=0) -> n1
-		expect(-> f(1)).toThrow("Expected argument #1 to be 'undefined', got Number 1.")
+		expect(-> f(1)).toThrow("Expected argument #1 to be undefined, got Number 1.")
 
 	test "do nothing if only an optional argument and value is undefined", ->
 		f = fn undefined, Any,
@@ -181,21 +181,21 @@ describe "Rest type", ->
 		f = fn etc(String), String,
 			(str...) -> str.join('')
 		expect(-> f('a', 5, 'def'))
-		.toThrow("Expected argument #2 to be 'String', got Number 5.")
+		.toThrow("Expected argument #2 to be String, got Number 5.")
 		f = fn Number, etc(String), String,
 			(n, str...) -> n + str.join('')
 		expect(-> f(1, 'a', 5, 'def'))
-		.toThrow("Expected argument #3 to be 'String', got Number 5.")
+		.toThrow("Expected argument #3 to be String, got Number 5.")
 
 	test "throw an error if an argument is not a number", ->
 		f = fn etc(Number), String,
 			(str...) -> str.join('')
 		expect(-> f('a', 5, 'def'))
-		.toThrow("Expected argument #1 to be 'Number', got String \"a\".")
+		.toThrow("Expected argument #1 to be Number, got String \"a\".")
 		f = fn Number, etc(Number), String,
 			(n, str...) -> n + str.join('')
 		expect(-> f(1, 'a', 5, 'def'))
-		.toThrow("Expected argument #2 to be 'Number', got String \"a\".")
+		.toThrow("Expected argument #2 to be Number, got String \"a\".")
 
 	test "return the concatenation of all the arguments of String or Number type", ->
 		f = fn etc([String, Number]), String,
@@ -209,11 +209,11 @@ describe "Rest type", ->
 		f = fn etc([String, Number]), String,
 			(str...) -> str.join('')
 		expect(-> f('a', true, 'def'))
-		.toThrow("Expected argument #2 to be 'String or Number', got Boolean true.")
+		.toThrow("Expected argument #2 to be String or Number, got Boolean true.")
 		f = fn Number, etc([String, Number]), String,
 			(n, str...) -> n + str.join('')
 		expect(-> f(1, 'a', true, 'def'))
-		.toThrow("Expected argument #3 to be 'String or Number', got Boolean true.")
+		.toThrow("Expected argument #3 to be String or Number, got Boolean true.")
 
 	# ### CoffeeScript only ###
 	# test "NOT throw an error if splat is not the last of the argument types", ->

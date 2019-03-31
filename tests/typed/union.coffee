@@ -1,6 +1,6 @@
 import {typed} from '../../dist'
 
-describe.skip "Union", ->
+describe "Union", ->
 
 	test "init", ->
 		Numbers = Array(Number)
@@ -21,12 +21,12 @@ describe.skip "Union", ->
 	test "trow an error with a non-array type", ->
 		Numbers = Array(Number)
 		expect(-> n = typed [Number, Numbers, String], true)
-		.toThrow("Expected 'array of 'Number'', got boolean true.")
+		.toThrow("Expected Number or 'array of 'Number'' or String, got Boolean true.")
 
 	test "trow an error with a mismatched array type", ->
 		Numbers = Array(Number)
 		expect(-> n = typed [Number, Numbers, String], [1, true, 3])
-		.toThrow("Expected an array with element 1 of type 'Number' instead of Boolean true.")
+		.toThrow("Expected Number or 'array of 'Number'' or String, got Array of 3 elements.")
 
 	test "trow an error for a push type mismatch", ->
 		Numbers = Array(Number)

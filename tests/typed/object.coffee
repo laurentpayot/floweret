@@ -24,12 +24,12 @@ test "deep set", ->
 
 test "trow an error with a non-object type", ->
 	expect(-> o = typed Number, {a: 1, b: {c: 2}})
-	.toThrow("Expected 'Number', got Object.")
+	.toThrow("Expected Number, got Object.")
 
 test "trow an error with a non-object object", ->
 	Obj = {a: Number, b: {c: Number}}
 	expect(-> o = typed Obj, "foo")
-	.toThrow("Expected 'object type', got String \"foo\"")
+	.toThrow("Expected object type, got String \"foo\"")
 
 test "trow an error for a shallow type mismatch and leave object unmodified", ->
 	Obj = {a: Number, b: {c: Number}}

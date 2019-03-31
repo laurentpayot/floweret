@@ -54,7 +54,7 @@ describe.skip "Size 1", ->
 	test "trow an error with a non-array type", ->
 		Mono = Array(1)
 		expect(-> a = typed Mono, 1)
-		.toThrow("Expected of type 'array of 1 elements', got Number 1.")
+		.toThrow("Expected of type 'array of 1 elements, got Number 1.")
 
 	test "trow an error with a too long array", ->
 		Mono = Array(1)

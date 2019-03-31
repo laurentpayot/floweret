@@ -25,9 +25,9 @@ getTypeName = (type) -> if Array.isArray(type) # NB: special Array case http://w
 	switch type.length
 		when 0 then "empty array"
 		when 1
-			if typedArray then "array of one element" else "array of '#{getTypeName(type[0])}'"
+			if typedArray then "'array of one element'" else "'array of '#{getTypeName(type[0])}''"
 		else
-			if typedArray then "array of #{type.length} elements" else (getTypeName(t) for t in type).join(" or ")
+			if typedArray then "'array of #{type.length} elements'" else (getTypeName(t) for t in type).join(" or ")
 else switch type?.constructor
 	when undefined then typeOf(type)
 	when Function

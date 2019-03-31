@@ -36,7 +36,7 @@ typeError = (prefix, val, type, promised=false) -> throw new TypeError(
 				else
 					"an empty object, got a non-empty object"
 			else
-				"'#{getTypeName(type)}', got #{valueType(val)}"
+				"#{getTypeName(type)}, got #{valueType(val)}"
 		"Expected #{if prefix then prefix + ' to be ' else ''}#{if promised then 'a promise of type ' else ''}#{suffix}."
 )
 

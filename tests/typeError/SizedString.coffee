@@ -5,20 +5,20 @@ test "return an error with 'SizedString of at most 4 characters'", ->
 	f = fn SizedString(100), Any, ->
 	expect(-> f(true))
 	.toThrow("Expected argument #1 to be
-				'SizedString of at most 100 characters', got Boolean true.")
+				SizedString of at most 100 characters, got Boolean true.")
 
 test "return an error with 'SizedString of at least 100 characters'", ->
 	f = fn SizedString(10, undefined), Any, ->
 	expect(-> f(true))
 	.toThrow("Expected argument #1 to be
-				'SizedString of at least 10 characters', got Boolean true.")
+				SizedString of at least 10 characters, got Boolean true.")
 
 test "return an error with 'SizedString of at least 10 characters
 			and of at most 100 characters'", ->
 	f = fn SizedString(10, 100), Any, ->
 	expect(-> f(true))
-	.toThrow("Expected argument #1 to be 'SizedString of at least 10 characters
-				and of at most 100 characters', got Boolean true.")
+	.toThrow("Expected argument #1 to be SizedString of at least 10 characters
+				and of at most 100 characters, got Boolean true.")
 
 test "return an error with ''SizedString' arguments must be positive integers.'", ->
 	expect(-> SizedString(-100, -10)).toThrow("'SizedString' arguments must be positive integers.")

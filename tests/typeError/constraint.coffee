@@ -10,5 +10,5 @@ test "return an error with 'constraint 'val => Number.isInteger(val)''", ->
 		(n) -> 1
 	expect(-> f(2.5))
 	.toThrow(
-		/^Expected argument #1 to be 'constrained by 'function \(val\).\{[^$]+\}'', got Number 2\.5\.$/
+		/^Expected argument #1 to be constrained by 'function \(val\).\{[^$]+\}', got Number 2\.5\.$/
 	)
