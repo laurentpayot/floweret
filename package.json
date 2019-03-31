@@ -48,7 +48,7 @@
     "@babel/core": "^7.4.0",
     "babel-jest": "^24.5.0",
     "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
-    "coffeescript": "^2.3.2",
+    "coffeescript": "^2.4.0",
     "coveralls": "^3.0.3",
     "flow-runtime": "^0.17.0",
     "jest": "^24.5.0",
