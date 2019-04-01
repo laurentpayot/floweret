@@ -260,3 +260,32 @@ describe "Rest type", ->
 		f = fn Number, etc, String,
 			(n, str...) -> n + str.join('')
 		expect(f(1, 'a', 5, 'def')).toBe('1a5def')
+
+describe "Auto-typing", ->
+
+	test "parameter typed at object", ->
+		f = fn Boolean, {a: Number, b: Number}, Any, Any,
+			(foo, bar, baz) -> bar.b = baz
+		expect(f(true, {a: 1, b: 2}, 3)).toEqual(3)
+		expect(-> f(true, {a: 1, b: 2}, true))
+		.toThrow("Expected an object with key 'b' of type 'Number' instead of Boolean true.")
+
+	test "result typed as object", ->
+		f = fn undefined, {a: Number, b: Number},
+			-> {a: 1, b: 2}
+		result = f()
+		expect(result).toEqual({a: 1, b: 2})
+		expect(-> result.b = true)
+		.toThrow("Expected an object with key 'b' of type 'Number' instead of Boolean true.")
+		expect(result).toEqual({a: 1, b: 2})
+
+	test "result typed promised object", ->
+		f = fn undefined, Promise.resolve({a: Number, b: Number}),
+			-> Promise.resolve({a: 1, b: 2})
+		result = await f()
+		expect(result).toEqual({a: 1, b: 2})
+		expect(-> result.b = true)
+		.toThrow("Expected an object with key 'b' of type 'Number' instead of Boolean true.")
+		expect(result).toEqual({a: 1, b: 2})
+
+	# TODO: more tests!!!
