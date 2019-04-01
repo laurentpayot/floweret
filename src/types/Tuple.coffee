@@ -13,10 +13,10 @@ class Tuple extends Type
 		return false unless Array.isArray(val) and val.length is @types.length
 		val.every((e, i) => isValid(e, @types[i]))
 	getTypeName: -> "tuple of #{@types.length} elements '#{(getTypeName(t) for t in @types).join(", ")}'"
-	proxy: (arr) ->
+	proxy: (arr, context) ->
 		# NB: skipping parent class validation to let pre-proxy validation find a better error message
-		# super(arr)
-		Type.error("", arr, @) unless Array.isArray(arr)
+		# super(arr, context)
+		Type.error(context, arr, @) unless Array.isArray(arr)
 		sizeErrorMessage = "Tuple must have a length of #{@types.length}."
 		validator = (a, i, v) =>
 			Type.error(sizeErrorMessage) unless i < @types.length

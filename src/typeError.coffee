@@ -11,11 +11,11 @@ badPath = (obj, typeObj) ->
 			return [k].concat(if obj[k]?.constructor is Object then badPath(obj[k], typeObj[k]) \
 								else [obj[k], typeObj[k]])
 
-typeError = (prefix, val, type, promised=false) -> throw new TypeError(
+typeError = (context, val, type, promised=false) -> throw new TypeError(
 	if arguments.length < 2
-		prefix
+		context
 	else
-		suffix = switch
+		ending = switch
 			when Array.isArray(val) and Array.isArray(type) and (type.length is 1 or not Object.values(type).length)
 				if type.length
 					if not Object.values(type).length # sized array
@@ -37,7 +37,7 @@ typeError = (prefix, val, type, promised=false) -> throw new TypeError(
 					"an empty object, got a non-empty object"
 			else
 				"#{getTypeName(type)}, got #{valueType(val)}"
-		"Expected #{if prefix then prefix + ' to be ' else ''}#{if promised then 'a promise of type ' else ''}#{suffix}."
+		"Expected #{if context then context + ' to be ' else ''}#{if promised then 'a promise of type ' else ''}#{ending}."
 )
 
 # NB: to avoid circular dependencies, error static method is added to Type class here instead of `Type` file
