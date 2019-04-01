@@ -22,11 +22,10 @@ export default (argTypes..., resType, f) ->
 				rest = true
 				t = (if type is EtcHelper then type() else type).type # using default helper parameters
 				noType = isAny(t)
-				for arg, j in args[i..]
-					typedArgs[i+j] = if noType then arg else typed(t, arg, "argument ##{i+j+1}")
+				typedArgs.push(if noType then arg else typed(t, arg, "argument ##{i+j+1}")) for arg, j in args[i..]
 			else
-				typedArgs[i] = if isAny(type) then args[i] else typed(type, args[i],
-						if args[i] is undefined then "Missing required argument number #{i+1}." else "argument ##{i+1}")
+				typedArgs.push(if isAny(type) then args[i] else typed(type, args[i],
+						if args[i] is undefined then "Missing required argument number #{i+1}." else "argument ##{i+1}"))
 		typeError("Too many arguments provided.") if args.length > argTypes.length and not rest
 		if resType instanceof Promise
 			# NB: not using `await` because CS would transpile the returned function as an async one
