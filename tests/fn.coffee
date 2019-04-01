@@ -268,7 +268,9 @@ describe "Auto-typing", ->
 			(foo, bar, baz) -> bar.b = baz
 		o = {a: 1, b: 2}
 		expect(f(true, o, 3)).toEqual(3)
-		expect(o).toEqual({a: 1, b: 3}) # checking side effects
+		expect(o).toEqual({a: 1, b: 3}) # side effects for input parameter
+		o.a = false
+		expect(o).toEqual({a: false, b: 3}) # input parameter was not proxyfied
 		expect(-> f(true, {a: 1, b: 2}, true))
 		.toThrow("Expected an object with key 'b' of type 'Number' instead of Boolean true.")
 
