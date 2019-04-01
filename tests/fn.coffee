@@ -266,7 +266,9 @@ describe "Auto-typing", ->
 	test "parameter typed at object", ->
 		f = fn Boolean, {a: Number, b: Number}, Any, Any,
 			(foo, bar, baz) -> bar.b = baz
-		expect(f(true, {a: 1, b: 2}, 3)).toEqual(3)
+		o = {a: 1, b: 2}
+		expect(f(true, o, 3)).toEqual(3)
+		expect(o).toEqual({a: 1, b: 3}) # checking side effects
 		expect(-> f(true, {a: 1, b: 2}, true))
 		.toThrow("Expected an object with key 'b' of type 'Number' instead of Boolean true.")
 
