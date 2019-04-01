@@ -99,7 +99,7 @@ describe "Arguments number", ->
 	test "raise an error if function has too few arguments", ->
 		f = fn Number, [Number, String], Any,
 			(n1, n2=0) -> n1 + n2
-		expect(-> f(1)).toThrow("Missing required argument number 2.")
+		expect(-> f(1)).toThrow("Expected argument #2 to be Number or String, got undefined.")
 
 	test "do nothing if all unfilled arguments are optional", ->
 		f = fn Number, [Number, String, undefined], Any,
@@ -122,8 +122,8 @@ describe "Arguments number", ->
 	test "raise an error if some unfilled arguments are not optional", ->
 		f = fn Number, [Number, String, undefined], Number, Any,
 			(n1, n2=0, n3) -> n1 + n2 + n3
-		expect(-> f(1)).toThrow("Missing required argument number 3.")
-		expect(-> f(1, 2)).toThrow("Missing required argument number 3.")
+		expect(-> f(1)).toThrow("Expected argument #3 to be Number, got undefined.")
+		expect(-> f(1, 2)).toThrow("Expected argument #3 to be Number, got undefined.")
 
 	test "raise an error when an optional argument is filled with null", ->
 		f = fn Number, [Number, undefined], Any,
