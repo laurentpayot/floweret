@@ -1,5 +1,6 @@
 import {fn, Any, etc} from '../dist'
 import promised from '../dist/types/promised'
+import untyped from '../dist/types/untyped'
 
 describe "Arguments of signature itself", ->
 
@@ -263,7 +264,7 @@ describe "Rest type", ->
 
 describe "Auto-typing", ->
 
-	test "parameter typed at object", ->
+	test "parameter typed as object", ->
 		f = fn Boolean, {a: Number, b: Number}, Any, Any,
 			(foo, bar, baz) -> bar.b = baz
 		o = {a: 1, b: 2}
@@ -303,5 +304,24 @@ describe "Auto-typing", ->
 		expect(-> f(true, {a: 1, b: 2}))
 		.toThrow("Expected an object with key 'b' of type 'Number' instead of Boolean true.")
 
-
 	# TODO: more tests!!!
+
+	describe "untyped", ->
+
+		test "untyped object parameter", ->
+			f = fn Boolean, untyped({a: Number, b: Number}), Any, Any,
+				(foo, bar, baz) -> bar.b = baz
+			o = {a: 1, b: 2}
+			expect(f(true, o, 3)).toEqual(3)
+			expect(o).toEqual({a: 1, b: 3}) # side effects for input parameter
+			o.a = false
+			expect(o).toEqual({a: false, b: 3}) # input object was not proxyfied
+			expect(f(true, {a: 1, b: 2}, true)).toEqual(true) # parameter was not internally proxyfied
+
+		test "untyped result", ->
+			f = fn undefined, untyped({a: Number, b: Number}),
+				-> {a: 1, b: 2}
+			result = f()
+			expect(result).toEqual({a: 1, b: 2})
+			expect(-> result.b = true).not.toThrow()
+			expect(result).toEqual({a: 1, b: true})
