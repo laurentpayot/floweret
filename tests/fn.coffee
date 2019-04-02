@@ -292,4 +292,16 @@ describe "Auto-typing", ->
 		.toThrow("Expected an object with key 'b' of type 'Number' instead of Boolean true.")
 		expect(result).toEqual({a: 1, b: 2})
 
+	test "rest parameter typed as object", ->
+		f = fn Any, etc({a: Number, b: Number}), Any,
+			(foo, bar...) -> bar[0].b = foo
+		o = {a: 1, b: 2}
+		expect(f(3, o)).toEqual(3)
+		expect(o).toEqual({a: 1, b: 3}) # side effects for input parameter
+		o.a = false
+		expect(o).toEqual({a: false, b: 3}) # input parameter was not proxyfied
+		expect(-> f(true, {a: 1, b: 2}))
+		.toThrow("Expected an object with key 'b' of type 'Number' instead of Boolean true.")
+
+
 	# TODO: more tests!!!
