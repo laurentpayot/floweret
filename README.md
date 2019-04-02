@@ -92,7 +92,7 @@ const add = fn(
   (a, b) => a + b
 )
 ```
-
+Note that `fn` could be used as a decorator, but sadly [JavaScript decorators proposal](https://github.com/tc39/proposal-decorators) does not support standalone functions…
 For readability, most examples below will use the ES2015 arrow function syntax.
 
 ### CoffeeScript
@@ -783,7 +783,7 @@ typeOf(NaN) // 'NaN'
 
 ## Features to come
 
-* `fn` as a decorator, when JavaScript decorators reach stage 4.
+* 
 
 ## Benchmark
 
@@ -803,35 +803,35 @@ The benchmark currently includes the folowing runtime type-checking systems:
 
 The [sub-benchmarks](https://github.com/laurentpayot/floweret/tree/master/benchmark) are run from minified [Rollup](https://rollupjs.org) bundles (UMD) and call two simple functions several thousand times.
 
-Here are some results from a machine that scores around 21000 to the [Octane 2.0](https://chromium.github.io/octane/) JavaScript benchmark:
+Here are some results from a Google Cloud Shell machine:
 
 ```txt
-no-type-checking-benchmark.min.js.gz  238 bytes
-floweret-benchmark.min.js.gz          3166 bytes
-objectmodel.min.js.gz                 4117 bytes
-runtypes.min.js.gz                    5939 bytes
-flow-runtime-benchmark.min.js.gz      20225 bytes
+no-type-checking-benchmark.min.js.gz  257 bytes
+floweret-benchmark.min.js.gz          3185 bytes
+objectmodel.min.js.gz                 4123 bytes
+runtypes.min.js.gz                    5958 bytes
+flow-runtime-benchmark.min.js.gz      20240 bytes
 
 
 *** No type-checking ***
-10000 greets: 2.037ms
-10000 sums: 18.183ms
+10000 greets: 2.335ms
+10000 sums: 21.136ms
 
 *** Floweret ***
-10000 greets: 30.387ms
-10000 sums: 61.504ms
+10000 greets: 52.277ms
+10000 sums: 273.731ms
 
 *** Runtypes ***
-10000 greets: 12.218ms
-10000 sums: 44.588ms
+10000 greets: 17.394ms
+10000 sums: 37.446ms
 
 *** Object Model ***
-10000 greets: 129.538ms
-10000 sums: 893.899ms
+10000 greets: 227.994ms
+10000 sums: 1046.658ms
 
 *** Flow-runtime ***
-10000 greets: 302.172ms
-10000 sums: 497.733ms
+10000 greets: 519.916ms
+10000 sums: 571.542ms
 ```
 
 Feel free to make your own benchmarks and share the results.
