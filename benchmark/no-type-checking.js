@@ -9,7 +9,7 @@ function greet(person) {
 
 console.time(TIMES + " greets")
 for (let i = 0; i < TIMES; i++) {
-	const alice = { name: 'Alice' }
+	let alice = { name: 'Alice' }
 	alice.name = 'Alice'
 	greet(alice)
 }
@@ -17,6 +17,7 @@ console.timeEnd(TIMES + " greets")
 
 
 function sum(a) {
+	a[0] = -100
 	return a.reduce((acc, curr) => acc + curr)
 }
 

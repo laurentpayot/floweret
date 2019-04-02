@@ -15,7 +15,7 @@ const greet = fn(
 
 console.time(TIMES + " greets")
 for (let i = 0; i < TIMES; i++) {
-	const alice = typed(Person, { name: 'alice' })
+	let alice = typed(Person, { name: 'alice' })
 	alice.name = 'Alice'
 	greet(alice)
 }
@@ -25,6 +25,7 @@ console.timeEnd(TIMES + " greets")
 const sum = fn(
 	Array(Number), Number,
 	function (a) {
+		a[0] = -100
 		return a.reduce((acc, curr) => acc + curr)
 	}
 )

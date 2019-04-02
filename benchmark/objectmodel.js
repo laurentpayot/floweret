@@ -22,6 +22,7 @@ console.timeEnd(TIMES + " greets")
 
 const sum = FunctionModel(ArrayModel(Number)).return(Number)(
 	function (a) {
+		a[0] = -100
 		return a.reduce((acc, curr) => acc + curr)
 	}
 )

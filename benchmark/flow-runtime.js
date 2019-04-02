@@ -29,6 +29,8 @@ function sum(a) {
 	let _aType = t.array(t.number())
 	const _returnType = t.return(t.number())
 	t.param('a', _aType).assert(a)
+	a[0] = -100
+	t.number().assert(a[0]) // element type has to be checked manually
 	return _returnType.assert(a.reduce((acc, curr) => acc + curr))
 }
 t.annotate(sum, t.function(t.param('a', t.array(t.number())), t.return(t.number())))

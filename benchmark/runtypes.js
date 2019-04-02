@@ -31,6 +31,7 @@ const sum = Contract(
 	Number
 ).enforce(
 	function (a) {
+		a[0] = Number.check(-100) // element type has to be checked manually
 		return a.reduce((acc, curr) => acc + curr)
 	}
 )
