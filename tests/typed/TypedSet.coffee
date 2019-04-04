@@ -22,3 +22,8 @@ test "trow an error for a add type mismatch", ->
 	s = typed TypedSet(Number), new Set([1, 2, 3])
 	expect(-> s.add(true))
 	.toThrow("Expected set element to be Number, got Boolean true.")
+
+test "set types are stored in TypedSet instances so they do not overwrite", ->
+	s1 = typed TypedSet(Number), new Set([1, 2, 3])
+	s2 = typed TypedSet(String), new Set(['one', 'two', 'three'])
+	expect(-> s1.add(4)).not.toThrow()

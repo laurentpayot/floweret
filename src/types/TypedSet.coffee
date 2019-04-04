@@ -7,8 +7,8 @@ class _Set extends Set
 	constructor: (type, arr) ->
 		super(arr)
 		# overwriting add() inside constructor to use its type parameter 
-		@add = (val) =>
-			Type.error("set element", val, type) unless isValid(val, type)
+		@add = (val, context="") =>
+			Type.error("#{if context then context+' ' else ''}set element", val, type) unless isValid(val, type)
 			super.add(val)
 
 class TypedSet extends Type
@@ -38,7 +38,7 @@ class TypedSet extends Type
 		unless @validate(set)
 			super(set, context) unless set?.constructor is Set
 			s = new _Set(@type, [])
-			s.add(e) for e in [set...]
+			s.add(e, context) for e in [set...]
 		new _Set(@type, [set...])
 
 export default Type.createHelper(TypedSet)

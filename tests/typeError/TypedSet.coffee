@@ -9,4 +9,4 @@ test "return an error with 'set of 'Number''", ->
 test "return an error with 'set of 'String''", ->
 	f = fn TypedSet(String), Any, ->
 	expect(-> f(new Set(['a', 1])))
-	.toThrow("Expected argument #1 to be set of 'String', got Set.")
+	.toThrow("Expected argument #1 set element to be String, got Number 1.")
