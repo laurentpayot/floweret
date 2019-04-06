@@ -4,11 +4,12 @@ import {isAny, isLiteral, getTypeName} from '../tools'
 
 class _Set extends Set
 	# NB: cannot use @type argument as sets would store is inside data as a key-value pair
-	constructor: (type, arr) ->
-		super(arr)
-		# overwriting add() inside constructor to use its type parameter 
+	constructor: (type, set) ->
+		super([set...])
+		# overwriting add() inside constructor to use its type and set parameters
 		@add = (val, context="") =>
 			Type.error("#{if context then context+' ' else ''}set element", val, type) unless isValid(val, type)
+			set.add(val) # to have side effects
 			super.add(val)
 
 class TypedSet extends Type
@@ -20,7 +21,7 @@ class TypedSet extends Type
 		Type.invalid "You cannot have #{getTypeName(@type)} as '#{@constructor.name}' argument." if isLiteral(@type)
 		Type.warn "Use 'Set' type instead of a #{@constructor.name} with elements of any type." if isAny(@type)
 	validate: (val) -> switch
-		when val?.constructor isnt Set then false
+		when not (val instanceof Set) then false
 		when isAny(@type) then true
 		else [val...].every((e) => isValid(e, @type))
 	getTypeName: -> "set of '#{getTypeName(@type)}'"
@@ -36,9 +37,9 @@ class TypedSet extends Type
 		# super(set, context)
 		# custom instantiation validation
 		unless @validate(set)
-			super(set, context) unless set?.constructor is Set
-			s = new _Set(@type, [])
+			super(set, context) unless set instanceof Set
+			s = new _Set(@type, new Set([]))
 			s.add(e, context) for e in [set...]
-		new _Set(@type, [set...])
+		set = new _Set(@type, set) # replacing set for side effects
 
 export default Type.createHelper(TypedSet)
