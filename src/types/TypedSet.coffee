@@ -40,6 +40,6 @@ class TypedSet extends Type
 			super(set, context) unless set instanceof Set
 			s = new _Set(@type, new Set([]))
 			s.add(e, context) for e in [set...]
-		set = new _Set(@type, set) # replacing set for side effects
+		new _Set(@type, set)
 
 export default Type.createHelper(TypedSet)
