@@ -38,7 +38,7 @@ class TypedSet extends Type
 		# custom instantiation validation
 		unless @validate(set)
 			super(set, context) unless set instanceof Set
-			s = new _Set(@type, new Set([]))
+			s = new _Set(@type, new Set())
 			s.add(e, context) for e in [set...]
 		new _Set(@type, set)
 
