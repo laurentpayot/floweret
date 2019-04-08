@@ -77,3 +77,5 @@ describe.skip "Size 1", ->
 		a = typed Mono, [1]
 		expect(-> a.pop())
 		.toThrow("Sized array must have a length of 1.")
+
+describe "fn auto-typing", -> # TODO !!!

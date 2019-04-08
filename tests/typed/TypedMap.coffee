@@ -1,4 +1,4 @@
-import {typed} from '../../dist'
+import {typed, fn, Any} from '../../dist'
 import TypedMap from '../../dist/types/TypedMap'
 
 describe "values type", ->
@@ -29,7 +29,7 @@ describe "values type", ->
 		m1 = typed TypedMap(Number), new Map([[1,1], [2,2], [3,3]])
 		m2 = typed TypedMap(String), new Map([[1,'one'], [2,'two'], [3,'three']])
 		expect(-> m1.set(4,4)).not.toThrow()
-	
+
 describe "keys type and values type", ->
 
 	test "init", ->
@@ -58,3 +58,31 @@ describe "keys type and values type", ->
 		m1 = typed TypedMap(Number, String), new Map([[1,'1'], [2,'2'], [3,'3']])
 		m2 = typed TypedMap(String, Number), new Map([['one',1], ['two',2], ['three',3]])
 		expect(-> m1.set(4,'4')).not.toThrow()
+
+describe "fn auto-typing", ->
+
+	test "input parameter side effects", ->
+		f = fn Boolean, TypedMap(Number, String), Any, Any, Any,
+			(foo, bar, k, v) -> bar.set(k, v)
+		m = new Map([[1,'1'], [2,'2'], [3,'3']])
+		expect([f(true, m, 4, '4')...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4']])
+		expect([m...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4']])
+
+	test "input parameter no side effects when invalid", ->
+		f = fn Boolean, TypedMap(Number, String), Any, Any, Any,
+			(foo, bar, k, v) -> bar.set(k, v)
+		m = new Map([[1,'1'], [2,'2'], [3,'3']])
+		expect(-> f(true, m, 4, true))
+		.toThrow("Expected map element value to be String, got Boolean true.")
+		expect([m...]).toEqual([[1,'1'], [2,'2'], [3,'3']])
+
+	test "input parameter was not proxyfied", ->
+		f = fn Boolean, TypedMap(Number, String), Any, Any, Any,
+			(foo, bar, k, v) -> bar.set(k, v)
+		m = new Map([[1,'1'], [2,'2'], [3,'3']])
+		expect([f(true, m, 4, '4')...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4']])
+		expect([m...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4']])
+		expect(-> m.set(true, false)).not.toThrow()
+		expect([m...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4'], [true,false]])
+
+	# TODO: result and etc() tests!!!

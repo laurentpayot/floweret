@@ -45,3 +45,4 @@ test "trow an error for a set type mismatch", ->
 	expect(-> t[1] = true)
 	.toThrow("Expected tuple element 1 to be Number, got Boolean true.")
 
+describe "fn auto-typing", -> # TODO !!!

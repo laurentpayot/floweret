@@ -264,122 +264,22 @@ describe "Rest type", ->
 			(n, str...) -> n + str.join('')
 		expect(f(1, 'a', 5, 'def')).toBe('1a5def')
 
-describe "Auto-typing", ->
+describe "untyped", ->
 
-	describe "object type", ->
+	test "untyped object parameter", ->
+		f = fn Boolean, untyped({a: Number, b: Number}), Any, Any,
+			(foo, bar, baz) -> bar.b = baz
+		o = {a: 1, b: 2}
+		expect(f(true, o, 3)).toEqual(3)
+		expect(o).toEqual({a: 1, b: 3}) # side effects for input parameter
+		o.a = false
+		expect(o).toEqual({a: false, b: 3}) # input object was not proxyfied
+		expect(f(true, {a: 1, b: 2}, true)).toEqual(true) # parameter was not internally proxyfied
 
-		test "parameter typed as object", ->
-			f = fn Boolean, {a: Number, b: Number}, Any, Any,
-				(foo, bar, baz) -> bar.b = baz
-			o = {a: 1, b: 2}
-			expect(f(true, o, 3)).toEqual(3)
-			expect(o).toEqual({a: 1, b: 3}) # side effects for input parameter
-			expect(-> o.a = false).not.toThrow()
-			expect(o).toEqual({a: false, b: 3}) # input parameter was not proxyfied
-			expect(-> f(true, {a: 1, b: 2}, true))
-			.toThrow("Expected an object with key 'b' of type 'Number' instead of Boolean true.")
-
-		test "result typed as object", ->
-			f = fn undefined, {a: Number, b: Number},
-				-> {a: 1, b: 2}
-			result = f()
-			expect(result).toEqual({a: 1, b: 2})
-			expect(-> result.b = true)
-			.toThrow("Expected an object with key 'b' of type 'Number' instead of Boolean true.")
-			expect(result).toEqual({a: 1, b: 2})
-
-		test "result typed promised object", ->
-			f = fn undefined, Promise.resolve({a: Number, b: Number}),
-				-> Promise.resolve({a: 1, b: 2})
-			result = await f()
-			expect(result).toEqual({a: 1, b: 2})
-			expect(-> result.b = true)
-			.toThrow("Expected an object with key 'b' of type 'Number' instead of Boolean true.")
-			expect(result).toEqual({a: 1, b: 2})
-
-		test "rest parameter typed as object", ->
-			f = fn Any, etc({a: Number, b: Number}), Any,
-				(foo, bar...) -> bar[0].b = foo
-			o = {a: 1, b: 2}
-			expect(f(3, o)).toEqual(3)
-			expect(o).toEqual({a: 1, b: 3}) # side effects for input parameter
-			expect(-> o.a = false).not.toThrow()
-			expect(o).toEqual({a: false, b: 3}) # input parameter was not proxyfied
-			expect(-> f(true, {a: 1, b: 2}))
-			.toThrow("Expected an object with key 'b' of type 'Number' instead of Boolean true.")
-
-	describe "TypedSet", ->
-
-		test "input parameter side effects", ->
-			f = fn Boolean, TypedSet(Number), Any, Any,
-				(foo, bar, baz) -> bar.add(baz)
-			s = new Set([1, 2, 3])
-			expect([f(true, s, 4)...]).toEqual([1, 2, 3, 4])
-			expect([s...]).toEqual([1, 2, 3, 4])
-
-		test "input parameter no side effects when invalid", ->
-			f = fn Boolean, TypedSet(Number), Any, Any,
-				(foo, bar, baz) -> bar.add(baz)
-			s = new Set([1, 2, 3])
-			expect(-> f(true, s, true))
-			.toThrow("Expected set element to be Number, got Boolean true.")
-			expect([s...]).toEqual([1, 2, 3])
-
-		test "input parameter was not proxyfied", ->
-			f = fn Boolean, TypedSet(Number), Any, Any,
-				(foo, bar, baz) -> bar.add(baz)
-			s = new Set([1, 2, 3])
-			expect([f(true, s, 4)...]).toEqual([1, 2, 3, 4])
-			expect([s...]).toEqual([1, 2, 3, 4])
-			expect(-> s.add(false)).not.toThrow()
-			expect([s...]).toEqual([1, 2, 3, 4, false])
-
-		# TODO: more tests!!!
-
-	describe "TypedMap", ->
-
-		test "input parameter side effects", ->
-			f = fn Boolean, TypedMap(Number, String), Any, Any, Any,
-				(foo, bar, k, v) -> bar.set(k, v)
-			m = new Map([[1,'1'], [2,'2'], [3,'3']])
-			expect([f(true, m, 4, '4')...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4']])
-			expect([m...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4']])
-
-		test "input parameter no side effects when invalid", ->
-			f = fn Boolean, TypedMap(Number, String), Any, Any, Any,
-				(foo, bar, k, v) -> bar.set(k, v)
-			m = new Map([[1,'1'], [2,'2'], [3,'3']])
-			expect(-> f(true, m, 4, true))
-			.toThrow("Expected map element value to be String, got Boolean true.")
-			expect([m...]).toEqual([[1,'1'], [2,'2'], [3,'3']])
-
-		test "input parameter was not proxyfied", ->
-			f = fn Boolean, TypedMap(Number, String), Any, Any, Any,
-				(foo, bar, k, v) -> bar.set(k, v)
-			m = new Map([[1,'1'], [2,'2'], [3,'3']])
-			expect([f(true, m, 4, '4')...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4']])
-			expect([m...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4']])
-			expect(-> m.set(true, false)).not.toThrow()
-			expect([m...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4'], [true,false]])
-
-		# TODO: more tests!!!
-
-	describe "untyped", ->
-
-		test "untyped object parameter", ->
-			f = fn Boolean, untyped({a: Number, b: Number}), Any, Any,
-				(foo, bar, baz) -> bar.b = baz
-			o = {a: 1, b: 2}
-			expect(f(true, o, 3)).toEqual(3)
-			expect(o).toEqual({a: 1, b: 3}) # side effects for input parameter
-			o.a = false
-			expect(o).toEqual({a: false, b: 3}) # input object was not proxyfied
-			expect(f(true, {a: 1, b: 2}, true)).toEqual(true) # parameter was not internally proxyfied
-
-		test "untyped result", ->
-			f = fn undefined, untyped({a: Number, b: Number}),
-				-> {a: 1, b: 2}
-			result = f()
-			expect(result).toEqual({a: 1, b: 2})
-			expect(-> result.b = true).not.toThrow()
-			expect(result).toEqual({a: 1, b: true})
+	test "untyped result", ->
+		f = fn undefined, untyped({a: Number, b: Number}),
+			-> {a: 1, b: 2}
+		result = f()
+		expect(result).toEqual({a: 1, b: 2})
+		expect(-> result.b = true).not.toThrow()
+		expect(result).toEqual({a: 1, b: true})
