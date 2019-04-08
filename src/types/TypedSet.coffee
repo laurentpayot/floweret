@@ -2,7 +2,7 @@ import Type from './Type'
 import isValid from '../isValid'
 import {isAny, isLiteral, getTypeName} from '../tools'
 
-class _Set extends Set
+class CheckedTypedSet extends Set
 	# NB: cannot use @type argument as sets would store is inside data as a key-value pair
 	constructor: (type, set) ->
 		super([set...])
@@ -31,15 +31,15 @@ class TypedSet extends Type
 	#	get: (s, k, receiverProxy) =>
 	#		ret = Reflect.get(s, k, receiverProxy)
 	#		if ret is Set.prototype.add
-	#			(v) => if isValid(v, @type) then s.add(v) else Type.error("set element", v, @type) 
+	#			(v) => if isValid(v, @type) then s.add(v) else Type.error("set element", v, @type)
 	#		else ret)
-	proxy: (set, context) ->
+	checkWrap: (set, context) ->
 		# super(set, context)
 		# custom instantiation validation
 		unless @validate(set)
 			super(set, context) unless set instanceof Set
-			s = new _Set(@type, new Set())
+			s = new CheckedTypedSet(@type, new Set())
 			s.add(e, context) for e in [set...]
-		new _Set(@type, set)
+		new CheckedTypedSet(@type, set)
 
 export default Type.createHelper(TypedSet)

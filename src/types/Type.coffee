@@ -34,4 +34,4 @@ export default class Type
 	validate: -> false # false if child class validate() missing
 	getTypeName: -> @constructor.name
 	# NB: to avoid circular dependencies, error static method is added to Type class in `typeError` file
-	proxy: (val, context) -> if @validate(val) then val else Type.error(context, val, @)
+	checkWrap: (val, context) -> if @validate(val) then val else Type.error(context, val, @)

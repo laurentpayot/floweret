@@ -2,7 +2,7 @@ import typeError from './typeError'
 import {isAny} from './tools'
 import isValid from './isValid'
 import EtcHelper from './types/etc'
-import typed from './typed'
+import check from './check'
 
 Etc = EtcHelper().constructor
 
@@ -22,16 +22,16 @@ export default (argTypes..., resType, f) ->
 				rest = true
 				t = (if type is EtcHelper then type() else type).type # using default helper parameters
 				noType = isAny(t)
-				typedArgs.push(if noType then arg else typed(t, arg, "argument ##{i+j+1}")) for arg, j in args[i..]
+				typedArgs.push(if noType then arg else check(t, arg, "argument ##{i+j+1}")) for arg, j in args[i..]
 			else
-				typedArgs.push(if isAny(type) then args[i] else typed(type, args[i], "argument ##{i+1}"))
+				typedArgs.push(if isAny(type) then args[i] else check(type, args[i], "argument ##{i+1}"))
 		typeError("Too many arguments provided.") if args.length > argTypes.length and not rest
 		if resType instanceof Promise
 			# NB: not using `await` because CS would transpile the returned function as an async one
 			resType.then((promiseType) ->
 				promise = f(typedArgs...)
 				typeError("result", promise, promiseType, true) unless promise instanceof Promise
-				promise.then((result) -> typed(promiseType, result, "promise result"))
+				promise.then((result) -> check(promiseType, result, "promise result"))
 			)
 		else
-			typed(resType, f(typedArgs...), "result")
+			check(resType, f(typedArgs...), "result")

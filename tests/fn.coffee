@@ -1,6 +1,6 @@
 import {fn, Any, etc} from '../dist'
 import promised from '../dist/types/promised'
-import untyped from '../dist/types/untyped'
+import unchecked from '../dist/types/unchecked'
 import TypedSet from '../dist/types/TypedSet'
 import TypedMap from '../dist/types/TypedMap'
 
@@ -264,10 +264,10 @@ describe "Rest type", ->
 			(n, str...) -> n + str.join('')
 		expect(f(1, 'a', 5, 'def')).toBe('1a5def')
 
-describe "untyped", ->
+describe "unchecked", ->
 
-	test "untyped object parameter", ->
-		f = fn Boolean, untyped({a: Number, b: Number}), Any, Any,
+	test "unchecked object parameter", ->
+		f = fn Boolean, unchecked({a: Number, b: Number}), Any, Any,
 			(foo, bar, baz) -> bar.b = baz
 		o = {a: 1, b: 2}
 		expect(f(true, o, 3)).toEqual(3)
@@ -276,8 +276,8 @@ describe "untyped", ->
 		expect(o).toEqual({a: false, b: 3}) # input object was not proxyfied
 		expect(f(true, {a: 1, b: 2}, true)).toEqual(true) # parameter was not internally proxyfied
 
-	test "untyped result", ->
-		f = fn undefined, untyped({a: Number, b: Number}),
+	test "unchecked result", ->
+		f = fn undefined, unchecked({a: Number, b: Number}),
 			-> {a: 1, b: 2}
 		result = f()
 		expect(result).toEqual({a: 1, b: 2})

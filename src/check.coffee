@@ -48,9 +48,9 @@ sizedArrayProxy = (arr) ->
 	)
 
 # NB: `context` string is for instantiation only, do not use post-instantiation in actual proxies
-typed = (type, val, context="") ->
+check = (type, val, context="") ->
 	# custom types first for customized instantiation validity check
-	return type.proxy(val, context) if type instanceof Type
+	return type.checkWrap(val, context) if type instanceof Type
 	typeError(context, val, type) unless isValid(val, type)
 	switch
 		when Array.isArray(type)
@@ -61,8 +61,8 @@ typed = (type, val, context="") ->
 					if type[0] is undefined and type[1] is undefined # array of empty values: sized array, e.g.: `Array(1000)`)
 						sizedArrayProxy(val)
 					else # union of types: typing with the first valid type
-						typed(type.find((t) -> isValid(val, t)), val)
+						check(type.find((t) -> isValid(val, t)), val)
 		when type?.constructor is Object then objectProxy(type, val)
 		else val # no proxy
 
-export default typed
+export default check

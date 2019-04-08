@@ -1,5 +1,5 @@
 export {default as fn} from './fn'
-export {default as typed} from './typed'
+export {default as check} from './check'
 export {default as isValid} from './isValid'
 export {default as typeOf} from './typeOf'
 

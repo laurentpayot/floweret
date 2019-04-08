@@ -4,7 +4,7 @@ import {isAny, isLiteral, getTypeName} from '../tools'
 
 notDefined = (t) -> t is undefined or isAny(t)
 
-class _Map extends Map
+class CheckedTypedMap extends Map
 	# NB: cannot use @type argument as sets would store is inside data as a key-value pair
 	constructor: (keysType, valuesType, map) ->
 		super([map...])
@@ -48,9 +48,9 @@ class TypedMap extends Type
 	getTypeName: ->
 		kt = if @keysType isnt undefined then "keys of type '#{getTypeName(@keysType)}' and " else ''
 		"map with #{kt}values of type '#{getTypeName(@valuesType)}'"
-	# NB: https://stackoverflow.com/questions/43927933/why-is-set-incompatible-with-proxy
+	# NB: https://stackoverflow.com/questions/43927933/why-is-set-incompatible-with-checkWrap
 	#new Proxy(map,
-	#	 https://stackoverflow.com/questions/43236329/why-is-proxy-to-a-map-object-in-es2015-not-working/43236808#43236808
+	#	 https://stackoverflow.com/questions/43236329/why-is-checkWrap-to-a-map-object-in-es2015-not-working/43236808#43236808
 	#	get: (m, prop, receiverProxy) =>
 	#		ret = Reflect.get(m, prop, receiverProxy)
 	#		return ret if notDefined(@keysType) and notDefined(@valuesType)
@@ -62,12 +62,12 @@ class TypedMap extends Type
 	#					Type.error("#{if context then context+' ' else ''}map element key", k, @keysType)
 	#				m.set(k, v)
 	#		else ret)
-	proxy: (map, context) ->
+	checkWrap: (map, context) ->
 		# custom instantiation validation
 		unless @validate(map)
 			super(map, context) unless map instanceof Map
-			m = new _Map(@keysType, @valuesType, new Map())
+			m = new CheckedTypedMap(@keysType, @valuesType, new Map())
 			m.set(e[0], e[1], context) for e in [map...]
-		new _Map(@keysType, @valuesType, map)
+		new CheckedTypedMap(@keysType, @valuesType, map)
 
 export default Type.createHelper(TypedMap)

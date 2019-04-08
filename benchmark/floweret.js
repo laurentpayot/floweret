@@ -1,4 +1,4 @@
-import { fn, typed } from '../dist'
+import { fn, check } from '../dist'
 
 const TIMES = 10 * 1000
 
@@ -15,7 +15,7 @@ const greet = fn(
 
 console.time(TIMES + " greets")
 for (let i = 0; i < TIMES; i++) {
-	let alice = typed(Person, { name: 'alice' })
+	let alice = check(Person, { name: 'alice' })
 	alice.name = 'Alice'
 	greet(alice)
 }

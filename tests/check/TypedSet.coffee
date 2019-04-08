@@ -1,31 +1,31 @@
-import {typed, fn, Any} from '../../dist'
+import {check, fn, Any} from '../../dist'
 import TypedSet from '../../dist/types/TypedSet'
 
 test "init", ->
-	s = typed TypedSet(Number), new Set([1, 2, 3])
+	s = check TypedSet(Number), new Set([1, 2, 3])
 	expect([s...]).toEqual([1, 2, 3])
 
 test "add", ->
-	s = typed TypedSet(Number), new Set([1, 2, 3])
+	s = check TypedSet(Number), new Set([1, 2, 3])
 	s.add(4)
 	expect([s...]).toEqual([1, 2, 3,4])
 
 test "trow an error with a non-TypedSet type", ->
-	expect(-> s = typed TypedSet(Number), 1)
+	expect(-> s = check TypedSet(Number), 1)
 	.toThrow("Expected set of 'Number', got Number 1.")
 
 test "trow an error with a mismatched TypedSet type", ->
-	expect(-> s = typed TypedSet(Number), new Set([1, true, 3]))
+	expect(-> s = check TypedSet(Number), new Set([1, true, 3]))
 	.toThrow("Expected set element to be Number, got Boolean true.")
 
 test "trow an error for a add type mismatch", ->
-	s = typed TypedSet(Number), new Set([1, 2, 3])
+	s = check TypedSet(Number), new Set([1, 2, 3])
 	expect(-> s.add(true))
 	.toThrow("Expected set element to be Number, got Boolean true.")
 
 test "set types are stored in TypedSet instances so they do not overwrite", ->
-	s1 = typed TypedSet(Number), new Set([1, 2, 3])
-	s2 = typed TypedSet(String), new Set(['one', 'two', 'three'])
+	s1 = check TypedSet(Number), new Set([1, 2, 3])
+	s2 = check TypedSet(String), new Set(['one', 'two', 'three'])
 	expect(-> s1.add(4)).not.toThrow()
 
 describe "fn auto-typing", ->
@@ -45,7 +45,7 @@ describe "fn auto-typing", ->
 		.toThrow("Expected set element to be Number, got Boolean true.")
 		expect([s...]).toEqual([1, 2, 3])
 
-	test "input parameter was not proxyfied", ->
+	test "input parameter was not checkWrapped", ->
 		f = fn Boolean, TypedSet(Number), Any, Any,
 			(foo, bar, baz) -> bar.add(baz)
 		s = new Set([1, 2, 3])

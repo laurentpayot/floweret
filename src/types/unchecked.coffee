@@ -9,6 +9,6 @@ class Untyped extends Type
 	constructor: (@type) -> super(arguments...)
 	validate: (val) -> isValid(val, @type)
 	getTypeName: -> getTypeName(@type)
-	# parent Type proxy, i.e. no proxy
+	# parent Type checkWrap, i.e. no checkWrap
 
 export default Type.createHelper(Untyped)

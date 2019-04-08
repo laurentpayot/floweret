@@ -807,31 +807,31 @@ Here are some results from my Ubuntu machine with node v11.10.1:
 
 ```txt
 no-type-checking-benchmark.min.js.gz  257 bytes
-floweret-benchmark.min.js.gz          3185 bytes
+floweret-benchmark.min.js.gz          3191 bytes
 objectmodel.min.js.gz                 4123 bytes
 runtypes.min.js.gz                    6036 bytes
 flow-runtime-benchmark.min.js.gz      20240 bytes
 
 
 *** No type-checking ***
-10000 greets: 2.530ms
-10000 sums: 18.754ms
+10000 greets: 2.101ms
+10000 sums: 25.062ms
 
 *** Floweret ***
-10000 greets: 37.946ms
-10000 sums: 304.011ms
+10000 greets: 36.680ms
+10000 sums: 304.042ms
 
 *** Runtypes ***
-10000 greets: 12.194ms
-10000 sums: 36.125ms
+10000 greets: 12.668ms
+10000 sums: 36.834ms
 
 *** Object Model ***
-10000 greets: 138.668ms
-10000 sums: 914.188ms
+10000 greets: 131.840ms
+10000 sums: 936.078ms
 
 *** Flow-runtime ***
-10000 greets: 318.563ms
-10000 sums: 549.364ms
+10000 greets: 293.982ms
+10000 sums: 499.800ms
 ```
 
 Feel free to make your own benchmarks and share the results.
