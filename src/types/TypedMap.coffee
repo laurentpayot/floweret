@@ -10,8 +10,10 @@ class _Map extends Map
 		super([map...])
 		# overwriting set() inside constructor to use its types and map parameters
 		@set = (k, v, context="") =>
-			Type.error("#{if context then context+' ' else ''}map element value", v, valuesType) unless notDefined(valuesType) or isValid(v, valuesType)	
-			Type.error("#{if context then context+' ' else ''}map element key", k, keysType) unless notDefined(keysType) or isValid(k, keysType)
+			unless notDefined(valuesType) or isValid(v, valuesType)
+				Type.error("#{if context then context+' ' else ''}map element value", v, valuesType)
+			unless notDefined(keysType) or isValid(k, keysType)
+				Type.error("#{if context then context+' ' else ''}map element key", k, keysType)
 			map.set(k, v) # to have side effects
 			super.set(k, v)
 
@@ -35,7 +37,7 @@ class TypedMap extends Type
 			@keysType = t1
 			@valuesType = t2
 	validate: (val) -> switch
-		when val?.constructor isnt Map then false
+		when not (val instanceof Map) then false
 		when notDefined(@keysType) and notDefined(@valuesType) then true
 		when notDefined(@keysType) then Array.from(val.values()).every((e) => isValid(e, @valuesType))
 		when notDefined(@valuesType) then Array.from(val.keys()).every((e) => isValid(e, @keysType))
@@ -54,8 +56,10 @@ class TypedMap extends Type
 	#		return ret if notDefined(@keysType) and notDefined(@valuesType)
 	#		if ret is Map.prototype.set
 	#			(k, v) =>
-	#				Type.error("#{if context then context+' ' else ''}map element value", v, @valuesType) unless isValid(v, @valuesType)	
-	#				Type.error("#{if context then context+' ' else ''}map element key", k, @keysType) unless isValid(k, @keysType)
+	#				unless notDefined(@valuesType) or isValid(v, @valuesType)
+	#					Type.error("#{if context then context+' ' else ''}map element value", v, @valuesType)
+	#				unless isValid(k, @keysType) or isValid(k, @keysType)
+	#					Type.error("#{if context then context+' ' else ''}map element key", k, @keysType)
 	#				m.set(k, v)
 	#		else ret)
 	proxy: (map, context) ->

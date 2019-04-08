@@ -2,6 +2,7 @@ import {fn, Any, etc} from '../dist'
 import promised from '../dist/types/promised'
 import untyped from '../dist/types/untyped'
 import TypedSet from '../dist/types/TypedSet'
+import TypedMap from '../dist/types/TypedMap'
 
 describe "Arguments of signature itself", ->
 
@@ -321,7 +322,7 @@ describe "Auto-typing", ->
 				(foo, bar, baz) -> bar.add(baz)
 			s = new Set([1, 2, 3])
 			expect(-> f(true, s, true))
-			.toThrow("Expected set element to be Number, got Boolean true.")
+			.toThrow("Expected argument #2 set element to be Number, got Boolean true.")
 			expect([s...]).toEqual([1, 2, 3])
 
 		test "input parameter was not proxyfied", ->
@@ -332,6 +333,34 @@ describe "Auto-typing", ->
 			expect([s...]).toEqual([1, 2, 3, 4])
 			expect(-> s.add(false)).not.toThrow()
 			expect([s...]).toEqual([1, 2, 3, 4, false])
+
+		# TODO: more tests!!!
+
+	describe "TypedMap", ->
+
+		test "input parameter side effects", ->
+			f = fn Boolean, TypedMap(Number, String), Any, Any,
+				(foo, bar, k, v) -> bar.set(k, v)
+			m = new TypedMap([[1,'1'], [2,'2'], [3,'3']])
+			expect([f(true, m, 4, '4')...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4']])
+			expect([m...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4']])
+
+		test "input parameter no side effects when invalid", ->
+			f = fn Boolean, TypedMap(Number, String), Any, Any,
+				(foo, bar, k, v) -> bar.set(k, v)
+			m = new TypedMap([[1,'1'], [2,'2'], [3,'3']])
+			expect(-> f(true, m, 4, true))
+			.toThrow("Expected argument #2 map element value to be String, got Boolean true.")
+			expect([m...]).toEqual([[1,'1'], [2,'2'], [3,'3']])
+
+		test "input parameter was not proxyfied", ->
+			f = fn Boolean, TypedMap(Number, String), Any, Any,
+				(foo, bar, k, v) -> bar.set(k, v)
+			m = new TypedMap([[1,'1'], [2,'2'], [3,'3']])
+			expect([f(true, m, 4, '4')...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4']])
+			expect([m...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4']])
+			expect(-> m.set(true, false)).not.toThrow()
+			expect([m...]).toEqual([[1,'1'], [2,'2'], [3,'3'], [4,'4'], [true,false]])
 
 		# TODO: more tests!!!
 
