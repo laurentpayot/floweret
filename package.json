@@ -45,7 +45,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.4.0",
+    "@babel/core": "^7.4.3",
     "babel-jest": "^24.6.0",
     "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
     "coffeescript": "^2.4.0",
@@ -57,9 +57,9 @@
     "rollup": "^1.8.0",
     "rollup-plugin-commonjs": "^9.2.3",
     "rollup-plugin-gzip": "^2.2.0",
-    "rollup-plugin-node-resolve": "^4.0.1",
+    "rollup-plugin-node-resolve": "^4.2.1",
     "rollup-plugin-terser": "^4.0.4",
-    "runtypes": "^3.1.2",
+    "runtypes": "^3.2.0",
     "size-limit": "^0.21.1"
   },
   "size-limit": [

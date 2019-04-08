@@ -783,7 +783,7 @@ typeOf(NaN) // 'NaN'
 
 ## Features to come
 
-* 
+*
 
 ## Benchmark
 
@@ -803,35 +803,35 @@ The benchmark currently includes the folowing runtime type-checking systems:
 
 The [sub-benchmarks](https://github.com/laurentpayot/floweret/tree/master/benchmark) are run from minified [Rollup](https://rollupjs.org) bundles (UMD) and call two simple functions several thousand times.
 
-Here are some results from a Google Cloud Shell machine:
+Here are some results from my Ubuntu machine with node v11.10.1:
 
 ```txt
-no-type-checking-benchmark.min.js.gz  257 bytes
-floweret-benchmark.min.js.gz          3185 bytes
-objectmodel.min.js.gz                 4123 bytes
-runtypes.min.js.gz                    5958 bytes
-flow-runtime-benchmark.min.js.gz      20240 bytes
+no-type-checking-benchmark.min.js.gz  257 bytes
+floweret-benchmark.min.js.gz          3185 bytes
+objectmodel.min.js.gz                 4123 bytes
+runtypes.min.js.gz                    6036 bytes
+flow-runtime-benchmark.min.js.gz      20240 bytes
 
 
 *** No type-checking ***
-10000 greets: 2.335ms
-10000 sums: 21.136ms
+10000 greets: 2.530ms
+10000 sums: 18.754ms
 
 *** Floweret ***
-10000 greets: 52.277ms
-10000 sums: 273.731ms
+10000 greets: 37.946ms
+10000 sums: 304.011ms
 
 *** Runtypes ***
-10000 greets: 17.394ms
-10000 sums: 37.446ms
+10000 greets: 12.194ms
+10000 sums: 36.125ms
 
 *** Object Model ***
-10000 greets: 227.994ms
-10000 sums: 1046.658ms
+10000 greets: 138.668ms
+10000 sums: 914.188ms
 
 *** Flow-runtime ***
-10000 greets: 519.916ms
-10000 sums: 571.542ms
+10000 greets: 318.563ms
+10000 sums: 549.364ms
 ```
 
 Feel free to make your own benchmarks and share the results.
