@@ -110,6 +110,7 @@ const add = fn(
   (a, b) => a + b
 )
 ```
+
 Note that `fn` could be used as a decorator, but sadly [JavaScript decorators proposal](https://github.com/tc39/proposal-decorators) does not support standalone functions…
 For readability, most examples below will use the ES2015 arrow function syntax.
 
@@ -118,31 +119,10 @@ For readability, most examples below will use the ES2015 arrow function syntax.
 You can ommit the `fn` parentheses, resulting in a decorator-like syntax:
 
 ```coffee
-# CoffeeScript
-import { fn, maybe } from 'floweret'
+import { fn } from 'floweret'
 
-# union of valid string litterals
-MethodType = ['GET', 'POST', 'PUT', 'DELETE']
-
-# object attribute types
-InfoType =
-  size: Number
-  title: String
-
-#      param #1 type ⮢      ⮣ param #2 type (optional)   ⮣ result type (promise of an InfoType object)
-getPageInfo = fn String, maybe(MethodType), Promise.resolve(InfoType),
-  (url, method) ->
-    response = await fetch(url, {method})
-    html = await response.text()
-    size: html.length
-    title: /<title>([^<]+)/.exec(html)[1]
-
-# {size: 201972, title: "laurentpayot/floweret: An easy Javascript runtime type system."}
-currentPageInfo = await getPageInfo('.')
-
-# the result is typed! B-)
-currentPageInfo.size = "foo" # TypeError: …
-
+add = fn Number, Number, Number,
+  (a, b) -> a + b
 ```
 
 The following [CoffeeScript's type annotations example](https://coffeescript.org/#type-annotations) (that needs [Flow](https://flow.org/) in the background)
@@ -171,6 +151,39 @@ Obj =
 f = fn String, Obj, String,
   (str, obj) ->
     str + obj.num
+```
+
+Another example showing Floweret usage with CoffeeScript:
+
+```coffee
+import { fn, maybe } from 'floweret'
+
+# union of valid string litterals
+MethodType = ['GET', 'POST', 'PUT', 'DELETE']
+
+# object attribute types
+InfoType =
+  size: Number
+  title: String
+
+#    arg. #1 type ⮢       ⮣ arg. #2 type (optional)    ⮣ result type (promise of an InfoType object)
+getPageInfo = fn String, maybe(MethodType), Promise.resolve(InfoType),
+  (url, method) ->
+    # `url` and `method` arguments are now typed inside this function: `url = 1` would throw a TypeError
+    response = await fetch(url, {method})
+    html = await response.text()
+    size: html.length
+    title: /<title>([^<]+)/.exec(html)[1]
+
+# {size: 201972, title: "laurentpayot/floweret: An easy JavaScript runtime type system."}
+currentPageInfo = await getPageInfo('.')
+
+# the result is typed as InfoType
+currentPageInfo.size = "foo" # TypeError: …
+
+getPageInfo() # TypeError: …
+getPageInfo(1) # TypeError: …
+getPageInfo(1, 'FOO') # TypeError: …
 ```
 
 ## Types

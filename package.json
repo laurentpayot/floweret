@@ -1,7 +1,7 @@
 {
   "name": "floweret",
   "version": "0.9.3",
-  "description": "Easy Javascript runtime type system.",
+  "description": "Easy JavaScript runtime type system.",
   "author": "Laurent Payot",
   "license": "MIT",
   "homepage": "https://github.com/laurentpayot/floweret#readme",
