@@ -6,13 +6,21 @@
 [![npm bundle size](https://badgen.net/bundlephobia/minzip/floweret)](https://bundlephobia.com/result?p=floweret)
 [![npm version](https://badgen.net/npm/v/floweret)](https://www.npmjs.com/package/floweret)
 
-Floweret is a JavasScript *runtime* signature type checker that is:
+## Why?
+
+Either…
+
+* You need type checking in the browser: external APIs, forms, etc.
+* You are looking for a concise type syntax.
+* You :heart: CoffeeScript but you miss a convenient type system for it.
+
+*Floweret* is a JavasScript runtime type system that is:
 
 * **Intuitive**: Native JavaScript types syntax.
 * **Powerful**: Type composition, promises, rest parameters, logical operators and more…
-* **Customizable**: Create your own types for your own needs.
-* **Lightweight**: No dependencies. Typically [around 3 kB](#benchmark) minified and gzipped. Less if you use tree shaking.
+* **Lightweight**: No dependencies. Typically [around 3 kB](#benchmark) minified and gzipped. Less if you use tree shaking. Concise syntax that does not bloat your code.
 * **Fast**: Direct type comparison. No string to parse.
+* **Customizable**: Create your own types for your own needs.
 
 ## Contents
 
@@ -20,39 +28,41 @@ Floweret is a JavasScript *runtime* signature type checker that is:
 * [Usage](#usage)
   * [JavaScript](#javascript)
   * [CoffeeScript](#coffeescript)
-* [Type syntax](#type-syntax)
-  * [Native types](#native-types)
+* [Variable typing](#check)
+* [Function typing](#fn)
   * [Absence of type](#absence-of-type)
-  * [Union of types](#union-of-types)
   * [Maybe type](#maybe-type)
+  * [Promised type](#promised-type)
+  * [Rest arguments type](#rest-arguments-type)
+  * [Any type](#any-type)
+  * [Unchecked type](#any-type)
+* [Basic types](#basic-types)
+  * [Native types](#native-types)
   * [Literal type](#literal-type)
   * [Regular expression type](#regular-expression-type)
+  * [Union of types](#union-of-types)
   * [Typed array type](#typed-array-type)
   * [Sized array type](#sized-array-type)
   * [Object type](#object-type)
   * [Class type](#class-type)
-  * [Promised type](#promised-type)
-  * [Any type](#any-type)
-  * [Rest arguments type](#rest-arguments-type)
+* [Advanced types](#advanced-types)
+  * [Tuple](#tuple)
+  * [Typed Object](#typed-object)
+  * [Typed Set](#typed-set)
+  * [Typed Map](#typed-map)
+  * [Integer](#integer)
+  * [Sized string](#sized-string)
   * [Logical operators](#logical-operators)
     * [Or](#or)
     * [And](#and)
     * [Not](#not)
-  * [Constraint type](#constraint-type)
-  * [Included types](#included-types)
-    * [Tuple](#tuple)
-    * [Typed Object](#typed-object)
-    * [Typed Set](#typed-set)
-    * [Typed Map](#typed-map)
-    * [Integer](#integer)
-    * [Sized string](#sized-string)
   * [Foreign types](#foreign-types)
+  * [Constraint type](#constraint-type)
+  * [Custom types](#custom-types)
 * [Type composition](#type-composition)
-* [Custom types](#custom-types)
-* [Type tools](#type-tools)
+* [Tools](#tools)
   * [isValid](#isvalid)
   * [typeOf](#typeof)
-* [Features to come](#features-to-come)
 * [Benchmark](#benchmark)
 * [License](#license)
 
@@ -60,13 +70,19 @@ Floweret is a JavasScript *runtime* signature type checker that is:
 
 ```bash
 $ npm install floweret
-# or
+```
+
+or
+
+```bash
 $ yarn add floweret
 ```
 
 ## Usage
 
 > fn( <argument 1 type\>, <argument 2 type\>, …, <argument n type\>, <result type\>, <function\> )
+
+> <variable\> = check(<type\>)
 
 To add a signature to a function, wrap the function with the `fn` function.
 `fn` arguments are first the list of arguments types, followed by the result type, and finally the function itself:
@@ -75,6 +91,8 @@ To add a signature to a function, wrap the function with the `fn` function.
 
 ```js
 import { fn } from 'floweret'
+
+const MethodType = ['GET', 'POST', 'PUT', 'DELETE']
 
 const add = fn(
   Number, Number, Number,
@@ -101,10 +119,30 @@ You can ommit the `fn` parentheses, resulting in a decorator-like syntax:
 
 ```coffee
 # CoffeeScript
-import { fn } from 'floweret'
+import { fn, maybe } from 'floweret'
 
-add = fn Number, Number, Number,
-  (a, b) -> a + b
+# union of valid string litterals
+MethodType = ['GET', 'POST', 'PUT', 'DELETE']
+
+# object attribute types
+InfoType =
+  size: Number
+  title: String
+
+#      param #1 type ⮢      ⮣ param #2 type (optional)   ⮣ result type (promise of an InfoType object)
+getPageInfo = fn String, maybe(MethodType), Promise.resolve(InfoType),
+  (url, method) ->
+    response = await fetch(url, {method})
+    html = await response.text()
+    size: html.length
+    title: /<title>([^<]+)/.exec(html)[1]
+
+# {size: 201972, title: "laurentpayot/floweret: An easy Javascript runtime type system."}
+currentPageInfo = await getPageInfo('.')
+
+# the result is typed! B-)
+currentPageInfo.size = "foo" # TypeError: …
+
 ```
 
 The following [CoffeeScript's type annotations example](https://coffeescript.org/#type-annotations) (that needs [Flow](https://flow.org/) in the background)
@@ -135,7 +173,7 @@ f = fn String, Obj, String,
     str + obj.num
 ```
 
-## Type syntax
+## Types
 
 ### Native types
 
@@ -731,6 +769,10 @@ export createUser = fn(
 )
 ```
 
+### Custom types
+
+*Documentation in progress…*
+
 ## Type composition
 
 As types are simply JavaScript expressions, you can assign any type to a variable and use it to create new types:
@@ -741,11 +783,7 @@ const Name = {first: String, last: String, middle: [String, undefined]}
 const User = {id: Number, name: Name, phone: Phone}
 ```
 
-## Custom types
-
-*Documentation in progress…*
-
-## Type tools
+## Tools
 
 Some handy utilities exported by the package.
 
@@ -780,10 +818,6 @@ typeOf([1, 2]) // 'Array'
 typeOf(Promise.resolve(1)) // 'Promise'
 typeOf(NaN) // 'NaN'
 ```
-
-## Features to come
-
-*
 
 ## Benchmark
 
