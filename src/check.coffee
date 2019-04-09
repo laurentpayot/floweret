@@ -17,7 +17,8 @@ objectProxy = (type, obj, path=[]) ->
 			o[k] = v
 			true # indicate success
 		deleteProperty: (o, k) ->
-			error(k, 0, true)
+			error(k, 0, true) if k of type
+			delete o[k]
 	)
 
 arrayProxy = (type, arr) ->

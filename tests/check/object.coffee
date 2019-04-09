@@ -52,6 +52,19 @@ test "trow an error for a deep-deep type mismatch and leave object unmodified", 
 	.toThrow("Expected an object with key 'b.c.d' of type 'Number' instead of Boolean true.")
 	expect(o).toEqual({a: 1, b: {c: {d: 2}, e: 3}})
 
+test "trow an error for a deletion and leave object unmodified", ->
+	Obj = {a: Number, b: {c: Number}}
+	o = check Obj, {a: 1, b: {c: 2}}
+	expect(-> delete o.a)
+	.toThrow("Expected an object with key 'a' of type 'Number' instead of missing key 'a'")
+	expect(o).toEqual({a: 1, b: {c: 2}})
+
+test "do not trow an error for a deletion of an untyped attribute", ->
+	Obj = {a: Number, b: {c: Number}}
+	o = check Obj, {a: 1, b: {c: 2, d: 3}}
+	expect(-> delete o.b.d).not.toThrow()
+	expect(o).toEqual({a: 1, b: {c: 2}})
+
 describe "fn auto-typing", ->
 
 	test "parameter typed as object", ->
