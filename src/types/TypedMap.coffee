@@ -63,6 +63,7 @@ class TypedMap extends Type
 	#				m.set(k, v)
 	#		else ret)
 	checkWrap: (map, context) ->
+		# super(map, context)
 		# custom instantiation validation
 		unless @validate(map)
 			super(map, context) unless map instanceof Map

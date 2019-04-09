@@ -14,5 +14,18 @@ class TypedObject extends Type
 		when isAny(@type) then true
 		else Object.values(val).every((v) => isValid(v, @type))
 	getTypeName: -> "object with values of type '#{getTypeName(@type)}'"
+	checkWrap: (obj, context) ->
+		#super(obj, context)
+		# custom instantiation validation
+		unless @validate(obj)
+			super(obj, context) unless obj?.constructor is Object
+			badObj = @checkWrap({}, context)
+			(badObj[k] = v) for k, v of obj
+		new Proxy(obj,
+			set: (o, k, v) =>
+				Type.error("#{if context then context+' ' else ''}object property '#{k}'", v, @type) unless isValid(v, @type)
+				o[k] = v
+				true # indicate success
+		)
 
 export default Type.createHelper(TypedObject)

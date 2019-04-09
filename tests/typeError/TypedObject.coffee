@@ -6,7 +6,7 @@ test "return an error with 'object with values of type 'Number''", ->
 	expect(-> f(1))
 	.toThrow("Expected argument #1 to be object with values of type 'Number', got Number 1.")
 
-test "return an error with 'set of 'String''", ->
+test "return an error with 'object property 'b' to be String'", ->
 	f = fn TypedObject(String), Any, ->
 	expect(-> f({a: 'foo', b: 1}))
-	.toThrow("Expected argument #1 to be object with values of type 'String', got Object.")
+	.toThrow("Expected argument #1 object property 'b' to be String, got Number 1.")
