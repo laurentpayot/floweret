@@ -59,6 +59,8 @@ describe "keys type and values type", ->
 		m2 = check TypedMap(String, Number), new Map([['one',1], ['two',2], ['three',3]])
 		expect(-> m1.set(4,'4')).not.toThrow()
 
+describe "alias", -> # TODO !!!
+
 describe "fn auto-typing", ->
 
 	test "input parameter side effects", ->

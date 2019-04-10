@@ -65,6 +65,8 @@ test "do not trow an error for a deletion of an untyped attribute", ->
 	expect(-> delete o.b.d).not.toThrow()
 	expect(o).toEqual({a: 1, b: {c: 2}})
 
+describe "alias", -> # TODO !!!
+
 describe "fn auto-typing", ->
 
 	test "parameter typed as object", ->

@@ -1,5 +1,6 @@
 import Type from './Type'
 import isValid from '../isValid'
+import check from '../check'
 import {getTypeName} from '../tools'
 
 # to be used with as() to specify an alias
@@ -14,5 +15,6 @@ class AliasedType extends Type
 	validate: (val) -> isValid(val, @type)
 	getTypeName: -> getTypeName(@type)
 	helperName: "type"
+	checkWrap: (val, context) -> check(@type, val, context)
 
 export default Type.createHelper(AliasedType)

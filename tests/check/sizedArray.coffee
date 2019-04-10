@@ -78,4 +78,6 @@ describe.skip "Size 1", ->
 		expect(-> a.pop())
 		.toThrow("Sized array must have a length of 1.")
 
+describe "alias", -> # TODO !!!
+
 describe "fn auto-typing", -> # TODO !!!

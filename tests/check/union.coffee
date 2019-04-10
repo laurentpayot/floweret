@@ -39,3 +39,5 @@ describe "Union", ->
 		n = check [Number, Numbers, String], [1, 2, 3]
 		expect(-> n[1] = true)
 		.toThrow("Expected an array with element 1 of type 'Number' instead of Boolean true.")
+
+describe "alias", -> # TODO !!!

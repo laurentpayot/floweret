@@ -28,6 +28,8 @@ test "set types are stored in TypedSet instances so they do not overwrite", ->
 	s2 = check TypedSet(String), new Set(['one', 'two', 'three'])
 	expect(-> s1.add(4)).not.toThrow()
 
+describe "alias", -> # TODO !!!
+
 describe "fn auto-typing", ->
 
 	test "input parameter side effects", ->

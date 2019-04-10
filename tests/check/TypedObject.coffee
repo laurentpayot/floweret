@@ -45,6 +45,8 @@ test "do not trow an error for a deletion", ->
 	expect(-> delete o.a).not.toThrow()
 	expect(o).toEqual({})
 
+describe "alias", -> # TODO !!!
+
 describe "fn auto-typing", ->
 
 	test "parameter typed as TypedObject", ->

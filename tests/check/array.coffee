@@ -38,4 +38,6 @@ test "trow an error for a set type mismatch", ->
 	expect(-> a[1] = true)
 	.toThrow("Expected an array with element 1 of type 'Number' instead of Boolean true.")
 
+describe "alias", -> # TODO !!!
+
 describe "fn auto-typing", -> # TODO !!!
