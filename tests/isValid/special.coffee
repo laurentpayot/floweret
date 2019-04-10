@@ -123,7 +123,7 @@ describe "Unmanaged Types", ->
 describe "Constraint", ->
 
 	test "return true when validator function is truthy for the value", ->
-		Int = constraint((val) -> Number.isInteger(val))
+		Int = constraint(Number.isInteger)
 		expect(isValid(100, Int)).toBe(true)
 		expect(isValid(-10, Int)).toBe(true)
 		expect(isValid(0, Int)).toBe(true)
