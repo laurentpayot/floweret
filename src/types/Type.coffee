@@ -31,7 +31,10 @@ export default class Type
 			else
 				if l > max then Type.invalid "'#{name}' must have at most#{argsNb(max)}"
 				if l < min then Type.invalid "'#{name}' must have at least#{argsNb(min)}"
-	validate: -> false # false if child class validate() missing
+	validate: -> false # false if child class validate method missing
 	getTypeName: -> @constructor.name
+	as: (name) ->
+		@getTypeName = -> name
+		@ # returning the new instance
 	# NB: to avoid circular dependencies, error static method is added to Type class in `typeError` file
 	checkWrap: (val, context) -> if @validate(val) then val else Type.error(context, val, @)
