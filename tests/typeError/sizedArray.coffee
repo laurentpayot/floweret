@@ -1,0 +1,28 @@
+import {fn, Any} from '../../dist'
+import type from '../../dist/types/type'
+
+
+test "empty array", ->
+	f = fn Array(3), Any, ->
+	expect(-> f([]))
+	.toThrow("Expected argument #1 to be an array with a length of 3 instead of 0.")
+
+test "different size array of Number", ->
+	f = fn Array(3), Any, ->
+	expect(-> f([1, 2]))
+	.toThrow("Expected argument #1 to be an array with a length of 3 instead of 2.")
+
+test "different size array of undefined", ->
+	f = fn Array(3), Any, ->
+	expect(-> f([undefined, undefined]))
+	.toThrow("Expected argument #1 to be an array with a length of 3 instead of 2.")
+
+test "alias for invalid type", ->
+	f = fn type(Array(3)).as("Foo"), Any, ->
+	expect(-> f(true))
+	.toThrow("Expected argument #1 to be Foo: 'array of 3 elements', got Boolean true.")
+
+test "alias for invalid array", ->
+	f = fn type(Array(3)).as("Foo"), Any, ->
+	expect(-> f([1, 2]))
+	.toThrow("Expected argument #1 to be Foo: an array with a length of 3 instead of 2.")

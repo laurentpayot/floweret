@@ -23,7 +23,9 @@ class TypedObject extends Type
 			(badObj[k] = v) for k, v of obj
 		new Proxy(obj,
 			set: (o, k, v) =>
-				Type.error("#{if context then context+' ' else ''}object property '#{k}'", v, @type) unless isValid(v, @type)
+				Type.error((if context then context + ' ' else '') +
+							(if @alias then @alias + ' ' else '') +
+						"object property '#{k}'", v, @type) unless isValid(v, @type)
 				o[k] = v
 				true # indicate success
 		)
