@@ -30,7 +30,7 @@ export default (argTypes..., resType, f) ->
 			# NB: not using `await` because CS would transpile the returned function as an async one
 			resType.then((promiseType) ->
 				promise = f(typedArgs...)
-				typeError("result", promise, promiseType, true) unless promise instanceof Promise
+				typeError("result", promise, promiseType, "", true) unless promise instanceof Promise
 				promise.then((result) -> check(promiseType, result, "promise result"))
 			)
 		else

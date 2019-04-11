@@ -23,4 +23,4 @@ test "alias", ->
 	f = fn Int, Number,
 		(n) -> 1
 	expect(-> f(2.5))
-	.toThrow("Expected argument #1 to be Integer, got Number 2\.5\.")
+	.toThrow("Expected argument #1 to be Integer: constrained type, got Number 2.5.")

@@ -16,11 +16,13 @@ class Tuple extends Type
 	checkWrap: (arr, context) ->
 		# NB: skipping parent class validation to let pre-proxy validation find a better error message
 		# super(arr, context)
-		Type.error(context, arr, @) unless Array.isArray(arr)
-		sizeErrorMessage = "Tuple must have a length of #{@types.length}."
+		Type.error(context, arr, @, @alias) unless Array.isArray(arr)
+		sizeErrorMessage = "#{if @alias then @alias+' t' else 'T'}uple must have a length of #{@types.length}."
 		validator = (a, i, v) =>
 			Type.error(sizeErrorMessage) unless i < @types.length
-			Type.error("tuple element #{i}", v, @types[i]) unless isValid(v, @types[i])
+			Type.error((if context then context + ' ' else '') +
+						(if @alias then @alias + ' ' else '') +
+						"tuple element #{i}", v, @types[i]) unless isValid(v, @types[i])
 			a[i] = v
 			true # indicate success
 		# pre-proxy validation

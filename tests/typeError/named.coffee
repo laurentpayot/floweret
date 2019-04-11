@@ -5,7 +5,7 @@ import named from '../../dist/types/named'
 test "type name", ->
 	f = fn named('Foo'), Any, ->
 	expect(-> f(true))
-	.toThrow("Expected argument #1 to be Foo, got Boolean true.")
+	.toThrow("Expected argument #1 to be a direct instance of Foo, got Boolean true.")
 
 test "type name not a string", ->
 	expect(-> f = fn named({a: Number}), Any, ->)
@@ -18,4 +18,4 @@ test "type name empty string", ->
 test "named type by name alias", ->
 	f = fn named('Bar').as("Foo"), Any, ->
 	expect(-> f(true))
-	.toThrow("Expected argument #1 to be Foo, got Boolean true.")
+	.toThrow("Expected argument #1 to be Foo: a direct instance of Bar, got Boolean true.")

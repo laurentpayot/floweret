@@ -15,7 +15,12 @@ class AliasedType extends Type
 	validate: (val) -> isValid(val, @type)
 	getTypeName: -> getTypeName(@type)
 	helperName: "type"
-	# checkWrap: (val, context) -> check(@type, val, context)
-	# checkWrap: @type.checkWrap if @type instanceof Type or @type?.rootClass is Type
+	checkWrap: (val, context) ->
+		Type.warn "Usage of '#{@helperName}' is not needed without alias." unless @alias
+		if @type instanceof Type or @type?.rootClass is Type
+			@type.alias = @alias
+			@type.checkWrap(val, context)
+		else
+			check(@type, val, context, @alias)
 
 export default Type.createHelper(AliasedType)
