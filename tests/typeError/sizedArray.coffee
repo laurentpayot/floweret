@@ -17,6 +17,16 @@ test "different size array of undefined", ->
 	expect(-> f([undefined, undefined]))
 	.toThrow("Expected argument #1 to be an array with a length of 3 instead of 2.")
 
+test "empty array type with non-array value", ->
+	f = fn [], Any, ->
+	expect(-> f(1))
+	.toThrow("Expected argument #1 to be empty array, got Number 1.")
+
+test "empty array type with non-empty array value", ->
+	f = fn [], Any, ->
+	expect(-> f([1]))
+	.toThrow("Expected argument #1 to be an empty array, got a non-empty array.")
+
 test "alias for invalid type", ->
 	f = fn type(Array(3)).as("Foo"), Any, ->
 	expect(-> f(true))
