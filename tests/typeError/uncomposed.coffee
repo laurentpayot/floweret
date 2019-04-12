@@ -47,30 +47,6 @@ test "return an error with
 	expect(-> f(a: {b: 1, c: 2}, d: 3))
 	.toThrow("Expected argument #1 to be Number, got Object.")
 
-test "return an error with
-	'Argument number 1 should be an object with key 'a.c' of type 'String' instead of Number 2.'", ->
-	f = fn {a: {b: Number, c: String}, d: Number}, Any, ->
-	expect(-> f(a: {b: 1, c: 2}, d: 3))
-	.toThrow("Expected argument #1 to be an object with key 'a.c' of type 'String' instead of Number 2.")
-
-test "return an error with
-	'Argument number 1 should be an object with key 'a.c' of type 'String' instead of missing key 'c'.'", ->
-	f = fn {a: {b: Number, c: String}, d: Number}, Any, ->
-	expect(-> f(a: {b: 1, x: 4}, d: 3))
-	.toThrow("Expected argument #1 to be an object with key 'a.c' of type 'String' instead of missing key 'c'.")
-
-test "return an error with
-	'Argument number 1 should be an object with key 'a.c' of type 'String' instead of undefined.'", ->
-	f = fn {a: {b: Number, c: String}, d: Number}, Any, ->
-	expect(-> f(a: {b: 1, c: undefined, x: 4}, d: 3))
-	.toThrow("Expected argument #1 to be an object with key 'a.c' of type 'String' instead of undefined.")
-
-test "return an error with
-	'Argument number 1 should be an object with key 'a.c' of type 'String' instead of Number 5.'", ->
-	f = fn {a: {b: Number, c: String}, d: Number}, Any, ->
-	expect(-> f(a: {b: 1, c: 5, x: 4}, d: 3))
-	.toThrow("Expected argument #1 to be an object with key 'a.c' of type 'String' instead of Number 5.")
-
 test "return an error with 'MyClass", ->
 	class MyClass
 	f = fn MyClass, Any, ->
@@ -111,16 +87,6 @@ test "return an error with 'empty array, got a non-empty array'", ->
 	f = fn [], Any, ->
 	expect(-> f([1]))
 	.toThrow("Expected argument #1 to be an empty array, got a non-empty array.")
-
-test "return an error with 'empty object, got Number 1.'", ->
-	f = fn {}, Any, ->
-	expect(-> f(1))
-	.toThrow("Expected argument #1 to be empty object, got Number 1.")
-
-test "return an error with 'empty object, got a non-empty object.'", ->
-	f = fn {}, Any, ->
-	expect(-> f({foo: "bar"}))
-	.toThrow("Expected argument #1 to be an empty object, got a non-empty object.")
 
 test "return an error with 'NaN'", ->
 	f = fn Number, Any, ->

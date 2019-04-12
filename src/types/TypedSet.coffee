@@ -7,8 +7,10 @@ class CheckedTypedSet extends Set
 	constructor: (type, set) ->
 		super([set...])
 		# overwriting add() inside constructor to use its type and set parameters
-		@add = (val, context="") =>
-			Type.error("#{if context then context+' ' else ''}set element", val, type) unless isValid(val, type)
+		@add = (val, context="", alias="") =>
+			Type.error((if context then context + ' ' else '') +
+						(if alias then alias + ' ' else '') +
+						"set element", val, type) unless isValid(val, type)
 			set.add(val) # to have side effects
 			super.add(val)
 
@@ -39,7 +41,7 @@ class TypedSet extends Type
 		unless @validate(set)
 			super(set, context) unless set instanceof Set
 			s = new CheckedTypedSet(@type, new Set())
-			s.add(e, context) for e in [set...]
+			s.add(e, context, @alias) for e in [set...]
 		new CheckedTypedSet(@type, set)
 
 export default Type.createHelper(TypedSet)
