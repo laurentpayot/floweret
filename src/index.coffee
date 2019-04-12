@@ -9,6 +9,6 @@ export {default as typeOf} from './typeOf'
 # exporting types already used by fn
 export {default as etc} from './types/etc'
 export {default as Any} from './types/Any'
-
-# exporting maybe() as it is often used
+# exporting other frequently used types
 export {default as maybe} from './types/maybe'
+export {default as type} from './types/type'
