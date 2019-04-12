@@ -10,14 +10,11 @@ class CheckedTypedMap extends Map
 		super([map...])
 		# overwriting set() inside constructor to use its types and map parameters
 		@set = (k, v, context="", alias="") =>
-			unless notDefined(valuesType) or isValid(v, valuesType)
-				Type.error((if context then context + ' ' else '') +
-							(if alias then alias + ' ' else '') +
-							"map element value", v, valuesType)
-			unless notDefined(keysType) or isValid(k, keysType)
-				Type.error((if context then context + ' ' else '') +
-							(if alias then alias + ' ' else '') +
-							"map element key", k, keysType)
+			for [kind, type, arg] in [['value', valuesType, v], ['key', keysType, k]]
+				unless notDefined(type) or isValid(arg, type)
+					Type.error((if context then context + ' ' else '') +
+								(if alias then alias + ' ' else '') +
+								"map element " + kind, arg, type)
 			map.set(k, v) # to have side effects
 			super.set(k, v)
 
