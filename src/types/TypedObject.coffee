@@ -24,7 +24,7 @@ class TypedObject extends Type
 		new Proxy(obj,
 			set: (o, k, v) =>
 				Type.error((if context then context + ' ' else '') +
-							(if @alias then @alias + ' ' else '') +
+							(if @aliasName then @aliasName + ' ' else '') +
 						"object property '#{k}'", v, @type) unless isValid(v, @type)
 				o[k] = v
 				true # indicate success

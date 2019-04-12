@@ -1,5 +1,5 @@
 import {fn, Any} from '../../dist'
-import type from '../../dist/types/type'
+import alias from '../../dist/types/alias'
 
 test "return an error with
 	'Argument number 1 should be an object with key 'a.c' of type 'String' instead of Number 2.'", ->
@@ -36,12 +36,12 @@ test "return an error with 'empty object, got a non-empty object.'", ->
 	.toThrow("Expected argument #1 to be an empty object, got a non-empty object.")
 
 test "alias for invalid type", ->
-	f = fn type({a: {b: Number, c: String}, d: Number}).as("Foo"), Any, ->
+	f = fn alias("Foo", {a: {b: Number, c: String}, d: Number}), Any, ->
 	expect(-> f(true))
 	.toThrow("Expected argument #1 to be Foo: object type, got Boolean true.")
 
 test "alias for invalid array", ->
-	f = fn type({a: {b: Number, c: String}, d: Number}).as("Foo"), Any, ->
+	f = fn alias("Foo", {a: {b: Number, c: String}, d: Number}), Any, ->
 	expect(-> f({a: {b: 1, c: true}, d: 3}))
 	.toThrow("Expected argument #1 to be Foo:
 			an object with key 'a.c' of type 'String' instead of Boolean true.")

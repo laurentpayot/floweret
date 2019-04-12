@@ -12,11 +12,11 @@ test "return an error with 'set of 'String''", ->
 	.toThrow("Expected argument #1 set element to be String, got Number 1.")
 
 test "alias for invalid type", ->
-	f = fn TypedSet(Number).as("Foo"), Any, ->
+	f = fn TypedSet(Number).alias("Foo"), Any, ->
 	expect(-> f(true))
 	.toThrow("Expected argument #1 to be Foo: set of 'Number', got Boolean true.")
 
 test "alias for invalid array", ->
-	f = fn TypedSet(Number).as("Foo"), Any, ->
+	f = fn TypedSet(Number).alias("Foo"), Any, ->
 	expect(-> f(new Set([1, true, 3])))
 	.toThrow("Expected argument #1 Foo set element to be Number, got Boolean true.")

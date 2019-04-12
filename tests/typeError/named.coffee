@@ -15,7 +15,7 @@ test "type name empty string", ->
 	expect(-> f = fn named({a: Number}), Any, ->)
 	.toThrow("'named' argument must be a non-empty string.")
 
-test "named type by name alias", ->
-	f = fn named('Bar').as("Foo"), Any, ->
+test "named type by name aliasName", ->
+	f = fn named('Bar').alias("Foo"), Any, ->
 	expect(-> f(true))
 	.toThrow("Expected argument #1 to be Foo: a direct instance of Bar, got Boolean true.")

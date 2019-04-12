@@ -11,4 +11,4 @@ export {default as etc} from './types/etc'
 export {default as Any} from './types/Any'
 # exporting other frequently used types
 export {default as maybe} from './types/maybe'
-export {default as type} from './types/type'
+export {default as alias} from './types/alias'

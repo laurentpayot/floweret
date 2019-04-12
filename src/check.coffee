@@ -2,15 +2,15 @@ import isValid from './isValid'
 import typeError from './typeError'
 import Type from './types/Type'
 
-objectProxy = (type, obj, alias, path=[]) ->
-	(obj[key] = objectProxy(val, obj[key], alias, [key, path...])) for key, val of type when val?.constructor is Object
+objectProxy = (type, obj, aliasName, path=[]) ->
+	(obj[key] = objectProxy(val, obj[key], aliasName, [key, path...])) for key, val of type when val?.constructor is Object
 	error = (k, v, deletion) ->
 		pathObject = if deletion then {} else {"#{k}": v}
 		typeObject = {"#{k}": type[k]}
 		for p in path
 			pathObject = {"#{p}": pathObject}
 			typeObject = {"#{p}": typeObject}
-		typeError("", pathObject, typeObject, alias)
+		typeError("", pathObject, typeObject, aliasName)
 	new Proxy(obj,
 		set: (o, k, v) ->
 			error(k, v) unless isValid(v, type[k])
@@ -21,13 +21,13 @@ objectProxy = (type, obj, alias, path=[]) ->
 			delete o[k]
 	)
 
-arrayProxy = (type, arr, alias) ->
+arrayProxy = (type, arr, aliasName) ->
 	new Proxy(arr,
 		set: (a, i, v) ->
 			unless isValid(v, type)
 				badArray = [a...]
 				badArray[i] = v
-				typeError("", badArray, [type], alias)
+				typeError("", badArray, [type], aliasName)
 			a[i] = v
 			true # indicate success
 	)
@@ -49,21 +49,21 @@ sizedArrayProxy = (arr) ->
 	)
 
 # NB: `context` string is for instantiation only, do not use post-instantiation in actual proxies
-check = (type, val, context="", alias="") ->
+check = (type, val, context="", aliasName="") ->
 	# custom types first for customized instantiation validity check
 	return type.checkWrap(val, context) if type instanceof Type
-	typeError(context, val, type, alias) unless isValid(val, type)
+	typeError(context, val, type, aliasName) unless isValid(val, type)
 	switch
 		when Array.isArray(type)
 			switch type.length
-				when 1 then arrayProxy(type[0], val, alias)
+				when 1 then arrayProxy(type[0], val, aliasName)
 				else
 					# checking two first values instead of `Object.values(type).length` for performance reasons
 					if type[0] is undefined and type[1] is undefined # array of empty values: sized array, e.g.: `Array(1000)`)
-						sizedArrayProxy(val, alias)
+						sizedArrayProxy(val, aliasName)
 					else # union of types: typing with the first valid type
-						check(type.find((t) -> isValid(val, t)), val, context, alias)
-		when type?.constructor is Object then objectProxy(type, val, alias)
+						check(type.find((t) -> isValid(val, t)), val, context, aliasName)
+		when type?.constructor is Object then objectProxy(type, val, aliasName)
 		else val # no proxy
 
 export default check

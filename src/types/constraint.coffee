@@ -9,7 +9,7 @@ class Constraint extends Type
 		Type.invalid "'#{@helperName}' argument must be a function." unless @validator?.constructor is Function
 	validate: (val) -> @validator(val)
 	getTypeName: -> "constrained " +
-		if @alias then "type" else "by " + if @validator.name then "function '#{@validator.name}'" else "'#{@validator}'"
+		if @aliasName then "type" else "by " + if @validator.name then "function '#{@validator.name}'" else "'#{@validator}'"
 	helperName: "constraint"
 
 export default Type.createHelper(Constraint)

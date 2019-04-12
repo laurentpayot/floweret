@@ -33,9 +33,10 @@ export default class Type
 				if l < min then Type.invalid "'#{name}' must have at least#{argsNb(min)}"
 	validate: -> false # false if child class validate method missing
 	getTypeName: -> @constructor.name
-	alias: ""
-	as: (alias) ->
-		@alias = alias
+	aliasName: ""
+	alias: (name) ->
+		Type.error("Alias name must be a non-empty string.") unless typeof name is 'string' and name
+		@aliasName = name
 		@ # returning the instance
 	# NB: to avoid circular dependencies, error static method is added to Type class in `typeError` file
-	checkWrap: (val, context) -> if @validate(val) then val else Type.error(context, val, @, @alias)
+	checkWrap: (val, context) -> if @validate(val) then val else Type.error(context, val, @, @aliasName)

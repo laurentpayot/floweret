@@ -12,11 +12,11 @@ test "return an error with 'object property 'b' to be String'", ->
 	.toThrow("Expected argument #1 object property 'b' to be String, got Number 1.")
 
 test "alias for invalid type", ->
-	f = fn TypedObject(Number).as("Foo"), Any, ->
+	f = fn TypedObject(Number).alias("Foo"), Any, ->
 	expect(-> f(true))
 	.toThrow("Expected argument #1 to be Foo: object with values of type 'Number', got Boolean true.")
 
 test "alias for invalid array", ->
-	f = fn TypedObject(Number).as("Foo"), Any, ->
+	f = fn TypedObject(Number).alias("Foo"), Any, ->
 	expect(-> f({a: true}))
 	.toThrow("Expected argument #1 Foo object property 'a' to be Number, got Boolean true.")

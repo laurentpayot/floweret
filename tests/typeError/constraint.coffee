@@ -19,7 +19,7 @@ test "return an error with function code", ->
 	.toThrow(/^Expected argument #1 to be constrained by 'function \(val\).\{[^$]+\}', got Number 3\.5\.$/)
 
 test "alias", ->
-	Int = constraint(Number.isInteger).as("Integer")
+	Int = constraint(Number.isInteger).alias("Integer")
 	f = fn Int, Number,
 		(n) -> 1
 	expect(-> f(2.5))

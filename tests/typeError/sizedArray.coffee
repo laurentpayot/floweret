@@ -1,5 +1,5 @@
 import {fn, Any} from '../../dist'
-import type from '../../dist/types/type'
+import alias from '../../dist/types/alias'
 
 
 test "empty array", ->
@@ -28,11 +28,11 @@ test "empty array type with non-empty array value", ->
 	.toThrow("Expected argument #1 to be an empty array, got a non-empty array.")
 
 test "alias for invalid type", ->
-	f = fn type(Array(3)).as("Foo"), Any, ->
+	f = fn alias("Foo", Array(3)), Any, ->
 	expect(-> f(true))
 	.toThrow("Expected argument #1 to be Foo: 'array of 3 elements', got Boolean true.")
 
 test "alias for invalid array", ->
-	f = fn type(Array(3)).as("Foo"), Any, ->
+	f = fn alias("Foo", Array(3)), Any, ->
 	expect(-> f([1, 2]))
 	.toThrow("Expected argument #1 to be Foo: an array with a length of 3 instead of 2.")

@@ -9,11 +9,11 @@ class CheckedTypedMap extends Map
 	constructor: (keysType, valuesType, map) ->
 		super([map...])
 		# overwriting set() inside constructor to use its types and map parameters
-		@set = (k, v, context="", alias="") =>
+		@set = (k, v, context="", aliasName="") =>
 			for [kind, type, arg] in [['value', valuesType, v], ['key', keysType, k]]
 				unless notDefined(type) or isValid(arg, type)
 					Type.error((if context then context + ' ' else '') +
-								(if alias then alias + ' ' else '') +
+								(if aliasName then aliasName + ' ' else '') +
 								"map element " + kind, arg, type)
 			map.set(k, v) # to have side effects
 			super.set(k, v)
@@ -69,7 +69,7 @@ class TypedMap extends Type
 		unless @validate(map)
 			super(map, context) unless map instanceof Map
 			m = new CheckedTypedMap(@keysType, @valuesType, new Map())
-			m.set(e[0], e[1], context, @alias) for e in [map...]
+			m.set(e[0], e[1], context, @aliasName) for e in [map...]
 		new CheckedTypedMap(@keysType, @valuesType, map)
 
 export default Type.createHelper(TypedMap)

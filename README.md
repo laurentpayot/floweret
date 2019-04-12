@@ -854,7 +854,7 @@ Here are some results from my Ubuntu machine with node v11.10.1:
 
 ```txt
 no-type-checking-benchmark.min.js.gz  257 bytes
-floweret-benchmark.min.js.gz          3415 bytes
+floweret-benchmark.min.js.gz          3391 bytes
 objectmodel.min.js.gz                 4123 bytes
 runtypes.min.js.gz                    6036 bytes
 flow-runtime-benchmark.min.js.gz      20240 bytes

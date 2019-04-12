@@ -11,7 +11,7 @@ badPath = (obj, typeObj) ->
 			return [k].concat(if obj[k]?.constructor is Object then badPath(obj[k], typeObj[k]) \
 								else [obj[k], typeObj[k]])
 
-typeError = (context, val, type, alias="", promised=false) -> throw new TypeError(
+typeError = (context, val, type, aliasName="", promised=false) -> throw new TypeError(
 	if arguments.length < 2
 		context
 	else
@@ -37,7 +37,7 @@ typeError = (context, val, type, alias="", promised=false) -> throw new TypeErro
 					"an empty object, got a non-empty object"
 			else
 				"#{getTypeName(type)}, got #{valueType(val)}"
-		ending = (alias or type.alias) + ": " + ending if alias or type instanceof Type and type.alias
+		ending = (aliasName or type.aliasName) + ": " + ending if aliasName or type instanceof Type and type.aliasName
 		"Expected #{if context then context + ' to be ' else ''}#{if promised then 'a promise of type ' else ''}#{ending}."
 )
 
