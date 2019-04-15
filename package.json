@@ -52,7 +52,7 @@
     "coveralls": "^3.0.3",
     "flow-runtime": "^0.17.0",
     "jest": "^24.7.1",
-    "jest-preset-coffeescript": "^1.0.0",
+    "jest-preset-coffeescript": "^1.0.1",
     "objectmodel": "^3.7.7",
     "rollup": "^1.10.0",
     "rollup-plugin-commonjs": "^9.3.4",
