@@ -10,7 +10,7 @@ export default class Type
 	# static  methods
 	@createHelper: (childClass) ->
 		h = -> new childClass(arguments...)
-		h.rootClass = Type
+		h.rootClass = Type # function attribute used to detect helper
 		h
 	@invalid: (msg) -> throw new InvalidType msg
 	@warn: (msg) -> console.warn("Floweret:", msg) unless process?.env.NODE_ENV is 'production'

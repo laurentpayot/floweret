@@ -1,5 +1,5 @@
 import isValid from './isValid'
-import typeError from './typeError'
+import {isAny} from './tools'
 import Type from './types/Type'
 
 objectProxy = (type, obj, aliasName, path=[]) ->
@@ -10,7 +10,7 @@ objectProxy = (type, obj, aliasName, path=[]) ->
 		for p in path
 			pathObject = {"#{p}": pathObject}
 			typeObject = {"#{p}": typeObject}
-		typeError("", pathObject, typeObject, aliasName)
+		Type.error("", pathObject, typeObject, aliasName)
 	new Proxy(obj,
 		set: (o, k, v) ->
 			error(k, v) unless isValid(v, type[k])
@@ -27,7 +27,7 @@ arrayProxy = (type, arr, aliasName) ->
 			unless isValid(v, type)
 				badArray = [a...]
 				badArray[i] = v
-				typeError("", badArray, [type], aliasName)
+				Type.error("", badArray, [type], aliasName)
 			a[i] = v
 			true # indicate success
 	)
@@ -50,9 +50,11 @@ sizedArrayProxy = (arr) ->
 
 # NB: `context` string is for instantiation only, do not use post-instantiation in actual proxies
 check = (type, val, context="", aliasName="") ->
+	Type.warn "Any is not needed as 'check' argument." if not context and isAny(type)
 	# custom types first for customized instantiation validity check
-	return type.checkWrap(val, context) if type instanceof Type
-	typeError(context, val, type, aliasName) unless isValid(val, type)
+	if type instanceof Type or type?.rootClass is Type
+		return (if type.rootClass then type() else type).checkWrap(val, context)
+	Type.error(context, val, type, aliasName) unless isValid(val, type)
 	switch
 		when Array.isArray(type)
 			switch type.length
