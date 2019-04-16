@@ -74,3 +74,13 @@ test "throw an error with 'etc'", ->
 test "other type (Symbol)", ->
 	f = Symbol("foo")
 	expect(check Symbol, f).toEqual(f)
+
+test "constraint at init", ->
+	Duo = constraint((a) -> Array.isArray(a) and a.length is 2)
+	expect(-> check Duo, 1)
+	.toThrow(/^Expected constrained by 'function \(a\).\{[^$]+\}', got Number 1\.$/)
+
+test "no constraint after init", ->
+	Duo = constraint((a) -> Array.isArray(a) and a.length is 2)
+	expect(d = check Duo, [1, true]).toEqual([1, true])
+	expect(-> d.push('three')).not.toThrow()
