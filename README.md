@@ -10,7 +10,7 @@
 
 Either…
 
-* You need type checking in the browser: external APIs, forms, etc.
+* You need type checking in the browser: external APIs, form inputs, etc.
 * You are looking for a concise type syntax.
 * You :heart: CoffeeScript but you miss a convenient type system for it.
 
