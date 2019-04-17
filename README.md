@@ -158,27 +158,32 @@ Another example showing Floweret usage with CoffeeScript:
 ```coffee
 import { fn, maybe } from 'floweret'
 
-# union of valid string litterals
-MethodType = ['GET', 'POST', 'PUT', 'DELETE']
-
-# object attribute types
-InfoType =
+# object type made of native types
+Info =
   size: Number
   title: String
 
-#    arg. #1 type ⮢       ⮣ arg. #2 type (optional)    ⮣ result type (promise of an InfoType object)
-getPageInfo = fn String, maybe(MethodType), Promise.resolve(InfoType),
-  (url, method) ->
-    # `url` and `method` arguments are now typed inside this function: `url = 1` would throw a TypeError
-    response = await fetch(url, {method})
+# union of valid string litterals
+Method = ['GET', 'POST', 'PUT', 'DELETE']
+
+# type composition (type made of types)
+Options =
+  method: Method
+  headers: maybe(Object) # can be undefined or an object with unspecified type attributes
+
+#    arg. #1 type ⮢       ⮣ arg. #2 type (optional)    ⮣ result type (promise of an Info object)
+getPageInfo = fn String, maybe(Options), Promise.resolve(Info),
+  (url, options={}) ->
+    # `options` object is now type-checked inside this function
+    response = await fetch(url, options)
     html = await response.text()
     size: html.length
     title: /<title>([^<]+)/.exec(html)[1]
 
 # {size: 201972, title: "laurentpayot/floweret: An easy JavaScript runtime type system."}
-currentPageInfo = await getPageInfo('.')
+currentPageInfo = await getPageInfo('.', {method: 'GET', headers: {'Content-Type': 'text/xml'}})
 
-# the result is typed as InfoType
+# the result is type-checked as Info
 currentPageInfo.size = "foo" # TypeError: …
 
 getPageInfo() # TypeError: …
@@ -854,7 +859,7 @@ Here are some results from my Ubuntu machine with node v11.10.1:
 
 ```txt
 no-type-checking-benchmark.min.js.gz  257 bytes
-floweret-benchmark.min.js.gz          3391 bytes
+floweret-benchmark.min.js.gz          3435 bytes
 objectmodel.min.js.gz                 4123 bytes
 runtypes.min.js.gz                    6036 bytes
 flow-runtime-benchmark.min.js.gz      20240 bytes
