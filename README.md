@@ -8,61 +8,105 @@
 
 ## Why?
 
-Either…
+One way to do type checking with CoffeeScript is [type annotations](https://coffeescript.org/#type-annotations):
 
-* You need type checking in the browser: external APIs, form inputs, etc.
-* You are looking for a concise type syntax.
-* You :heart: CoffeeScript but you miss a convenient type system for it.
+```coffee
+# @flow
 
-*Floweret* is a JavasScript runtime type system that is:
+###::
+type Obj = {
+  num: number,
+};
+###
 
-* **Intuitive**: Native JavaScript types syntax.
+f = (str ###: string ###, obj ###: Obj ###) ###: string ### ->
+  str + obj.num
+```
+
+but…
+
+* [Flow](https://flow.org/) must be running in the background.
+* Comments add "noise" to the source code.
+* Bad (inexistant?) build tools integration (webpack, rollup).
+* Cannot check types in the browser for external APIs results, form inputs validation etc.
+
+Floweret was written in CoffeeScript specialy for CoffeeScript to solve these problems.
+The previous example can be rewritten using a decorator-like syntax:
+
+```coffee
+import { fn } from 'floweret'
+
+Obj =
+  num: Number
+
+f = fn String, Obj, String,
+  (str, obj) -> str + obj.num
+```
+
+Floweret runtime type system is:
+
+* **Intuitive**: Native JavaScript types usage. Expressive error messages.
 * **Powerful**: Type composition, promises, rest parameters, logical operators and more…
-* **Lightweight**: No dependencies. Typically [around 3 kB](#benchmark) minified and gzipped. Less if you use tree shaking. Concise syntax that does not bloat your code.
+* **Lightweight**: No dependencies. Concise syntax that does not bloat your code. Typically [around 3 kB](#benchmark) minified and gzipped. Less if you use tree shaking.
 * **Fast**: Direct type comparison. No string to parse.
 * **Customizable**: Create your own types for your own needs.
+
+Because *"CoffeeScript is just Javascript"*(TM), you can easily use Floweret with plain JavaScript if you need runtime type checking. You simply miss the decorator-like syntaxic sugar allowed by CoffeeScript as [JavaScript decorators proposal](https://github.com/tc39/proposal-decorators) does not support standalone functions yet:
+
+```js
+// ES6 example
+import { fn } from 'floweret'
+
+const Obj = {
+  num: Number
+}
+
+const f = fn(
+  String, Obj, String,
+  (str, obj) => str + obj.num
+)
+```
 
 ## Contents
 
 * [Install](#install)
-* [Usage](#usage)
-  * [JavaScript](#javascript)
-  * [CoffeeScript](#coffeescript)
-* [Variable typing](#check)
-* [Function typing](#fn)
+* [Function typing](#functon-typing)
   * [Absence of type](#absence-of-type)
   * [Maybe type](#maybe-type)
   * [Promised type](#promised-type)
   * [Rest arguments type](#rest-arguments-type)
   * [Any type](#any-type)
   * [Unchecked type](#any-type)
-* [Basic types](#basic-types)
-  * [Native types](#native-types)
-  * [Literal type](#literal-type)
-  * [Regular expression type](#regular-expression-type)
-  * [Union of types](#union-of-types)
-  * [Typed array type](#typed-array-type)
-  * [Sized array type](#sized-array-type)
-  * [Object type](#object-type)
-  * [Class type](#class-type)
-* [Advanced types](#advanced-types)
-  * [Tuple](#tuple)
-  * [Typed Object](#typed-object)
-  * [Typed Set](#typed-set)
-  * [Typed Map](#typed-map)
-  * [Integer](#integer)
-  * [Sized string](#sized-string)
-  * [Logical operators](#logical-operators)
-    * [Or](#or)
-    * [And](#and)
-    * [Not](#not)
-  * [Foreign types](#foreign-types)
-  * [Constraint type](#constraint-type)
-  * [Custom types](#custom-types)
-* [Type composition](#type-composition)
+* [Variable typing](#variable-typing)
 * [Tools](#tools)
   * [isValid](#isvalid)
   * [typeOf](#typeof)
+* [Types reference](#types-reference)
+  * [Basic types](#basic-types)
+    * [Native types](#native-types)
+    * [Literal type](#literal-type)
+    * [Regular expression type](#regular-expression-type)
+    * [Union of types](#union-of-types)
+    * [Typed array type](#typed-array-type)
+    * [Sized array type](#sized-array-type)
+    * [Object type](#object-type)
+    * [Class type](#class-type)
+  * [Advanced types](#advanced-types)
+    * [Tuple](#tuple)
+    * [Typed Object](#typed-object)
+    * [Typed Set](#typed-set)
+    * [Typed Map](#typed-map)
+    * [Integer](#integer)
+    * [Sized string](#sized-string)
+    * [Logical operators](#logical-operators)
+      * [Or](#or)
+      * [And](#and)
+      * [Not](#not)
+    * [Foreign types](#foreign-types)
+    * [Constraint type](#constraint-type)
+    * [Custom types](#custom-types)
+  * [Type composition](#type-composition)
+
 * [Benchmark](#benchmark)
 * [License](#license)
 
@@ -78,80 +122,7 @@ or
 $ yarn add floweret
 ```
 
-## Usage
-
-> fn( <argument 1 type\>, <argument 2 type\>, …, <argument n type\>, <result type\>, <function\> )
-
-> <variable\> = check(<type\>)
-
-To add a signature to a function, wrap the function with the `fn` function.
-`fn` arguments are first the list of arguments types, followed by the result type, and finally the function itself:
-
-### JavaScript
-
-```js
-import { fn } from 'floweret'
-
-const MethodType = ['GET', 'POST', 'PUT', 'DELETE']
-
-const add = fn(
-  Number, Number, Number,
-  function (a, b) {return a + b}
-)
-```
-
-or using the ES2015 arrow function syntax:
-
-```js
-import { fn } from 'floweret'
-
-const add = fn(
-  Number, Number, Number,
-  (a, b) => a + b
-)
-```
-
-Note that `fn` could be used as a decorator, but sadly [JavaScript decorators proposal](https://github.com/tc39/proposal-decorators) does not support standalone functions…
-For readability, most examples below will use the ES2015 arrow function syntax.
-
-### CoffeeScript
-
-You can ommit the `fn` parentheses, resulting in a decorator-like syntax:
-
-```coffee
-import { fn } from 'floweret'
-
-add = fn Number, Number, Number,
-  (a, b) -> a + b
-```
-
-The following [CoffeeScript's type annotations example](https://coffeescript.org/#type-annotations) (that needs [Flow](https://flow.org/) in the background)
-
-```coffee
-# @flow
-
-###::
-type Obj = {
-  num: number,
-};
-###
-
-f = (str ###: string ###, obj ###: Obj ###) ###: string ### ->
-  str + obj.num
-```
-
-can be rewritten with less "noise":
-
-```coffee
-import { fn } from 'floweret'
-
-Obj =
-  num: Number
-
-f = fn String, Obj, String,
-  (str, obj) ->
-    str + obj.num
-```
+## Function typing
 
 Another example showing Floweret usage with CoffeeScript:
 
@@ -191,7 +162,9 @@ getPageInfo(1) # TypeError: …
 getPageInfo(1, 'FOO') # TypeError: …
 ```
 
-## Types
+## Variable typing
+
+## Types refence
 
 ### Native types
 

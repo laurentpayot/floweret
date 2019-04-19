@@ -1,7 +1,7 @@
 {
   "name": "floweret",
   "version": "0.9.3",
-  "description": "Easy JavaScript runtime type system.",
+  "description": "A CoffeeScript runtime type system.",
   "author": "Laurent Payot",
   "license": "MIT",
   "homepage": "https://github.com/laurentpayot/floweret#readme",
