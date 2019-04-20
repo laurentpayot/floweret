@@ -51,7 +51,7 @@ Floweret runtime type system is:
 * **Fast**: Direct type comparison. No string to parse.
 * **Customizable**: Create your own types for your own needs.
 
-Because *"CoffeeScript is just Javascript"*(TM), you can easily use Floweret with plain JavaScript if you need runtime type checking. You simply miss the decorator-like syntaxic sugar allowed by CoffeeScript as [JavaScript decorators proposal](https://github.com/tc39/proposal-decorators) does not support standalone functions yet:
+Because *"CoffeeScript is just JavaScript"* ™, you can easily use Floweret with plain JavaScript if you need runtime type checking. You simply miss the decorator-like syntaxic sugar allowed by CoffeeScript as [JavaScript decorators proposal](https://github.com/tc39/proposal-decorators) does not support standalone functions yet:
 
 ```js
 // ES6 example
@@ -70,13 +70,11 @@ const f = fn(
 ## Contents
 
 * [Install](#install)
-* [Function typing](#functon-typing)
+* [Function typing](#function-typing)
   * [Absence of type](#absence-of-type)
-  * [Maybe type](#maybe-type)
   * [Promised type](#promised-type)
   * [Rest arguments type](#rest-arguments-type)
-  * [Any type](#any-type)
-  * [Unchecked type](#any-type)
+  * [Unchecked type](#unchecked-type)
 * [Variable typing](#variable-typing)
 * [Tools](#tools)
   * [isValid](#isvalid)
@@ -87,10 +85,12 @@ const f = fn(
     * [Literal type](#literal-type)
     * [Regular expression type](#regular-expression-type)
     * [Union of types](#union-of-types)
+    * [Maybe type](#maybe-type)
     * [Typed array type](#typed-array-type)
     * [Sized array type](#sized-array-type)
     * [Object type](#object-type)
     * [Class type](#class-type)
+    * [Any type](#any-type)
   * [Advanced types](#advanced-types)
     * [Tuple](#tuple)
     * [Typed Object](#typed-object)
@@ -124,7 +124,12 @@ $ yarn add floweret
 
 ## Function typing
 
-Another example showing Floweret usage with CoffeeScript:
+> fn( <argument 1 type\>, <argument 2 type\>, …, <argument n type\>, <result type\>, <function\> )
+
+To add a signature to a function, wrap the function with the `fn` function.
+`fn` arguments are first the list of arguments types, followed by the result type, and finally the function itself.
+
+In the example below we will use [Native](#native-types), [`maybe`](#maybe-type), [`union`](#union-of-types), and [`object`](#object-type) types. They are all detailed in the [Types reference](#types-reference) section of this document.
 
 ```coffee
 import { fn, maybe } from 'floweret'
@@ -162,9 +167,127 @@ getPageInfo(1) # TypeError: …
 getPageInfo(1, 'FOO') # TypeError: …
 ```
 
+### Absence of type
+
+When the function takes no argument, only the result type is needed:
+
+```coffee
+returnHi = fn String,
+  -> "Hi"
+
+returnHi()  # Hi
+returnHi(1) # TypeError: Too many arguments provided.
+```
+
+Use `undefined` as the result type when the function returns nothing (undefined):
+
+```coffee
+logInfo = fn String, undefined,
+  (msg) -> console.log("Info:", msg)
+
+logInfo("Boo.") # logs "Info: Boo.", returns undefined
+
+logHi = fn undefined,
+  -> console.log("Hi")
+
+logHi() # logs "Hi", returns undefined
+```
+
+### Promised type
+
+> Promise.resolve(<type\>)
+
+or with the `promised` shortcut:
+
+> import promised from 'floweret/types/promised'
+>
+> promised(<type\>)
+
+Promised types are used for the *result* type of the function signature.
+
+You can use the `Promise` result type when a function returns a promise that can be of any type, but most of the time it is better to specify the type of the resolved value.
+
+For instance use the `Promise.resolve([Object, null])` type for a promise that will resolve with an object or the null value:
+
+```coffee
+getUserById = fn Number, Promise.resolve([Object, null]),
+  (id) ->
+    new Promise((resolve) ->
+      # simulating slow database/network access
+      setTimeout(-> if id then resolve({id, name: "Bob"}) else resolve("anonymous"), 1000)
+    )
+
+await getUserById(1234) # {id: 1234, name: "Bob"}
+await getUserById(0) # TypeError: Result should be a promise of type 'Object or null' instead of String "anonymous".
+```
+
+### Rest arguments type
+
+> etc(<type\>)
+
+or (untyped)
+
+> etc
+
+```coffee
+import { fn, etc } from 'floweret'
+
+average = fn etc(Number), [Number, NaN], # for Floweret NaN is NOT a Number (unlike JavaScript)
+  (numbers...) -> numbers.reduce((acc, curr) -> acc + curr, 0) / numbers.length
+
+average()           # NaN (0/0)
+average(2, 6, 4)    # 4
+average([2, 6, 4])  # TypeError: Argument #1 should be of type 'Number' instead of Array.
+average(2, true, 4) # TypeError: Argument #2 should be of type 'Number' instead of Boolean true.
+```
+
+* **:warning:** Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description). CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented (yet) in floweret.
+
+### Unchecked type
+
+*Documentation in progress…*
+
 ## Variable typing
 
-## Types refence
+*Documentation in progress…*
+
+## Tools
+
+Some handy utilities exported by the package.
+
+### isValid
+
+> isValid(<value\>, <type\>)
+
+`isValid` can tell if a value is of a given type. Useful for user input validation:
+
+```coffee
+import { isValid } from 'floweret'
+
+isValid("abc", [Number, String]) # true
+```
+
+### typeOf
+
+> typeOf(<value\>)
+
+The `typeOf` function is a replacement of the standard JavaScript `typeof` operator:
+
+```coffee
+import { typeOf } from 'floweret'
+
+# standard JavaScript `typeof` operator
+typeof [1, 2] # 'object'
+typeof Promise.resolve(1) # 'object'
+typeof NaN # 'number'
+
+# more usefull results
+typeOf [1, 2] # 'Array'
+typeOf Promise.resolve(1) # 'Promise'
+typeOf NaN # 'NaN'
+```
+
+## Types reference
 
 ### Native types
 
@@ -173,46 +296,12 @@ getPageInfo(1, 'FOO') # TypeError: …
 All native JavaScript type constructors are allowed as type:
 `Number`, `String`, `Array`, `Object`, `Boolean`, `RegExp`, `undefined`, `null`, `Promise`, `Function`, `Set`, `Map`, `WeakMap`, `WeakSet`, etc.
 
-```js
-const f = fn(
-  Number, String, Array,
-  (a, b) => [a, b]
-)
+```coffee
+f = fn Number, String, Array,
+  (a, b) -> [a, b]
 
-f(1, 'a') // [1, 'a']
-f(1, 5)   // TypeError: Argument #2 should be of type 'String' instead of Number 5.
-```
-
-### Absence of type
-
-When the function takes no argument, only the result type is needed:
-
-```js
-const returnHi = fn(
-  String,
-  function () {return "Hi"}
-)
-
-returnHi()  // Hi
-returnHi(1) // TypeError: Too many arguments provided.
-```
-
-Use `undefined` as the result type when the function returns nothing (undefined):
-
-```js
-const logInfo = fn(
-  String, undefined,
-  function (msg) {console.log("Info:", msg)}
-)
-
-logInfo("Boo.") // logs "Info: Boo.", returns undefined
-
-const logHi = fn(
-  undefined,
-  function () {console.log("Hi")}
-)
-
-logHi() // logs "Hi", returns undefined
+f(1, 'a') # [1, 'a']
+f(1, 5)   # TypeError: Argument #2 should be of type 'String' instead of Number 5.
 ```
 
 ### Union of types
@@ -222,15 +311,13 @@ logHi() // logs "Hi", returns undefined
 You can create a type that is the union of several types. Simply put them between brackets.
 For instance the type `[Number, String]` will accept a number or a string.
 
-```js
-const f = fn(
-  Number, [Number, String], String,
-  (a, b) => '' + a + b
-)
+```coffee
+f = fn Number, [Number, String], String,
+  (a, b) -> '' + a + b
 
-f(1, 2)    // '12'
-f(1, '2')  // '12'
-f(1, true) // TypeError: Argument #2 should be of type 'Number or String' instead of Boolean true.
+f(1, 2)    # '12'
+f(1, '2')  # '12'
+f(1, true) # TypeError: Argument #2 should be of type 'Number or String' instead of Boolean true.
 ```
 
 ### Maybe type
@@ -241,18 +328,16 @@ Usefull for optional parameters of a function. This is simply a shortcut to the 
 
 * **:warning:** Unlike [Flow's maybe types](https://flow.org/en/docs/types/maybe/), a `null` value will generate an error, as it should.
 
-```js
+```coffee
 import { fn, maybe } from 'floweret'
 
-const f = fn(
-  Number, maybe(Number), Number,
-  (a, b=0) => a + b
-)
+f = fn Number, maybe(Number), Number,
+  (a, b=0) -> a + b
 
-f(5)       // 5
-f(5, 1)    // 6
-f(5, '1')  // TypeError: Argument #2  should be of type 'undefined or Number' instead of String "1".
-f(5, null) // TypeError: Argument #2 should be of type 'undefined or Number' instead of null.
+f(5)       # 5
+f(5, 1)    # 6
+f(5, '1')  # TypeError: Argument #2  should be of type 'undefined or Number' instead of String "1".
+f(5, null) # TypeError: Argument #2 should be of type 'undefined or Number' instead of null.
 ```
 
 ### Literal type
@@ -415,37 +500,6 @@ superficy("foo") // TypeError: Argument #1 should be of type 'Rectangle' instead
 superficy({height: 10, width: 5}) // TypeError: Argument #1 should be of type 'Rectangle' instead of Object.
 ```
 
-### Promised type
-
-> Promise.resolve(<type\>)
-
-or with the `promised` shortcut:
-
-> import promised from 'floweret/types/promised'
->
-> promised(<type\>)
-
-Promised types are used for the *result* type of the function signature.
-
-You can use the `Promise` result type when a function returns a promise that can be of any type, but most of the time it is better to specify the type of the resolved value.
-
-For instance use the `Promise.resolve([Object, null])` type for a promise that will resolve with an object or the null value:
-
-```js
-const getUserById = fn(
-  Number, Promise.resolve([Object, null]),
-  function (id) {
-    return new Promise(resolve => {
-      // simulating slow database/network access
-      setTimeout(() => id ? resolve({id, name: "Bob"}) : resolve("anonymous"), 1000)
-    })
-  }
-)
-
-await getUserById(1234) // {id: 1234, name: "Bob"}
-await getUserById(0) // TypeError: Result should be a promise of type 'Object or null' instead of String "anonymous".
-```
-
 ### Any type
 
 > Any
@@ -463,31 +517,6 @@ const log = fn(
 log("foo") // logs "foo"
 log({a: 1, b: 2}) // logs Object {a: 1, b: 2}
 ```
-
-### Rest arguments type
-
-> etc(<type\>)
-
-or (untyped)
-
-> etc
-
-```js
-import { fn, etc } from 'floweret'
-
-const average = fn(
-  etc(Number), [Number, NaN], // for Floweret NaN is NOT a Number (unlike JavaScript)
-  (...numbers) => numbers.reduce((acc, curr) => acc + curr, 0) / numbers.length
-)
-
-average()           // NaN (0/0)
-average(2, 6, 4)    // 4
-average([2, 6, 4])  // TypeError: Argument #1 should be of type 'Number' instead of Array.
-average(2, true, 4) // TypeError: Argument #2 should be of type 'Number' instead of Boolean true.
-```
-
-* **:warning:** Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description).
-* **:coffee:** CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented (yet) in floweret.
 
 ### Logical operators
 
@@ -772,42 +801,6 @@ As types are simply JavaScript expressions, you can assign any type to a variabl
 const Phone = [Number, undefined]
 const Name = {first: String, last: String, middle: [String, undefined]}
 const User = {id: Number, name: Name, phone: Phone}
-```
-
-## Tools
-
-Some handy utilities exported by the package.
-
-### isValid
-
-> isValid(<value\>, <type\>)
-
-`isValid` can tell if a value is of a given type. Useful for user input validation:
-
-```js
-import { isValid } from 'floweret'
-
-isValid("abc", [Number, String]) // true
-```
-
-### typeOf
-
-> typeOf(<value\>)
-
-The `typeOf` function is a replacement of the standard JavaScript `typeof` operator:
-
-```js
-import { typeOf } from 'floweret'
-
-// standard JavaScript `typeof` operator
-typeof [1, 2] // 'object'
-typeof Promise.resolve(1) // 'object'
-typeof NaN // 'number'
-
-// more usefull results
-typeOf([1, 2]) // 'Array'
-typeOf(Promise.resolve(1)) // 'Promise'
-typeOf(NaN) // 'NaN'
 ```
 
 ## Benchmark
