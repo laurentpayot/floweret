@@ -21,13 +21,13 @@ valueType = (val) ->
 
 # returns the type name for signature error messages (supposing type is always correct)
 getTypeName = (type) -> if Array.isArray(type) # NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
-	typedArray = not Object.values(type).length
+	isSized = not Object.values(type).length
 	switch type.length
 		when 0 then "empty array"
 		when 1
-			if typedArray then "'array of one element'" else "'array of '#{getTypeName(type[0])}''"
+			if isSized then "'array of one element'" else "'array of '#{getTypeName(type[0])}''"
 		else
-			if typedArray then "'array of #{type.length} elements'" else (getTypeName(t) for t in type).join(" or ")
+			if isSized then "'array of #{type.length} elements'" else (getTypeName(t) for t in type).join(" or ")
 else switch type?.constructor
 	when undefined then typeOf(type)
 	when Function
