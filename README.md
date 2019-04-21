@@ -129,22 +129,19 @@ $ yarn add floweret
 To add a signature to a function, wrap the function with the `fn` function.
 `fn` arguments are first the list of arguments types, followed by the result type, and finally the function itself.
 
-In the example below we will use [Native](#native-types), [`maybe`](#maybe-type), [`union`](#union-of-types), and [`object`](#object-type) types. They are all detailed in the [Types reference](#types-reference) section of this document.
+In the example below we will use [native](#native-types), [`maybe`](#maybe-type), [`union`](#union-of-types), and [`object`](#object-type) types as well as [aliases](#alias-type). All these types are detailed in the [Types reference](#types-reference) section of this document.
 
 ```coffee
-import { fn, maybe } from 'floweret'
+import { fn, maybe, alias } from 'floweret'
 
-# object type made of native types
-Info =
+# type made of native types
+Info = alias "WebPageInfo",
   size: Number
   title: String
 
-# union of valid string litterals
-Method = ['GET', 'POST', 'PUT', 'DELETE']
-
 # type composition (type made of types)
-Options =
-  method: Method
+Options = alias "SimplifiedFetchOptions",
+  method: ['GET', 'POST', 'PUT', 'DELETE'] # union of valid string litterals
   headers: maybe(Object) # can be undefined or an object with unspecified type attributes
 
 #    arg. #1 type ⮢       ⮣ arg. #2 type (optional)    ⮣ result type (promise of an Info object)
@@ -166,6 +163,8 @@ getPageInfo() # TypeError: …
 getPageInfo(1) # TypeError: …
 getPageInfo(1, 'FOO') # TypeError: …
 ```
+
+* **:warning:** As mentioned in the comments, the object returned by the function is *type checked*. It means that a check is performed before every modification of the result object to ensure all the type expectations are met. Arguments also are typed internally to the function, as long as they are objects (Object, Array, Set, Map, etc.). More on this in the [variable typing section](#variable-typing).
 
 ### Absence of type
 
