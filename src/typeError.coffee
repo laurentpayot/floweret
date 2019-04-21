@@ -37,7 +37,8 @@ typeError = (context, val, type, aliasName="", promised=false) -> throw new Type
 					"an empty object, got a non-empty object"
 			else
 				"#{getTypeName(type)}, got #{valueType(val)}"
-		ending = (aliasName or type.aliasName) + ": " + ending if aliasName or type instanceof Type and type.aliasName
+		if aliasName or type instanceof Type and type.aliasName and type.constructor.name isnt 'Alias'
+			ending = (aliasName or type.aliasName) + ": " + ending
 		"Expected #{if context then context + ' to be ' else ''}#{if promised then 'a promise of type ' else ''}#{ending}."
 )
 
