@@ -259,9 +259,11 @@ import unchecked from 'floweret/types/unchecked'
 Numbers = Array(Number)
 
 addToNumbers = fn Numbers, Any, unchecked(Numbers),
-  (array, number) -> [array..., number]
+  (array, number) ->
+    # NB: `array.push(number)` would throw a type error as `array` parameter is type-checked inside the function
+    [array..., number]
 
-# the result is still type checked internally
+# the result is still type-checked inside the function
 addToNumbers([1, 2], true) # TypeError: Expected result to be an array with element 2 of type 'Number' instead of Boolean true.
 
 a = addToNumbers([1, 2], 3) # [1, 2, 3]
