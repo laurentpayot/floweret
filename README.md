@@ -164,7 +164,9 @@ getPageInfo(1) # TypeError: …
 getPageInfo(1, 'FOO') # TypeError: …
 ```
 
-* **:warning:** As mentioned in the comments, the object returned by the function is *type checked*. It means that a check is performed before every modification of the result object to ensure all the type expectations are met. Arguments also are typed internally to the function, as long as they are objects (Object, Array, Set, Map, etc.). More on this in the [variable typing section](#variable-typing).
+As mentioned in the comments, the object returned by the function is *type-checked*. It means that a check is performed before every modification of the result object to ensure all type expectations are always met. Arguments also are typed internally to the function, as long as they are objects (Object, Array, Set, Map, etc.).
+
+More on this in the [variable typing section](#variable-typing) of this document.
 
 ### Absence of type
 
@@ -244,7 +246,28 @@ average(2, true, 4) # TypeError: Argument #2 should be of type 'Number' instead 
 
 ### Unchecked type
 
-*Documentation in progress…*
+> import unchecked from 'floweret/types/unchecked'
+>
+> unchecked(<type\>)
+
+If you do not want the object returned by a typed function to be type-checked (because it means the value is accessed via an [ES6 proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (Object, Array) or subclassed (Set, Map)) you can use the `unchecked` type:
+
+```coffee
+import { fn, Any } from 'floweret'
+import unchecked from 'floweret/types/unchecked'
+
+Numbers = Array(Number)
+
+addToNumbers = fn Numbers, Any, unchecked(Numbers),
+  (array, number) -> [array..., number]
+
+# the result is still type checked internally
+addToNumbers([1, 2], true) # TypeError: Expected result to be an array with element 2 of type 'Number' instead of Boolean true.
+
+a = addToNumbers([1, 2], 3) # [1, 2, 3]
+# no error as `a` is not type-checked
+a.push(true) # [1, 2, 3, true]
+```
 
 ## Variable typing
 
