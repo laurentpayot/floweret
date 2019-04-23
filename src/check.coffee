@@ -32,20 +32,19 @@ arrayProxy = (type, arr, aliasName) ->
 			true # indicate success
 	)
 
-sizedArrayProxy = (arr) ->
-	sizeErrorMessage = "Expected an array with a length of #{arr.length}."
+sizedArrayProxy = (arr, aliasName) ->
 	new Proxy(arr,
 		set: (a, i, v) ->
 			unless i < a.length
 				badArray = [a...]
 				badArray[i] = v
-				Type.error("", badArray, Array(arr.length))
+				Type.error("", badArray, Array(arr.length), aliasName)
 			a[i] = v
 			true # indicate success
 		deleteProperty: (a, i) ->
 			badArray = [a...]
 			badArray.splice(i, 1)
-			Type.error("", badArray, Array(arr.length))
+			Type.error("", badArray, Array(arr.length), aliasName)
 	)
 
 # NB: `context` string is for instantiation only, do not use post-instantiation in actual proxies
