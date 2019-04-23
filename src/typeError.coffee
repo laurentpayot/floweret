@@ -15,6 +15,7 @@ typeError = (context, val, type, aliasName="", promised=false) -> throw new Type
 	if arguments.length < 2
 		context
 	else
+		type = type.type if type instanceof Type and type.constructor.name is 'Unchecked'
 		ending = switch
 			when Array.isArray(val) and Array.isArray(type) and (type.length is 1 or not Object.values(type).length)
 				if type.length
