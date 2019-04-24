@@ -102,7 +102,7 @@ const f = fn(
       * [Or](#or)
       * [And](#and)
       * [Not](#not)
-    * [Foreign types](#foreign-types)
+    * [Named type](#named-type)
     * [Constraint type](#constraint-type)
     * [Custom types](#custom-types)
   * [Type composition](#type-composition)
@@ -359,7 +359,9 @@ typeOf NaN # 'NaN'
 
 ## Types reference
 
-### Native types
+### Basic types
+
+#### Native types
 
 > <native type\>
 
@@ -374,43 +376,7 @@ f(1, 'a') # [1, 'a']
 f(1, 5)   # TypeError: Expected argument #2 to be String, got Number 5.
 ```
 
-### Union of types
-
-> [ <type 1\>, <type 2\>, …, <type n\> ]
-
-You can create a type that is the union of several types. Simply put them between brackets.
-For instance the type `[Number, String]` will accept a number or a string.
-
-```coffee
-f = fn Number, [Number, String], String,
-  (a, b) -> '' + a + b
-
-f(1, 2)    # '12'
-f(1, '2')  # '12'
-f(1, true) # TypeError: Expected argument #2 to be Number or String, got Boolean true.
-```
-
-### Maybe type
-
-> maybe( <type\> )
-
-Usefull for optional parameters of a function. This is simply a shortcut to the union `[undefined, <type>]`.
-
-* **:warning:** Unlike [Flow's maybe types](https://flow.org/en/docs/types/maybe/), a `null` value will generate an error, as it should.
-
-```coffee
-import { fn, maybe } from 'floweret'
-
-f = fn Number, maybe(Number), Number,
-  (a, b=0) -> a + b
-
-f(5)       # 5
-f(5, 1)    # 6
-f(5, '1')  # TypeError: Expected argument #2 to be undefined or Number, got String "1".
-f(5, null) # TypeError: Expected argument #2 to be undefined or Number, got null.
-```
-
-### Literal type
+#### Literal type
 
 > <string or number or boolean or undefined or null or NaN\>
 
@@ -424,7 +390,7 @@ turn('left')  # "turning left"
 turn('light') # TypeError: Expected argument #1 to be literal String "left" or literal String "right", got String "light".
 ```
 
-### Regular Expression type
+#### Regular Expression type
 
 > <regular expression\>
 
@@ -445,7 +411,43 @@ showEmail('laurent.example.com', "Hi", "Hello!")
 
 * **:warning:** Regular expressions are slow so if you need to check a lot of data consider using a [constraint type](#constraint-type) with String prototype methods instead.
 
-### Typed array type
+#### Union of types
+
+> [ <type 1\>, <type 2\>, …, <type n\> ]
+
+You can create a type that is the union of several types. Simply put them between brackets.
+For instance the type `[Number, String]` will accept a number or a string.
+
+```coffee
+f = fn Number, [Number, String], String,
+  (a, b) -> '' + a + b
+
+f(1, 2)    # '12'
+f(1, '2')  # '12'
+f(1, true) # TypeError: Expected argument #2 to be Number or String, got Boolean true.
+```
+
+#### Maybe type
+
+> maybe( <type\> )
+
+Usefull for optional parameters of a function. This is simply a shortcut to the union `[undefined, <type>]`.
+
+* **:warning:** Unlike [Flow's maybe types](https://flow.org/en/docs/types/maybe/), a `null` value will generate an error, as it should.
+
+```coffee
+import { fn, maybe } from 'floweret'
+
+f = fn Number, maybe(Number), Number,
+  (a, b=0) -> a + b
+
+f(5)       # 5
+f(5, 1)    # 6
+f(5, '1')  # TypeError: Expected argument #2 to be undefined or Number, got String "1".
+f(5, null) # TypeError: Expected argument #2 to be undefined or Number, got null.
+```
+
+#### Typed array type
 
 > Array(<type\>)
 
@@ -465,7 +467,7 @@ dashJoin(["a", "b", 3])   # TypeError: Expected argument #1 to be an array with 
   * Use `Array([Number, String])` to accept an array of elements that can be numbers or strings, such as `[1, "2", 3]`.
   * If you forget the brackets you will get the union of types instead of the array of union of types, because in JavaScript `Array(Number, String)` is the same as `[Number, String]`.
 
-### Sized array type
+#### Sized array type
 
 > Array(<length\>)
 
@@ -484,7 +486,7 @@ pokerHand([7, 9, 10, "Q", "K", 1]) # TypeError: Expected argument #1 to be an ar
 Sized array type is useful when used in conjunction with a typed array type, thanks to the [`and` operator](#and).
 Note that you can use the empty array `[]` for an array of size 0 type, if you ever need it.
 
-### Object type
+#### Object type
 
 > {<key 1\>: <type 1\>, <key 2\>: <type 2\>, …, <key n\>: <type n\>}
 
@@ -528,132 +530,70 @@ f({a: true, b: {x: 1, z: 2}}) // TypeError: Argument #1 should be an object with
 f({a: true, b: {x: 1, y: undefined}}) // TypeError: Argument #1 should be an object with key 'b.y' of type 'Number' instead of undefined.
 ```
 
-### Class type
+#### Class type
 
 > <class\>
 
 Simply use the class itself as the type:
 
-```js
-class Rectangle {
-  constructor(height, width) {
-    this.height = height;
-    this.width = width;
-  }
-}
+```coffee
+class Rectangle
+  constructor: (@height, @width) ->
 
-// Of course it would be better to have superficy() as a Rectangle method,
-// but that is not the point…
-const superficy = fn(
-  Rectangle, Number,
-  (rect) => rect.height * rect.width
-)
+# Of course it would be better to have superficy() as a Rectangle method,
+# but that is not the point…
+superficy = fn Rectangle, Number,
+  (rect) -> rect.height * rect.width
 
-let myRect = new Rectangle(10, 5)
+rect = new Rectangle(10, 5)
 
-superficy(myRect) // 50
-superficy("foo") // TypeError: Argument #1 should be of type 'Rectangle' instead of String "foo".
-superficy({height: 10, width: 5}) // TypeError: Argument #1 should be of type 'Rectangle' instead of Object.
+superficy(rect) # 50
+superficy("foo") # TypeError: Expected argument #1 to be Rectangle, got String "foo".
+superficy({height: 10, width: 5}) # TypeError: Expected argument #1 to be Rectangle, got Object.
 ```
 
-### Any type
+#### Any type
 
 > Any
 
 Use the `Any` type when a parameter or a result can be of any type:
 
-```js
+```coffee
 import { fn, Any } from 'floweret'
 
-const log = fn(
-  Any, undefined,
-  (x) => console.log(x)
-)
+log = fn Any, undefined,
+  (x) -> console.log(x)
 
-log("foo") // logs "foo"
-log({a: 1, b: 2}) // logs Object {a: 1, b: 2}
+log("foo") # logs "foo"
+log({a: 1, b: 2}) # logs Object {a: 1, b: 2}
 ```
 
-### Logical operators
+### Advanced types
 
-#### Or
+Advanced types are not accessible via the Floweret named exports object, they have to be imported from the `floweret/types` directory.
 
-> or( <type 1\>, <type 2\>, …, <type n\> )
+#### Tuple
 
-`or` is the same as the [union of types](#union-of-types) brackets notation, but more explicit.
+> Tuple( <type 1\>, <type 2\>, …, <type n\> )
 
-```js
+`Tuple` is a quite useful type that you can use for arrays containing a constant number of values, each one of a predetermined type.
+
+```coffee
 import { fn } from 'floweret'
-import or from 'floweret/types/or'
+import Tuple from 'floweret/types/Tuple'
 
-const size = fn(
-  or(String, Array), Number,
-  (x) => x.length
-)
+# https://www.brasnthings.com/size-guide/bra-sizing
+Cup = alias "BraCup",
+  ['A', 'B', 'C', 'D', 'DD', 'E', 'F', 'G', 'H']
+BraSize = Tuple(Number, Cup)
 
-size("ab")       // 2
-size(['a', 'b']) // 2
-size({a: 'b'})   // TypeError: Argument #1 should be of type 'String or Array' instead of Object.
+braSizeLabel = fn BraSize, String,
+  (braSize) -> braSize.join('-')
+
+braSizeLabel([95, 'C'])   # "90-C"
+braSizeLabel([true, 'C']) # TypeError: Expected argument #1 tuple element 0 to be Number, got Boolean true.
+braSizeLabel([200, 'Z']) # TypeError: Expected argument #1 tuple element 1 to be BraCup, got String "Z".
 ```
-
-* **:coffee:** `or` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
-
-  ```coffee
-  # CoffeeScript
-  import Or from 'floweret/types/or'
-  ```
-
-#### And
-
-> and( <type 1\>, <type 2\>, …, <type n\> )
-
-`and` is for intersection of types. It is useful with constraints or to specify typed arrays of a given length:
-
-```js
-import { fn } from 'floweret'
-import and from 'floweret/types/and'
-
-const weeklyMax = fn(
-  and(Array(Number), Array(7)), Number,
-  (days) => Math.max(...days)
-)
-
-weeklyMax([1, 1, 2, 2, 5, 5, 1]) // 5
-weeklyMax([1, 1, 2, 2, 5, 5]) // TypeError: Argument #1 should be of type ''array of 'Number'' and 'array of 7 elements'' instead of Array.
-```
-
-* **:coffee:** `and` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
-
-  ```coffee
-  # CoffeeScript
-  import And from 'floweret/types/and'
-  ```
-
-#### Not
-
-> not( <type\> )
-
-`not` is the the complement type, i. e. for items not matching the type:
-
-```js
-import { fn } from 'floweret'
-import not from 'floweret/types/not'
-
-const getConstructor = fn(
-  not([undefined, null]), Function,
-  (x) => x.constructor
-)
-
-getConstructor(1)    // function Number()
-getConstructor(null) // TypeError: Argument #1 should be of type 'not 'undefined or null'' instead of null.
-```
-
-* **:coffee:** `not` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
-
-  ```coffee
-  # CoffeeScript
-  import Not from 'floweret/types/not'
-  ```
 
 ### Constraint type
 
@@ -677,28 +617,6 @@ f(2.5) // TypeError: Argument #1 should be of type 'constrained by 'val => Numbe
 ```
 
 If you need more complex types have a look in the [Floweret-included types](#included-types) or create you own [custom types](#custom-types).
-
-### Included types
-
-#### Tuple
-
-> Tuple( <type 1\>, <type 2\>, …, <type n\> )
-
-```js
-import { fn } from 'floweret'
-import Tuple from 'floweret/types/Tuple'
-
-const Coords = Tuple(Number, Number, Number) // latitude, longitude, altitude
-
-const getLongitude = fn(
-  Coords, Number,
-  (c) => c[1]
-)
-
-getLongitude([10, 20, 5])   // 20
-getLongitude([10, 5])       // TypeError: Argument #1 should be of type 'tuple of 3 elements 'Number, Number, Number'' instead of Array.
-getLongitude([10, 20, '5']) // TypeError: Argument #1 should be of type 'tuple of 3 elements 'Number, Number, Number'' instead of Array.
-```
 
 #### Typed Object
 
@@ -801,47 +719,122 @@ or
 
 *Documentation in progress…*
 
-### Foreign types
+#### Logical operators
 
-> foreign(<foreign type name\>)
+##### Or
 
-or
+> or( <type 1\>, <type 2\>, …, <type n\> )
 
-> foreign(<object type\>)
+`or` is the same as the [union of types](#union-of-types) brackets notation, but more explicit.
 
-Sometimes when you use external libraries you have to handle instances whithout having access to their classes definitions. You can use the `foreign` operator to check that the instance constructor is of the expected type.
+```js
+import { fn } from 'floweret'
+import or from 'floweret/types/or'
+
+const size = fn(
+  or(String, Array), Number,
+  (x) => x.length
+)
+
+size("ab")       // 2
+size(['a', 'b']) // 2
+size({a: 'b'})   // TypeError: Argument #1 should be of type 'String or Array' instead of Object.
+```
+
+* **:coffee:** `or` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
+
+  ```coffee
+  # CoffeeScript
+  import Or from 'floweret/types/or'
+  ```
+
+##### And
+
+> and( <type 1\>, <type 2\>, …, <type n\> )
+
+`and` is for intersection of types. It is useful with constraints or to specify typed arrays of a given length:
+
+```js
+import { fn } from 'floweret'
+import and from 'floweret/types/and'
+
+const weeklyMax = fn(
+  and(Array(Number), Array(7)), Number,
+  (days) => Math.max(...days)
+)
+
+weeklyMax([1, 1, 2, 2, 5, 5, 1]) // 5
+weeklyMax([1, 1, 2, 2, 5, 5]) // TypeError: Argument #1 should be of type ''array of 'Number'' and 'array of 7 elements'' instead of Array.
+```
+
+* **:coffee:** `and` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
+
+  ```coffee
+  # CoffeeScript
+  import And from 'floweret/types/and'
+  ```
+
+##### Not
+
+> not( <type\> )
+
+`not` is the the complement type, i. e. for items not matching the type:
+
+```js
+import { fn } from 'floweret'
+import not from 'floweret/types/not'
+
+const getConstructor = fn(
+  not([undefined, null]), Function,
+  (x) => x.constructor
+)
+
+getConstructor(1)    // function Number()
+getConstructor(null) // TypeError: Argument #1 should be of type 'not 'undefined or null'' instead of null.
+```
+
+* **:coffee:** `not` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
+
+  ```coffee
+  # CoffeeScript
+  import Not from 'floweret/types/not'
+  ```
+
+#### Named type
+
+> named(<type name\>)
+
+Sometimes when you use external libraries you have to handle instances whithout having access to their classes definitions, but only their names. You can use the `named` type to check that the instance constructor name correct.
 
 Here is a Firebase example where we wrap the [createUser](https://firebase.google.com/docs/reference/admin/node/admin.auth.Auth#createUser)
 function that returns a promise of a *Firebase-defined* `UserRecord` instance:
 
-```js
-import { fn } from 'floweret'
-import foreign from 'floweret/types/foreign'
+```coffee
+import { fn, alias } from 'floweret'
+import named from 'floweret/types/named'
 
 import * as admin from 'firebase-admin'
-admin.initializeApp(/* your Firebase config */)
+admin.initializeApp(### your Firebase config ###)
 
-export createUser = fn(
-  Object, Promise.resolve(foreign('UserRecord')),
-  (data) => admin.auth().createUser(data)
-            .catch((err) => console.error("User Creation:", err.message))
+export createUser = fn Object, Promise.resolve(named('UserRecord')),
+  (data) -> admin.auth().createUser(data)
+            .catch((err) -> console.error("User Creation:", err.message))
 )
 ```
 
-Sometimes you cannot use the foreign class name because it has been mangled by a minifier and is subject to change. In such a case you can use the `foreign` operator with an [Object type](#object-type) argument to do some *duck typing* with some (not necessarily all) properties of the foreign type instance.
+Some other times you cannot use the foreign class name because it has been mangled by a minifier and is subject to change. In such a case you can use the [Object type](#object-type) to do some *duck typing* with some (not necessarily all) properties of the foreign type instance.
 The above example could end with:
 
-```js
-const UserRecord = foreign({
-    uid: String,
-    emailVerified: Boolean,
-    disabled: Boolean
-  })
+```coffee
+# using an alias is optional
+User = alias "UserRecord",
+  uid: String
+  emailVerified: Boolean
+  disabled: Boolean
 
-export createUser = fn(
-  Object, Promise.resolve(UserRecord),
-  (data) => admin.auth().createUser(data)
-            .catch((err) => console.error("User Creation:", err.message))
+export createUser = fn Object, Promise.resolve(User),
+  (data) -> admin.auth().createUser(data)
+            .catch((err) -> console.error("User Creation:", err.message))
 )
 ```
 
