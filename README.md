@@ -124,7 +124,7 @@ $ yarn add floweret
 
 ## Function typing
 
-> fn( <argument 1 type\>, <argument 2 type\>, …, <argument n type\>, <result type\>, <function\> )
+> fn <argument 1 type\>, <argument 2 type\>, …, <argument n type\>, <result type\>, <function\>
 
 To add a signature to a function, wrap the function with the `fn` function.
 `fn` arguments are first the list of arguments types, followed by the result type, and finally the function itself.
@@ -134,37 +134,31 @@ In the example below we will use [native](#native-types), [`maybe`](#maybe-type)
 ```coffee
 import { fn, maybe, alias } from 'floweret'
 
-# type made of native types
-Info = alias "WebPageInfo",
+Mode = alias "TextMode", # alias is optional, but is good practice
+  ['asIs', 'trimed'] # union of valid string litterals
+
+Info = alias "TextInfo",
   size: Number
-  title: String
+  hasSpam: Boolean
 
-# type composition (type made of types)
-Options = alias "SimplifiedFetchOptions",
-  method: ['GET', 'POST', 'PUT', 'DELETE'] # union of valid string litterals
-  headers: maybe(Object) # can be undefined or an object with unspecified type attributes
+#   arg. #1 type ⮢       ⮣ arg. #2 type  ⮣ result type
+getTextInfo = fn String, maybe(Mode), Info,
+  (str, mode='asIs') ->
+    size: (if mode is 'trimed' then str.trim() else str).length
+    hasSpam: /spam/i.test(str)
 
-#    arg. #1 type ⮢       ⮣ arg. #2 type (optional)    ⮣ result type (promise of an Info object)
-getPageInfo = fn String, maybe(Options), Promise.resolve(Info),
-  (url, options={}) ->
-    # `options` object is now type-checked inside this function
-    response = await fetch(url, options)
-    html = await response.text()
-    size: html.length
-    title: /<title>([^<]+)/.exec(html)[1]
-
-# {size: 201972, title: "laurentpayot/floweret: An easy JavaScript runtime type system."}
-currentPageInfo = await getPageInfo('.', {method: 'GET', headers: {'Content-Type': 'text/xml'}})
+# {size: 24, hasSpam: true}
+recipeInfo = getTextInfo(" egg spam spam bacon spam   ", 'trimed')
 
 # the result is type-checked as Info
-currentPageInfo.size = "foo" # TypeError: …
+sandwichInfo.size = "foo" # TypeError: Expected TextInfo: an object with key 'size' of type 'Number' instead of String "foo".
 
-getPageInfo() # TypeError: …
-getPageInfo(1) # TypeError: …
-getPageInfo(1, 'FOO') # TypeError: …
+getTextInfo() # TypeError: Expected argument #1 to be String, got undefined.
+getTextInfo(1) # TypeError: Expected argument #1 to be String, got Number 1.
+getTextInfo("egg sausage", 'foo') # TypeError: Expected argument #2 to be undefined or TextMode, got String "foo".
 ```
 
-As mentioned in the comments, the object returned by the function is *type-checked*. It means that a check is performed before every modification of the result object to ensure all type expectations are always met. Arguments also are typed internally to the function, as long as they are objects (Object, Array, Set, Map, etc.).
+As mentioned in the comments, the object returned by the function is *type-checked*. It means that a check is performed before every modification of the result object to ensure all type expectations are always met. The function parameters also are type-checked internally to the function, as long as they are objects (Object, Array, Set, Map, etc.).
 
 More on this in the [variable typing section](#variable-typing) of this document.
 
@@ -213,13 +207,14 @@ For instance use the `Promise.resolve([Object, null])` type for a promise that w
 ```coffee
 getUserById = fn Number, Promise.resolve([Object, null]),
   (id) ->
-    new Promise((resolve) ->
+    new Promise (resolve) ->
       # simulating slow database/network access
-      setTimeout(-> if id then resolve({id, name: "Bob"}) else resolve("anonymous"), 1000)
-    )
+      setTimeout(->
+        if id then resolve({id, name: "Bob"}) else resolve("anonymous")
+      , 1000)
 
-await getUserById(1234) # {id: 1234, name: "Bob"}
-await getUserById(0) # TypeError: Result should be a promise of type 'Object or null' instead of String "anonymous".
+(-> await getUserById(1234))() # {id: 1234, name: "Bob"}
+(-> await getUserById(0))() # TypeError: Expected promise result to be Object or null, got String "anonymous".
 ```
 
 ### Rest arguments type
@@ -238,8 +233,8 @@ average = fn etc(Number), [Number, NaN], # for Floweret NaN is NOT a Number (unl
 
 average()           # NaN (0/0)
 average(2, 6, 4)    # 4
-average([2, 6, 4])  # TypeError: Argument #1 should be of type 'Number' instead of Array.
-average(2, true, 4) # TypeError: Argument #2 should be of type 'Number' instead of Boolean true.
+average([2, 6, 4])  # TypeError: Expected argument #1 to be Number, got Array of 3 elements.
+average(2, true, 4) # TypeError: Expected argument #2 to be Number, got Boolean true.
 ```
 
 * **:warning:** Rest type can only be the last type of the signature arguments types, [as it should be in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters#Description). CoffeeScript doesn't have this limitation, but this neat CoffeeScript feature is not implemented (yet) in floweret.
@@ -250,7 +245,7 @@ average(2, true, 4) # TypeError: Argument #2 should be of type 'Number' instead 
 >
 > unchecked(<type\>)
 
-If you do not want the object returned by a typed function to be type-checked (because it means the value is accessed via an [ES6 proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (Object, Array) or is subclassed (Set, Map)) you can use the `unchecked` type:
+In case you do not want the object returned by your function to be type-checked (because it means it is accessed via an [ES6 proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (Object, Array) or is subclassed (Set, Map)) you can use the `unchecked` type:
 
 ```coffee
 import { fn, Any } from 'floweret'
@@ -271,9 +266,11 @@ a = addToNumbers([1, 2], 3) # [1, 2, 3]
 a.push(true) # [1, 2, 3, true]
 ```
 
+See the [variable typing section](#variable-typing) of this document for more details.
+
 ## Variable typing
 
-> unchecked <type\>, <value\>
+> check <type\>, <value\>
 
 When you need to ensure a variable type, you can make it type-checked just like a `fn` argument with the `checked` type:
 
@@ -313,17 +310,16 @@ name = check String, "Laurent"
 name = 1234 # no error, strings are not mutable
 ```
 
-* **:warning:** When using [Union type](#union-type), …
+* **:warning:** When using [union of types](#union-of-types), the variable will be instantiated with the first type matching the union. There will no more type checking for other types of the union:
 
 ```coffee
 import { check } from 'floweret'
 
-# type is always checked before instantiation
 foo = check [{prop: String}, {prop: Number}],
   prop: "abc"
+
+foo.prop = 1 # TypeError: Expected an object with key 'prop' of type 'String' instead of Number 1.
 ```
-
-
 
 ## Tools
 
@@ -343,7 +339,7 @@ isValid("abc", [Number, String]) # true
 
 ### typeOf
 
-> typeOf(<value\>)
+> typeOf <value\>
 
 The `typeOf` function is a replacement of the standard JavaScript `typeof` operator:
 
@@ -375,7 +371,7 @@ f = fn Number, String, Array,
   (a, b) -> [a, b]
 
 f(1, 'a') # [1, 'a']
-f(1, 5)   # TypeError: Argument #2 should be of type 'String' instead of Number 5.
+f(1, 5)   # TypeError: Expected argument #2 to be String, got Number 5.
 ```
 
 ### Union of types
@@ -391,7 +387,7 @@ f = fn Number, [Number, String], String,
 
 f(1, 2)    # '12'
 f(1, '2')  # '12'
-f(1, true) # TypeError: Argument #2 should be of type 'Number or String' instead of Boolean true.
+f(1, true) # TypeError: Expected argument #2 to be Number or String, got Boolean true.
 ```
 
 ### Maybe type
@@ -410,8 +406,8 @@ f = fn Number, maybe(Number), Number,
 
 f(5)       # 5
 f(5, 1)    # 6
-f(5, '1')  # TypeError: Argument #2  should be of type 'undefined or Number' instead of String "1".
-f(5, null) # TypeError: Argument #2 should be of type 'undefined or Number' instead of null.
+f(5, '1')  # TypeError: Expected argument #2 to be undefined or Number, got String "1".
+f(5, null) # TypeError: Expected argument #2 to be undefined or Number, got null.
 ```
 
 ### Literal type
@@ -420,14 +416,12 @@ f(5, null) # TypeError: Argument #2 should be of type 'undefined or Number' inst
 
 A literal can only be a string, a number, a boolean or be equal to `undefined` or `null` or `NaN`. Literals are useful when used inside an union list.
 
-```js
-const turn = fn(
-  ['left', 'right'], String,
-  (direction) => "turning " + direction
-)
+```coffee
+turn = fn ['left', 'right'], String,
+  (direction) -> "turning " + direction
 
-turn('left')  // "turning left"
-turn('light') // TypeError: Argument #1 should be of type 'literal String "left" or literal String "right"' instead of String "light".
+turn('left')  # "turning left"
+turn('light') # TypeError: Expected argument #1 to be literal String "left" or literal String "right", got String "light".
 ```
 
 ### Regular Expression type
@@ -436,18 +430,16 @@ turn('light') // TypeError: Argument #1 should be of type 'literal String "left"
 
 When the type is a regular expression, if the value is a string it will be tested to see if it matches the regular expression.
 
-```js
-const Email = /\S+@\S+\.\S+/ // simple email RegExp, do not use in production
+```coffee
+Email = /\S+@\S+\.\S+/ # simple email RegExp, do not use in production
 
-const showEmail = fn(
-  Email, String, String, undefined,
-  (email, subject, content) => console.table({ email, subject, content })
-)
+showEmail = fn Email, String, String, undefined,
+  (email, subject, content) -> console.table({ email, subject, content })
 
-// nice email display
+# nice email display
 showEmail('laurent@example.com', "Hi", "Hello!")
 
-// TypeError: Argument #1 should be of type 'string matching regular expression /\S+@\S+\.\S+/' instead of String "laurent.example.com".
+# TypeError: Expected argument #1 to be string matching regular expression /\S+@\S+\.\S+/, got String "laurent.example.com".
 showEmail('laurent.example.com', "Hi", "Hello!")
 ```
 
@@ -461,14 +453,12 @@ You can use the `Array` constructor type for arrays with elements of any type, b
 
 If you want to specify the type of the elements of an array, use this type as the `Array` constructor argument. For instance simply use `Array(String)` for an array of strings:
 
-```js
-const dashJoin = fn(
-  Array(String), String,
-  (strings) => strings.join('-')
-)
+```coffee
+dashJoin = fn Array(String), String,
+  (strings) -> strings.join('-')
 
-dashJoin(["a", "b", "c"]) // a-b-c
-dashJoin(["a", "b", 3])   // TypeError: Argument #1 should be an array with element 2 of type 'String' instead of Number 3.
+dashJoin(["a", "b", "c"]) # "a-b-c"
+dashJoin(["a", "b", 3])   # TypeError: Expected argument #1 to be an array with element 2 of type 'String' instead of Number 3.
 ```
 
 * **:warning:** If you want an array with elements of a type that is the union of severay types, do not forget the brackets (`[` and `]`).
@@ -483,14 +473,12 @@ If you want to specify the length of an array, use this length as the `Array` co
 
 For instance use `Array(5)` for an array of five elements:
 
-```js
-const pokerHand = fn(
-  Array(5), String,
-  (cards) => cards.join('-')
-)
+```coffee
+pokerHand = fn Array(5), String,
+  (cards) -> cards.join('-')
 
-pokerHand([7, 9, "Q", "K", 1])     // 7-9-Q-K-1
-pokerHand([7, 9, 10, "Q", "K", 1]) // TypeError: Argument #1 should be an array with a length of 5 instead of 6.
+pokerHand([7, 9, "Q", "K", 1])     # 7-9-Q-K-1
+pokerHand([7, 9, 10, "Q", "K", 1]) # TypeError: Expected argument #1 to be an array with a length of 5 instead of 6.
 ```
 
 Sized array type is useful when used in conjunction with a typed array type, thanks to the [`and` operator](#and).
@@ -502,33 +490,27 @@ Note that you can use the empty array `[]` for an array of size 0 type, if you e
 
 You can specify the types of an object values, at any depth.
 
-```js
-const userType = {
-  id: Number,
-  name: {
-    first: String,
-    last: String,
+```coffee
+User =
+  id: Number
+  name:
+    first: String
+    last: String
     middle: [String, undefined]
-  }
-}
 
-const fullName = fn(
-  userType, String,
-  (user) => Object.keys(user.name).join(' ')
-)
+fullName = fn User, String,
+  (user) -> Object.keys(user.name).join(' ')
 
-let Bob = {
-  id: 1234,
-  name: {
-    first: "Robert",
+Bob =
+  id: 1234
+  name:
+    first: "Robert"
     last: "Smith"
-  }
-}
 
-// "Robert Smith"
+# "Robert Smith"
 fullName(Bob)
 
-// TypeError: Argument #1 should be an object with key 'name.first' of type 'String' instead of Number 1.
+# TypeError: Expected argument #1 to be an object with key 'name.first' of type 'String' instead of Number 1.
 fullName({id: 1234, name: {first: 1, last: "Smith"}})
 ```
 
