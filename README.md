@@ -45,7 +45,7 @@ f = fn String, Obj, String,
 
 Floweret runtime type system is:
 
-* **Intuitive**: Native JavaScript types usage. Expressive error messages.
+* **Intuitive**: Native JavaScript types usage. Useful error messages.
 * **Powerful**: Type composition, promises, rest parameters, logical operators and more…
 * **Lightweight**: No dependencies. Concise syntax that does not bloat your code. Typically [around 3 kB](#benchmark) minified and gzipped. Less if you use tree shaking.
 * **Fast**: Direct type comparison. No string to parse.
@@ -250,7 +250,7 @@ average(2, true, 4) # TypeError: Argument #2 should be of type 'Number' instead 
 >
 > unchecked(<type\>)
 
-If you do not want the object returned by a typed function to be type-checked (because it means the value is accessed via an [ES6 proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (Object, Array) or subclassed (Set, Map)) you can use the `unchecked` type:
+If you do not want the object returned by a typed function to be type-checked (because it means the value is accessed via an [ES6 proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (Object, Array) or is subclassed (Set, Map)) you can use the `unchecked` type:
 
 ```coffee
 import { fn, Any } from 'floweret'
@@ -273,7 +273,57 @@ a.push(true) # [1, 2, 3, true]
 
 ## Variable typing
 
-*Documentation in progress…*
+> unchecked <type\>, <value\>
+
+When you need to ensure a variable type, you can make it type-checked just like a `fn` argument with the `checked` type:
+
+```coffee
+import { check, alias } from 'floweret'
+
+# using an alias just because it's nice
+Store = alias 'AppStore',
+  darkMode: Boolean
+  userId: Number
+  displayName: String
+
+store = check Store,
+  darkMode: on
+  userId: 12345678
+  displayName: "Laurent"
+
+store.darkMode = 1 # TypeError: Expected AppStore: an object with key 'darkMode' of type 'Boolean' instead of Number 1.
+```
+
+`check` actualy does two things:
+
+1) **Before the variable instantiation**: checks if the value is of the correct type and raises a type error if not.
+2) **If the value is mutable**: adds a transparent type-checking mechanism when the value is modified:
+    * If the value is **an object or an array**: wraps it with an [ES6 proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy).
+    * If the value is **a set or a map**: makes the value an instance of a "type-checking" subclass of Set or Map.
+
+So if the value argument of `check` is immutable, the type will only be checked before the variable instantiation:
+
+```coffee
+import { check } from 'floweret'
+
+# type is always checked before instantiation
+name = check String, 1234 # TypeError: Expected String, got Number 1234.
+
+name = check String, "Laurent"
+name = 1234 # no error, strings are not mutable
+```
+
+* **:warning:** When using [Union type](#union-type), …
+
+```coffee
+import { check } from 'floweret'
+
+# type is always checked before instantiation
+foo = check [{prop: String}, {prop: Number}],
+  prop: "abc"
+```
+
+
 
 ## Tools
 
