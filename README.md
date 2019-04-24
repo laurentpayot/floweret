@@ -854,10 +854,10 @@ npm run benchmark
 The benchmark currently includes the folowing runtime type checking systems:
 
 * **no type checking**: the reference results.
-* [**Floweret**](https://github.com/laurentpayot/floweret): you might know it if you are reading this.
-* [**Runtypes**](https://github.com/pelotom/runtypes): "Runtime validation for static types" (TypeScript-oriented)
+* [**Floweret**](https://github.com/laurentpayot/floweret): "Runtime type annotations for CoffeeScript (and JavaScript too!)" − CoffeeScript-oriented
+* [**Runtypes**](https://github.com/pelotom/runtypes): "Runtime validation for static types" − TypeScript-oriented
 * [**Object Model**](https://github.com/sylvainpolletvillard/ObjectModel): "Strong Dynamically Typed Object Modeling for JavaScript."
-* [**Flow-runtime**](https://codemix.github.io/flow-runtime): "Flow-compatible runtime type system for JavaScript."
+* [**Flow-runtime**](https://codemix.github.io/flow-runtime): "Flow-compatible runtime type system for JavaScript." − Flow-oriented
 
 The [sub-benchmarks](https://github.com/laurentpayot/floweret/tree/master/benchmark) are run from minified [Rollup](https://rollupjs.org) bundles (UMD) and call two simple functions several thousand times.
 
