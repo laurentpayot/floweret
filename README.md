@@ -106,7 +106,6 @@ const f = fn(
     * [Constraint type](#constraint-type)
     * [Custom types](#custom-types)
   * [Type composition](#type-composition)
-
 * [Benchmark](#benchmark)
 * [License](#license)
 
@@ -518,16 +517,14 @@ fullName({id: 1234, name: {first: 1, last: "Smith"}})
 
 * **:warning:** If values of an object argument match all the keys types of the object type, **the argument will be accepted even if it has more keys than the object type** (except if type is the empty object `{}`):
 
-```js
-const f = fn(
-  {a: Boolean, b: {x: Number, y: Number}}, Number,
-  (obj) => obj.b.x + obj.b.y
-)
+```coffee
+f = fn {a: Boolean, b: {x: Number, y: Number}}, Number,
+  (obj) -> obj.b.x + obj.b.y
 
-f({a: true, b: {x: 1, y: 2}}) // 3
-f({a: true, b: {x: 1, y: 2}, foo: "bar"}) // 3 (no error)
-f({a: true, b: {x: 1, z: 2}}) // TypeError: Argument #1 should be an object with key 'b.y' of type 'Number' instead of missing key 'y'.
-f({a: true, b: {x: 1, y: undefined}}) // TypeError: Argument #1 should be an object with key 'b.y' of type 'Number' instead of undefined.
+f({a: true, b: {x: 1, y: 2}}) # 3
+f({a: true, b: {x: 1, y: 2}, foo: "bar"}) # 3 (no error)
+f({a: true, b: {x: 1, z: 2}}) # TypeError: Expected argument #1 to be an object with key 'b.y' of type 'Number' instead of missing key 'y'.
+f({a: true, b: {x: 1, y: undefined}}) # TypeError: Expected argument #1 to be an object with key 'b.y' of type 'Number' instead of undefined.
 ```
 
 #### Class type
@@ -595,29 +592,6 @@ braSizeLabel([true, 'C']) # TypeError: Expected argument #1 tuple element 0 to b
 braSizeLabel([200, 'Z']) # TypeError: Expected argument #1 tuple element 1 to be BraCup, got String "Z".
 ```
 
-### Constraint type
-
-> constraint(<function\>)
-
-You can quickly create new types using the `constraint` type, that takes a validation function as argument:
-
-```js
-import { fn } from 'floweret'
-import constraint from 'floweret/types/constraint'
-
-const Int = constraint(val => Number.isInteger(val))
-
-const f = fn(
-  Int, String,
-  n => n + "eggs needed for that recipe"
-)
-
-f(2)   // "2 eggs needed for that recipe"
-f(2.5) // TypeError: Argument #1 should be of type 'constrained by 'val => Number.isInteger(val)'' instead of Number 2.5.
-```
-
-If you need more complex types have a look in the [Floweret-included types](#included-types) or create you own [custom types](#custom-types).
-
 #### Typed Object
 
 > TypedObject(<values type\>)
@@ -625,45 +599,41 @@ If you need more complex types have a look in the [Floweret-included types](#inc
 Typed object types are useful for object types with values of a given type.
 Key type is always `String`, just like normal objects.
 
-```js
+```coffee
 import { fn } from 'floweret'
 import TypedObject from 'floweret/types/TypedObject'
 
-const Results = TypedObject(Number)
+Results = TypedObject(Number)
 
-const maxGrade = fn(
-  Results, Number,
-  (results) => Math.max(...Object.values(results))
-)
+maxGrade = fn Results, Number,
+  (results) -> Math.max(Object.values(results)...)
 
-maxGrade({
-    Alice: 8.5,
-    Larry: 8,
+maxGrade(
+    Alice: 8.5
+    Larry: 8
     Bob: 9.1
-}) // 9.1
+) # 9.1
 
-maxGrade({
-    Alice: 8.5,
-    Larry: "B",
+maxGrade(
+    Alice: 8.5
+    Larry: "B"
     Bob: 9.1
-}) // TypeError: Argument #1 should be of type 'object with values of type 'Number'' instead of Object.
+) # TypeError: Expected argument #1 object property 'Larry' to be Number, got String "B".
 ```
 
 #### Typed Set
 
 > TypedSet(<elements type\>)
 
-```js
+```coffee
 import { fn } from 'floweret'
 import TypedSet from 'floweret/types/TypedSet'
 
-const isSalty = fn(
-  TypedSet(String), Boolean,
-  (ingredients) => [...ingredients].includes('salt')
-)
+isSalty = fn TypedSet(String), Boolean,
+  (ingredients) -> [ingredients...].includes('salt')
 
-isSalty(new Set(["chocolate", "salt", "banana"])) // true
-isSalty(new Set(["chocolate", "salt", 100])) // TypeError: Argument #1 should be of type 'set of 'String'' instead of Set.
+isSalty(new Set(["chocolate", "salt", "banana"])) # true
+isSalty(new Set(["chocolate", "salt", 100])) # TypeError: Expected argument #1 set element to be String, got Number 100.
 ```
 
 #### Typed Map
@@ -692,20 +662,18 @@ or
 * If only one argument is provided, it is considered as the maximum value, the minimum value being 0. Thus use `Integer(Number.MAX_SAFE_INTEGER)` for positive integers including 0.
 * Used without argument, `Integer` simply specify an integer number, positive or negative.
 
-```js
+```coffee
 import { fn } from 'floweret'
 import Integer from 'floweret/types/Integer'
 
-const Temperature = Integer(-70, 70)
+Temperature = Integer(-70, 70)
 
-const maxTemperature = fn(
-  Array(Temperature), Temperature,
-  (temperatures) => Math.max(...temperatures)
-)
+maxTemperature = fn Array(Temperature), Temperature,
+  (temperatures) -> Math.max(temperatures...)
 
-maxTemperature([5, -2, 20, 17]) // 20
-// TypeError: Argument #1 should be an array with element 3 of type 'Integer
-// bigger than or equal to -70 and smaller than or equal to 70' instead of Number 170.
+maxTemperature([5, -2, 20, 17]) # 20
+
+# TypeError: Expected argument #1 to be an array with element 3 of type 'Integer bigger than or equal to -70 and smaller than or equal to 70' instead of Number 170.
 maxTemperature([5, -2, 20, 170])
 ```
 
@@ -721,58 +689,42 @@ or
 
 #### Logical operators
 
+* **:warning:** **:coffee:** `or`, `and` and `not` are reserved CoffeeScript words. In the examples below we will import them as `Or`, `And` and `Not.`
+
 ##### Or
 
 > or( <type 1\>, <type 2\>, …, <type n\> )
 
 `or` is the same as the [union of types](#union-of-types) brackets notation, but more explicit.
 
-```js
+```coffee
 import { fn } from 'floweret'
-import or from 'floweret/types/or'
+import Or from 'floweret/types/or'
 
-const size = fn(
-  or(String, Array), Number,
-  (x) => x.length
-)
+size = fn Or(String, Array), Number,
+  (x) -> x.length
 
-size("ab")       // 2
-size(['a', 'b']) // 2
-size({a: 'b'})   // TypeError: Argument #1 should be of type 'String or Array' instead of Object.
+size("ab")       # 2
+size(['a', 'b']) # 2
+size({a: 'b'})   # TypeError: Expected argument #1 to be String or Array, got Object.
 ```
-
-* **:coffee:** `or` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
-
-  ```coffee
-  # CoffeeScript
-  import Or from 'floweret/types/or'
-  ```
 
 ##### And
 
 > and( <type 1\>, <type 2\>, …, <type n\> )
 
-`and` is for intersection of types. It is useful with constraints or to specify typed arrays of a given length:
+`and` is for intersection of types. It is useful with [constraint types](#constraint-type) or to specify typed arrays of a given length:
 
-```js
+```coffee
 import { fn } from 'floweret'
-import and from 'floweret/types/and'
+import And from 'floweret/types/and'
 
-const weeklyMax = fn(
-  and(Array(Number), Array(7)), Number,
-  (days) => Math.max(...days)
-)
+weeklyMax = fn And(Array(Number), Array(7)), Number,
+  (days) -> Math.max(days...)
 
-weeklyMax([1, 1, 2, 2, 5, 5, 1]) // 5
-weeklyMax([1, 1, 2, 2, 5, 5]) // TypeError: Argument #1 should be of type ''array of 'Number'' and 'array of 7 elements'' instead of Array.
+weeklyMax([1, 1, 2, 2, 5, 5, 1]) # 5
+weeklyMax([1, 1, 2, 2, 5, 5])  # TypeError: Expected argument #1 to be 'array of 'Number'' and 'array of 7 elements', got Array of 6 elements.
 ```
-
-* **:coffee:** `and` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
-
-  ```coffee
-  # CoffeeScript
-  import And from 'floweret/types/and'
-  ```
 
 ##### Not
 
@@ -780,25 +732,16 @@ weeklyMax([1, 1, 2, 2, 5, 5]) // TypeError: Argument #1 should be of type ''arra
 
 `not` is the the complement type, i. e. for items not matching the type:
 
-```js
+```coffee
 import { fn } from 'floweret'
-import not from 'floweret/types/not'
+import Not from 'floweret/types/not'
 
-const getConstructor = fn(
-  not([undefined, null]), Function,
-  (x) => x.constructor
-)
+getConstructor = fn Not([undefined, null]), Function,
+  (x) -> x.constructor
 
-getConstructor(1)    // function Number()
-getConstructor(null) // TypeError: Argument #1 should be of type 'not 'undefined or null'' instead of null.
+getConstructor(1)    # function Number()
+getConstructor(null) # TypeError: Expected argument #1 to be not 'undefined or null', got null.
 ```
-
-* **:coffee:** `not` is a reserved CoffeeScript word. Use another identifier for imports in your CoffeeScript file:
-
-  ```coffee
-  # CoffeeScript
-  import Not from 'floweret/types/not'
-  ```
 
 #### Named type
 
@@ -838,7 +781,47 @@ export createUser = fn Object, Promise.resolve(User),
 )
 ```
 
+### Constraint type
+
+> constraint(<function\>)
+
+You can quickly create new types using the `constraint` type, that takes a validation function as argument:
+
+```coffee
+import { fn } from 'floweret'
+import constraint from 'floweret/types/constraint'
+
+Int = constraint(Number.isInteger)
+
+f = fn Int, String,
+  n -> n + " eggs needed for that recipe"
+
+f(2)   # "2 eggs needed for that recipe"
+f(2.5) # TypeError: Expected argument #1 to be constrained by function 'isInteger', got Number 2.5.
+```
+
+`constraint` also work with anonymous validation functions:
+
+```coffee
+import { fn } from 'floweret'
+import constraint from 'floweret/types/constraint'
+
+Pos = constraint((x) -> x >= 0)
+
+f = fn Pos, String,
+  (n) -> "a distance of #{n} meters"
+
+f(2.5) # "a distance of 2.5 meters"
+
+# TypeError: Expected argument #1 to be constrained by 'function(x) {
+#    return x >= 0;
+#  }', got Number -2.5.
+f(-2.5)
+```
+
 ### Custom types
+
+If you need more complex types you can create your own custom types, like the ones in the [`floweret/types` directory](https://github.com/laurentpayot/floweret/tree/master/src/types). Custom types have to be a subclass of `Type`.
 
 *Documentation in progress…*
 
@@ -846,10 +829,18 @@ export createUser = fn Object, Promise.resolve(User),
 
 As types are simply JavaScript expressions, you can assign any type to a variable and use it to create new types:
 
-```js
-const Phone = [Number, undefined]
-const Name = {first: String, last: String, middle: [String, undefined]}
-const User = {id: Number, name: Name, phone: Phone}
+```coffee
+Phone = [Number, undefined]
+
+Name =
+  first: String
+  last: String
+  middle: [String, undefined]
+
+User =
+  id: Number
+  name: Name
+  phone: Phone
 ```
 
 ## Benchmark
