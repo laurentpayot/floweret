@@ -1,6 +1,6 @@
 const TIMES = 10 * 1000
 
-console.log("\n*** No type-checking ***")
+console.log("\n*** No type checking ***")
 
 // example from https://codemix.github.io/flow-runtime/#/
 function greet(person) {
