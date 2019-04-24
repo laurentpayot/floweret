@@ -140,21 +140,21 @@ Info = alias "TextInfo",
   size: Number
   hasSpam: Boolean
 
-#   arg. #1 type ⮢       ⮣ arg. #2 type  ⮣ result type
-getTextInfo = fn String, maybe(Mode), Info,
+#  arg. #1 type ⮢       ⮣ arg. #2 type  ⮣ result type
+recipeInfo = fn String, maybe(Mode), Info,
   (str, mode='asIs') ->
     size: (if mode is 'trimed' then str.trim() else str).length
     hasSpam: /spam/i.test(str)
 
 # {size: 24, hasSpam: true}
-recipeInfo = getTextInfo(" egg spam spam bacon spam   ", 'trimed')
+sandwichInfo = recipeInfo(" egg spam spam bacon spam   ", 'trimed')
 
 # the result is type-checked as Info
 sandwichInfo.size = "foo" # TypeError: Expected TextInfo: an object with key 'size' of type 'Number' instead of String "foo".
 
-getTextInfo() # TypeError: Expected argument #1 to be String, got undefined.
-getTextInfo(1) # TypeError: Expected argument #1 to be String, got Number 1.
-getTextInfo("egg sausage", 'foo') # TypeError: Expected argument #2 to be undefined or TextMode, got String "foo".
+recipeInfo() # TypeError: Expected argument #1 to be String, got undefined.
+recipeInfo(1) # TypeError: Expected argument #1 to be String, got Number 1.
+recipeInfo("egg sausage", 'foo') # TypeError: Expected argument #2 to be undefined or TextMode, got String "foo".
 ```
 
 As mentioned in the comments, the object returned by the function is *type-checked*. It means that a check is performed before every modification of the result object to ensure all type expectations are always met. The function parameters also are type-checked internally to the function, as long as they are objects (Object, Array, Set, Map, etc.).
