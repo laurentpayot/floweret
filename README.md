@@ -6,9 +6,9 @@
 [![npm bundle size](https://badgen.net/bundlephobia/minzip/floweret)](https://bundlephobia.com/result?p=floweret)
 [![npm version](https://badgen.net/npm/v/floweret)](https://www.npmjs.com/package/floweret)
 
-## Why?
+## Why
 
-One way to do type checking with CoffeeScript is [type annotations](https://coffeescript.org/#type-annotations):
+*Static* type checking can be achieved in CoffeeScript by using [Flow](https://flow.org/)’s Comment Types syntax:
 
 ```coffee
 # @flow
@@ -25,9 +25,9 @@ f = (str ###: string ###, obj ###: Obj ###) ###: string ### ->
 
 but…
 
-* [Flow](https://flow.org/) must be running in the background.
+* Flow must be running in the background.
 * Comments add "noise" to the source code.
-* Bad (inexistant?) build tools integration (webpack, rollup).
+* Difficult (impossible?) build tools integration (webpack, rollup).
 * Cannot check types in the browser for external APIs results, form inputs validation etc.
 
 Floweret was written in CoffeeScript specialy for CoffeeScript to solve these problems.
@@ -43,7 +43,7 @@ f = fn String, Obj, String,
   (str, obj) -> str + obj.num
 ```
 
-Floweret runtime type system is:
+Floweret runtime type annotations are:
 
 * **Intuitive**: Native JavaScript types usage. Useful error messages.
 * **Powerful**: Type composition, promises, rest parameters, logical operators and more…
@@ -293,9 +293,9 @@ store.darkMode = 1 # TypeError: Expected AppStore: an object with key 'darkMode'
 `check` actualy does two things:
 
 1) **Before the variable instantiation**: checks if the value is of the correct type and raises a type error if not.
-2) **If the value is mutable**: adds a transparent type-checking mechanism when the value is modified:
+2) **If the value is mutable**: adds a transparent type checking mechanism when the value is modified:
     * If the value is **an object or an array**: wraps it with an [ES6 proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy).
-    * If the value is **a set or a map**: makes the value an instance of a "type-checking" subclass of Set or Map.
+    * If the value is **a set or a map**: makes the value an instance of a "type checking" subclass of Set or Map.
 
 So if the value argument of `check` is immutable, the type will only be checked before the variable instantiation:
 
@@ -851,9 +851,9 @@ Run the benchmark with:
 npm run benchmark
 ```
 
-The benchmark currently includes the folowing runtime type-checking systems:
+The benchmark currently includes the folowing runtime type checking systems:
 
-* **no type-checking**: the reference results.
+* **no type checking**: the reference results.
 * [**Floweret**](https://github.com/laurentpayot/floweret): you might know it if you are reading this.
 * [**Runtypes**](https://github.com/pelotom/runtypes): "Runtime validation for static types" (TypeScript-oriented)
 * [**Object Model**](https://github.com/sylvainpolletvillard/ObjectModel): "Strong Dynamically Typed Object Modeling for JavaScript."
@@ -865,13 +865,13 @@ Here are some results from my Ubuntu machine with node v11.10.1:
 
 ```txt
 no-type-checking-benchmark.min.js.gz  257 bytes
-floweret-benchmark.min.js.gz          3441 bytes
+floweret-benchmark.min.js.gz          3451 bytes
 objectmodel.min.js.gz                 4123 bytes
 runtypes.min.js.gz                    6036 bytes
 flow-runtime-benchmark.min.js.gz      20240 bytes
 
 
-*** No type-checking ***
+*** No type checking ***
 10000 greets: 2.101ms
 10000 sums: 25.062ms
 
