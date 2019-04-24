@@ -8,7 +8,7 @@
 
 ## Why
 
-*Static* type checking can be achieved in CoffeeScript by using [Flow](https://flow.org/)’s Comment Types syntax:
+*Static* type checking can be achieved in CoffeeScript by using [Flow’s Comment Types syntax](https://flow.org/en/docs/types/comments/):
 
 ```coffee
 # @flow
@@ -43,7 +43,7 @@ f = fn String, Obj, String,
   (str, obj) -> str + obj.num
 ```
 
-Floweret runtime type annotations are:
+Floweret *runtime* type annotations are:
 
 * **Intuitive**: Native JavaScript types usage. Useful error messages.
 * **Powerful**: Type composition, promises, rest parameters, logical operators and more…
