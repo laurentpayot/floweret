@@ -244,7 +244,7 @@ average(2, true, 4) # TypeError: Expected argument #2 to be Number, got Boolean 
 >
 > unchecked(<type\>)
 
-In case you do not want the object returned by your function to be type-checked (because it means it is accessed via an [ES6 proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (Object, Array) or is subclassed (Set, Map)) you can use the `unchecked` type:
+In case you do not want the object returned by your function to be type-checked − because it means it is accessed via an [ES6 proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (Object, Array) or is subclassed (Set, Map) − you can use the `unchecked` type:
 
 ```coffee
 import { fn, Any } from 'floweret'
@@ -328,12 +328,15 @@ Some handy utilities exported by the package.
 
 > isValid(<value\>, <type\>)
 
-`isValid` can tell if a value is of a given type. Useful for user input validation:
+`isValid` can tell if a value is of a given type. Useful for user input validation.
 
 ```coffee
 import { isValid } from 'floweret'
 
-isValid("abc", [Number, String]) # true
+Sauce = ['BBQ', 'Ketchup', 'Mayo']
+
+isValid('Mayo', Sauce) # true
+isValid('Blanche', Sauce) # false
 ```
 
 ### typeOf
@@ -382,7 +385,10 @@ f(1, 5)   # TypeError: Expected argument #2 to be String, got Number 5.
 A literal can only be a string, a number, a boolean or be equal to `undefined` or `null` or `NaN`. Literals are useful when used inside an union list.
 
 ```coffee
-turn = fn ['left', 'right'], String,
+
+Direction = ['left', 'right']
+
+turn = fn Direction, String,
   (direction) -> "turning " + direction
 
 turn('left')  # "turning left"
@@ -515,7 +521,7 @@ fullName(Bob)
 fullName({id: 1234, name: {first: 1, last: "Smith"}})
 ```
 
-* **:warning:** If values of an object argument match all the keys types of the object type, **the argument will be accepted even if it has more keys than the object type** (except if type is the empty object `{}`):
+* **:warning:** If values of an object argument match all the key types of the object type, **the argument will be accepted even if it has more keys than the object type** (except if type is the empty object `{}`):
 
 ```coffee
 f = fn {a: Boolean, b: {x: Number, y: Number}}, Number,
@@ -765,7 +771,7 @@ getConstructor(null) # TypeError: Expected argument #1 to be not 'undefined or n
 
 > named(<type name\>)
 
-Sometimes when you use external libraries you have to handle instances whithout having access to their classes definitions, but only their names. You can use the `named` type to check that the instance constructor name correct.
+Sometimes when you use external libraries you have to handle instances whithout having access to their classes definitions, but only their names. You can use the `named` type to check that the instance constructor name is correct.
 
 Here is a Firebase example where we wrap the [createUser](https://firebase.google.com/docs/reference/admin/node/admin.auth.Auth#createUser)
 function that returns a promise of a *Firebase-defined* `UserRecord` instance:
