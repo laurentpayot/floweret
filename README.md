@@ -625,6 +625,8 @@ maxGrade(
 
 > TypedSet(<elements type\>)
 
+As expected, to ensure the type of the `Set` elements:
+
 ```coffee
 import { fn } from 'floweret'
 import TypedSet from 'floweret/types/TypedSet'
@@ -643,6 +645,9 @@ isSalty(new Set(["chocolate", "salt", 100])) # TypeError: Expected argument #1 s
 or
 
 > TypedMap(<keys type\>, <values type\>)
+
+* With a single argument, `TypedMap` works like [`TypedObject`](#typed-object), but for maps instead of objects.
+* With two arguments, `TypedMap` allows you to specify both key and value types.
 
 *Documentation in progress…*
 
@@ -684,6 +689,9 @@ maxTemperature([5, -2, 20, 170])
 or
 
 > SizedString(<minimum length\>, <maximum length\>)
+
+* Use `SizedString` with a single maximum length argument for strings that can be empty or with a maximum numbers of characters.
+* With two arguments, `SizedString` allows you to specify strings of a minimum and a maximum length. Use `0` as second argument if you want to specify a minimum length but no maximum length.
 
 *Documentation in progress…*
 

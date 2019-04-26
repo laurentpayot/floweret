@@ -14,12 +14,15 @@ class SizedString extends Type
 		if arguments.length is 1
 			@max = n1
 		else
-			Type.invalid "'#{@constructor.name}' max value cannot be less than min value." if n2 < n1
+			Type.invalid "'#{@constructor.name}' non-zero maximum length
+						cannot be less than minimum length." if n2 < n1 and n2 > 0
 			# [@min, @max] = [n1, n2] # problem with Rollup commonjs plugin
 			@min = n1
 			@max = n2
 	validate: (val) ->
-		typeof val is 'string' and (@max is undefined or val.length <= @max) and (@min is undefined or val.length >= @min)
+		typeof val is 'string' \
+		and (@max is undefined or @max is 0 or val.length <= @max) \
+		and (@min is undefined or val.length >= @min)
 	getTypeName: ->
 		max = if @max? then " of at most #{@max} characters" else ''
 		min = if @min? then " of at least #{@min} characters" else ''

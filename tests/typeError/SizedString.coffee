@@ -26,6 +26,6 @@ test "return an error with ''SizedString' arguments must be positive integers.'"
 	expect(-> SizedString(undefined, -10)).toThrow("'SizedString' arguments must be positive integers.")
 	expect(-> SizedString(-10, undefined)).toThrow("'SizedString' arguments must be positive integers.")
 
-test "return an error with ''SizedString' max value cannot be less than min value", ->
+test "return an error with ''SizedString' non-zero maximum length cannot be less than minimum length", ->
 	expect(-> SizedString(100, 10))
-	.toThrow("'SizedString' max value cannot be less than min value.")
+	.toThrow("'SizedString' non-zero maximum length cannot be less than minimum length.")
