@@ -76,6 +76,7 @@ const f = fn(
   * [Rest arguments type](#rest-arguments-type)
   * [Unchecked type](#unchecked-type)
 * [Variable typing](#variable-typing)
+  * [Type aliases](#type-aliases)
 * [Tools](#tools)
   * [isValid](#isvalid)
   * [typeOf](#typeof)
@@ -128,7 +129,7 @@ $ yarn add floweret
 To add a signature to a function, wrap the function with the `fn` function.
 `fn` arguments are first the list of arguments types, followed by the result type, and finally the function itself.
 
-In the example below we will use [native](#native-types), [`maybe`](#maybe-type), [`union`](#union-of-types), and [`object`](#object-type) types as well as [aliases](#alias-type). All these types are detailed in the [Type reference](#type-reference) section of this document.
+In the example below we will use [native](#native-types), [`maybe`](#maybe-type), [`union`](#union-of-types), and [`object`](#object-type) types as well as [type aliases](#type-aliases). All these types are detailed in the [Type reference](#type-reference) section of this document.
 
 ```coffee
 import { fn, maybe, alias } from 'floweret'
@@ -276,8 +277,7 @@ When you need to ensure a variable type, you can make it type-checked just like 
 ```coffee
 import { check, alias } from 'floweret'
 
-# using an alias just because it's nice
-Store = alias 'AppStore',
+Store =
   darkMode: Boolean
   userId: Number
   displayName: String
@@ -287,7 +287,8 @@ store = check Store,
   userId: 12345678
   displayName: "Laurent"
 
-store.darkMode = 1 # TypeError: Expected AppStore: an object with key 'darkMode' of type 'Boolean' instead of Number 1.
+# TypeError: Expected an object with key 'darkMode' of type 'Boolean' instead of Number 1.
+store.darkMode = 1
 ```
 
 `check` actualy does two things:
@@ -319,6 +320,32 @@ foo = check [{prop: String}, {prop: Number}],
 
 foo.prop = 1 # TypeError: Expected an object with key 'prop' of type 'String' instead of Number 1.
 ```
+
+### Type aliases
+
+> alias <name\>, <type\>
+
+Using type aliases is good practice because an alias allows the name of the type to be "stored" within the type itself (if you need to export it) and gives more useful error messages.
+
+Note the difference from the [example without alias](#variable-typing):
+
+```coffee
+import { check, alias } from 'floweret'
+
+Store = alias 'MyAppStore',
+  darkMode: Boolean
+  userId: Number
+  displayName: String
+
+store = check Store,
+  darkMode: on
+  userId: 12345678
+  displayName: "Laurent"
+
+# TypeError: Expected MyAppStore: an object with key 'darkMode' of type 'Boolean' instead of Number 1.
+store.darkMode = 1 
+```
+
 
 ## Tools
 
