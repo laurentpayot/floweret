@@ -79,7 +79,7 @@ const f = fn(
 * [Tools](#tools)
   * [isValid](#isvalid)
   * [typeOf](#typeof)
-* [Types reference](#types-reference)
+* [Type reference](#type-reference)
   * [Basic types](#basic-types)
     * [Native types](#native-types)
     * [Literal type](#literal-type)
@@ -128,7 +128,7 @@ $ yarn add floweret
 To add a signature to a function, wrap the function with the `fn` function.
 `fn` arguments are first the list of arguments types, followed by the result type, and finally the function itself.
 
-In the example below we will use [native](#native-types), [`maybe`](#maybe-type), [`union`](#union-of-types), and [`object`](#object-type) types as well as [aliases](#alias-type). All these types are detailed in the [Types reference](#types-reference) section of this document.
+In the example below we will use [native](#native-types), [`maybe`](#maybe-type), [`union`](#union-of-types), and [`object`](#object-type) types as well as [aliases](#alias-type). All these types are detailed in the [Type reference](#type-reference) section of this document.
 
 ```coffee
 import { fn, maybe, alias } from 'floweret'
@@ -356,7 +356,7 @@ typeOf Promise.resolve(1) # 'Promise'
 typeOf NaN # 'NaN'
 ```
 
-## Types reference
+## Type reference
 
 ### Basic types
 
