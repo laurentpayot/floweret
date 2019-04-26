@@ -646,10 +646,8 @@ or
 
 > TypedMap(<keys type\>, <values type\>)
 
-* With a single argument, `TypedMap` works like [`TypedObject`](#typed-object), but for maps instead of objects.
-* With two arguments, `TypedMap` allows you to specify both key and value types.
-
-*Documentation in progress…*
+* With a single argument, `TypedMap` works like [`TypedObject`](#typed-object), but for maps instead of objects. Only the value type is specified.
+* With two arguments, `TypedMap` allows you to specify both key type (first argument) and value type(second argument).
 
 #### Integer
 
@@ -693,7 +691,19 @@ or
 * Use `SizedString` with a single maximum length argument for strings that can be empty or with a maximum numbers of characters.
 * With two arguments, `SizedString` allows you to specify strings of a minimum and a maximum length. Use `0` as second argument if you want to specify a minimum length but no maximum length.
 
-*Documentation in progress…*
+```coffee
+import { fn } from 'floweret'
+import SizedString from 'floweret/types/SizedString'
+
+# https://en.wikipedia.org/wiki/United_States_license_plate_designs_and_serial_formats
+Plate = SizedString(5, 8)
+
+isMagnumDriving = fn Plate, Boolean,
+  (plate) -> plate is "ROBIN-1"
+
+# TypeError: Expected argument #1 to be SizedString of at least 5 characters and of at most 8 characters, got String "Robin Masters".
+isMagnumDriving("Robin Masters")
+```
 
 #### Logical operators
 
