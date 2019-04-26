@@ -76,7 +76,7 @@ const f = fn(
   * [Rest arguments type](#rest-arguments-type)
   * [Unchecked type](#unchecked-type)
 * [Variable typing](#variable-typing)
-  * [Type aliases](#type-aliases)
+* [Type aliases](#type-aliases)
 * [Tools](#tools)
   * [isValid](#isvalid)
   * [typeOf](#typeof)
@@ -321,7 +321,7 @@ foo = check [{prop: String}, {prop: Number}],
 foo.prop = 1 # TypeError: Expected an object with key 'prop' of type 'String' instead of Number 1.
 ```
 
-### Type aliases
+## Type aliases
 
 > alias <name\>, <type\>
 
@@ -345,7 +345,6 @@ store = check Store,
 # TypeError: Expected MyAppStore: an object with key 'darkMode' of type 'Boolean' instead of Number 1.
 store.darkMode = 1 
 ```
-
 
 ## Tools
 
