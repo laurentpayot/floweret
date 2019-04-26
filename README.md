@@ -51,7 +51,7 @@ Floweret *runtime* type annotations are:
 * **Fast**: Direct type comparison. No string to parse.
 * **Customizable**: Create your own types for your own needs.
 
-Because *"CoffeeScript is just JavaScript"* ™, you can easily use Floweret with plain JavaScript if you need runtime type checking. You simply miss the decorator-like syntaxic sugar allowed by CoffeeScript as [JavaScript decorators proposal](https://github.com/tc39/proposal-decorators) does not support standalone functions yet:
+Because the golden rule of CoffeeScript is *“It’s just JavaScript.”*, you can easily use Floweret with plain JavaScript if you need runtime type checking. You simply miss the decorator-like syntaxic sugar allowed by CoffeeScript as [JavaScript decorators proposal](https://github.com/tc39/proposal-decorators) does not support standalone functions yet:
 
 ```js
 // ES6 example
