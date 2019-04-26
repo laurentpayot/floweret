@@ -133,14 +133,14 @@ In the example below we will use [native](#native-types), [`maybe`](#maybe-type)
 ```coffee
 import { fn, maybe, alias } from 'floweret'
 
-Mode = alias "TextMode", # alias is optional, but is good practice
+Mode = alias 'TextMode', # alias is optional, but is good practice
   ['asIs', 'trimed'] # union of valid string litterals
 
-Info = alias "TextInfo",
+Info = alias 'TextInfo',
   size: Number
   hasSpam: Boolean
 
-#  arg. #1 type ⮢       ⮣ arg. #2 type  ⮣ result type
+#     arg. #1 type↰     ↱arg. #2 type ↱result type
 recipeInfo = fn String, maybe(Mode), Info,
   (str, mode='asIs') ->
     size: (if mode is 'trimed' then str.trim() else str).length
@@ -149,7 +149,7 @@ recipeInfo = fn String, maybe(Mode), Info,
 # {size: 24, hasSpam: true}
 sandwichInfo = recipeInfo(" egg spam spam bacon spam   ", 'trimed')
 
-# the result is type-checked as Info
+# the result is type-checked as TextInfo
 sandwichInfo.size = "foo" # TypeError: Expected TextInfo: an object with key 'size' of type 'Number' instead of String "foo".
 
 recipeInfo() # TypeError: Expected argument #1 to be String, got undefined.
