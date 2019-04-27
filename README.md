@@ -8,7 +8,7 @@
 
 ## Why
 
-*Static* type checking can be achieved in CoffeeScript by using [Flow’s Comment Types syntax](https://flow.org/en/docs/types/comments/):
+*Static* type checking can be achieved in CoffeeScript using [Flow’s Comment Types syntax](https://flow.org/en/docs/types/comments/):
 
 ```coffee
 # @flow
