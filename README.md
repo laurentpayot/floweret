@@ -352,7 +352,7 @@ Some handy utilities exported by the package.
 
 ### isValid
 
-> isValid(<value\>, <type\>)
+> isValid <type\>, <value\>
 
 `isValid` can tell if a value is of a given type. Useful for user input validation.
 
@@ -361,8 +361,8 @@ import { isValid } from 'floweret'
 
 Sauce = ['BBQ', 'Ketchup', 'Mayo']
 
-isValid('Mayo', Sauce) # true
-isValid('Blanche', Sauce) # false
+isValid Sauce, 'Mayo' # true
+isValid Sauce, 'Blanche' # false
 ```
 
 ### typeOf
@@ -914,8 +914,8 @@ The [sub-benchmarks](https://github.com/laurentpayot/floweret/tree/master/benchm
 Here are some results from my Ubuntu machine with node v11.10.1:
 
 ```txt
-no-type-checking-benchmark.min.js.gz  257 bytes
-floweret-benchmark.min.js.gz          3451 bytes
+no-type-checking-benchmark.min.js.gz  256 bytes
+floweret-benchmark.min.js.gz          3433 bytes
 objectmodel.min.js.gz                 4123 bytes
 runtypes.min.js.gz                    6036 bytes
 flow-runtime-benchmark.min.js.gz      20240 bytes
