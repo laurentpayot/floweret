@@ -11,7 +11,7 @@ class CheckedTypedMap extends Map
 		# overwriting set() inside constructor to use its types and map parameters
 		@set = (k, v, context="", aliasName="") =>
 			for [kind, type, arg] in [['value', valuesType, v], ['key', keysType, k]]
-				unless notDefined(type) or isValid(arg, type)
+				unless notDefined(type) or isValid(type, arg)
 					Type.error((if context then context + ' ' else '') +
 								(if aliasName then aliasName + ' ' else '') +
 								"map element " + kind, arg, type)
@@ -40,12 +40,12 @@ class TypedMap extends Type
 	validate: (val) -> switch
 		when not (val instanceof Map) then false
 		when notDefined(@keysType) and notDefined(@valuesType) then true
-		when notDefined(@keysType) then Array.from(val.values()).every((e) => isValid(e, @valuesType))
-		when notDefined(@valuesType) then Array.from(val.keys()).every((e) => isValid(e, @keysType))
+		when notDefined(@keysType) then Array.from(val.values()).every((e) => isValid(@valuesType, e))
+		when notDefined(@valuesType) then Array.from(val.keys()).every((e) => isValid(@keysType, e))
 		else
 			keys = Array.from(val.keys())
 			values = Array.from(val.values())
-			keys.every((e) => isValid(e, @keysType)) and values.every((e) => isValid(e, @valuesType))
+			keys.every((e) => isValid(@keysType, e) and values.every((e) => isValid(@valuesType, e)))
 	getTypeName: ->
 		kt = if @keysType isnt undefined then "keys of type '#{getTypeName(@keysType)}' and " else ''
 		"map with #{kt}values of type '#{getTypeName(@valuesType)}'"
@@ -57,9 +57,9 @@ class TypedMap extends Type
 	#		return ret if notDefined(@keysType) and notDefined(@valuesType)
 	#		if ret is Map.prototype.set
 	#			(k, v) =>
-	#				unless notDefined(@valuesType) or isValid(v, @valuesType)
+	#				unless notDefined(@valuesType) or isValid(@valuesType, v)
 	#					Type.error("#{if context then context+' ' else ''}map element value", v, @valuesType)
-	#				unless isValid(k, @keysType) or isValid(k, @keysType)
+	#				unless isValid(@keysType, k) or isValid(@keysType, k)
 	#					Type.error("#{if context then context+' ' else ''}map element key", k, @keysType)
 	#				m.set(k, v)
 	#		else ret)

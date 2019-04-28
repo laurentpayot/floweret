@@ -40,15 +40,15 @@ describe "And", ->
 
 	test "isValid with and() should return true only if value in intersection of array types", ->
 		t = And(Array(Number), Array(2))
-		expect(isValid([1, 2], t)).toBe(true)
-		expect(isValid([1], t)).toBe(false)
-		expect(isValid([1, "two"], t)).toBe(false)
+		expect(isValid(t, [1, 2])).toBe(true)
+		expect(isValid(t, [1])).toBe(false)
+		expect(isValid(t, [1, "two"])).toBe(false)
 
 	test "isValid with and() should return true only if value in intersection of unions of literal types", ->
 		t = And(["foo", "bar"], ["bar", "baz"])
-		expect(isValid("bar", t)).toBe(true)
-		expect(isValid("foo", t)).toBe(false)
-		expect(isValid("baz", t)).toBe(false)
+		expect(isValid(t, "bar")).toBe(true)
+		expect(isValid(t, "foo")).toBe(false)
+		expect(isValid(t, "baz")).toBe(false)
 
 describe "Or", ->
 
@@ -81,9 +81,9 @@ describe "Not", ->
 
 	test "isValid with not() should return true only if value is not of the given type", ->
 		t = Not([String, Number])
-		expect(isValid("foo", t)).toBe(false)
-		expect(isValid(1, t)).toBe(false)
-		expect(isValid(true, t)).toBe(true)
-		expect(isValid(false, t)).toBe(true)
-		expect(isValid(NaN, t)).toBe(true)
+		expect(isValid(t, "foo")).toBe(false)
+		expect(isValid(t, 1)).toBe(false)
+		expect(isValid(t, true)).toBe(true)
+		expect(isValid(t, false)).toBe(true)
+		expect(isValid(t, NaN)).toBe(true)
 

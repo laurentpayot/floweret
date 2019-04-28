@@ -13,7 +13,7 @@ objectProxy = (type, obj, aliasName, path=[]) ->
 		Type.error("", pathObject, typeObject, aliasName)
 	new Proxy(obj,
 		set: (o, k, v) ->
-			error(k, v) unless isValid(v, type[k])
+			error(k, v) unless isValid(type[k], v)
 			o[k] = v
 			true # indicate success
 		deleteProperty: (o, k) ->
@@ -24,7 +24,7 @@ objectProxy = (type, obj, aliasName, path=[]) ->
 arrayProxy = (type, arr, aliasName) ->
 	new Proxy(arr,
 		set: (a, i, v) ->
-			unless isValid(v, type)
+			unless isValid(type, v)
 				badArray = [a...]
 				badArray[i] = v
 				Type.error("", badArray, [type], aliasName)
@@ -53,7 +53,7 @@ check = (type, val, context="", aliasName="") ->
 	# custom types first for customized instantiation validity check
 	if type instanceof Type or type?.rootClass is Type
 		return (if type.rootClass then type() else type).checkWrap(val, context)
-	Type.error(context, val, type, aliasName) unless isValid(val, type)
+	Type.error(context, val, type, aliasName) unless isValid(type, val)
 	switch
 		when Array.isArray(type)
 			switch type.length
@@ -63,7 +63,7 @@ check = (type, val, context="", aliasName="") ->
 					if type[0] is undefined and type[1] is undefined # array of empty values: sized array, e.g.: `Array(1000)`)
 						sizedArrayProxy(val, aliasName)
 					else # union of types: typing with the first valid type
-						check(type.find((t) -> isValid(val, t)), val, context, aliasName)
+						check(type.find((t) -> isValid(t, val)), val, context, aliasName)
 		when type?.constructor is Object then objectProxy(type, val, aliasName)
 		else val # no proxy
 

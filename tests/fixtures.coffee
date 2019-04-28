@@ -42,6 +42,6 @@ export VALUES = [
 ]
 
 export testTypes = (val, type) ->
-	expect(isValid(val, t)).toBe(false) \
+	expect(isValid(t, val)).toBe(false) \
 		for t in NATIVE_TYPES when not(t is type or Number.isNaN val and Number.isNaN type)
-	expect(isValid(val, type)).toBe(true)
+	expect(isValid(type, val)).toBe(true)

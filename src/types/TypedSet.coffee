@@ -10,7 +10,7 @@ class CheckedTypedSet extends Set
 		@add = (val, context="", aliasName="") =>
 			Type.error((if context then context + ' ' else '') +
 						(if aliasName then aliasName + ' ' else '') +
-						"set element", val, type) unless isValid(val, type)
+						"set element", val, type) unless isValid(type, val)
 			set.add(val) # to have side effects
 			super.add(val)
 
@@ -25,7 +25,7 @@ class TypedSet extends Type
 	validate: (val) -> switch
 		when not (val instanceof Set) then false
 		when isAny(@type) then true
-		else [val...].every((e) => isValid(e, @type))
+		else [val...].every((e) => isValid(@type, e))
 	getTypeName: -> "set of '#{getTypeName(@type)}'"
 	# NB: https://stackoverflow.com/questions/43927933/why-is-set-incompatible-with-proxy
 	#new Proxy(set,
@@ -33,7 +33,7 @@ class TypedSet extends Type
 	#	get: (s, k, receiverProxy) =>
 	#		ret = Reflect.get(s, k, receiverProxy)
 	#		if ret is Set.prototype.add
-	#			(v) => if isValid(v, @type) then s.add(v) else Type.error("set element", v, @type)
+	#			(v) => if isValid(@type, v) then s.add(v) else Type.error("set element", v, @type)
 	#		else ret)
 	checkWrap: (set, context) ->
 		# super(set, context)

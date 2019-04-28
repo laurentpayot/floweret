@@ -11,7 +11,7 @@ class Tuple extends Type
 				of #{@types.length} values of any type'." if @types.every((a) -> isAny(a))
 	validate: (val) ->
 		return false unless Array.isArray(val) and val.length is @types.length
-		val.every((e, i) => isValid(e, @types[i]))
+		val.every((e, i) => isValid(@types[i], e))
 	getTypeName: -> "tuple of #{@types.length} elements '#{(getTypeName(t) for t in @types).join(", ")}'"
 	checkWrap: (arr, context) ->
 		# NB: skipping parent class validation to let pre-proxy validation find a better error message
@@ -22,7 +22,7 @@ class Tuple extends Type
 			Type.error(sizeErrorMessage) unless i < @types.length
 			Type.error((if context then context + ' ' else '') +
 						(if @aliasName then @aliasName + ' ' else '') +
-						"tuple element #{i}", v, @types[i]) unless isValid(v, @types[i])
+						"tuple element #{i}", v, @types[i]) unless isValid(@types[i], v)
 			a[i] = v
 			true # indicate success
 		# pre-proxy validation

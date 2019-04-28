@@ -3,7 +3,7 @@ import typeOf from './typeOf'
 import Type from './types/Type'
 
 # check that a value is of a given type or of any (undefined) type, e.g.: isValid("foo", String)
-isValid = (val, type) ->
+isValid = (type, val) ->
 	# NB: special Array case http://web.mit.edu/jwalden/www/isArray.html
 	if Array.isArray(type) then switch type.length
 		when 0 then Array.isArray(val) and not val.length # empty array: `[]`
@@ -17,14 +17,14 @@ isValid = (val, type) ->
 					when Number then f = Number.isFinite # Number.isFinite(NaN) is falsy
 					when String, Boolean, Object then f = (e) -> try e.constructor is t
 					when Array then f = Array.isArray
-					else f = (e) -> isValid(e, t) # unoptimized
+					else f = (e) -> isValid(t, e) # unoptimized
 				val.every(f)
 		else
 			# NB: checking two first values instead of `Object.values(type).length` for performance reasons
 			if type[0] is undefined and type[1] is undefined # array of empty values: sized array, e.g.: `Array(1000)`)
 				Array.isArray(val) and val.length is type.length
 			else # union of types, e.g.: `[Object, null]`
-				type.some((t) -> isValid(val, t))
+				type.some((t) -> isValid(t, val))
 	else switch type?.constructor
 		when undefined, String, Number, Boolean # literal type (including ±Infinity and NaN) or undefined or null
 			if Number.isNaN(type) then Number.isNaN(val) else val is type
@@ -37,8 +37,8 @@ isValid = (val, type) ->
 		when Object # Object type, e.g.: `{id: Number, name: {firstName: String, lastName: String}}`
 			return false unless val?.constructor is Object
 			if not isEmptyObject(type)
-				for k, v of type
-					return false unless isValid(val[k], v)
+				for k, t of type
+					return false unless isValid(t, val[k])
 				true
 			else isEmptyObject(val)
 		when RegExp then val?.constructor is String and type.test(val)

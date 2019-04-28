@@ -12,7 +12,7 @@ class TypedObject extends Type
 	validate: (val) -> switch
 		when val?.constructor isnt Object then false
 		when isAny(@type) then true
-		else Object.values(val).every((v) => isValid(v, @type))
+		else Object.values(val).every((v) => isValid(@type, v))
 	getTypeName: -> "object with values of type '#{getTypeName(@type)}'"
 	checkWrap: (obj, context) ->
 		#super(obj, context)
@@ -25,7 +25,7 @@ class TypedObject extends Type
 			set: (o, k, v) =>
 				Type.error((if context then context + ' ' else '') +
 							(if @aliasName then @aliasName + ' ' else '') +
-						"object property '#{k}'", v, @type) unless isValid(v, @type)
+						"object property '#{k}'", v, @type) unless isValid(@type, v)
 				o[k] = v
 				true # indicate success
 		)

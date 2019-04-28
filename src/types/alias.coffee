@@ -12,7 +12,7 @@ class Alias extends Type
 		# return needed to return an instance of @type
 		return @type.alias(name) if @type instanceof Type or @type?.rootClass is Type
 		@alias(name) # name validation by Type alias method
-	validate: (val) -> isValid(val, @type)
+	validate: (val) -> isValid(@type, val)
 	getTypeName: -> @aliasName
 	helperName: "alias"
 	# for object and array types

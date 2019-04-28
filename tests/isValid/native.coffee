@@ -10,20 +10,20 @@ test "return true for a null type, false for other types", ->
 
 test "return true for NaN type, false for other types", ->
 	expect(isValid(NaN, NaN)).toBe(true)
-	expect(isValid(NaN, Number)).toBe(false)
-	expect(isValid(1, NaN)).toBe(false)
+	expect(isValid(Number, NaN)).toBe(false)
+	expect(isValid(NaN, 1)).toBe(false)
 	testTypes(NaN, NaN)
 
 test "return true for Infinity type, false for other types", ->
 	expect(isValid(Infinity, Infinity)).toBe(true)
-	expect(isValid(Infinity, Number)).toBe(false)
-	expect(isValid(1, Infinity)).toBe(false)
+	expect(isValid(Number, Infinity)).toBe(false)
+	expect(isValid(Infinity, 1)).toBe(false)
 	testTypes(Infinity, Infinity)
 
 test "return true for -Infinity type, false for other types", ->
 	expect(isValid(-Infinity, -Infinity)).toBe(true)
-	expect(isValid(-Infinity, Number)).toBe(false)
-	expect(isValid(-1, -Infinity)).toBe(false)
+	expect(isValid(Number, -Infinity)).toBe(false)
+	expect(isValid(-Infinity, -1)).toBe(false)
 	testTypes(-Infinity, -Infinity)
 
 test "return true for a number type, false for other types", ->

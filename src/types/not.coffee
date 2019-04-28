@@ -9,7 +9,7 @@ class Not extends Type
 	constructor: (@type) ->
 		super(arguments...)
 		Type.warn "Any is inadequate as '#{@helperName}' argument." if isAny(@type)
-	validate: (val) -> not isValid(val, @type)
+	validate: (val) -> not isValid(@type, val)
 	getTypeName: -> "not '#{getTypeName(@type)}'"
 	helperName: "not"
 

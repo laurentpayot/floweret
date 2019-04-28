@@ -7,7 +7,7 @@ badPath = (obj, typeObj) ->
 	for k, t of typeObj
 		return [k, obj, typeObj[k]] if isEmptyObject(obj)
 		# second or clause in case key not in obj and type is undefined
-		if not isValid(obj[k], t) or isEmptyObject(obj[k]) and t?.constructor is Object
+		if not isValid(t, obj[k]) or isEmptyObject(obj[k]) and t?.constructor is Object
 			return [k].concat(if obj[k]?.constructor is Object then badPath(obj[k], typeObj[k]) \
 								else [obj[k], typeObj[k]])
 
@@ -22,7 +22,7 @@ typeError = (context, val, type, aliasName="", promised=false) -> throw new Type
 					if not Object.values(type).length # sized array
 						"an array with a length of #{type.length} instead of #{val.length}"
 					else
-						i = val.findIndex((e) -> not isValid(e, type[0]))
+						i = val.findIndex((e) -> not isValid(type[0], e))
 						"an array with element #{i} of type '#{getTypeName(type[0])}' instead of #{valueType(val[i])}"
 				else
 					"an empty array, got a non-empty array"

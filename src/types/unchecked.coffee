@@ -7,7 +7,7 @@ class Unchecked extends Type
 	argsMin: 1
 	argsMax: 1
 	constructor: (@type) -> super(arguments...)
-	validate: (val) -> isValid(val, @type)
+	validate: (val) -> isValid(@type, val)
 	getTypeName: -> getTypeName(@type)
 	helperName: 'unchecked'
 	# parent Type checkWrap, i.e. no checkWrap
