@@ -46,7 +46,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.4.3",
+    "@babel/core": "^7.4.4",
     "babel-jest": "^24.7.1",
     "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
     "coffeescript": "^2.4.1",
