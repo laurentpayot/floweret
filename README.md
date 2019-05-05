@@ -275,7 +275,7 @@ See the [variable typing section](#variable-typing) of this document for more de
 When you need to ensure a variable type, you can make it type-checked just like a `fn` argument with the `checked` type:
 
 ```coffee
-import { check, alias } from 'floweret'
+import { check } from 'floweret'
 
 Store =
   darkMode: Boolean
@@ -343,7 +343,7 @@ store = check Store,
   displayName: "Laurent"
 
 # TypeError: Expected MyAppStore: an object with key 'darkMode' of type 'Boolean' instead of Number 1.
-store.darkMode = 1 
+store.darkMode = 1
 ```
 
 ## Tools
