@@ -55,10 +55,10 @@
     "jest": "^24.8.0",
     "jest-preset-coffeescript": "^1.0.1",
     "objectmodel": "^3.7.7",
-    "rollup": "^1.11.3",
+    "rollup": "^1.12.0",
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-gzip": "^2.2.0",
-    "rollup-plugin-node-resolve": "^4.2.3",
+    "rollup-plugin-node-resolve": "^4.2.4",
     "rollup-plugin-terser": "^4.0.4",
     "runtypes": "^3.2.0",
     "size-limit": "^0.21.1"
