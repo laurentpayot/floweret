@@ -46,7 +46,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.4.4",
+    "@babel/core": "^7.4.5",
     "babel-jest": "^24.8.0",
     "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
     "coffeescript": "^2.4.1",
@@ -55,7 +55,7 @@
     "jest": "^24.8.0",
     "jest-preset-coffeescript": "^1.0.1",
     "objectmodel": "^3.7.7",
-    "rollup": "^1.12.0",
+    "rollup": "^1.12.3",
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-gzip": "^2.2.0",
     "rollup-plugin-node-resolve": "^4.2.4",
