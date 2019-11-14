@@ -911,35 +911,35 @@ The benchmark currently includes the folowing runtime type checking systems:
 
 The [sub-benchmarks](https://github.com/laurentpayot/floweret/tree/master/benchmark) are run from minified [Rollup](https://rollupjs.org) bundles (UMD) and call two simple functions several thousand times.
 
-Here are some results from my Ubuntu machine with node v11.10.1:
+Here are some results from my low spec Ubuntu laptop with node v12.13.0:
 
 ```txt
-no-type-checking-benchmark.min.js.gz  256 bytes
-floweret-benchmark.min.js.gz          3433 bytes
-objectmodel.min.js.gz                 4123 bytes
-runtypes.min.js.gz                    6036 bytes
-flow-runtime-benchmark.min.js.gz      20240 bytes
+no-type-checking-benchmark.min.js.gz  257 bytes
+floweret-benchmark.min.js.gz          3436 bytes
+runtypes.min.js.gz                    3643 bytes
+objectmodel.min.js.gz                 4092 bytes
+flow-runtime-benchmark.min.js.gz      20296 bytes
 
 
 *** No type checking ***
-10000 greets: 2.101ms
-10000 sums: 25.062ms
+10000 greets: 16.885ms
+10000 sums: 269.751ms
 
 *** Floweret ***
-10000 greets: 36.680ms
-10000 sums: 304.042ms
+10000 greets: 113.636ms
+10000 sums: 844.946ms
 
 *** Runtypes ***
-10000 greets: 12.668ms
-10000 sums: 36.834ms
+10000 greets: 41.068ms
+10000 sums: 213.717ms
 
 *** Object Model ***
-10000 greets: 131.840ms
-10000 sums: 936.078ms
+10000 greets: 532.950ms
+10000 sums: 3632.958ms
 
 *** Flow-runtime ***
-10000 greets: 293.982ms
-10000 sums: 499.800ms
+10000 greets: 1169.674ms
+10000 sums: 1508.513ms
 ```
 
 Feel free to make your own benchmarks and share the results.

@@ -46,22 +46,22 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.5.5",
+    "@babel/core": "^7.7.2",
     "babel-jest": "^24.9.0",
     "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
     "coffeescript": "^2.4.1",
-    "coveralls": "^3.0.6",
+    "coveralls": "^3.0.7",
     "flow-runtime": "^0.17.0",
     "jest": "^24.9.0",
     "jest-preset-coffeescript": "^1.1.1",
-    "objectmodel": "^3.7.7",
-    "rollup": "^1.20.3",
-    "rollup-plugin-commonjs": "^9.3.4",
+    "objectmodel": "^4.0.3",
+    "rollup": "^1.27.0",
+    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-gzip": "^2.2.0",
-    "rollup-plugin-node-resolve": "^4.2.4",
-    "rollup-plugin-terser": "^4.0.4",
-    "runtypes": "^3.2.0",
-    "size-limit": "^0.21.1"
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.1.2",
+    "runtypes": "^4.0.3",
+    "size-limit": "^2.2.0"
   },
   "size-limit": [
     {
