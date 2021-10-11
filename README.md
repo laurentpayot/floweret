@@ -6,6 +6,8 @@
 [![npm bundle size](https://badgen.net/bundlephobia/minzip/floweret)](https://bundlephobia.com/result?p=floweret)
 [![npm version](https://badgen.net/npm/v/floweret)](https://www.npmjs.com/package/floweret)
 
+![Archived repository](./archived.svg)
+
 ## Why
 
 *Static* type checking can be achieved in CoffeeScript using [Flow’s Comment Types syntax](https://flow.org/en/docs/types/comments/):
